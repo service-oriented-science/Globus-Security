@@ -12,5 +12,6 @@
 
     <modules>
         <module>proxyProcessor</module>
+        <module>jetty</module>
     </modules>
 </project>

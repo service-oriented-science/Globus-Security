@@ -15,6 +15,8 @@
  */
 package org.globus.security.provider;
 
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.security.Provider;
 
 /**
@@ -29,13 +31,19 @@ public class GlobusProvider extends Provider {
     public GlobusProvider() {
 
         super(PROVIDER_NAME, 1.0, "Globus Security Providers");
-
-        put("CertStore.X509ProxyFileStore",
-            "org.globus.security.provider.FileBasedCertStore");
-        put("CertPathValidator.X509ProxyPath",
-            "org.globus.security.provider.X509ProxyCertPathValidator");
-        put("KeyStore.PEMFilebasedKeyStore",
-            "org.globus.security.provider.FileBasedKeyStore");
+        AccessController.doPrivileged(new PrivilegedAction<Object>() {
+            public Object run() {
+                put("CertStore.X509ProxyFileStore",
+                        FileBasedCertStore.class.getName());
+                put("CertPathValidator.X509ProxyPath",
+                        X509ProxyCertPathValidator.class.getName());
+                put("KeyStore.PEMFilebasedKeyStore",
+                        FileBasedKeyStore.class.getName());
+                put("TrustManagerFactory.PKITrustManager",
+                        PKITrustManagerFactory.class.getName());
+                return null;
+            }
+        });
 
     }
 
