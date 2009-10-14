@@ -1,5 +1,6 @@
 package org.globus.security.provider;
 
+import org.globus.security.filestore.FileBasedKeyStoreParameters;
 import org.globus.security.filestore.FileBasedStore;
 import static org.globus.security.filestore.FileBasedStore.LoadFileType;
 import org.globus.security.filestore.FileBasedTrustAnchor;
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.Key;
+import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.KeyStoreSpi;
 import java.security.NoSuchAlgorithmException;
@@ -115,6 +117,20 @@ public class FileBasedKeyStore extends KeyStoreSpi {
     }
 
     @Override
+    public void engineLoad(KeyStore.LoadStoreParameter loadStoreParameter) throws IOException, NoSuchAlgorithmException, CertificateException {
+        if(!(loadStoreParameter instanceof FileBasedKeyStoreParameters)){
+            throw new IllegalArgumentException("Unable to process parameters: " +loadStoreParameter);
+        }
+        FileBasedKeyStoreParameters params = (FileBasedKeyStoreParameters) loadStoreParameter;
+        try {
+            loadDirectories(params.getCertDirs());
+            loadDirectories(new String[]{params.getDefaultCertDir()});
+        } catch (CertStoreException e) {
+            throw new CertificateException(e);
+        }
+    }
+
+    @Override
     public void engineLoad(InputStream inputStream, char[] chars)
         throws IOException, NoSuchAlgorithmException, CertificateException {
         try {
@@ -135,15 +151,9 @@ public class FileBasedKeyStore extends KeyStoreSpi {
             String directoryListString =
                 properties.getProperty(DIRECTORY_LIST_KEY);
             try {
-                delegate.loadWrappers(directoryListString.split(","));
-                delegate.getWrapperMap();
-                for (FileBasedTrustAnchor trustAnchor : certsAliasMap
-                    .values()) {
-                    reverseAliasMap
-                        .put(trustAnchor.getTrustAnchor().getTrustedCert(),
-                             trustAnchor.getAlias());
-                    this.certsAliasMap.put(trustAnchor.getAlias(), trustAnchor);
-                }
+                String[] directoryList =directoryListString.split(",");
+                loadDirectories(directoryList);
+                loadDirectories(new String[]{defaultDirectoryString});
             } catch (CertStoreException e) {
                 throw new CertificateException(e);
             }
@@ -155,6 +165,18 @@ public class FileBasedKeyStore extends KeyStoreSpi {
             }
         }
 
+    }
+
+    private void loadDirectories(String[] directoryList) throws CertStoreException {
+        delegate.loadWrappers(directoryList);
+        delegate.getWrapperMap();
+        for (FileBasedTrustAnchor trustAnchor : certsAliasMap
+            .values()) {
+            reverseAliasMap
+                .put(trustAnchor.getTrustAnchor().getTrustedCert(),
+                     trustAnchor.getAlias());
+            this.certsAliasMap.put(trustAnchor.getAlias(), trustAnchor);
+        }
     }
 
     @Override

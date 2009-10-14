@@ -17,6 +17,8 @@ package org.globus.security;
 
 import org.globus.security.proxyExtension.ProxyPolicyHandler;
 
+import javax.net.ssl.CertPathTrustManagerParameters;
+import javax.net.ssl.ManagerFactoryParameters;
 import java.security.KeyStore;
 import java.security.cert.CertPathParameters;
 import java.security.cert.CertStore;
@@ -51,6 +53,8 @@ public class X509ProxyCertPathParameters implements CertPathParameters {
                                        boolean rejectLimitedProxy_) {
         this(keyStore_, certStore_, policyStore_, rejectLimitedProxy_, null);
     }
+
+
 
     public X509ProxyCertPathParameters(KeyStore keyStore_,
                                        CertStore certStore_,
@@ -97,6 +101,12 @@ public class X509ProxyCertPathParameters implements CertPathParameters {
      * @return a copy of this <code>CertPathParameters</code>
      */
     public Object clone() {
-        return null;  //CHANGEME To change body of implemented methods use File | Settings | File Templates.
+        try {
+            X509ProxyCertPathParameters clone = (X509ProxyCertPathParameters) super.clone();
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new InternalError(e.toString());
+
+        }        
     }
 }
