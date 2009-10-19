@@ -20,6 +20,9 @@ import org.globus.security.X509ProxyCertPathParameters;
 import org.globus.security.X509ProxyCertPathValidatorResult;
 import org.globus.security.provider.X509ProxyCertPathValidator;
 import org.globus.security.proxyExtension.ProxyPolicyHandler;
+import org.globus.security.util.CertificateLoadUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.X509TrustManager;
 import java.security.InvalidAlgorithmParameterException;
@@ -29,9 +32,12 @@ import java.security.cert.CertPath;
 import java.security.cert.CertPathValidatorException;
 import java.security.cert.CertPathValidatorResult;
 import java.security.cert.CertStore;
+import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -44,7 +50,7 @@ import java.util.Vector;
  *         FIXME: ability to accept anonymous connections?
  */
 public class PKITrustManager implements X509TrustManager {
-
+    private Logger logger = LoggerFactory.getLogger(getClass());
     X509ProxyCertPathValidator validator;
     X509ProxyCertPathParameters parameters;
     X509ProxyCertPathValidatorResult result;
@@ -66,27 +72,27 @@ public class PKITrustManager implements X509TrustManager {
                            boolean rejectLimitedProxy,
                            Map<String, ProxyPolicyHandler> policyHandlers) {
 
-
-            parameters =
+        parameters =
                 new X509ProxyCertPathParameters(keyStore, certStore, policyStore,
-                                                rejectLimitedProxy,
-                                                policyHandlers);
+                        rejectLimitedProxy,
+                        policyHandlers);
         
         validator = new X509ProxyCertPathValidator();
 
     }
 
     public void checkClientTrusted(X509Certificate[] x509Certificates, String s)
-        throws CertificateException {
+            throws CertificateException {
 
 
+        logger.info("In Globus Provider");
 
 
         // FIXME: anonymous clients?
         CertPath certPath = getCertPath(x509Certificates);
         try {
-            this.result = (X509ProxyCertPathValidatorResult)this.validator
-                .engineValidate(certPath, parameters);
+            this.result = (X509ProxyCertPathValidatorResult) this.validator
+                    .engineValidate(certPath, parameters);
         } catch (CertPathValidatorException exception) {
             throw new CertificateException("Pathvalidation failed", exception);
         } catch (InvalidAlgorithmParameterException exception) {
@@ -95,12 +101,12 @@ public class PKITrustManager implements X509TrustManager {
     }
 
     public void checkServerTrusted(X509Certificate[] x509Certificates, String s)
-        throws CertificateException {
+            throws CertificateException {
 
         CertPath certPath = getCertPath(x509Certificates);
         try {
-            this.result = (X509ProxyCertPathValidatorResult)this.validator
-                .engineValidate(certPath, parameters);
+            this.result = (X509ProxyCertPathValidatorResult) this.validator
+                    .engineValidate(certPath, parameters);
         } catch (CertPathValidatorException exception) {
             throw new CertificateException("Pathvalidation failed", exception);
         } catch (InvalidAlgorithmParameterException exception) {
@@ -110,7 +116,16 @@ public class PKITrustManager implements X509TrustManager {
 
     // FIXME:
     public X509Certificate[] getAcceptedIssuers() {
-        return new X509Certificate[0];  //To change body of implemented methods use File | Settings | File Templates.
+        try {
+            Collection<X509Certificate> trusted = 
+                    CertificateLoadUtil.getTrustedCertificates(
+                            this.parameters.getKeyStore(), null);
+            X509Certificate[] trustedCerts = trusted.toArray(new X509Certificate[trusted.size()]);
+            return trustedCerts;
+        } catch (KeyStoreException e) {
+            logger.warn("Unable to load trusted Certificates.  No authentication will occur.");
+            return new X509Certificate[]{};
+        }
     }
 
     public CertPathValidatorResult getValidationResult() {
@@ -119,14 +134,13 @@ public class PKITrustManager implements X509TrustManager {
 
     // FIXME: THis is super naive, fix it.
     private CertPath getCertPath(X509Certificate[] certs)
-        throws CertificateException {
+            throws CertificateException {
 
         CertificateFactory factory = CertificateFactory.getInstance("X.509");
-        List certList = new Vector(certs.length);
-        for (int i = 0; i < certs.length; i++) {
-            certList.add(certs[i]);
-        }
+        List<X509Certificate> certList = new Vector<X509Certificate>(certs.length);
+        certList.addAll(Arrays.asList(certs));
         CertPath certPath = factory.generateCertPath(certList);
+        logger.debug("CertPath: {}", certPath.toString());
         return certPath;
     }
 }
