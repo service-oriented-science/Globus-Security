@@ -39,8 +39,6 @@ public class GlobusProvider extends Provider {
                         X509ProxyCertPathValidator.class.getName());
                 put("KeyStore.PEMFilebasedKeyStore",
                         FileBasedKeyStore.class.getName());
-                put("TrustManagerFactory.PKITrustManager",
-                        PKITrustManagerFactory.class.getName());
                 return null;
             }
         });
