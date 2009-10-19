@@ -26,11 +26,18 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.Security;
+import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509CRL;
+import java.security.cert.X509CertSelector;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.Vector;
 
 /**
  * Contains various security-related utility methods.
@@ -38,7 +45,7 @@ import java.util.ArrayList;
 public class CertificateLoadUtil {
 
     private static Logger logger =
-        LoggerFactory.getLogger(CertificateLoadUtil.class.getName());
+            LoggerFactory.getLogger(CertificateLoadUtil.class.getName());
 
 
     static {
@@ -76,7 +83,7 @@ public class CertificateLoadUtil {
      * @return <code>CertificateFactory</code>
      */
     protected static CertificateFactory getCertificateFactory()
-        throws GeneralSecurityException {
+            throws GeneralSecurityException {
         if (provider == null) {
             return CertificateFactory.getInstance("X.509");
         } else {
@@ -93,8 +100,8 @@ public class CertificateLoadUtil {
      * @throws GeneralSecurityException if certificate failed to load.
      */
     public static X509Certificate loadCertificate(InputStream in)
-        throws GeneralSecurityException {
-        return (X509Certificate)getCertificateFactory().generateCertificate(in);
+            throws GeneralSecurityException {
+        return (X509Certificate) getCertificateFactory().generateCertificate(in);
     }
 
 
@@ -110,7 +117,7 @@ public class CertificateLoadUtil {
      * @throws GeneralSecurityException if security problems occurs.
      */
     public static X509Certificate loadCertificate(String file)
-        throws IOException, GeneralSecurityException {
+            throws IOException, GeneralSecurityException {
 
         if (file == null) {
             throw new IllegalArgumentException("Certificate file is null");
@@ -146,7 +153,7 @@ public class CertificateLoadUtil {
      * @throws GeneralSecurityException if security problems occurs.
      */
     public static X509Certificate[] loadCertificates(String file)
-        throws IOException, GeneralSecurityException {
+            throws IOException, GeneralSecurityException {
 
         if (file == null) {
             throw new IllegalArgumentException("Certificate file is null");
@@ -171,7 +178,7 @@ public class CertificateLoadUtil {
         }
 
         int size = list.size();
-        return (X509Certificate[])list.toArray(new X509Certificate[size]);
+        return (X509Certificate[]) list.toArray(new X509Certificate[size]);
     }
 
     /**
@@ -188,7 +195,7 @@ public class CertificateLoadUtil {
      * @throws GeneralSecurityException if security problems occurs.
      */
     public static X509Certificate readCertificate(BufferedReader reader)
-        throws IOException, GeneralSecurityException {
+            throws IOException, GeneralSecurityException {
         String line;
         StringBuffer buff = new StringBuffer();
         boolean isCert = false;
@@ -204,15 +211,15 @@ public class CertificateLoadUtil {
         }
         if (!isCert) {
             throw new GeneralSecurityException(
-                "Certificate needs to start with "
-                + " BEGIN CERTIFICATE");
+                    "Certificate needs to start with "
+                            + " BEGIN CERTIFICATE");
         }
         return null;
     }
 
 
     public static X509CRL loadCrl(String file)
-        throws IOException, GeneralSecurityException {
+            throws IOException, GeneralSecurityException {
 
         if (file == null) {
             throw new IllegalArgumentException("crlFileNull");
@@ -253,9 +260,36 @@ public class CertificateLoadUtil {
     }
 
     public static X509CRL loadCrl(InputStream in)
-        throws GeneralSecurityException {
-        return (X509CRL)getCertificateFactory().generateCRL(in);
+            throws GeneralSecurityException {
+        return (X509CRL) getCertificateFactory().generateCRL(in);
     }
 
+    public static Collection<X509Certificate>
+    getTrustedCertificates(KeyStore keyStore, X509CertSelector selector)
+            throws KeyStoreException {
 
+        Vector<X509Certificate> certificates = new Vector<X509Certificate>();
+        Enumeration<String> aliases = keyStore.aliases();
+        while (aliases.hasMoreElements()) {
+            String alias = aliases.nextElement();
+            boolean keyEntry = keyStore.isKeyEntry(alias);
+            if (keyStore.isCertificateEntry(alias)) {
+                // If a specific impl of keystore requires refresh, this would be a
+                // good place to add it.
+                Certificate certificate =
+                        keyStore.getCertificate(alias);
+                if (certificate instanceof X509Certificate) {
+                    X509Certificate x509Cert =
+                            (X509Certificate) certificate;
+                    if (selector == null) {
+                        certificates.add(x509Cert);
+                    } else if (selector.match(certificate)) {
+                        certificates.add(x509Cert);
+                    }
+                }
+
+            }
+        }
+        return certificates;
+    }
 }
