@@ -37,7 +37,8 @@ import java.util.Vector;
  *
  * @author ranantha@mcs.anl.gov
  *         <p/>
- *         FIXME: ability to accept anonymous connections?
+ *         FIXME: ability to accept anonymous connections? // Rework this, so
+ *         validator creation is not hardcoded.
  */
 public class PKITrustManager implements X509TrustManager {
 
@@ -57,24 +58,47 @@ public class PKITrustManager implements X509TrustManager {
         this(keyStore, certStore, policyStore, rejectLimitedProxy, null);
     }
 
+    /**
+     * @param keyStore           Contains all trusted CA certificates for use in
+     *                           validation
+     * @param certStore          Contains CRLs for use in validation. Any
+     *                           certificates stored here is not used.
+     * @param policyStore        Contains signing policy for use in validation
+     * @param rejectLimitedProxy Parameter determines if validator should reject
+     *                           limited proxy certificates presented by remote
+     *                           entity.
+     * @param policyHandlers     Map of policy OID to handlers for processing
+     *                           custom extensions in certificates.
+     */
     public PKITrustManager(KeyStore keyStore, CertStore certStore,
                            SigningPolicyStore policyStore,
                            boolean rejectLimitedProxy,
                            Map<String, ProxyPolicyHandler> policyHandlers) {
 
 
-        parameters =
+        initializeValidator(keyStore, certStore, policyStore,
+                            rejectLimitedProxy,
+                            policyHandlers);
+    }
+
+    protected void initializeValidator(KeyStore keyStore, CertStore certStore,
+                                       SigningPolicyStore policyStore,
+                                       boolean rejectLimitedProxy,
+                                       Map<String, ProxyPolicyHandler> policyHandlers) {
+
+        this.parameters =
             new X509ProxyCertPathParameters(keyStore, certStore, policyStore,
                                             rejectLimitedProxy,
                                             policyHandlers);
 
-        validator = new X509ProxyCertPathValidator();
-
+        this.validator = new X509ProxyCertPathValidator();
     }
 
-    public void checkClientTrusted(X509Certificate[] x509Certificates, String s)
+    public void checkClientTrusted(X509Certificate[] x509Certificates,
+                                   String authType)
         throws CertificateException {
 
+        // FIXME: authType checking?
         // FIXME: anonymous clients?
         CertPath certPath = getCertPath(x509Certificates);
         try {
@@ -87,8 +111,11 @@ public class PKITrustManager implements X509TrustManager {
         }
     }
 
-    public void checkServerTrusted(X509Certificate[] x509Certificates, String s)
+    public void checkServerTrusted(X509Certificate[] x509Certificates,
+                                   String authType)
         throws CertificateException {
+
+        // FIXME: authType checking?
 
         CertPath certPath = getCertPath(x509Certificates);
         try {
@@ -103,6 +130,7 @@ public class PKITrustManager implements X509TrustManager {
 
     // FIXME:
     public X509Certificate[] getAcceptedIssuers() {
+        KeyStore trustedStore = this.parameters.getKeyStore();
         return new X509Certificate[0];  //To change body of implemented methods use File | Settings | File Templates.
     }
 

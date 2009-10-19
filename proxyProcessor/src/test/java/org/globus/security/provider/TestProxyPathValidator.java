@@ -263,8 +263,8 @@ public class TestProxyPathValidator {
     public static String signingPolicySansPolicy =
         "# Globus CA rights\naccess_id_CA      nonX509         '/C=US/O=Globus/CN=Globus Certification Authority'\npos_rights        globus        CA:sign\ncond_subjects     globus       '\"/C=usa/O=Globus/*\"  \"/C=USA/O=Globus/*\"'\n# End of ca-signing-policy.conf";
 
-    X509Certificate[] goodCertsArr;
-    X509CRL[] crls;
+    public X509Certificate[] goodCertsArr;
+    public X509CRL[] crls;
     CertificateFactory factory;
 
     @BeforeClass
@@ -1020,9 +1020,8 @@ public class TestProxyPathValidator {
 
     }
 
-// for testing only to disable validity checking
-
-    class MockProxyCertPathValidator extends X509ProxyCertPathValidator {
+    // for testing only to disable validity checking
+    public class MockProxyCertPathValidator extends X509ProxyCertPathValidator {
 
         boolean checkCertificateDateValidity;
         boolean checkCRLDateValidity;
@@ -1031,6 +1030,7 @@ public class TestProxyPathValidator {
         public MockProxyCertPathValidator(boolean checkCertificateDateValidity_,
                                           boolean checkCRLDateValidity_,
                                           boolean checkSigningPolicy_) {
+
             this.checkCertificateDateValidity = checkCertificateDateValidity_;
             this.checkCRLDateValidity = checkCRLDateValidity_;
             this.checkSigningPolicy = checkSigningPolicy_;
