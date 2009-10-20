@@ -1,8 +1,10 @@
 package org.globus.security.util;
 
 import org.globus.security.SigningPolicyStoreParameters;
+import org.globus.security.X509ProxyCertPathParameters;
 import org.globus.security.filestore.FileBasedSigningPolicyStore;
 import org.globus.security.provider.PKITrustManager;
+import org.globus.security.provider.X509ProxyCertPathValidator;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
@@ -103,9 +105,12 @@ public class SSLConfigurator {
                 : SecureRandom.getInstance(secureRandomAlgorithm);
     }
 
+    // FIXME: limited proxy policy and configurable policy handlers...
     private TrustManager[] loadTrustManagers(KeyStore trustStore, CertStore certStore) throws InvalidAlgorithmParameterException {
         FileBasedSigningPolicyStore spStore = new FileBasedSigningPolicyStore(signingPolicyStoreParameters);
-        TrustManager tm = new PKITrustManager(trustStore, certStore, spStore, false);
+        X509ProxyCertPathValidator validator = new X509ProxyCertPathValidator();
+        X509ProxyCertPathParameters parameters = new X509ProxyCertPathParameters(trustStore, certStore, spStore, false);
+        TrustManager tm = new PKITrustManager(validator, parameters);
         return new TrustManager[]{tm};
     }
 
