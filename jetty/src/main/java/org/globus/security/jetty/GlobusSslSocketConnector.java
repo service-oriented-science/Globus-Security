@@ -8,7 +8,12 @@ import javax.net.ssl.SSLServerSocketFactory;
 import java.security.cert.CertStoreParameters;
 
 /**
+ * This is an implementation of the SslSocketConnector from Jetty, which allows
+ * a bit more sophisticated configuration, specifically, it allows an
+ * SSLConfigurator to be used to configure the SSLServerSocketFactory.
  *
+ * @author Tom Howe
+ * @since 1.0
  */
 public class GlobusSslSocketConnector extends SslSocketConnector {
 
