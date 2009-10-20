@@ -15,14 +15,14 @@
  */
 package org.globus.security.util;
 
+import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.cert.Certificate;
 import java.security.cert.X509CertSelector;
 import java.security.cert.X509Certificate;
-import java.security.KeyStoreException;
-import java.security.KeyStore;
 import java.util.Collection;
-import java.util.Vector;
 import java.util.Enumeration;
+import java.util.Vector;
 
 /**
  * FILL ME
@@ -31,7 +31,15 @@ import java.util.Enumeration;
  */
 public class KeyStoreUtil {
 
-    // Should not return a null
+    /**
+     * Returns the list of certificates in the KeyStore. Return object will not
+     * be null.
+     *
+     * @param keyStore
+     * @param selector
+     * @return
+     * @throws KeyStoreException
+     */
     public static Collection<? extends Certificate> getTrustedCertificates(
         KeyStore keyStore, X509CertSelector selector)
         throws KeyStoreException {
