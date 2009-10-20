@@ -29,6 +29,7 @@ import org.globus.security.proxyExtension.ProxyCertInfo;
 import org.globus.security.proxyExtension.ProxyPolicy;
 import org.globus.security.proxyExtension.ProxyPolicyHandler;
 import org.globus.security.util.CertificateUtil;
+import org.globus.security.util.KeyStoreUtil;
 import org.globus.security.util.ProxyCertificateUtil;
 
 import javax.security.auth.x500.X500Principal;
@@ -68,7 +69,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
 
 /**
  * Implementation of the CertPathValidatorSpi and the logic for X.509 Proxy Path
@@ -425,7 +425,8 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
             certSelector.setCertificate(x509Certificate);
             Collection<? extends Certificate> caCerts;
             try {
-                caCerts = getTrustedCertificates(certSelector);
+                caCerts = KeyStoreUtil
+                    .getTrustedCertificates(this.keyStore, certSelector);
             } catch (KeyStoreException e) {
                 throw new CertPathValidatorException(
                     "Error accessing trusted certificate store", e);
@@ -504,7 +505,8 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
         selector.setSubject(x509Certificate.getIssuerX500Principal());
         Collection<? extends Certificate> caCerts;
         try {
-            caCerts = getTrustedCertificates(selector);
+            caCerts =
+                KeyStoreUtil.getTrustedCertificates(this.keyStore, selector);
         } catch (KeyStoreException e) {
             throw new CertPathValidatorException(e);
         }
@@ -650,7 +652,8 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
         certSelector.setSubject(certIssuer);
         Collection<? extends Certificate> caCerts;
         try {
-            caCerts = getTrustedCertificates(certSelector);
+            caCerts = KeyStoreUtil
+                .getTrustedCertificates(this.keyStore, certSelector);
         } catch (KeyStoreException e) {
             throw new CertPathValidatorException(
                 "Error accessing CA certificate from certificate store for CRL validation",
@@ -924,31 +927,5 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
 
     }
 
-    // Should not return a null
-    private Collection<? extends Certificate> getTrustedCertificates(
-        X509CertSelector selector)
-        throws KeyStoreException {
-
-        Vector certificates = new Vector();
-        Enumeration<String> aliases = this.keyStore.aliases();
-        while (aliases.hasMoreElements()) {
-            String alias = aliases.nextElement();
-            if (this.keyStore.isCertificateEntry(alias)) {
-                // If a specific impl of keystore requires refresh, this would be a
-                // good place to add it.
-                Certificate certificate =
-                    this.keyStore.getCertificate(alias);
-                if (certificate instanceof X509Certificate) {
-                    X509Certificate x509Cert =
-                        (X509Certificate)certificate;
-                    if (selector.match(certificate)) {
-                        certificates.add(x509Cert);
-                    }
-
-                }
-            }
-        }
-        return certificates;
-    }
 }
 

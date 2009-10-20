@@ -17,8 +17,6 @@ package org.globus.security;
 
 import org.globus.security.proxyExtension.ProxyPolicyHandler;
 
-import javax.net.ssl.CertPathTrustManagerParameters;
-import javax.net.ssl.ManagerFactoryParameters;
 import java.security.KeyStore;
 import java.security.cert.CertPathParameters;
 import java.security.cert.CertStore;
@@ -26,6 +24,11 @@ import java.util.Map;
 
 /**
  * FILL ME
+ * <p/>
+ * FIXME: Refactor to have an interface that retuns trusted certificates, crls,
+ * keys and policy. Manage stores within parameters. PKITrustManager can take
+ * that interface and the validator can also be agnostic of this implementation
+ * (can support say CertStore or KeyStore for trsuted certs).
  *
  * @author ranantha@mcs.anl.gov
  */
@@ -40,20 +43,12 @@ public class X509ProxyCertPathParameters implements CertPathParameters {
     boolean rejectLimitedProxy;
     Map<String, ProxyPolicyHandler> handlers;
 
-    // FIXME: we could add another constructor that takes trusted CA
-    // certificate collection, CRL collcetion and signing policy collection,
-    // but implementations that use this need to be modified to not expect
-    // tores and thus refresh of credentials. One seamless way would be to
-    // create corresponding store objects for the provided input in this
-    // constructor and implementations can work without caring about how this
-    // object was created. 
     public X509ProxyCertPathParameters(KeyStore keyStore_,
                                        CertStore certStore_,
                                        SigningPolicyStore policyStore_,
                                        boolean rejectLimitedProxy_) {
         this(keyStore_, certStore_, policyStore_, rejectLimitedProxy_, null);
     }
-
 
 
     public X509ProxyCertPathParameters(KeyStore keyStore_,
@@ -102,11 +97,12 @@ public class X509ProxyCertPathParameters implements CertPathParameters {
      */
     public Object clone() {
         try {
-            X509ProxyCertPathParameters clone = (X509ProxyCertPathParameters) super.clone();
+            X509ProxyCertPathParameters clone =
+                (X509ProxyCertPathParameters)super.clone();
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new InternalError(e.toString());
 
-        }        
+        }
     }
 }
