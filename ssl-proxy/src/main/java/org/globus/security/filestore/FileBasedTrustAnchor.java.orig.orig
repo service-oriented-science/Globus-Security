@@ -32,7 +32,16 @@ import org.globus.security.util.CertificateLoadUtil;
  *
  * @author ranantha@mcs.anl.gov
  */
+<<<<<<< HEAD:ssl-proxy/src/main/java/org/globus/security/filestore/FileBasedTrustAnchor.java.orig
+<<<<<<< HEAD:ssl-proxy/src/main/java/org/globus/security/filestore/FileBasedTrustAnchor.java
 public class FileBasedTrustAnchor extends FileBasedObject<TrustAnchor> {
+=======
+public class FileBasedTrustAnchor extends FileBasedObject<TrustAnchor>
+    implements TrustAnchorWrapper {
+>>>>>>> Changed up exception, working to get proxy loaded up in keystore:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedTrustAnchor.java
+=======
+public class FileBasedTrustAnchor extends FileBasedObject<TrustAnchor> {
+>>>>>>> updated poms with interproject dependencies:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedTrustAnchor.java
 
     private static TrustAnchorFilter filter = new TrustAnchorFilter();
     private String alias;
