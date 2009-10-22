@@ -1,7 +1,7 @@
 package org.globus.security;
 
-import com.ecerami.wsdl.helloservice_wsdl.HelloPortType;
-import com.ecerami.wsdl.helloservice_wsdl.HelloService;
+import com.ecerami.wsdl.helloservice.HelloPortType;
+import com.ecerami.wsdl.helloservice.HelloService;
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
