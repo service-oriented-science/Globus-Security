@@ -190,6 +190,10 @@ public class FileBasedKeyStore extends KeyStoreSpi {
 
     }
 
+    private void loadProxyCertificate(String proxyFilename) {
+
+    }
+
     private void loadDirectories(String[] directoryList)
         throws FileStoreException {
 
