@@ -35,6 +35,8 @@ import java.util.Vector;
 
 /**
  * FILL ME
+ * <p/>
+ * This class equivalent was called GlobusCredential in CoG -maybe a better name?
  *
  * @author ranantha@mcs.anl.gov
  */
@@ -134,9 +136,8 @@ public class X509Credential {
     }
 
     /**
-     * Reads Base64 encoded data from the stream and returns its decoded value.
-     * The reading continues until the "END" string is found in the data.
-     * Otherwise, returns null.
+     * Reads Base64 encoded data from the stream and returns its decoded value. The reading continues until the "END"
+     * string is found in the data. Otherwise, returns null.
      */
     private static final byte[] getDecodedPEMObject(BufferedReader reader)
         throws IOException {
