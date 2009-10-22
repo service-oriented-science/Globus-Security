@@ -1,7 +1,5 @@
 package org.globus.security;
 
-import com.ecerami.wsdl.helloservice.HelloPortType;
-import com.ecerami.wsdl.helloservice.HelloService;
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
@@ -16,6 +14,10 @@ import java.io.File;
 import java.security.Security;
 
 import static org.globus.security.TestServer.*;
+
+import com.ecerami.wsdl.helloservice.HelloPortType;
+import com.ecerami.wsdl.helloservice.HelloService;
+
 
 /**
  * Hello world!
@@ -33,7 +35,7 @@ public class TestClient {
         TLSClientParameters tlsParams = new TLSClientParameters();
         SSLConfigurator configurator = configure();
         SSLSocketFactory socketFactory = configurator.createFactory();
-        tlsParams.setSSLSocketFactory(socketFactory);        
+        tlsParams.setSSLSocketFactory(socketFactory);
         tlsParams.setDisableCNCheck(true);
         conduit.setTlsClientParameters(tlsParams);
         System.out.println(port.sayHello("hello"));

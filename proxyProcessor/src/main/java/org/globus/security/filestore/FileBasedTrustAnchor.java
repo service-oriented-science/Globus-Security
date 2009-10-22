@@ -32,8 +32,7 @@ import java.security.cert.X509Certificate;
  *
  * @author ranantha@mcs.anl.gov
  */
-public class FileBasedTrustAnchor extends FileBasedObject<TrustAnchor>
-    implements TrustAnchorWrapper {
+public class FileBasedTrustAnchor extends FileBasedObject<TrustAnchor> {
 
     private static TrustAnchorFilter filter = new TrustAnchorFilter();
     private String alias;
