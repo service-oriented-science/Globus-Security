@@ -58,9 +58,15 @@ under the License.
         <module name="ExecutableStatementCount">
             <property name="max" value="75"/>
         </module>
+<<<<<<< HEAD:build-tools/src/main/resources/globus-security/globus-security-checkstyle.xml
+        <!--<module name="FileLength">
+            <property name="max" value="3000"/>
+        </module>-->
+=======
         <module name="FileLength">
             <property name="max" value="3000"/>
         </module>
+>>>>>>> merged with master:build-tools/src/main/resources/globus-security/globus-security-checkstyle.xml
         <module name="LineLength">
             <property name="max" value="120"/>
         </module>
@@ -85,7 +91,11 @@ under the License.
         <module name="OperatorWrap"/>
         <module name="ParenPad"/>
         <module name="TypecastParenPad"/>
+<<<<<<< HEAD:build-tools/src/main/resources/globus-security/globus-security-checkstyle.xml
+<!--        <module name="TabCharacter"/>-->
+=======
         <module name="TabCharacter"/>
+>>>>>>> merged with master:build-tools/src/main/resources/globus-security/globus-security-checkstyle.xml
         <module name="WhitespaceAfter">
             <property name="tokens" value="COMMA, SEMI"/>
         </module>
@@ -216,4 +226,8 @@ under the License.
         </module>
 
     </module>
+<<<<<<< HEAD:build-tools/src/main/resources/globus-security/globus-security-checkstyle.xml
 </module>
+=======
+</module>
+>>>>>>> merged with master:build-tools/src/main/resources/globus-security/globus-security-checkstyle.xml
