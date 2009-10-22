@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2006 University of Chicago
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,7 +23,6 @@ import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.security.cert.CertStoreException;
 import java.security.cert.TrustAnchor;
 import java.security.cert.X509Certificate;
 
@@ -33,48 +32,49 @@ import java.security.cert.X509Certificate;
  *
  * @author ranantha@mcs.anl.gov
  */
-public class FileBasedTrustAnchor extends FileBasedObject<TrustAnchor> 
-        implements TrustAnchorWrapper {
+public class FileBasedTrustAnchor extends FileBasedObject<TrustAnchor>
+    implements TrustAnchorWrapper {
 
     private static TrustAnchorFilter filter = new TrustAnchorFilter();
     private String alias;
     private TrustAnchor memoryAnchor;
 
-    public FileBasedTrustAnchor(File file) throws CertStoreException {
+    public FileBasedTrustAnchor(File file) throws FileStoreException {
         init(file);
+
     }
 
-    public FileBasedTrustAnchor(String alias, TrustAnchor cachedAnchor){
+    public FileBasedTrustAnchor(String alias, TrustAnchor cachedAnchor) {
         this.alias = alias;
         this.memoryAnchor = cachedAnchor;
     }
-    
+
     public String getAlias() {
         return alias;
     }
 
-    public void refresh() throws CertStoreException {
+    public void refresh() throws FileStoreException {
         super.reload();
     }
 
-    protected TrustAnchor createObject(File file) throws CertStoreException {
+    protected TrustAnchor createObject(File file) throws FileStoreException {
         X509Certificate certificate;
-        if(memoryAnchor != null){
+        if (memoryAnchor != null) {
             return memoryAnchor;
         }
         try {
             certificate = CertificateLoadUtil.loadCertificate(
-                    new FileInputStream(file));
+                new FileInputStream(file));
         } catch (IOException e) {
-            throw new CertStoreException(e);
+            throw new FileStoreException(e);
         } catch (GeneralSecurityException e) {
-            throw new CertStoreException(e);
+            throw new FileStoreException(e);
         }
 
         return new TrustAnchor(certificate, null);
     }
 
-    protected void validateFilename(File file) throws CertStoreException {
+    protected void validateFilename(File file) throws FileStoreException {
 
         if (!filter.accept(file.getParentFile(), file.getName())) {
             // FIXME exceptions
@@ -82,11 +82,12 @@ public class FileBasedTrustAnchor extends FileBasedObject<TrustAnchor>
         }
     }
 
-    public TrustAnchor getTrustAnchor() throws CertStoreException {
+    public TrustAnchor getTrustAnchor() throws FileStoreException {
+
         TrustAnchor trustAnchor = getObject();
         this.alias = CertificateIOUtil.nameHash(
-                trustAnchor.getTrustedCert().getSubjectDN());
-        return trustAnchor;        
+            trustAnchor.getTrustedCert().getSubjectDN());
+        return trustAnchor;
     }
 
     public static FilenameFilter getTrustAnchorFilter() {
@@ -102,9 +103,9 @@ public class FileBasedTrustAnchor extends FileBasedObject<TrustAnchor>
             }
             int length = file.length();
             return length > 2 &&
-                    file.charAt(length - 2) == '.' &&
-                    file.charAt(length - 1) >= '0' &&
-                    file.charAt(length - 1) <= '9';
+                   file.charAt(length - 2) == '.' &&
+                   file.charAt(length - 1) >= '0' &&
+                   file.charAt(length - 1) <= '9';
         }
     }
 

@@ -13,23 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.globus.security;
+package org.globus.security.filestore;
 
-import javax.security.auth.x500.X500Principal;
-import java.security.InvalidAlgorithmParameterException;
+import java.security.GeneralSecurityException;
 
-/**
- * FILL ME
- *
- * @author ranantha@mcs.anl.gov // FIXME: Maybe a provider  access to this?
- */
-public abstract class SigningPolicyStore {
+public class FileStoreException extends GeneralSecurityException {
 
-    public SigningPolicyStore(SigningPolicyStoreParameters parameters)
-        throws InvalidAlgorithmParameterException {
-
+    public FileStoreException(String msg) {
+        super(msg);
     }
 
-    public abstract SigningPolicy getSigningPolicy(X500Principal caPrincipal)
-        throws SigningPolicyStoreException;
+    public FileStoreException(String msg, Throwable ex) {
+        super(msg, ex);
+    }
+
+    public FileStoreException(Throwable ex) {
+        super(ex);
+    }
 }

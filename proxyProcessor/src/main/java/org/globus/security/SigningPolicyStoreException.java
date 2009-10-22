@@ -15,21 +15,19 @@
  */
 package org.globus.security;
 
-import javax.security.auth.x500.X500Principal;
-import java.security.InvalidAlgorithmParameterException;
+import java.security.cert.CertStoreException;
 
-/**
- * FILL ME
- *
- * @author ranantha@mcs.anl.gov // FIXME: Maybe a provider  access to this?
- */
-public abstract class SigningPolicyStore {
+public class SigningPolicyStoreException extends CertStoreException {
 
-    public SigningPolicyStore(SigningPolicyStoreParameters parameters)
-        throws InvalidAlgorithmParameterException {
-
+    public SigningPolicyStoreException(String msg) {
+        super(msg);
     }
 
-    public abstract SigningPolicy getSigningPolicy(X500Principal caPrincipal)
-        throws SigningPolicyStoreException;
+    public SigningPolicyStoreException(String msg, Throwable ex) {
+        super(msg, ex);
+    }
+
+    public SigningPolicyStoreException(Throwable ex) {
+        super(ex);
+    }
 }
