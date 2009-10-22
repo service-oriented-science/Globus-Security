@@ -42,6 +42,9 @@ public class FileBasedKeyStore extends KeyStoreSpi {
         LoggerFactory.getLogger(FileBasedCertStore.class.getName());
     public static final String DEFAULT_DIRECTORY_KEY = "default_directory";
     public static final String DIRECTORY_LIST_KEY = "directory_list";
+    public static final String CERTIFICATE_FILENAME = "certificateFilename";
+    public static final String KEY_FILENAME = "keyFilename";
+    public static final String PROXY_FILENAME = "proxyFilename";
 
     private Map<String, FileBasedTrustAnchor> certsAliasMap =
         new HashMap<String, FileBasedTrustAnchor>();
@@ -117,17 +120,28 @@ public class FileBasedKeyStore extends KeyStoreSpi {
     }
 
     @Override
-    public void engineLoad(KeyStore.LoadStoreParameter loadStoreParameter) throws IOException, NoSuchAlgorithmException, CertificateException {
-        if(!(loadStoreParameter instanceof FileBasedKeyStoreParameters)){
-            throw new IllegalArgumentException("Unable to process parameters: " +loadStoreParameter);
+    public void engineLoad(KeyStore.LoadStoreParameter loadStoreParameter)
+        throws IOException, NoSuchAlgorithmException, CertificateException {
+        if (!(loadStoreParameter instanceof FileBasedKeyStoreParameters)) {
+            throw new IllegalArgumentException(
+                "Unable to process parameters: " + loadStoreParameter);
         }
-        FileBasedKeyStoreParameters params = (FileBasedKeyStoreParameters) loadStoreParameter;
+        FileBasedKeyStoreParameters params =
+            (FileBasedKeyStoreParameters)loadStoreParameter;
         try {
             loadDirectories(params.getCertDirs());
             loadDirectories(new String[]{params.getDefaultCertDir()});
         } catch (CertStoreException e) {
             throw new CertificateException(e);
         }
+
+        // load proxy certificate, if configured
+        loadProxyCertificate(params.getProxyFilename());
+
+        // load usercert/key, if configured
+        loadCertificateKey(params.getUserCertFilename(),
+                           params.getUserKeyFilename(),
+                           params.getProtectionParameter());
     }
 
     @Override
@@ -151,12 +165,21 @@ public class FileBasedKeyStore extends KeyStoreSpi {
             String directoryListString =
                 properties.getProperty(DIRECTORY_LIST_KEY);
             try {
-                String[] directoryList =directoryListString.split(",");
+                String[] directoryList = directoryListString.split(",");
                 loadDirectories(directoryList);
                 loadDirectories(new String[]{defaultDirectoryString});
             } catch (CertStoreException e) {
                 throw new CertificateException(e);
             }
+
+            String proxyFilename =
+                properties.getProperty(PROXY_FILENAME);
+            loadProxyCertificate(proxyFilename);
+
+            String certFilename = properties.getProperty(CERTIFICATE_FILENAME);
+            String keyFilename = properties.getProperty(KEY_FILENAME);
+            loadCertificateKey(certFilename, keyFilename,
+                               new KeyStore.PasswordProtection(chars));
         } finally {
             try {
                 inputStream.close();
@@ -167,7 +190,8 @@ public class FileBasedKeyStore extends KeyStoreSpi {
 
     }
 
-    private void loadDirectories(String[] directoryList) throws CertStoreException {
+    private void loadDirectories(String[] directoryList)
+        throws CertStoreException {
         delegate.loadWrappers(directoryList);
         delegate.getWrapperMap();
         for (FileBasedTrustAnchor trustAnchor : certsAliasMap
