@@ -7,13 +7,13 @@ import java.security.Security;
 import javax.net.ssl.SSLSocketFactory;
 
 =======
-import com.ecerami.wsdl.helloservice.HelloPortType;
-import com.ecerami.wsdl.helloservice.HelloService;
+import com.ecerami.wsdl.helloservice_wsdl.HelloPortType;
+import com.ecerami.wsdl.helloservice_wsdl.HelloService;
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.transport.http.HTTPConduit;
->>>>>>> updating poms for style check:integration-example/src/main/java/org/globus/security/TestClient.java
+>>>>>>> updated poms with interproject dependencies:integration-example/src/main/java/org/globus/security/TestClient.java
 import org.globus.security.filestore.FileCertStoreParameters;
 import org.globus.security.filestore.FileSigningPolicyStoreParameters;
 import org.globus.security.provider.GlobusProvider;
