@@ -3,7 +3,6 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-<<<<<<< HEAD:pom.xml
     <artifactId>security</artifactId>
     <parent>
         <groupId>org.globus.security</groupId>
@@ -11,11 +10,6 @@
         <version>1.0-SNAPSHOT</version>
         <relativePath>parent</relativePath>
     </parent>
-=======
-    <groupId>org.globus.crux</groupId>
-    <artifactId>security</artifactId>
-    <version>1.0-SNAPSHOT</version>
->>>>>>> updating poms for style check:pom.xml
     <packaging>pom</packaging>
     <name>Globus Security (Master Project)</name>
 
@@ -35,9 +29,27 @@
         </extensions>
         <plugins>
             <plugin>
+<<<<<<< HEAD:pom.xml
                 <groupId>com.atlassian.maven.plugins</groupId>
                 <artifactId>maven-clover2-plugin</artifactId>
                 <version>2.6.2</version>
+=======
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <!--<failsOnError>true</failsOnError>-->
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.globus.security</groupId>
+                        <artifactId>build-tools</artifactId>
+                        <version>1.0-SNAPSHOT</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+>>>>>>> updated poms with interproject dependencies:pom.xml
                 <configuration>
                     <snapshot>${user.home}/.clover/${groupId}-${artifactId}/clover.snapshot</snapshot>
                     <cloverDatabase>${user.home}/.clover/${groupId}-${artfactId}/clover.db</cloverDatabase>
@@ -188,135 +200,6 @@
         </plugins>
     </reporting>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
-    <issueManagement>
-        <system>JIRA</system>
-        <url>http://jira.globus.org/browse/SOS</url>
-    </issueManagement>
-
-    <distributionManagement>
-        <site>
-            <id>website</id>
-            <url>file:/Users/turtlebender/sites/security</url>
-        </site>
-    </distributionManagement>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-                <version>1.5.8
-                </version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jcl-over-slf4j</artifactId>
-            <version>1.5.8</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>1.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>1.5.8</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <classifier>jdk15</classifier>
-            <version>5.8</version>
-            <scope>test</scope>
-        </dependency>
-        </dependencies>
-    </dependencyManagement>
-
-    <build>
-
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.globus.security</groupId>
-                        <artifactId>build-tools</artifactId>
-                        <version>1.0-SNAPSHOT</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-        </plugins>
-    </build>
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <configuration>
-                    <configLocation>globus-security/checkstyle-checker.xml
-                    </configLocation>
-                    <headerLocation>globus-security/LICENSE.txt</headerLocation>
-                    <outputDirectory>${project.build.directory}/resources/</outputDirectory>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-changes-plugin</artifactId>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>jira-report</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jxr-plugin</artifactId>
-                <configuration>
-                    <aggregate>true</aggregate>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-pmd-plugin</artifactId>
-                <!--<version>2.3</version>-->
-                <configuration>
-                    <linkXref>true</linkXref>
-                    <sourceEncoding>utf-8</sourceEncoding>
-                    <minimumTokens>100</minimumTokens>
-                    <targetJdk>1.5</targetJdk>
-                    <excludeRoots>
-                        <excludeRoot>target/generated-sources</excludeRoot>
-                    </excludeRoots>
-                    <outputDirectory>${project.build.directory}/resources</outputDirectory>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>net.sf.xradar</groupId>
-                <artifactId>maven-xradar-plugin</artifactId>
-                <configuration>
-                    <autoRadar>false</autoRadar>
-                    <!--need to be set at false-->
-                    <reportPmd>${project.build.directory}/resources/pmd.xml
-                    </reportPmd>
-                    <reportCheckstyle>
-                        ${project.build.directory}/resources/checkstyle.xml
-                    </reportCheckstyle>
-                </configuration>
-            </plugin>
-
-        </plugins>
-    </reporting>
-
-
     <modules>
         <module>build-tools</module>
         <module>ssl-proxy</module>
@@ -324,7 +207,6 @@
         <module>jetty</module>
         <module>parent</module>
         <module>integration-example</module>
-        <module>build-tools</module>
     </modules>
 
 
