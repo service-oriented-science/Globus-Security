@@ -1,14 +1,5 @@
 package org.globus.security.provider;
 
-import org.globus.security.filestore.FileBasedKeyStoreParameters;
-import org.globus.security.filestore.FileBasedStore;
-import static org.globus.security.filestore.FileBasedStore.LoadFileType;
-import org.globus.security.filestore.FileBasedTrustAnchor;
-import org.globus.security.filestore.TrustAnchorWrapper;
-import static org.globus.security.util.CertificateIOUtil.writeCertificate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,6 +21,15 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+
+import org.globus.security.filestore.FileBasedKeyStoreParameters;
+import org.globus.security.filestore.FileBasedStore;
+import static org.globus.security.filestore.FileBasedStore.LoadFileType;
+import org.globus.security.filestore.FileBasedTrustAnchor;
+import static org.globus.security.util.CertificateIOUtil.writeCertificate;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -69,7 +69,7 @@ public class FileBasedKeyStore extends KeyStoreSpi {
                                                                      IOException,
                                                                      NoSuchAlgorithmException,
                                                                      CertificateException {
-        for (TrustAnchorWrapper desc : this.certsAliasMap.values()) {
+        for (FileBasedTrustAnchor desc : this.certsAliasMap.values()) {
             File file = desc.getFile();
             if (file == null) {
                 File outputFile =
