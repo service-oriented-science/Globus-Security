@@ -15,6 +15,10 @@
  */
 package org.globus.security.bc;
 
+<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/bc/BouncyCastleOpenSSLKey.java
+=======
+import java.io.ByteArrayInputStream;
+>>>>>>> updated checkstyle:proxyProcessor/src/main/java/org/globus/security/bc/BouncyCastleOpenSSLKey.java
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ByteArrayInputStream;
@@ -27,17 +31,18 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import org.globus.security.OpenSSLKey;
 
 <<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/bc/BouncyCastleOpenSSLKey.java
-=======
-import org.bouncycastle.asn1.ASN1InputStream;
->>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/bc/BouncyCastleOpenSSLKey.java
 import org.bouncycastle.asn1.pkcs.RSAPrivateKeyStructure;
 import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
+=======
+import org.bouncycastle.asn1.ASN1InputStream;
+import org.bouncycastle.asn1.ASN1Sequence;
+>>>>>>> updated checkstyle:proxyProcessor/src/main/java/org/globus/security/bc/BouncyCastleOpenSSLKey.java
 import org.bouncycastle.asn1.DERObject;
 import org.bouncycastle.asn1.DERObjectIdentifier;
-import org.bouncycastle.asn1.DERInputStream;
-import org.bouncycastle.asn1.ASN1Sequence;
-import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
+import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
+import org.bouncycastle.asn1.pkcs.RSAPrivateKeyStructure;
+import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 
 /**
  * BouncyCastle-based implementation of OpenSSLKey.
