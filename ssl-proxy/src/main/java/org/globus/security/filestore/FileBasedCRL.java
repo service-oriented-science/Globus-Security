@@ -79,10 +79,10 @@ public class FileBasedCRL extends FileBasedObject<X509CRL> {
 
             int length = file.length();
             return length > 3 &&
-                    file.charAt(length - 3) == '.' &&
-                    file.charAt(length - 2) == 'r' &&
-                    file.charAt(length - 1) >= '0' &&
-                    file.charAt(length - 1) <= '9';
+                   file.charAt(length - 3) == '.' &&
+                   file.charAt(length - 2) == 'r' &&
+                   file.charAt(length - 1) >= '0' &&
+                   file.charAt(length - 1) <= '9';
 
         }
     }

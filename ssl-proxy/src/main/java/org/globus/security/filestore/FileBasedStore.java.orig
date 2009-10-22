@@ -4,14 +4,8 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
-<<<<<<< HEAD:ssl-proxy/src/main/java/org/globus/security/filestore/FileBasedStore.java
  * Created by IntelliJ IDEA. User: turtlebender Date: Oct 13, 2009 Time: 4:09:25 PM To change this template use File |
  * Settings | File Templates. TODO: This should probably just be a generic class with <T,V> representing TODO: wrapper
-=======
- * Created by IntelliJ IDEA. User: turtlebender Date: Oct 13, 2009 Time: 4:09:25
- * PM To change this template use File | Settings | File Templates. TODO: This
- * should probably just be a generic class with <T,V> representing TODO: wrapper
->>>>>>> Basic utility classes for reading PEM private key.:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedStore.java
  * and the core type.
  */
 public abstract class FileBasedStore<T> {
@@ -36,8 +30,8 @@ public abstract class FileBasedStore<T> {
 <<<<<<< HEAD:ssl-proxy/src/main/java/org/globus/security/filestore/FileBasedStore.java
             throws FileStoreException;
 =======
-        throws CertStoreException;
->>>>>>> Basic utility classes for reading PEM private key.:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedStore.java
+        throws FileStoreException;
+>>>>>>> Changed up exception, working to get proxy loaded up in keystore:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedStore.java
 
 
     public abstract Map<String, FileBasedObject<T>> getWrapperMap();
