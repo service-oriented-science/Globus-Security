@@ -3,201 +3,159 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <groupId>org.globus.security</groupId>
     <artifactId>security</artifactId>
-    <parent>
-        <groupId>org.globus.security</groupId>
-        <artifactId>parent</artifactId>
-        <version>1.0-SNAPSHOT</version>
-        <relativePath>parent</relativePath>
-    </parent>
     <packaging>pom</packaging>
-    <name>Globus Security (Master Project)</name>
+    <version>1.0-SNAPSHOT</version>
+    <name>Security (Master Project)</name>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <issueManagement>
+        <system>JIRA</system>
+        <url>http://jira.globus.org/browse/SOS</url>
+    </issueManagement>
+
+    <distributionManagement>
+        <site>
+            <id>website</id>
+            <url>file:/Users/turtlebender/sites/security</url>
+        </site>
+    </distributionManagement>
 
     <build>
-        <extensions>
-            <extension>
-                <groupId>org.globus.security</groupId>
-                <artifactId>build-tools</artifactId>
-                <version>${version}</version>
-            </extension>
-            <extension>
-                <groupId>org.apache.maven.wagon</groupId>
-                <artifactId>wagon-ssh-external</artifactId>
-                <version>1.0-alpha-5</version>
-            </extension>
-        </extensions>
+
         <plugins>
             <plugin>
-                <groupId>com.atlassian.maven.plugins</groupId>
-                <artifactId>maven-clover2-plugin</artifactId>
-                <version>2.6.2</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
                 <configuration>
-                    <snapshot>${user.home}/.clover/${groupId}-${artifactId}/clover.snapshot</snapshot>
-                    <cloverDatabase>${user.home}/.clover/${groupId}-${artfactId}/clover.db</cloverDatabase>
+                    <failsOnError>true</failsOnError>
+                    <configLocation>/globus/globus-security-checkstyle.xml</configLocation>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.globus.security</groupId>
+                        <artifactId>build-tools</artifactId>
+                        <version>1.0-SNAPSHOT</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
                 </configuration>
             </plugin>
         </plugins>
-    </build>
+        <pluginManagement>
+            <plugins>
 
-    <profiles>
-        <profile>
-            <id>clover.optimize</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.atlassian.maven.plugins</groupId>
-                        <artifactId>maven-clover2-plugin</artifactId>
-                        <version>2.6.2</version>
-                        <executions>
-                            <execution>
-                                <id>clover</id>
-                                <goals>
-                                    <goal>setup</goal>
-                                    <goal>optimize</goal>
-                                    <goal>snapshot</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>clover.all</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.atlassian.maven.plugins</groupId>
-                        <artifactId>maven-clover2-plugin</artifactId>
-                        <configuration>
-                            <!--<targetPercentage>93%</targetPercentage>-->
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>clover</id>
-                                <goals>
-                                    <goal>setup</goal>
-                                    <goal>optimize</goal>
-                                    <goal>snapshot</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>clover</goal>
-                                    <goal>log</goal>
-                                    <goal>check</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>enforce-banned-dependencies</id>
+                            <goals>
+                                <goal>enforce</goal>
+                            </goals>
+                            <configuration>
+                                <rules>
+                                    <bannedDependencies>
+                                        <excludes>
+                                            <exclude>commons-logging</exclude>
+                                            <exclude>
+                                                org.springframework:*:(,3.0.0.RC1)
+                                            </exclude>
+                                        </excludes>
+                                    </bannedDependencies>
+                                </rules>
+                                <fail>true</fail>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+
+            </plugins>
+        </pluginManagement>
+    </build>
     <reporting>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <configLocation>globus-security/checkstyle-checker.xml
+                    </configLocation>
+                    <headerLocation>globus-security/LICENSE.txt</headerLocation>
+                    <outputDirectory>${project.build.directory}/resources/
+                    </outputDirectory>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-changes-plugin</artifactId>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>jira-report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jxr-plugin</artifactId>
-                <version>2.1</version>
                 <configuration>
                     <aggregate>true</aggregate>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.6.1</version>
-                <configuration>
-                </configuration>
-                <reportSets>
-                    <reportSet>
-                        <id>non-aggregate</id>
-                        <configuration>
-                        </configuration>
-                        <reports>
-                            <report>javadoc</report>
-                        </reports>
-                    </reportSet>
-                    <reportSet>
-                        <id>aggregate</id>
-                        <configuration>
-                        </configuration>
-                        <reports>
-                            <report>aggregate</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
-            <plugin>
-                <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>2.4.3</version>
-                <configuration>
-                    <xrefLocation>${project.reporting.outputDirectory}/../xref-test</xrefLocation>
-                </configuration>
-            </plugin>
-            <plugin>
                 <artifactId>maven-pmd-plugin</artifactId>
-                <version>2.4</version>
+                <!--<version>2.3</version>-->
                 <configuration>
-                    <xrefLocation>${project.reporting.outputDirectory}/../xref</xrefLocation>
+                    <linkXref>true</linkXref>
+                    <sourceEncoding>utf-8</sourceEncoding>
+                    <minimumTokens>100</minimumTokens>
                     <targetJdk>1.5</targetJdk>
+                    <excludeRoots>
+                        <excludeRoot>target/generated-sources</excludeRoot>
+                    </excludeRoots>
+                    <outputDirectory>${project.build.directory}/resources
+                    </outputDirectory>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>jdepend-maven-plugin</artifactId>
-                <version>2.0-beta-2</version>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-                <version>2.2-SNAPSHOT</version>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>javancss-maven-plugin</artifactId>
-                <version>2.0</version>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>taglist-maven-plugin</artifactId>
-                <version>2.4</version>
             </plugin>
             <plugin>
                 <groupId>net.sf.xradar</groupId>
                 <artifactId>maven-xradar-plugin</artifactId>
-                <version>1.2.1-RC1</version>
-            </plugin>
-            <plugin>
-                <groupId>com.atlassian.maven.plugins</groupId>
-                <artifactId>maven-clover2-plugin</artifactId>
                 <configuration>
-                    <generateHtml>true</generateHtml>
-                    <generateJson>true</generateJson>
-                    <generateXml>true</generateXml>
+                    <autoRadar>false</autoRadar>
+                    <!--need to be set at false-->
+                    <reportPmd>${project.build.directory}/resources/pmd.xml
+                    </reportPmd>
+                    <reportCheckstyle>
+                        ${project.build.directory}/resources/checkstyle.xml
+                    </reportCheckstyle>
                 </configuration>
             </plugin>
+
         </plugins>
     </reporting>
 
+
     <modules>
-        <module>build-tools</module>
-        <module>ssl-proxy</module>
-        <module>ssl-proxy-osgi</module>
+        <module>proxyProcessor</module>
         <module>jetty</module>
-        <module>parent</module>
         <module>integration-example</module>
+        <module>build-tools</module>
     </modules>
 
-
     <dependencies>
-        <dependency>
-            <groupId>org.globus.security</groupId>
-            <artifactId>build-tools</artifactId>
-            <version>${version}</version>
-        </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -209,6 +167,129 @@
             <version>1.5.8</version>
         </dependency>
     </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>3.0.0.RC1</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging-api</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-aop</artifactId>
+                <version>3.0.0.RC1</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging-api</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-beans</artifactId>
+                <version>3.0.0.RC1</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging-api</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>3.0.0.RC1</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging-api</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-web</artifactId>
+                <version>3.0.0.RC1</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging-api</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-webmvc</artifactId>
+                <version>3.0.0.RC1</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging-api</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>1.5.8
+                </version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>jcl-over-slf4j</artifactId>
+                <version>1.5.8</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>1.4</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+                <version>1.5.8</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.testng</groupId>
+                <artifactId>testng</artifactId>
+                <classifier>jdk15</classifier>
+                <version>5.8</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 
 </project>
