@@ -3,13 +3,8 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-<<<<<<< HEAD:pom.xml
     <groupId>org.globus.security</groupId>
-=======
-    <groupId>org.globus.crux</groupId>
->>>>>>> updating poms for style check:pom.xml
     <artifactId>security</artifactId>
-    <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <name>Security (Master Project)</name>
@@ -30,51 +25,14 @@
         </site>
     </distributionManagement>
 
-<<<<<<< HEAD:pom.xml
-=======
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-                <version>1.5.8
-                </version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jcl-over-slf4j</artifactId>
-            <version>1.5.8</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>1.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>1.5.8</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <classifier>jdk15</classifier>
-            <version>5.8</version>
-            <scope>test</scope>
-        </dependency>
-        </dependencies>
-    </dependencyManagement>
-
->>>>>>> updating poms for style check:pom.xml
     <build>
 
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-<<<<<<< HEAD:pom.xml
                 <configuration>
+<<<<<<< HEAD:pom.xml
 			<encoding>UTF-8</encoding>
                 </configuration>
 		<executions>
@@ -95,7 +53,9 @@
                     </executions>
 
 =======
->>>>>>> updating poms for style check:pom.xml
+                    <!--<failsOnError>true</failsOnError>-->
+                </configuration>
+>>>>>>> updated poms with interproject dependencies:pom.xml
                 <dependencies>
                     <dependency>
                         <groupId>org.globus.security</groupId>
@@ -104,7 +64,6 @@
                     </dependency>
                 </dependencies>
             </plugin>
-<<<<<<< HEAD:pom.xml
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
@@ -144,9 +103,6 @@
 
             </plugins>
         </pluginManagement>
-=======
-        </plugins>
->>>>>>> updating poms for style check:pom.xml
     </build>
     <reporting>
         <plugins>
@@ -157,12 +113,8 @@
                     <configLocation>globus-security/checkstyle-checker.xml
                     </configLocation>
                     <headerLocation>globus-security/LICENSE.txt</headerLocation>
-<<<<<<< HEAD:pom.xml
                     <outputDirectory>${project.build.directory}/resources/
                     </outputDirectory>
-=======
-                    <outputDirectory>${project.build.directory}/resources/</outputDirectory>
->>>>>>> updating poms for style check:pom.xml
                 </configuration>
             </plugin>
             <plugin>
@@ -195,12 +147,8 @@
                     <excludeRoots>
                         <excludeRoot>target/generated-sources</excludeRoot>
                     </excludeRoots>
-<<<<<<< HEAD:pom.xml
                     <outputDirectory>${project.build.directory}/resources
                     </outputDirectory>
-=======
-                    <outputDirectory>${project.build.directory}/resources</outputDirectory>
->>>>>>> updating poms for style check:pom.xml
                 </configuration>
             </plugin>
             <plugin>
@@ -225,12 +173,7 @@
         <module>proxyProcessor</module>
         <module>build-tools</module>
         <module>jetty</module>
-<<<<<<< HEAD:pom.xml
         <module>crux-wss4j</module>
-=======
-        <module>integration-example</module>
-        <module>build-tools</module>
->>>>>>> updating poms for style check:pom.xml
     </modules>
 
     <dependencies>
@@ -244,11 +187,14 @@
             <artifactId>jcl-over-slf4j</artifactId>
             <version>1.5.8</version>
         </dependency>
+<<<<<<< HEAD:pom.xml
         <dependency>
             <groupId>org.globus.security</groupId>
             <artifactId>build-tools</artifactId>
             <version>${version}</version>
         </dependency>
+=======
+>>>>>>> updated poms with interproject dependencies:pom.xml
     </dependencies>
     <dependencyManagement>
         <dependencies>
