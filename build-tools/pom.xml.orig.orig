@@ -5,6 +5,20 @@
 
     <modelVersion>4.0.0</modelVersion>
 <<<<<<< HEAD:build-tools/pom.xml
+<<<<<<< HEAD:build-tools/pom.xml.orig
+    <parent>
+        <groupId>org.globus.security</groupId>
+        <artifactId>parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+=======
+    <groupId>org.globus.security</groupId>
+>>>>>>> fixed parent pom groups:build-tools/pom.xml
+    <artifactId>build-tools</artifactId>
+    <name>Globus Security Build Tools</name>
+
+</project>
+=======
 =======
     <parent>
         <groupId>org.globus.crux</groupId>
@@ -22,3 +36,4 @@
 =======
 </project>
 >>>>>>> updating poms for style check:build-tools/pom.xml
+>>>>>>> updating poms for style check:build-tools/pom.xml.orig
