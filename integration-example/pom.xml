@@ -18,7 +18,7 @@
             <plugin>
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-codegen-plugin</artifactId>
-                <version>${cxf.version}</version>
+                <version>2.3.0-SNAPSHOT</version>
                 <executions>
                     <execution>
                         <id>generate-service</id>
@@ -49,13 +49,13 @@
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-frontend-jaxws</artifactId>
-            <version>2.2.3</version>
+            <version>2.3.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-transports-http</artifactId>
-            <version>2.2.3</version>
-        </dependency>      
+            <version>2.3.0-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>${groupId}</groupId>
             <artifactId>ssl-proxy</artifactId>
@@ -74,7 +74,7 @@
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-transports-http</artifactId>
-            <version>2.2.3</version>
+            <version>2.3.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

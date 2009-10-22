@@ -7,7 +7,7 @@
     <artifactId>ssl-proxy</artifactId>
     <parent>
         <groupId>org.globus.crux</groupId>
-        <artifactId>parent</artifactId>
+        <artifactId>security</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <version>1.0-SNAPSHOT</version>
@@ -36,7 +36,7 @@
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
+            <artifactId>slf4j-api</artifactId>                
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
