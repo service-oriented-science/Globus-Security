@@ -27,7 +27,19 @@ public abstract class FileBasedStore<T> {
     }
 
     public abstract void loadWrappers(String[] locations)
+<<<<<<< HEAD:ssl-proxy/src/main/java/org/globus/security/filestore/FileBasedStore.java.orig.orig
+<<<<<<< HEAD:ssl-proxy/src/main/java/org/globus/security/filestore/FileBasedStore.java.orig
+<<<<<<< HEAD:ssl-proxy/src/main/java/org/globus/security/filestore/FileBasedStore.java
+            throws FileStoreException;
+=======
         throws FileStoreException;
+>>>>>>> Changed up exception, working to get proxy loaded up in keystore:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedStore.java
+=======
+            throws FileStoreException;
+>>>>>>> Updating for merge:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedStore.java
+=======
+        throws FileStoreException;
+>>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedStore.java
 
 
     public abstract Map<String, FileBasedObject<T>> getWrapperMap();

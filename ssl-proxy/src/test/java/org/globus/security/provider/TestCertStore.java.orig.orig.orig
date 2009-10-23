@@ -15,12 +15,24 @@
  */
 package org.globus.security.provider;
 
+<<<<<<< HEAD:ssl-proxy/src/test/java/org/globus/security/provider/TestCertStore.java.orig.orig
+<<<<<<< HEAD:ssl-proxy/src/test/java/org/globus/security/provider/TestCertStore.java.orig
+<<<<<<< HEAD:ssl-proxy/src/test/java/org/globus/security/provider/TestCertStore.java
+=======
+=======
+>>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/provider/FileBasedCertStore.java
 import org.globus.security.filestore.FileBasedStore;
 import org.globus.security.filestore.FileCertStoreParameters;
 import org.globus.security.filestore.FileStoreException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+<<<<<<< HEAD:ssl-proxy/src/test/java/org/globus/security/provider/TestCertStore.java.orig.orig
+>>>>>>> Some compilation errors fixed.:proxyProcessor/src/main/java/org/globus/security/provider/FileBasedCertStore.java
+=======
+>>>>>>> Updating for merge:proxyProcessor/src/main/java/org/globus/security/provider/FileBasedCertStore.java
+=======
+>>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/provider/FileBasedCertStore.java
 import java.security.InvalidAlgorithmParameterException;
 import java.security.cert.CRL;
 import java.security.cert.CRLSelector;
@@ -36,7 +48,20 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+<<<<<<< HEAD:ssl-proxy/src/test/java/org/globus/security/provider/TestCertStore.java.orig.orig
+<<<<<<< HEAD:ssl-proxy/src/test/java/org/globus/security/provider/TestCertStore.java.orig
+=======
+import org.globus.security.filestore.FileBasedStore;
+import org.globus.security.filestore.FileCertStoreParameters;
+import org.globus.security.filestore.FileStoreException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+=======
+>>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/provider/FileBasedCertStore.java
+
+>>>>>>> Updating for merge:proxyProcessor/src/main/java/org/globus/security/provider/FileBasedCertStore.java
 /**
  * FILL ME
  *
@@ -152,8 +177,24 @@ public class FileBasedCertStore extends CertStoreSpi {
         Vector<X509Certificate> certSet = new Vector<X509Certificate>();
 >>>>>>> Some compilation errors fixed.:proxyProcessor/src/main/java/org/globus/security/provider/FileBasedCertStore.java
         if (selector == null) {
+<<<<<<< HEAD:ssl-proxy/src/test/java/org/globus/security/provider/TestCertStore.java.orig.orig
+<<<<<<< HEAD:ssl-proxy/src/test/java/org/globus/security/provider/TestCertStore.java.orig
+            return this.certificate;
+        }
+
+        List certSet = new Vector();
+        Iterator<X509Certificate> iterator = this.certificate.iterator();
+        while (iterator.hasNext()) {
+            X509Certificate cert = iterator.next();
+            if (selector.match(cert)) {
+                certSet.add(cert);
+=======
+            for (TrustAnchor trustAnchor : (Collection<TrustAnchor>) caDelegate
+                    .getCollection()) {
+=======
             for (TrustAnchor trustAnchor : (Collection<TrustAnchor>)caDelegate
                 .getCollection()) {
+>>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/provider/FileBasedCertStore.java
                 certSet.add(trustAnchor.getTrustedCert());
             }
 
@@ -193,7 +234,13 @@ public class FileBasedCertStore extends CertStoreSpi {
      *          if an exception occurs
      */
     public Collection<? extends CRL> engineGetCRLs(CRLSelector selector)
+<<<<<<< HEAD:ssl-proxy/src/test/java/org/globus/security/provider/TestCertStore.java.orig.orig
+            throws CertStoreException {
+<<<<<<< HEAD:ssl-proxy/src/test/java/org/globus/security/provider/TestCertStore.java.orig
+=======
+=======
         throws CertStoreException {
+>>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/provider/FileBasedCertStore.java
 
         if (selector != null) {
             if (!(selector instanceof X509CRLSelector)) {

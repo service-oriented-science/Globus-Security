@@ -12,7 +12,11 @@ public abstract class FileBasedStore<T> {
 
     public static enum LoadFileType {
 
+<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedStore.java
+        CA_FILE, CRL_FILE, PROXY_FILE //, PRIVATE_KEY
+=======
         CA_FILE, CRL_FILE //, PRIVATE_KEY
+>>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedStore.java
     }
 
     public static FileBasedStore getFileBasedStore(LoadFileType fileType) {
@@ -21,13 +25,19 @@ public abstract class FileBasedStore<T> {
                 return new FileBasedCACertStore();
             case CRL_FILE:
                 return new FileBasedCRLStore();
+            case PROXY_FILE:
+                return new FileBasedProxyCredentialStore();
             default:
                 return null;
         }
     }
 
     public abstract void loadWrappers(String[] locations)
+<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedStore.java
+            throws FileStoreException;
+=======
         throws FileStoreException;
+>>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedStore.java
 
 
     public abstract Map<String, FileBasedObject<T>> getWrapperMap();

@@ -15,6 +15,12 @@
  */
 package org.globus.security.provider;
 
+<<<<<<< HEAD:ssl-proxy/src/test/java/org/globus/security/provider/TestProxyPathValidator.java.orig.orig
+<<<<<<< HEAD:ssl-proxy/src/test/java/org/globus/security/provider/TestProxyPathValidator.java.orig
+<<<<<<< HEAD:ssl-proxy/src/test/java/org/globus/security/provider/TestProxyPathValidator.java
+=======
+=======
+>>>>>>> reformatting:proxyProcessor/src/test/java/org/globus/security/provider/TestProxyPathValidator.java
 import org.globus.security.SigningPolicy;
 import org.globus.security.SigningPolicyStore;
 import org.globus.security.SigningPolicyStoreException;
@@ -30,6 +36,12 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import javax.security.auth.x500.X500Principal;
+<<<<<<< HEAD:ssl-proxy/src/test/java/org/globus/security/provider/TestProxyPathValidator.java.orig.orig
+>>>>>>> reformatting:proxyProcessor/src/test/java/org/globus/security/provider/TestProxyPathValidator.java
+=======
+>>>>>>> Updating for merge:proxyProcessor/src/test/java/org/globus/security/provider/TestProxyPathValidator.java
+=======
+>>>>>>> reformatting:proxyProcessor/src/test/java/org/globus/security/provider/TestProxyPathValidator.java
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.Reader;
@@ -52,6 +64,29 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+<<<<<<< HEAD:ssl-proxy/src/test/java/org/globus/security/provider/TestProxyPathValidator.java.orig.orig
+import javax.security.auth.x500.X500Principal;
+
+import org.globus.security.SigningPolicy;
+import org.globus.security.SigningPolicyStore;
+<<<<<<< HEAD:ssl-proxy/src/test/java/org/globus/security/provider/TestProxyPathValidator.java.orig
+import org.globus.security.SigningPolicyStoreException;
+=======
+>>>>>>> Updating for merge:proxyProcessor/src/test/java/org/globus/security/provider/TestProxyPathValidator.java
+import org.globus.security.SigningPolicyStoreParameters;
+import org.globus.security.X509ProxyCertPathParameters;
+import org.globus.security.X509ProxyCertPathValidatorResult;
+import org.globus.security.proxyExtension.ProxyCertInfo;
+import org.globus.security.proxyExtension.ProxyPolicy;
+import org.globus.security.proxyExtension.ProxyPolicyHandler;
+import org.globus.security.util.CertificateLoadUtil;
+import org.globus.security.util.SigningPolicyFileParser;
+
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
+=======
+>>>>>>> reformatting:proxyProcessor/src/test/java/org/globus/security/provider/TestProxyPathValidator.java
 public class TestProxyPathValidator {
 
     public static final String BASE = "validatorTest/";
@@ -1109,7 +1144,19 @@ public class TestProxyPathValidator {
         }
 
         public SigningPolicy getSigningPolicy(X500Principal caPrincipal)
+<<<<<<< HEAD:ssl-proxy/src/test/java/org/globus/security/provider/TestProxyPathValidator.java.orig.orig
+<<<<<<< HEAD:ssl-proxy/src/test/java/org/globus/security/provider/TestProxyPathValidator.java.orig
+<<<<<<< HEAD:ssl-proxy/src/test/java/org/globus/security/provider/TestProxyPathValidator.java
+                throws SigningPolicyStoreException {
+=======
             throws SigningPolicyStoreException {
+>>>>>>> reformatting:proxyProcessor/src/test/java/org/globus/security/provider/TestProxyPathValidator.java
+=======
+                throws CertStoreException {
+>>>>>>> Updating for merge:proxyProcessor/src/test/java/org/globus/security/provider/TestProxyPathValidator.java
+=======
+            throws SigningPolicyStoreException {
+>>>>>>> reformatting:proxyProcessor/src/test/java/org/globus/security/provider/TestProxyPathValidator.java
             return this.policies.get(caPrincipal);
         }
     }

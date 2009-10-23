@@ -15,11 +15,18 @@
  */
 package org.globus.security.util;
 
+<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/util/FileUtil.java
+import java.io.File;
+import java.io.IOException;
+
+import org.apache.commons.io.FileUtils;
+=======
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+>>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/util/FileUtil.java
 
 /**
  * FILL ME
@@ -29,14 +36,22 @@ import java.io.RandomAccessFile;
 public class FileUtil {
 
     public static File createFile(String filename)
+<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/util/FileUtil.java
+            throws SecurityException, IOException {
+=======
         throws SecurityException, IOException {
+>>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/util/FileUtil.java
 
         File f = new File(filename);
         if (!f.createNewFile()) {
             FileUtils.forceDelete(f);
             if (!f.createNewFile()) {
                 throw new SecurityException(
+<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/util/FileUtil.java
+                        "Failed to atomically create new file");
+=======
                     "Failed to atomically create new file");
+>>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/util/FileUtil.java
             }
         }
         return f;

@@ -15,18 +15,12 @@
  */
 package org.globus.security.filestore;
 
+import java.io.File;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-<<<<<<< HEAD:ssl-proxy/src/main/java/org/globus/security/filestore/FileBasedObject.java.orig.orig
-<<<<<<< HEAD:ssl-proxy/src/main/java/org/globus/security/filestore/FileBasedObject.java.orig
-<<<<<<< HEAD:ssl-proxy/src/main/java/org/globus/security/filestore/FileBasedObject.java
-=======
-import java.io.File;
-
->>>>>>> Changed up exception, working to get proxy loaded up in keystore:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedObject.java
-=======
->>>>>>> Updating for merge:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedObject.java
+<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedObject.java
 =======
 import java.io.File;
 
@@ -39,20 +33,37 @@ import java.io.File;
 public abstract class FileBasedObject<T> {
 
     private static Logger logger =
-        LoggerFactory.getLogger(FileBasedObject.class.getName());
+            LoggerFactory.getLogger(FileBasedObject.class.getName());
 
     private T object = null;
     private long lastModified = -1;
     private File file = null;
     private boolean changed = false;
 
+<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedObject.java
+    protected void init(File filename) throws FileStoreException {
+=======
     public void init(File filename) throws FileStoreException {
+>>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedObject.java
         validateFilename(filename);
         this.file = filename;
         this.object = createObject(this.file);
         this.lastModified = this.file.lastModified();
     }
 
+<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedObject.java
+    protected void init(String filename, T object_) throws FileStoreException {
+        validateFilename(new File(filename));
+        if (object_ == null) {
+            // FIXME: better exception?
+            throw new IllegalArgumentException("Object cannot be null");
+        }
+        this.object = object_;
+        this.file = new File(filename);
+    }
+
+=======
+>>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedObject.java
     protected T getObject() throws FileStoreException {
 
         reload();
@@ -68,9 +79,7 @@ public abstract class FileBasedObject<T> {
         this.changed = false;
         long latestLastModified = this.file.lastModified();
         if (this.lastModified < latestLastModified) {
-            this.object =
-                createObject(this.file);
-
+            this.object = createObject(this.file);
             this.lastModified = latestLastModified;
             this.changed = true;
         }
@@ -80,30 +89,19 @@ public abstract class FileBasedObject<T> {
         return this.file;
     }
 
+    // for creation of file from a file
     protected abstract T createObject(File filename)
-<<<<<<< HEAD:ssl-proxy/src/main/java/org/globus/security/filestore/FileBasedObject.java.orig.orig
-<<<<<<< HEAD:ssl-proxy/src/main/java/org/globus/security/filestore/FileBasedObject.java.orig
-<<<<<<< HEAD:ssl-proxy/src/main/java/org/globus/security/filestore/FileBasedObject.java
-            throws FileStoreException;
-
-    protected abstract void validateFilename(File filename)
+<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedObject.java
             throws FileStoreException;
 =======
         throws FileStoreException;
+>>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedObject.java
 
+    // for filename validation
     protected abstract void validateFilename(File filename)
-        throws FileStoreException;
->>>>>>> Changed up exception, working to get proxy loaded up in keystore:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedObject.java
-=======
+<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedObject.java
             throws FileStoreException;
-
-    protected abstract void validateFilename(File filename)
-            throws FileStoreException;
->>>>>>> Updating for merge:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedObject.java
 =======
-        throws FileStoreException;
-
-    protected abstract void validateFilename(File filename)
         throws FileStoreException;
 >>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedObject.java
 }

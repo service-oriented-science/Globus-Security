@@ -13,31 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.globus.security.provider;
+package org.globus.security;
+
+import java.security.InvalidAlgorithmParameterException;
+<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/SigningPolicyStore.java
 
 import javax.security.auth.x500.X500Principal;
-import java.security.InvalidAlgorithmParameterException;
+=======
+>>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/SigningPolicyStore.java
 
 /**
  * FILL ME
  *
- * @author ranantha@mcs.anl.gov
+ * @author ranantha@mcs.anl.gov // FIXME: Maybe a provider  access to this?
  */
-public class TestGlobusProvider extends Provider {
+public abstract class SigningPolicyStore {
 
     public SigningPolicyStore(SigningPolicyStoreParameters parameters)
-        throws InvalidAlgorithmParameterException {
-
-        super("GlobusTest", 1.0, "Globus Security Providers");
-
-        put("CertStore.TestCertStore",
-                "org.globus.security.provider.TestCertStore");
-        put("KeyStore.TestKeyStore",
-                "org.globus.security.provider.TestKeyStore");
+            throws InvalidAlgorithmParameterException {
 
     }
-}
 
     public abstract SigningPolicy getSigningPolicy(X500Principal caPrincipal)
+<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/SigningPolicyStore.java
+            throws SigningPolicyStoreException;
+=======
         throws SigningPolicyStoreException;
+>>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/SigningPolicyStore.java
 }

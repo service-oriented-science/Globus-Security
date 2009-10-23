@@ -15,8 +15,12 @@
  */
 package org.globus.security.provider;
 
+<<<<<<< HEAD:ssl-proxy/src/test/java/org/globus/security/provider/TestGlobusProvider.java.orig
+import java.security.Provider;
+=======
 import javax.security.auth.x500.X500Principal;
 import java.security.InvalidAlgorithmParameterException;
+>>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/SigningPolicyStore.java
 
 /**
  * FILL ME
@@ -25,8 +29,12 @@ import java.security.InvalidAlgorithmParameterException;
  */
 public class TestGlobusProvider extends Provider {
 
+<<<<<<< HEAD:ssl-proxy/src/test/java/org/globus/security/provider/TestGlobusProvider.java.orig
+    public TestGlobusProvider() {
+=======
     public SigningPolicyStore(SigningPolicyStoreParameters parameters)
         throws InvalidAlgorithmParameterException {
+>>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/SigningPolicyStore.java
 
         super("GlobusTest", 1.0, "Globus Security Providers");
 
@@ -35,9 +43,11 @@ public class TestGlobusProvider extends Provider {
         put("KeyStore.TestKeyStore",
                 "org.globus.security.provider.TestKeyStore");
 
+<<<<<<< HEAD:ssl-proxy/src/test/java/org/globus/security/provider/TestGlobusProvider.java.orig
     }
-}
-
+=======
     public abstract SigningPolicy getSigningPolicy(X500Principal caPrincipal)
         throws SigningPolicyStoreException;
+>>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/SigningPolicyStore.java
 }
+
