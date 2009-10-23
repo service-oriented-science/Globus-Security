@@ -30,7 +30,15 @@ public abstract class AbstractFileBasedStore<T> extends FileBasedStore<T> {
 
     @Override
     public void loadWrappers(String[] locations)
+<<<<<<< HEAD:ssl-proxy/src/main/java/org/globus/security/filestore/AbstractFileBasedStore.java.orig
+<<<<<<< HEAD:ssl-proxy/src/main/java/org/globus/security/filestore/AbstractFileBasedStore.java
             throws FileStoreException {
+=======
+        throws FileStoreException {
+>>>>>>> Changed up exception, working to get proxy loaded up in keystore:proxyProcessor/src/main/java/org/globus/security/filestore/AbstractFileBasedStore.java
+=======
+            throws FileStoreException {
+>>>>>>> Updating for merge:proxyProcessor/src/main/java/org/globus/security/filestore/AbstractFileBasedStore.java
 
         if (locations == null) {
             return;

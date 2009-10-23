@@ -37,7 +37,15 @@ import org.globus.security.util.CertificateLoadUtil;
 public class FileBasedTrustAnchor extends FileBasedObject<TrustAnchor> {
 =======
 public class FileBasedTrustAnchor extends FileBasedObject<TrustAnchor>
+<<<<<<< HEAD:ssl-proxy/src/main/java/org/globus/security/filestore/FileBasedTrustAnchor.java.orig.orig
+    implements TrustAnchorWrapper {
+>>>>>>> Changed up exception, working to get proxy loaded up in keystore:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedTrustAnchor.java
+=======
+public class FileBasedTrustAnchor extends FileBasedObject<TrustAnchor> {
+>>>>>>> updated poms with interproject dependencies:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedTrustAnchor.java
+=======
         implements TrustAnchorWrapper {
+>>>>>>> Updating for merge:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedTrustAnchor.java
 
     private static TrustAnchorFilter filter = new TrustAnchorFilter();
     private String alias;
@@ -90,7 +98,15 @@ public class FileBasedTrustAnchor extends FileBasedObject<TrustAnchor>
 
         TrustAnchor trustAnchor = getObject();
         this.alias = CertificateIOUtil.nameHash(
+<<<<<<< HEAD:ssl-proxy/src/main/java/org/globus/security/filestore/FileBasedTrustAnchor.java.orig.orig
+<<<<<<< HEAD:ssl-proxy/src/main/java/org/globus/security/filestore/FileBasedTrustAnchor.java
                 trustAnchor.getTrustedCert().getSubjectDN());
+=======
+            trustAnchor.getTrustedCert().getSubjectDN());
+>>>>>>> Changed up exception, working to get proxy loaded up in keystore:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedTrustAnchor.java
+=======
+                trustAnchor.getTrustedCert().getSubjectDN());
+>>>>>>> Updating for merge:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedTrustAnchor.java
         return trustAnchor;
     }
 

@@ -15,13 +15,6 @@
  */
 package org.globus.security;
 
-import org.bouncycastle.util.encoders.Base64;
-import org.globus.security.bc.BouncyCastleOpenSSLKey;
-import org.globus.security.filestore.FileBasedSigningPolicyStore;
-import org.globus.security.util.CertificateLoadUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.EOFException;
@@ -33,6 +26,14 @@ import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
 import java.util.Vector;
 
+import org.globus.security.bc.BouncyCastleOpenSSLKey;
+import org.globus.security.filestore.FileBasedSigningPolicyStore;
+import org.globus.security.util.CertificateLoadUtil;
+
+import org.bouncycastle.util.encoders.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * FILL ME
  * <p/>
@@ -43,7 +44,7 @@ import java.util.Vector;
 public class X509Credential {
 
     private static Logger logger =
-        LoggerFactory.getLogger(FileBasedSigningPolicyStore.class.getName());
+            LoggerFactory.getLogger(FileBasedSigningPolicyStore.class.getName());
 
     private PrivateKey key;
     private X509Certificate[] certChain;
@@ -55,9 +56,9 @@ public class X509Credential {
         }
 
         if ((certChain_ == null) ||
-            (certChain_.length < 1)) {
+                (certChain_.length < 1)) {
             throw new IllegalArgumentException(
-                "Atleast one public certificate required");
+                    "Atleast one public certificate required");
         }
 
         this.certChain = certChain_;
@@ -69,11 +70,11 @@ public class X509Credential {
     }
 
     protected void loadCredential(InputStream input)
-        throws CredentialException {
+            throws CredentialException {
 
         if (input == null) {
             throw new IllegalArgumentException(
-                "Inputstream to load X509Credential is null");
+                    "Inputstream to load X509Credential is null");
         }
 
         PrivateKey key = null;
@@ -91,7 +92,7 @@ public class X509Credential {
                 if (line.indexOf("BEGIN CERTIFICATE") != -1) {
                     byte[] data = getDecodedPEMObject(reader);
                     cert = CertificateLoadUtil
-                        .loadCertificate(new ByteArrayInputStream(data));
+                            .loadCertificate(new ByteArrayInputStream(data));
                     chain.addElement(cert);
                 } else if (line.indexOf("BEGIN RSA PRIVATE KEY") != -1) {
                     byte[] data = getDecodedPEMObject(reader);
@@ -140,7 +141,7 @@ public class X509Credential {
      * string is found in the data. Otherwise, returns null.
      */
     private static final byte[] getDecodedPEMObject(BufferedReader reader)
-        throws IOException {
+            throws IOException {
         String line;
         StringBuffer buf = new StringBuffer();
         while ((line = reader.readLine()) != null) {

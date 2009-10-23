@@ -20,6 +20,14 @@ import java.io.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+<<<<<<< HEAD:ssl-proxy/src/main/java/org/globus/security/filestore/FileBasedObject.java.orig
+<<<<<<< HEAD:ssl-proxy/src/main/java/org/globus/security/filestore/FileBasedObject.java
+=======
+import java.io.File;
+
+>>>>>>> Changed up exception, working to get proxy loaded up in keystore:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedObject.java
+=======
+>>>>>>> Updating for merge:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedObject.java
 /**
  * FILL ME
  *
@@ -70,8 +78,22 @@ public abstract class FileBasedObject<T> {
     }
 
     protected abstract T createObject(File filename)
+<<<<<<< HEAD:ssl-proxy/src/main/java/org/globus/security/filestore/FileBasedObject.java.orig
+<<<<<<< HEAD:ssl-proxy/src/main/java/org/globus/security/filestore/FileBasedObject.java
             throws FileStoreException;
 
     protected abstract void validateFilename(File filename)
             throws FileStoreException;
+=======
+        throws FileStoreException;
+
+    protected abstract void validateFilename(File filename)
+        throws FileStoreException;
+>>>>>>> Changed up exception, working to get proxy loaded up in keystore:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedObject.java
+=======
+            throws FileStoreException;
+
+    protected abstract void validateFilename(File filename)
+            throws FileStoreException;
+>>>>>>> Updating for merge:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedObject.java
 }
