@@ -32,7 +32,12 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <configuration>
+<<<<<<< HEAD:pom.xml
+                    <failsOnError>true</failsOnError>
+                    <configLocation>/globus/globus-security-checkstyle.xml</configLocation>
+=======
                     <!--<failsOnError>true</failsOnError>-->
+>>>>>>> 88b3bd2792524b57cfd12061b6e2188b3d675897:pom.xml
                 </configuration>
                 <dependencies>
                     <dependency>
