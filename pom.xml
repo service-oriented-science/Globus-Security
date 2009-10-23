@@ -32,9 +32,25 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <configuration>
-                    <failsOnError>true</failsOnError>
-                    <configLocation>/globus/globus-security-checkstyle.xml</configLocation>
+			<encoding>UTF-8</encoding>
                 </configuration>
+		<executions>
+                        <execution>
+                            <id>validate</id>
+                            <phase>validate</phase>
+                            <configuration>
+                                <configLocation>/globus-security/globus-security-checkstyle.xml</configLocation>
+                                <consoleOutput>true</consoleOutput>
+                                <failsOnError>false</failsOnError>
+                                <linkXRef>false</linkXRef>
+                                <sourceDirectory>${basedir}/src</sourceDirectory>
+                            </configuration>
+                            <goals>
+                                <goal>checkstyle</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+
                 <dependencies>
                     <dependency>
                         <groupId>org.globus.security</groupId>
