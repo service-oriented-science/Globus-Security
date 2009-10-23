@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.security.cert.CertStoreException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,7 +30,7 @@ public abstract class AbstractFileBasedStore<T> extends FileBasedStore<T> {
 
     @Override
     public void loadWrappers(String[] locations)
-            throws CertStoreException {
+        throws FileStoreException {
 
         if (locations == null) {
             return;
@@ -57,14 +56,14 @@ public abstract class AbstractFileBasedStore<T> extends FileBasedStore<T> {
                 String[] caCertFiles = file.list(getFilenameFilter());
                 if (caCertFiles == null) {
                     logger.debug("Cannot load certificates from " +
-                            file.getAbsolutePath() + " directory.");
+                                 file.getAbsolutePath() + " directory.");
                 } else {
                     logger.debug("Loading certificates from " +
-                            file.getAbsolutePath() + " directory.");
+                                 file.getAbsolutePath() + " directory.");
                     for (String caCertFile : caCertFiles) {
                         String caFilename = file.getPath() +
-                                File.separatorChar +
-                                caCertFile;
+                                            File.separatorChar +
+                                            caCertFile;
 
                         FileBasedObject<T> loaded = load(caFilename, updatedList);
                         wrapperMap.put(caFilename, loaded);
@@ -84,7 +83,7 @@ public abstract class AbstractFileBasedStore<T> extends FileBasedStore<T> {
             // in case certificates were removed
             if (!changed) {
                 if (this.rootObjects != null &&
-                        this.wrapperMap.size() != newWrapperMap.size()) {
+                    this.wrapperMap.size() != newWrapperMap.size()) {
                     changed = true;
                 }
             }
@@ -95,12 +94,12 @@ public abstract class AbstractFileBasedStore<T> extends FileBasedStore<T> {
         }
     }
 
-    private FileBasedObject<T> load(String fileName, Set<T> currentRoots) throws CertStoreException {
+    private FileBasedObject<T> load(String fileName, Set<T> currentRoots) throws FileStoreException {
         File caFile = new File(fileName);
 
 
         if (!caFile.canRead()) {
-            throw new CertStoreException("Cannot read file");
+            throw new FileStoreException("Cannot read file");
         }
 
         FileBasedObject<T> fbo = this.wrapperMap.get(fileName);
@@ -118,7 +117,7 @@ public abstract class AbstractFileBasedStore<T> extends FileBasedStore<T> {
         return this.rootObjects;
     }
 
-    protected abstract FileBasedObject<T> create(String fileName) throws CertStoreException;
+    protected abstract FileBasedObject<T> create(String fileName) throws FileStoreException;
 
     protected abstract FilenameFilter getFilenameFilter();
 

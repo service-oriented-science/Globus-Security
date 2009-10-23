@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2006 University of Chicago
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,7 +22,6 @@ import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.security.cert.CertStoreException;
 import java.security.cert.X509CRL;
 
 /**
@@ -34,26 +33,26 @@ public class FileBasedCRL extends FileBasedObject<X509CRL> {
 
     private static CrlFilter filter = new CrlFilter();
 
-    public FileBasedCRL(File file) throws CertStoreException {
+    public FileBasedCRL(File file) throws FileStoreException {
 
         init(file);
     }
 
-    protected X509CRL createObject(File file) throws CertStoreException {
+    protected X509CRL createObject(File file) throws FileStoreException {
 
         X509CRL crl;
         try {
             crl = CertificateLoadUtil.loadCrl(new FileInputStream(file));
         } catch (IOException e) {
-            throw new CertStoreException(e);
+            throw new FileStoreException(e);
         } catch (GeneralSecurityException e) {
-            throw new CertStoreException(e);
+            throw new FileStoreException(e);
         }
 
         return crl;
     }
 
-    protected void validateFilename(File file) throws CertStoreException {
+    protected void validateFilename(File file) throws FileStoreException {
 
         if (!filter.accept(null, file.getAbsolutePath())) {
             // FIXME exceptions
@@ -61,7 +60,7 @@ public class FileBasedCRL extends FileBasedObject<X509CRL> {
         }
     }
 
-    public X509CRL getCrl() throws CertStoreException {
+    public X509CRL getCrl() throws FileStoreException {
 
         return getObject();
     }
@@ -80,13 +79,11 @@ public class FileBasedCRL extends FileBasedObject<X509CRL> {
 
             int length = file.length();
             return length > 3 &&
-                    file.charAt(length - 3) == '.' &&
-                    file.charAt(length - 2) == 'r' &&
-                    file.charAt(length - 1) >= '0' &&
-                    file.charAt(length - 1) <= '9';
+                   file.charAt(length - 3) == '.' &&
+                   file.charAt(length - 2) == 'r' &&
+                   file.charAt(length - 1) >= '0' &&
+                   file.charAt(length - 1) <= '9';
 
         }
     }
-
-
 }

@@ -26,8 +26,10 @@ public class FileBasedKeyStoreParameters
 
     }
 
-    public FileBasedKeyStoreParameters(String[] certDirs_, String defaultCertDir_,
-                                       String userCertFilename_, String userKeyFilename_,
+    public FileBasedKeyStoreParameters(String[] certDirs_,
+                                       String defaultCertDir_,
+                                       String userCertFilename_,
+                                       String userKeyFilename_,
                                        KeyStore.ProtectionParameter protectionParameter_) {
         this(certDirs_, defaultCertDir_);
         this.userCertFilename = userCertFilename_;
@@ -35,9 +37,21 @@ public class FileBasedKeyStoreParameters
         this.protectionParameter = protectionParameter_;
     }
 
-    public FileBasedKeyStoreParameters(String[] certDirs_, String defaultCertDir_,
+    public FileBasedKeyStoreParameters(String[] certDirs_,
+                                       String defaultCertDir_,
                                        String proxyFilename_) {
         this(certDirs_, defaultCertDir_);
+        this.proxyFilename = proxyFilename_;
+    }
+
+    public FileBasedKeyStoreParameters(String[] certDirs_,
+                                       String defaultCertDir_,
+                                       String userCertFilename_,
+                                       String userKeyFilename_,
+                                       KeyStore.ProtectionParameter protectionParameter_,
+                                       String proxyFilename_) {
+        this(certDirs_, defaultCertDir_, userCertFilename_, userKeyFilename_,
+             protectionParameter_);
         this.proxyFilename = proxyFilename_;
     }
 

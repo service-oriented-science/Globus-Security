@@ -23,7 +23,6 @@ import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.security.cert.CertStoreException;
 import java.security.cert.TrustAnchor;
 import java.security.cert.X509Certificate;
 
@@ -39,7 +38,7 @@ public class FileBasedTrustAnchor extends FileBasedObject<TrustAnchor> {
     private String alias;
     private TrustAnchor memoryAnchor;
 
-    public FileBasedTrustAnchor(File file) throws CertStoreException {
+    public FileBasedTrustAnchor(File file) throws FileStoreException {
         init(file);
 
     }
@@ -53,11 +52,11 @@ public class FileBasedTrustAnchor extends FileBasedObject<TrustAnchor> {
         return alias;
     }
 
-    public void refresh() throws CertStoreException {
+    public void refresh() throws FileStoreException {
         super.reload();
     }
 
-    protected TrustAnchor createObject(File file) throws CertStoreException {
+    protected TrustAnchor createObject(File file) throws FileStoreException {
         X509Certificate certificate;
         if (memoryAnchor != null) {
             return memoryAnchor;
@@ -66,15 +65,15 @@ public class FileBasedTrustAnchor extends FileBasedObject<TrustAnchor> {
             certificate = CertificateLoadUtil.loadCertificate(
                 new FileInputStream(file));
         } catch (IOException e) {
-            throw new CertStoreException(e);
+            throw new FileStoreException(e);
         } catch (GeneralSecurityException e) {
-            throw new CertStoreException(e);
+            throw new FileStoreException(e);
         }
 
         return new TrustAnchor(certificate, null);
     }
 
-    protected void validateFilename(File file) throws CertStoreException {
+    protected void validateFilename(File file) throws FileStoreException {
 
         if (!filter.accept(file.getParentFile(), file.getName())) {
             // FIXME exceptions
@@ -82,7 +81,7 @@ public class FileBasedTrustAnchor extends FileBasedObject<TrustAnchor> {
         }
     }
 
-    public TrustAnchor getTrustAnchor() throws CertStoreException {
+    public TrustAnchor getTrustAnchor() throws FileStoreException {
 
         TrustAnchor trustAnchor = getObject();
         this.alias = CertificateIOUtil.nameHash(
