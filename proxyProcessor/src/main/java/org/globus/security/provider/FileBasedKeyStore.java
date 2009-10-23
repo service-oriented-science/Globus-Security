@@ -1,16 +1,5 @@
 package org.globus.security.provider;
 
-import org.globus.security.filestore.FileBasedKeyStoreParameters;
-import org.globus.security.filestore.FileBasedStore;
-import static org.globus.security.filestore.FileBasedStore.LoadFileType;
-import org.globus.security.filestore.FileBasedTrustAnchor;
-import org.globus.security.filestore.FileStoreException;
-import org.globus.security.filestore.TrustAnchorWrapper;
-import static org.globus.security.util.CertificateIOUtil.writeCertificate;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,7 +10,6 @@ import java.security.KeyStoreException;
 import java.security.KeyStoreSpi;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
-import java.security.cert.CertStoreException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.TrustAnchor;
@@ -37,6 +25,7 @@ import org.globus.security.filestore.FileBasedKeyStoreParameters;
 import org.globus.security.filestore.FileBasedStore;
 import static org.globus.security.filestore.FileBasedStore.LoadFileType;
 import org.globus.security.filestore.FileBasedTrustAnchor;
+import org.globus.security.filestore.FileStoreException;
 import static org.globus.security.util.CertificateIOUtil.writeCertificate;
 
 import org.slf4j.Logger;

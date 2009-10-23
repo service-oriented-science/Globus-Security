@@ -15,12 +15,6 @@
  */
 package org.globus.security.provider;
 
-import org.globus.security.filestore.FileBasedStore;
-import org.globus.security.filestore.FileCertStoreParameters;
-import org.globus.security.filestore.FileStoreException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.security.InvalidAlgorithmParameterException;
 import java.security.cert.CRL;
 import java.security.cert.CRLSelector;
@@ -37,6 +31,13 @@ import java.security.cert.X509Certificate;
 import java.util.Collection;
 import java.util.Vector;
 
+import org.globus.security.filestore.FileBasedStore;
+import org.globus.security.filestore.FileCertStoreParameters;
+import org.globus.security.filestore.FileStoreException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * FILL ME
@@ -46,14 +47,14 @@ import java.util.Vector;
 public class FileBasedCertStore extends CertStoreSpi {
 
     private static Logger logger =
-        LoggerFactory.getLogger(FileBasedCertStore.class.getName());
+            LoggerFactory.getLogger(FileBasedCertStore.class.getName());
 
 
     private FileBasedStore caDelegate =
-        FileBasedStore.getFileBasedStore(FileBasedStore.LoadFileType.CA_FILE);
+            FileBasedStore.getFileBasedStore(FileBasedStore.LoadFileType.CA_FILE);
 
     private FileBasedStore crlDelegate =
-        FileBasedStore.getFileBasedStore(FileBasedStore.LoadFileType.CRL_FILE);
+            FileBasedStore.getFileBasedStore(FileBasedStore.LoadFileType.CRL_FILE);
 
     private FileCertStoreParameters storeParams = null;
 
@@ -65,14 +66,14 @@ public class FileBasedCertStore extends CertStoreSpi {
      *          if the initialization parameters are inappropriate for this <code>CertStoreSpi</code>
      */
     public FileBasedCertStore(CertStoreParameters params)
-        throws InvalidAlgorithmParameterException {
+            throws InvalidAlgorithmParameterException {
         super(params);
         if (params == null) {
             throw new InvalidAlgorithmParameterException();
         }
 
         if (params instanceof FileCertStoreParameters) {
-            this.storeParams = (FileCertStoreParameters)params;
+            this.storeParams = (FileCertStoreParameters) params;
         } else {
             throw new InvalidAlgorithmParameterException();
         }
@@ -120,14 +121,14 @@ public class FileBasedCertStore extends CertStoreSpi {
         // here. Custom
         Vector<X509Certificate> certSet = new Vector<X509Certificate>();
         if (selector == null) {
-            for (TrustAnchor trustAnchor : (Collection<TrustAnchor>)caDelegate
-                .getCollection()) {
+            for (TrustAnchor trustAnchor : (Collection<TrustAnchor>) caDelegate
+                    .getCollection()) {
                 certSet.add(trustAnchor.getTrustedCert());
             }
 
         } else {
-            for (TrustAnchor trustAnchor : (Collection<TrustAnchor>)caDelegate
-                .getCollection()) {
+            for (TrustAnchor trustAnchor : (Collection<TrustAnchor>) caDelegate
+                    .getCollection()) {
                 X509Certificate cert = trustAnchor.getTrustedCert();
                 if (selector.match(cert)) {
                     certSet.add(cert);
@@ -160,7 +161,7 @@ public class FileBasedCertStore extends CertStoreSpi {
      *          if an exception occurs
      */
     public Collection<? extends CRL> engineGetCRLs(CRLSelector selector)
-        throws CertStoreException {
+            throws CertStoreException {
 
         if (selector != null) {
             if (!(selector instanceof X509CRLSelector)) {
@@ -185,8 +186,8 @@ public class FileBasedCertStore extends CertStoreSpi {
             return crlDelegate.getCollection();
         } else {
             Vector<X509CRL> certSet = new Vector<X509CRL>();
-            for (X509CRL crl : (Collection<X509CRL>)crlDelegate
-                .getCollection()) {
+            for (X509CRL crl : (Collection<X509CRL>) crlDelegate
+                    .getCollection()) {
                 if (selector.match(crl)) {
                     certSet.add(crl);
                 }

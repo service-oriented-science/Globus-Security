@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2006 University of Chicago
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,19 +35,19 @@ public class ProxyPolicy implements DEREncodable {
      * Impersonation proxy OID
      */
     public static final DERObjectIdentifier IMPERSONATION
-        = new DERObjectIdentifier("1.3.6.1.5.5.7.21.1");
+            = new DERObjectIdentifier("1.3.6.1.5.5.7.21.1");
 
     /**
      * Independent proxy OID
      */
     public static final DERObjectIdentifier INDEPENDENT
-        = new DERObjectIdentifier("1.3.6.1.5.5.7.21.2");
+            = new DERObjectIdentifier("1.3.6.1.5.5.7.21.2");
 
     /**
      * Limited proxy OID
      */
     public static final DERObjectIdentifier LIMITED
-        = new DERObjectIdentifier("1.3.6.1.4.1.3536.1.1.1.9");
+            = new DERObjectIdentifier("1.3.6.1.4.1.3536.1.1.1.9");
 
     private DERObjectIdentifier policyLanguage;
     private DEROctetString policy;
@@ -62,13 +62,13 @@ public class ProxyPolicy implements DEREncodable {
         if (seq.size() < 1) {
             throw new IllegalArgumentException();
         }
-        this.policyLanguage = (DERObjectIdentifier)seq.getObjectAt(0);
+        this.policyLanguage = (DERObjectIdentifier) seq.getObjectAt(0);
         if (seq.size() > 1) {
             DEREncodable obj = seq.getObjectAt(1);
             if (obj instanceof DERTaggedObject) {
-                obj = ((DERTaggedObject)obj).getObject();
+                obj = ((DERTaggedObject) obj).getObject();
             }
-            this.policy = (DEROctetString)obj;
+            this.policy = (DEROctetString) obj;
         }
         checkConstraints();
     }
@@ -127,7 +127,7 @@ public class ProxyPolicy implements DEREncodable {
      * @param policyLanguage the language policy Oid.
      */
     public ProxyPolicy(DERObjectIdentifier policyLanguage) {
-        this(policyLanguage, (byte[])null);
+        this(policyLanguage, (byte[]) null);
     }
 
     /**
@@ -151,8 +151,8 @@ public class ProxyPolicy implements DEREncodable {
 
     protected void checkConstraints() {
         if ((this.policyLanguage.equals(IMPERSONATION) ||
-             this.policyLanguage.equals(INDEPENDENT)) &&
-            this.policy != null) {
+                this.policyLanguage.equals(INDEPENDENT)) &&
+                this.policy != null) {
             throw new IllegalArgumentException();
         }
     }
@@ -173,8 +173,8 @@ public class ProxyPolicy implements DEREncodable {
      */
     public String getPolicyAsString() {
         return (this.policy != null) ?
-               new String(this.policy.getOctets()) :
-               null;
+                new String(this.policy.getOctets()) :
+                null;
     }
 
     /**

@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2006 University of Chicago
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,17 +15,6 @@
  */
 package org.globus.security.filestore;
 
-import org.globus.security.SigningPolicy;
-import org.globus.security.SigningPolicyStore;
-import org.globus.security.SigningPolicyStoreParameters;
-import org.globus.security.provider.GlobusProvider;
-import static org.testng.AssertJUnit.assertFalse;
-import static org.testng.AssertJUnit.assertTrue;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-
-import javax.security.auth.x500.X500Principal;
 import java.io.File;
 import java.security.Security;
 import java.security.cert.CRL;
@@ -37,6 +26,19 @@ import java.security.cert.X509CertSelector;
 import java.security.cert.X509Certificate;
 import java.util.Collection;
 import java.util.Iterator;
+
+import javax.security.auth.x500.X500Principal;
+
+import org.globus.security.SigningPolicy;
+import org.globus.security.SigningPolicyStore;
+import org.globus.security.SigningPolicyStoreParameters;
+import org.globus.security.provider.GlobusProvider;
+
+import static org.testng.AssertJUnit.assertFalse;
+import static org.testng.AssertJUnit.assertTrue;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 /**
  * FILL ME
@@ -58,21 +60,21 @@ public class TestFileBasedTrustStore {
         // FIXME: mock the actual reading of the files and test the idea that
         // modified is used and map is used to pull information.
         this.dir = new DirSetupUtil(new String[]{"testTrustStore/1c3f2ca8.0",
-                                                 "testTrustStore/b38b4d8c.0",
-                                                 "testTrustStore/d1b603c3.0",
-                                                 "testTrustStore/1c3f2ca8.r0",
-                                                 "testTrustStore/d1b603c3.r0",
-                                                 "testTrustStore/1c3f2ca8.signing_policy",
-                                                 "testTrustStore/b38b4d8c.signing_policy",
-                                                 "testTrustStore/d1b603c3.signing_policy"
+                "testTrustStore/b38b4d8c.0",
+                "testTrustStore/d1b603c3.0",
+                "testTrustStore/1c3f2ca8.r0",
+                "testTrustStore/d1b603c3.r0",
+                "testTrustStore/1c3f2ca8.signing_policy",
+                "testTrustStore/b38b4d8c.signing_policy",
+                "testTrustStore/d1b603c3.signing_policy"
         });
         this.dir.createTempDirectory();
         this.dir.copy();
         parameters = new FileCertStoreParameters(
-            new String[]{this.dir.getTempDirectoryName()});
+                new String[]{this.dir.getTempDirectoryName()});
         policyParameters =
-            new FileSigningPolicyStoreParameters(new String[]{
-                this.dir.getTempDirectoryName()});
+                new FileSigningPolicyStoreParameters(new String[]{
+                        this.dir.getTempDirectoryName()});
 
         Security.addProvider(new GlobusProvider());
 
@@ -86,18 +88,18 @@ public class TestFileBasedTrustStore {
         File tempDir = this.dir.getTempDirectory();
         // number of CA files
         String[] caFiles =
-            tempDir.list(FileBasedTrustAnchor.getTrustAnchorFilter());
+                tempDir.list(FileBasedTrustAnchor.getTrustAnchorFilter());
 
 
         // Get comparison parameters
         this.certStore = CertStore.getInstance("X509ProxyFileStore",
-                                               parameters);
+                parameters);
 
         assert certStore != null;
 
 
         this.trustAnchors =
-            certStore.getCertificates(new X509CertSelector());
+                certStore.getCertificates(new X509CertSelector());
 
         assert trustAnchors != null;
 
@@ -126,17 +128,17 @@ public class TestFileBasedTrustStore {
         File tempDir = this.dir.getTempDirectory();
         // number of CRL files
         String[] crlFiles =
-            tempDir.list(FileBasedCRL.getCrlFilter());
+                tempDir.list(FileBasedCRL.getCrlFilter());
 
 
         // Get comparison parameters
         this.certStore = CertStore.getInstance("X509ProxyFileStore",
-                                               parameters);
+                parameters);
 
         assert certStore != null;
 
         Collection<? extends CRL> crls =
-            certStore.getCRLs(null);
+                certStore.getCRLs(null);
 
         assert crls != null;
 
@@ -161,10 +163,10 @@ public class TestFileBasedTrustStore {
         File tempDir = this.dir.getTempDirectory();
         // number of policy files
         String[] policyFiles =
-            tempDir.list(FileBasedSigningPolicy.getSigningPolicyFilter());
+                tempDir.list(FileBasedSigningPolicy.getSigningPolicyFilter());
 
         SigningPolicyStore store =
-            new FileBasedSigningPolicyStore(this.policyParameters);
+                new FileBasedSigningPolicyStore(this.policyParameters);
 
         SigningPolicy policy = store.getSigningPolicy(null);
 
@@ -178,7 +180,7 @@ public class TestFileBasedTrustStore {
 
         while (iterator.hasNext()) {
 
-            X509Certificate certificate = (X509Certificate)iterator.next();
+            X509Certificate certificate = (X509Certificate) iterator.next();
 
             X500Principal principal = certificate.getIssuerX500Principal();
 

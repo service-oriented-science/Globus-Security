@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2006 University of Chicago
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -56,7 +56,7 @@ public class TestKeyStore extends KeyStoreSpi {
      *          wrong).
      */
     public Key engineGetKey(String alias, char[] password)
-        throws NoSuchAlgorithmException, UnrecoverableKeyException {
+            throws NoSuchAlgorithmException, UnrecoverableKeyException {
         throw new UnsupportedOperationException();
     }
 
@@ -130,7 +130,7 @@ public class TestKeyStore extends KeyStoreSpi {
      */
     public void engineSetKeyEntry(String alias, Key key, char[] password,
                                   Certificate[] chain)
-        throws KeyStoreException {
+            throws KeyStoreException {
         throw new UnsupportedOperationException();
     }
 
@@ -154,7 +154,7 @@ public class TestKeyStore extends KeyStoreSpi {
      *          if this operation fails.
      */
     public void engineSetKeyEntry(String alias, byte[] key, Certificate[] chain)
-        throws KeyStoreException {
+            throws KeyStoreException {
         throw new UnsupportedOperationException();
     }
 
@@ -175,15 +175,15 @@ public class TestKeyStore extends KeyStoreSpi {
      *          some other reason.
      */
     public void engineSetCertificateEntry(String alias, Certificate cert)
-        throws KeyStoreException {
+            throws KeyStoreException {
         if (cert == null) {
             return;
         }
         if (cert instanceof X509Certificate) {
-            this.certificateMap.put(alias, (X509Certificate)cert);
+            this.certificateMap.put(alias, (X509Certificate) cert);
         } else {
             throw new IllegalArgumentException(
-                "Certificate should be X509Cert");
+                    "Certificate should be X509Cert");
         }
 
     }
@@ -298,7 +298,7 @@ public class TestKeyStore extends KeyStoreSpi {
      *                             keystore data could not be stored
      */
     public void engineStore(OutputStream stream, char[] password)
-        throws IOException, NoSuchAlgorithmException, CertificateException {
+            throws IOException, NoSuchAlgorithmException, CertificateException {
         throw new UnsupportedOperationException();
     }
 
@@ -327,7 +327,7 @@ public class TestKeyStore extends KeyStoreSpi {
      *                             could not be loaded
      */
     public void engineLoad(InputStream stream, char[] password)
-        throws IOException, NoSuchAlgorithmException, CertificateException {
+            throws IOException, NoSuchAlgorithmException, CertificateException {
         // To force keystore initialization
         // empty impl.
     }

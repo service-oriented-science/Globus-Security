@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2006 University of Chicago
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -41,8 +41,8 @@ public class KeyStoreUtil {
      * @throws KeyStoreException
      */
     public static Collection<? extends Certificate> getTrustedCertificates(
-        KeyStore keyStore, X509CertSelector selector)
-        throws KeyStoreException {
+            KeyStore keyStore, X509CertSelector selector)
+            throws KeyStoreException {
 
         Vector<X509Certificate> certificates = new Vector<X509Certificate>();
         Enumeration<String> aliases = keyStore.aliases();
@@ -52,10 +52,10 @@ public class KeyStoreUtil {
                 // If a specific impl of keystore requires refresh, this would be a
                 // good place to add it.
                 Certificate certificate =
-                    keyStore.getCertificate(alias);
+                        keyStore.getCertificate(alias);
                 if (certificate instanceof X509Certificate) {
                     X509Certificate x509Cert =
-                        (X509Certificate)certificate;
+                            (X509Certificate) certificate;
                     if (selector.match(certificate)) {
                         certificates.add(x509Cert);
                     }

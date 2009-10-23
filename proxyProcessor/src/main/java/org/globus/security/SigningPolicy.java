@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2006 University of Chicago
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,13 +15,14 @@
  */
 package org.globus.security;
 
-import org.globus.security.util.CertificateUtil;
-import org.globus.security.util.SigningPolicyFileParser;
-
-import javax.security.auth.x500.X500Principal;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.security.auth.x500.X500Principal;
+
+import org.globus.security.util.CertificateUtil;
+import org.globus.security.util.SigningPolicyFileParser;
 
 /**
  * Represents a signing policy associated with a particular CA.
@@ -44,7 +45,7 @@ public class SigningPolicy {
         this.allowedDNs = new Vector<Pattern>(numberOfDNs);
         for (int i = 0; i < allowedDNs_.length; i++) {
             this.allowedDNs.add(SigningPolicyFileParser.
-                getPattern(allowedDNs_[i]));
+                    getPattern(allowedDNs_[i]));
 
         }
     }
@@ -86,7 +87,7 @@ public class SigningPolicy {
         // no policy
         // FIXME: probably should be false?
         if ((this.allowedDNs == null) ||
-            (this.allowedDNs.size() < 1)) {
+                (this.allowedDNs.size() < 1)) {
             return true;
         }
 

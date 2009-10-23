@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2006 University of Chicago
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,24 +15,6 @@
  */
 package org.globus.security.provider;
 
-import org.bouncycastle.asn1.DERObjectIdentifier;
-import org.bouncycastle.asn1.x509.BasicConstraints;
-import org.bouncycastle.asn1.x509.TBSCertificateStructure;
-import org.bouncycastle.asn1.x509.X509Extension;
-import org.bouncycastle.asn1.x509.X509Extensions;
-import org.globus.security.Constants;
-import org.globus.security.SigningPolicy;
-import org.globus.security.SigningPolicyStore;
-import org.globus.security.X509ProxyCertPathParameters;
-import org.globus.security.X509ProxyCertPathValidatorResult;
-import org.globus.security.proxyExtension.ProxyCertInfo;
-import org.globus.security.proxyExtension.ProxyPolicy;
-import org.globus.security.proxyExtension.ProxyPolicyHandler;
-import org.globus.security.util.CertificateUtil;
-import org.globus.security.util.KeyStoreUtil;
-import org.globus.security.util.ProxyCertificateUtil;
-
-import javax.security.auth.x500.X500Principal;
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -69,6 +51,26 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.security.auth.x500.X500Principal;
+
+import org.globus.security.Constants;
+import org.globus.security.SigningPolicy;
+import org.globus.security.SigningPolicyStore;
+import org.globus.security.X509ProxyCertPathParameters;
+import org.globus.security.X509ProxyCertPathValidatorResult;
+import org.globus.security.proxyExtension.ProxyCertInfo;
+import org.globus.security.proxyExtension.ProxyPolicy;
+import org.globus.security.proxyExtension.ProxyPolicyHandler;
+import org.globus.security.util.CertificateUtil;
+import org.globus.security.util.KeyStoreUtil;
+import org.globus.security.util.ProxyCertificateUtil;
+
+import org.bouncycastle.asn1.DERObjectIdentifier;
+import org.bouncycastle.asn1.x509.BasicConstraints;
+import org.bouncycastle.asn1.x509.TBSCertificateStructure;
+import org.bouncycastle.asn1.x509.X509Extension;
+import org.bouncycastle.asn1.x509.X509Extensions;
 
 /**
  * Implementation of the CertPathValidatorSpi and the logic for X.509 Proxy Path
@@ -111,17 +113,17 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
      */
     public CertPathValidatorResult engineValidate(CertPath certPath,
                                                   CertPathParameters params)
-        throws CertPathValidatorException, InvalidAlgorithmParameterException {
+            throws CertPathValidatorException, InvalidAlgorithmParameterException {
 
         if (certPath == null) {
             throw new IllegalArgumentException(
-                "Certificate path cannot be null");
+                    "Certificate path cannot be null");
         }
 
         List list = certPath.getCertificates();
         if (list.size() < 1) {
             throw new IllegalArgumentException(
-                "Certificate path cannot be empty");
+                    "Certificate path cannot be empty");
         }
 
         parseParameters(params);
@@ -141,17 +143,17 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
     }
 
     protected void parseParameters(CertPathParameters params)
-        throws InvalidAlgorithmParameterException {
+            throws InvalidAlgorithmParameterException {
 
         if (!(params instanceof X509ProxyCertPathParameters)) {
             throw new IllegalArgumentException("Parameter of type "
-                                               +
-                                               X509ProxyCertPathParameters.class
-                                                   .getName() + " required");
+                    +
+                    X509ProxyCertPathParameters.class
+                            .getName() + " required");
         }
 
         X509ProxyCertPathParameters parameters =
-            (X509ProxyCertPathParameters)params;
+                (X509ProxyCertPathParameters) params;
         this.keyStore = parameters.getKeyStore();
         this.certStore = parameters.getCertStore();
         this.policyStore = parameters.getSigningPolicyStore();
@@ -172,7 +174,7 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
      * @throws CertPathValidatorException
      */
     protected CertPathValidatorResult validate(CertPath certPath)
-        throws CertPathValidatorException {
+            throws CertPathValidatorException {
 
         List<? extends Certificate> certificates = certPath.getCertificates();
         if (certificates.isEmpty()) {
@@ -189,16 +191,16 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
 
         int proxyDepth = 0;
 
-        cert = (X509Certificate)certificates.get(0);
+        cert = (X509Certificate) certificates.get(0);
 
         try {
             tbsCert = CertificateUtil.getTBSCertificateStructure(cert);
         } catch (CertificateException e) {
             throw new CertPathValidatorException("Error converting certificate",
-                                                 e);
+                    e);
         } catch (IOException e) {
             throw new CertPathValidatorException("Error converting certificate",
-                                                 e);
+                    e);
         }
 
 
@@ -206,10 +208,10 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
             certType = CertificateUtil.getCertificateType(tbsCert);
         } catch (CertificateException e) {
             throw new CertPathValidatorException(
-                "Error obtaining certificate type", e);
+                    "Error obtaining certificate type", e);
         } catch (IOException e) {
             throw new CertPathValidatorException(
-                "Error obtaining certificate type", e);
+                    "Error obtaining certificate type", e);
         }
         // validate the first certificate in chain
         checkCertificate(cert, certType);
@@ -222,133 +224,133 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
         for (int i = 1; i < certificates.size(); i++) {
 
             boolean certIsProxy = ProxyCertificateUtil.isProxy(certType);
-            issuerCert = (X509Certificate)certificates.get(i);
+            issuerCert = (X509Certificate) certificates.get(i);
             try {
                 issuerTbsCert =
-                    CertificateUtil.getTBSCertificateStructure(issuerCert);
+                        CertificateUtil.getTBSCertificateStructure(issuerCert);
             } catch (CertificateException e) {
                 throw new CertPathValidatorException(
-                    "Error converting certificate", e);
+                        "Error converting certificate", e);
             } catch (IOException e) {
                 throw new CertPathValidatorException(
-                    "Error converting certificate", e);
+                        "Error converting certificate", e);
             }
 
             try {
 
                 issuerCertType =
-                    CertificateUtil.getCertificateType(issuerTbsCert);
+                        CertificateUtil.getCertificateType(issuerTbsCert);
             } catch (CertificateException e) {
                 throw new CertPathValidatorException(
-                    "Error obtaining certificate type", e);
+                        "Error obtaining certificate type", e);
             } catch (IOException e) {
                 throw new CertPathValidatorException(
-                    "Error obtaining certificate type", e);
+                        "Error obtaining certificate type", e);
             }
 
             if (issuerCertType == Constants.CertificateType.CA) {
                 // PC can only be signed by EEC or PC
                 if (certIsProxy) {
                     throw new CertPathValidatorException(
-                        "Proxy certificate can be signed only by EEC or Proxy " +
-                        "Certificate. Certificate "
-                        + cert.getSubjectDN() + " violates this.");
+                            "Proxy certificate can be signed only by EEC or Proxy " +
+                                    "Certificate. Certificate "
+                                    + cert.getSubjectDN() + " violates this.");
                 }
 
                 try {
                     int pathLen =
-                        CertificateUtil.getCAPathConstraint(issuerTbsCert);
+                            CertificateUtil.getCAPathConstraint(issuerTbsCert);
                     if (pathLen < Integer.MAX_VALUE &&
-                        (i - proxyDepth - 1) > pathLen) {
+                            (i - proxyDepth - 1) > pathLen) {
                         throw new CertPathValidatorException(
-                            "Path length constaint of certificate " +
-                            issuerCert.getSubjectDN() + " voilated");
+                                "Path length constaint of certificate " +
+                                        issuerCert.getSubjectDN() + " voilated");
                     }
                 } catch (IOException e) {
                     throw new CertPathValidatorException(
-                        "Error obtaining CA Path constraint", e);
+                            "Error obtaining CA Path constraint", e);
                 }
             } else if (ProxyCertificateUtil.isGsi3Proxy(issuerCertType) ||
-                       ProxyCertificateUtil.isGsi4Proxy(issuerCertType)) {
+                    ProxyCertificateUtil.isGsi4Proxy(issuerCertType)) {
                 if (ProxyCertificateUtil.isGsi3Proxy(issuerCertType)) {
                     if (!ProxyCertificateUtil.isGsi3Proxy(certType)) {
                         throw new CertPathValidatorException(
-                            "Proxy certificate can only sign another proxy certificate of same type. Voilated by " +
-                            issuerCert.getSubjectDN() + " issuing "
-                            + cert.getSubjectDN());
+                                "Proxy certificate can only sign another proxy certificate of same type. Voilated by " +
+                                        issuerCert.getSubjectDN() + " issuing "
+                                        + cert.getSubjectDN());
                     }
                 } else if (ProxyCertificateUtil.isGsi4Proxy(issuerCertType)) {
                     if (!ProxyCertificateUtil.isGsi4Proxy(certType)) {
                         throw new CertPathValidatorException(
-                            "Proxy certificate can only sign another proxy certificate of same type. Voilated by " +
-                            issuerCert.getSubjectDN() + " issuing "
-                            + cert.getSubjectDN());
+                                "Proxy certificate can only sign another proxy certificate of same type. Voilated by " +
+                                        issuerCert.getSubjectDN() + " issuing "
+                                        + cert.getSubjectDN());
                     }
                 }
                 int pathLen;
                 try {
                     pathLen = ProxyCertificateUtil
-                        .getProxyPathConstraint(issuerTbsCert);
+                            .getProxyPathConstraint(issuerTbsCert);
                 } catch (IOException e) {
                     throw new CertPathValidatorException(
-                        "Error obtaining proxy path constraint", e);
+                            "Error obtaining proxy path constraint", e);
                 }
                 if (pathLen == 0) {
                     throw new CertPathValidatorException(
-                        "Proxy path length constraint violated of certificate " +
-                        issuerCert.getSubjectDN());
+                            "Proxy path length constraint violated of certificate " +
+                                    issuerCert.getSubjectDN());
                 }
                 if (pathLen < Integer.MAX_VALUE &&
-                    proxyDepth > pathLen) {
+                        proxyDepth > pathLen) {
                     throw new CertPathValidatorException(
-                        "Proxy path length constraint violated of certificate " +
-                        issuerCert.getSubjectDN());
+                            "Proxy path length constraint violated of certificate " +
+                                    issuerCert.getSubjectDN());
                 }
                 proxyDepth++;
             } else if (ProxyCertificateUtil.isGsi2Proxy(issuerCertType)) {
                 // PC can sign EEC or another PC only
                 if (!ProxyCertificateUtil.isGsi2Proxy(certType)) {
                     throw new CertPathValidatorException(
-                        "Proxy certificate can only sign another proxy certificate of same type. Voilated by " +
-                        issuerCert.getSubjectDN() + " issuing "
-                        + cert.getSubjectDN());
+                            "Proxy certificate can only sign another proxy certificate of same type. Voilated by " +
+                                    issuerCert.getSubjectDN() + " issuing "
+                                    + cert.getSubjectDN());
                 }
                 proxyDepth++;
             } else if (issuerCertType == Constants.CertificateType.EEC) {
                 if (!ProxyCertificateUtil.isProxy(certType)) {
                     throw new CertPathValidatorException(
-                        "EEC can only sign another proxy certificate. Voilated by " +
-                        issuerCert.getSubjectDN() + " issuing "
-                        + cert.getSubjectDN());
+                            "EEC can only sign another proxy certificate. Voilated by " +
+                                    issuerCert.getSubjectDN() + " issuing "
+                                    + cert.getSubjectDN());
 
                 }
             } else {
                 // this should never happen?
                 throw new CertPathValidatorException(
-                    "UNknown issuer type " + issuerCertType +
-                    " for certificate " + issuerCert.getSubjectDN());
+                        "UNknown issuer type " + issuerCertType +
+                                " for certificate " + issuerCert.getSubjectDN());
             }
             if (certIsProxy) {
                 // check all the proxy & issuer constraints
                 if (ProxyCertificateUtil.isGsi3Proxy(certType) ||
-                    ProxyCertificateUtil.isGsi4Proxy(certType)) {
+                        ProxyCertificateUtil.isGsi4Proxy(certType)) {
                     try {
                         checkProxyConstraints(tbsCert, issuerTbsCert, cert);
                     } catch (IOException e) {
                         throw new CertPathValidatorException(
-                            "Proxy constraint check failed on " +
-                            cert.getSubjectDN(), e);
+                                "Proxy constraint check failed on " +
+                                        cert.getSubjectDN(), e);
                     }
                     if ((certType ==
-                         Constants.CertificateType.GSI_3_RESTRICTED_PROXY)
-                        || (certType ==
+                            Constants.CertificateType.GSI_3_RESTRICTED_PROXY)
+                            || (certType ==
                             Constants.CertificateType.GSI_4_RESTRICTED_PROXY)) {
                         try {
                             checkRestrictedProxy(tbsCert, certPath, i);
                         } catch (IOException e) {
                             throw new CertPathValidatorException(
-                                "Restricted proxy check failed on " +
-                                cert.getSubjectDN(), e);
+                                    "Restricted proxy check failed on " +
+                                            cert.getSubjectDN(), e);
                         }
                     }
                 }
@@ -358,8 +360,8 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
                     checkKeyUsage(issuerTbsCert);
                 } catch (IOException e) {
                     throw new CertPathValidatorException(
-                        "Key usage check failed on " +
-                        issuerCert.getSubjectDN(), e);
+                            "Key usage check failed on " +
+                                    issuerCert.getSubjectDN(), e);
                 }
             }
 
@@ -372,7 +374,7 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
         }
 
         return new X509ProxyCertPathValidatorResult(this.identityCert,
-                                                    this.limited);
+                this.limited);
 
     }
 
@@ -399,11 +401,11 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
      * @throws CertPathValidatorException
      */
     protected CertPath findTrustedCertPath(CertPath certPath)
-        throws CertPathValidatorException {
+            throws CertPathValidatorException {
 
         // This will be the cert path to return
         List<X509Certificate> trustedCertPath =
-            new ArrayList<X509Certificate>();
+                new ArrayList<X509Certificate>();
         // This is the certs to validate
         List<? extends Certificate> certs = certPath.getCertificates();
 
@@ -414,10 +416,10 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
         Certificate certificate = certs.get(index);
         if (!(certificate instanceof X509Certificate)) {
             throw new CertPathValidatorException(
-                "Certificate of type " + X509Certificate.class.getName() +
-                " required");
+                    "Certificate of type " + X509Certificate.class.getName() +
+                            " required");
         }
-        x509Certificate = (X509Certificate)certificate;
+        x509Certificate = (X509Certificate) certificate;
 
         while (index < certsSize) {
 
@@ -426,10 +428,10 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
             Collection<? extends Certificate> caCerts;
             try {
                 caCerts = KeyStoreUtil
-                    .getTrustedCertificates(this.keyStore, certSelector);
+                        .getTrustedCertificates(this.keyStore, certSelector);
             } catch (KeyStoreException e) {
                 throw new CertPathValidatorException(
-                    "Error accessing trusted certificate store", e);
+                        "Error accessing trusted certificate store", e);
             }
             if (caCerts.size() > 0) {
 
@@ -439,11 +441,11 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
                 // trusted certificate found. return.
                 try {
                     CertificateFactory certFac =
-                        CertificateFactory.getInstance("X.509");
+                            CertificateFactory.getInstance("X.509");
                     return certFac.generateCertPath(trustedCertPath);
                 } catch (CertificateException e) {
                     throw new CertPathValidatorException(
-                        "Error generating trusted certificate path", e);
+                            "Error generating trusted certificate path", e);
                 }
             }
 
@@ -455,45 +457,45 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
             Certificate issuerCertificate = certs.get(index);
             if (!(certificate instanceof X509Certificate)) {
                 throw new CertPathValidatorException(
-                    "Certificate of type " + X509Certificate.class.getName() +
-                    " required");
+                        "Certificate of type " + X509Certificate.class.getName() +
+                                " required");
             }
             X509Certificate x509IssuerCertificate =
-                (X509Certificate)issuerCertificate;
+                    (X509Certificate) issuerCertificate;
 
             // check that the next one is indeed issuer
             Principal issuerDN = x509Certificate.getIssuerDN();
             Principal issuerCertDN = x509IssuerCertificate.getSubjectDN();
             if (!(issuerDN.equals(issuerCertDN))) {
                 throw new IllegalArgumentException(
-                    "Incorrect certificate path, certificate in chain can only " +
-                    "be issuer of previous certificate");
+                        "Incorrect certificate path, certificate in chain can only " +
+                                "be issuer of previous certificate");
             }
 
-            // validate integrity of signature                                                                          
+            // validate integrity of signature
             PublicKey publicKey = x509IssuerCertificate.getPublicKey();
             try {
                 x509Certificate.verify(publicKey);
             } catch (CertificateException e) {
                 throw new CertPathValidatorException(
-                    "Signature validation on the certificate " +
-                    x509Certificate.getSubjectDN(), e);
+                        "Signature validation on the certificate " +
+                                x509Certificate.getSubjectDN(), e);
             } catch (NoSuchAlgorithmException e) {
                 throw new CertPathValidatorException(
-                    "Signature validation on the certificate " +
-                    x509Certificate.getSubjectDN(), e);
+                        "Signature validation on the certificate " +
+                                x509Certificate.getSubjectDN(), e);
             } catch (InvalidKeyException e) {
                 throw new CertPathValidatorException(
-                    "Signature validation on the certificate " +
-                    x509Certificate.getSubjectDN(), e);
+                        "Signature validation on the certificate " +
+                                x509Certificate.getSubjectDN(), e);
             } catch (NoSuchProviderException e) {
                 throw new CertPathValidatorException(
-                    "Signature validation on the certificate " +
-                    x509Certificate.getSubjectDN(), e);
+                        "Signature validation on the certificate " +
+                                x509Certificate.getSubjectDN(), e);
             } catch (SignatureException e) {
                 throw new CertPathValidatorException(
-                    "Signature validation on the certificate " +
-                    x509Certificate.getSubjectDN(), e);
+                        "Signature validation on the certificate " +
+                                x509Certificate.getSubjectDN(), e);
             }
 
             trustedCertPath.add(x509Certificate);
@@ -506,26 +508,26 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
         Collection<? extends Certificate> caCerts;
         try {
             caCerts =
-                KeyStoreUtil.getTrustedCertificates(this.keyStore, selector);
+                    KeyStoreUtil.getTrustedCertificates(this.keyStore, selector);
         } catch (KeyStoreException e) {
             throw new CertPathValidatorException(e);
         }
         if (caCerts.size() < 1) {
             throw new CertPathValidatorException(
-                "No trusted path can be constructed");
+                    "No trusted path can be constructed");
         }
 
         trustedCertPath.add(x509Certificate);
         // FIXME: unchecked cast here. does the last certificate need to be validated?
-        trustedCertPath.add((X509Certificate)caCerts.iterator().next());
+        trustedCertPath.add((X509Certificate) caCerts.iterator().next());
 
         try {
             CertificateFactory certFac =
-                CertificateFactory.getInstance("X.509");
+                    CertificateFactory.getInstance("X.509");
             return certFac.generateCertPath(trustedCertPath);
         } catch (CertificateException e) {
             throw new CertPathValidatorException(
-                "Error generating trusted certificate path", e);
+                    "Error generating trusted certificate path", e);
         }
 
     }
@@ -538,16 +540,16 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
      *                                    yet valid.
      */
     protected void checkCertificateDateValidity(X509Certificate cert)
-        throws CertPathValidatorException {
+            throws CertPathValidatorException {
 
         try {
             cert.checkValidity();
         } catch (CertificateExpiredException e) {
             throw new CertPathValidatorException(
-                "Certificate " + cert.getSubjectDN() + " expired", e);
+                    "Certificate " + cert.getSubjectDN() + " expired", e);
         } catch (CertificateNotYetValidException e) {
             throw new CertPathValidatorException(
-                "Certificate " + cert.getSubjectDN() + " not yet valid.", e);
+                    "Certificate " + cert.getSubjectDN() + " not yet valid.", e);
         }
     }
 
@@ -563,11 +565,11 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
     protected void
     checkUnsupportedCriticalExtensions(X509Certificate certificate,
                                        Constants.CertificateType certType)
-        throws CertPathValidatorException {
+            throws CertPathValidatorException {
 
 
         Set<String> criticalExtensionOids =
-            certificate.getCriticalExtensionOIDs();
+                certificate.getCriticalExtensionOIDs();
         if (criticalExtensionOids == null) {
             return;
         }
@@ -575,14 +577,14 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
         while (iterator.hasNext()) {
             String oid = iterator.next();
             if (oid.equals(BASIC_CONSTRAINT_OID) ||
-                oid.equals(KEY_USAGE_OID) ||
-                (oid.equals(ProxyCertInfo.OID.toString()) &&
-                 ProxyCertificateUtil.isGsi4Proxy(certType)) ||
-                (oid.equals(ProxyCertInfo.OLD_OID.toString()) &&
-                 ProxyCertificateUtil.isGsi3Proxy(certType))) {
+                    oid.equals(KEY_USAGE_OID) ||
+                    (oid.equals(ProxyCertInfo.OID.toString()) &&
+                            ProxyCertificateUtil.isGsi4Proxy(certType)) ||
+                    (oid.equals(ProxyCertInfo.OLD_OID.toString()) &&
+                            ProxyCertificateUtil.isGsi3Proxy(certType))) {
             } else {
                 throw new CertPathValidatorException(
-                    "Critical extension with unsupported OID " + oid);
+                        "Critical extension with unsupported OID " + oid);
             }
 
         }
@@ -598,7 +600,7 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
      */
     protected void checkIdentity(X509Certificate cert,
                                  Constants.CertificateType certType)
-        throws CertPathValidatorException {
+            throws CertPathValidatorException {
 
         if (this.identityCert == null) {
             // check if limited
@@ -607,7 +609,7 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
 
                 if (this.rejectLimitedProxy) {
                     throw new CertPathValidatorException(
-                        "Limited proxy not accepted");
+                            "Limited proxy not accepted");
                 }
             }
 
@@ -628,7 +630,7 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
      *                                    expired, certificate is revoked.
      */
     protected void checkCRL(X509Certificate cert)
-        throws CertPathValidatorException {
+            throws CertPathValidatorException {
 
         X500Principal certIssuer = cert.getIssuerX500Principal();
 
@@ -640,7 +642,7 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
             crls = this.certStore.getCRLs(crlSelector);
         } catch (CertStoreException e) {
             throw new CertPathValidatorException(
-                "Error accessing CRL from certificate store", e);
+                    "Error accessing CRL from certificate store", e);
         }
 
         if (crls.size() < 1) {
@@ -653,11 +655,11 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
         Collection<? extends Certificate> caCerts;
         try {
             caCerts = KeyStoreUtil
-                .getTrustedCertificates(this.keyStore, certSelector);
+                    .getTrustedCertificates(this.keyStore, certSelector);
         } catch (KeyStoreException e) {
             throw new CertPathValidatorException(
-                "Error accessing CA certificate from certificate store for CRL validation",
-                e);
+                    "Error accessing CA certificate from certificate store for CRL validation",
+                    e);
         }
 
         if (caCerts.size() < 1) {
@@ -672,7 +674,7 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
         Iterator crlsIterator = crls.iterator();
         while (crlsIterator.hasNext()) {
 
-            X509CRL crl = (X509CRL)crlsIterator.next();
+            X509CRL crl = (X509CRL) crlsIterator.next();
 
             // if expired, will throw error.
             checkCRLDateValidity(crl);
@@ -682,24 +684,24 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
                 crl.verify(caCert.getPublicKey());
             } catch (CRLException e) {
                 throw new CertPathValidatorException(
-                    "Error validating CRL from CA " + crl.getIssuerDN(), e);
+                        "Error validating CRL from CA " + crl.getIssuerDN(), e);
             } catch (NoSuchAlgorithmException e) {
                 throw new CertPathValidatorException(
-                    "Error validating CRL from CA " + crl.getIssuerDN(), e);
+                        "Error validating CRL from CA " + crl.getIssuerDN(), e);
             } catch (InvalidKeyException e) {
                 throw new CertPathValidatorException(
-                    "Error validating CRL from CA " + crl.getIssuerDN(), e);
+                        "Error validating CRL from CA " + crl.getIssuerDN(), e);
             } catch (NoSuchProviderException e) {
                 throw new CertPathValidatorException(
-                    "Error validating CRL from CA " + crl.getIssuerDN(), e);
+                        "Error validating CRL from CA " + crl.getIssuerDN(), e);
             } catch (SignatureException e) {
                 throw new CertPathValidatorException(
-                    "Error validating CRL from CA " + crl.getIssuerDN(), e);
+                        "Error validating CRL from CA " + crl.getIssuerDN(), e);
             }
 
             if (crl.isRevoked(cert)) {
                 throw new CertPathValidatorException(
-                    "Certificate " + cert.getSubjectDN() + " has been revoked");
+                        "Certificate " + cert.getSubjectDN() + " has been revoked");
 
             }
         }
@@ -712,15 +714,15 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
      * @throws CertPathValidatorException
      */
     protected void checkCRLDateValidity(X509CRL crl)
-        throws CertPathValidatorException {
+            throws CertPathValidatorException {
 
         Date now = new Date();
         boolean valid = (crl.getThisUpdate().before(now) &&
-                         ((crl.getNextUpdate() != null) &&
-                          (crl.getNextUpdate().after(now))));
+                ((crl.getNextUpdate() != null) &&
+                        (crl.getNextUpdate().after(now))));
         if (!valid) {
             throw new CertPathValidatorException(
-                "CRL issued by " + crl.getIssuerDN() + " has expired");
+                    "CRL issued by " + crl.getIssuerDN() + " has expired");
         }
     }
 
@@ -732,7 +734,7 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
      * @throws CertPathValidatorException
      */
     protected void checkSigningPolicy(X509Certificate certificate)
-        throws CertPathValidatorException {
+            throws CertPathValidatorException {
 
         X500Principal caPrincipal = certificate.getIssuerX500Principal();
         SigningPolicy policy;
@@ -744,16 +746,16 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
 
         if (policy == null) {
             throw new CertPathValidatorException(
-                "No signing policy for " + certificate.getIssuerDN());
+                    "No signing policy for " + certificate.getIssuerDN());
         }
 
         boolean valid =
-            policy.isValidSubject(certificate.getSubjectX500Principal());
+                policy.isValidSubject(certificate.getSubjectX500Principal());
 
         if (!valid) {
             throw new CertPathValidatorException(
-                "Certificate " + certificate.getSubjectDN() +
-                " voilates signing policy for CA " + caPrincipal.getName());
+                    "Certificate " + certificate.getSubjectDN() +
+                            " voilates signing policy for CA " + caPrincipal.getName());
         }
 
     }
@@ -761,7 +763,7 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
     protected void checkRestrictedProxy(TBSCertificateStructure proxy,
                                         CertPath certPath,
                                         int index)
-        throws CertPathValidatorException, IOException {
+            throws CertPathValidatorException, IOException {
 
 
         ProxyCertInfo info = ProxyCertificateUtil.getProxyCertInfo(proxy);
@@ -776,8 +778,8 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
 
         if (handler == null) {
             throw new CertPathValidatorException(
-                "Unknown policy, no handler registered to validate policy " +
-                pl);
+                    "Unknown policy, no handler registered to validate policy " +
+                            pl);
 
         }
 
@@ -786,14 +788,14 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
     }
 
     protected void checkKeyUsage(TBSCertificateStructure issuer)
-        throws CertPathValidatorException, IOException {
+            throws CertPathValidatorException, IOException {
 
         boolean[] issuerKeyUsage = CertificateUtil.getKeyUsage(issuer);
         if (issuerKeyUsage != null) {
             if (!issuerKeyUsage[5]) {
                 throw new CertPathValidatorException(
-                    "Certificate " + issuer.getSubject() +
-                    " violated key usage policy.");
+                        "Certificate " + issuer.getSubject() +
+                                " violated key usage policy.");
             }
         }
     }
@@ -814,7 +816,7 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
      */
     private void checkCertificate(X509Certificate cert,
                                   Constants.CertificateType certType)
-        throws CertPathValidatorException {
+            throws CertPathValidatorException {
 
         checkCertificateDateValidity(cert);
 
@@ -835,10 +837,10 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
      * if a certificate is not a CA or if it is not a proxy, return true.
      */
     private boolean requireSigningPolicyCheck(
-        Constants.CertificateType certType) {
+            Constants.CertificateType certType) {
 
         if (ProxyCertificateUtil.isProxy(certType) ||
-            (certType == Constants.CertificateType.CA)) {
+                (certType == Constants.CertificateType.CA)) {
             return false;
         }
         return true;
@@ -847,7 +849,7 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
     protected void checkProxyConstraints(TBSCertificateStructure proxy,
                                          TBSCertificateStructure issuer,
                                          X509Certificate checkedProxy)
-        throws CertPathValidatorException, IOException {
+            throws CertPathValidatorException, IOException {
 
         X509Extensions extensions;
         DERObjectIdentifier oid;
@@ -859,34 +861,34 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
         if (extensions != null) {
             Enumeration e = extensions.oids();
             while (e.hasMoreElements()) {
-                oid = (DERObjectIdentifier)e.nextElement();
+                oid = (DERObjectIdentifier) e.nextElement();
                 proxyExtension = extensions.getExtension(oid);
                 if (oid.equals(X509Extensions.SubjectAlternativeName) ||
-                    oid.equals(X509Extensions.IssuerAlternativeName)) {
+                        oid.equals(X509Extensions.IssuerAlternativeName)) {
                     // No Alt name extensions - 3.2 & 3.5
                     throw new CertPathValidatorException(
-                        "Proxy violation: no Subject or Issuer Alternative Name");
+                            "Proxy violation: no Subject or Issuer Alternative Name");
                 } else if (oid.equals(X509Extensions.BasicConstraints)) {
                     // Basic Constraint must not be true - 3.8
                     BasicConstraints basicExt =
-                        CertificateUtil.getBasicConstraints(proxyExtension);
+                            CertificateUtil.getBasicConstraints(proxyExtension);
                     if (basicExt.isCA()) {
                         throw new CertPathValidatorException(
-                            "Proxy violation: Basic Constraint CA is set to true");
+                                "Proxy violation: Basic Constraint CA is set to true");
                     }
                 } else if (oid.equals(X509Extensions.KeyUsage)) {
                     proxyKeyUsage = proxyExtension;
 
                     boolean[] keyUsage =
-                        CertificateUtil.getKeyUsage(proxyExtension);
+                            CertificateUtil.getKeyUsage(proxyExtension);
                     // these must not be asserted
                     if (keyUsage[1] ||
-                        keyUsage[5]) {
+                            keyUsage[5]) {
                         throw new CertPathValidatorException(
-                            "Proxy violation: Key usage is asserted.");
+                                "Proxy violation: Key usage is asserted.");
                     }
                     boolean[] issuerKeyUsage =
-                        CertificateUtil.getKeyUsage(issuer);
+                            CertificateUtil.getKeyUsage(issuer);
                     if (issuerKeyUsage != null) {
                         for (int i = 0; i < 9; i++) {
                             if (i == 1 || i == 5) {
@@ -894,7 +896,7 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
                             }
                             if (!issuerKeyUsage[i] && keyUsage[i]) {
                                 throw new CertPathValidatorException(
-                                    "Proxy violation: Issuer key usage is incorrect");
+                                        "Proxy violation: Issuer key usage is incorrect");
                             }
                         }
                     }
@@ -907,19 +909,19 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
         if (extensions != null) {
             Enumeration e = extensions.oids();
             while (e.hasMoreElements()) {
-                oid = (DERObjectIdentifier)e.nextElement();
+                oid = (DERObjectIdentifier) e.nextElement();
                 proxyExtension = extensions.getExtension(oid);
                 if (oid.equals(X509Extensions.KeyUsage)) {
                     // If issuer has it then proxy must have it also
                     if (proxyKeyUsage == null) {
                         throw new CertPathValidatorException(
-                            "Proxy violation: Issuer has key usage, but proxy does not");
+                                "Proxy violation: Issuer has key usage, but proxy does not");
                     }
                     // If issuer has it as critical so does the proxy
                     if (proxyExtension.isCritical() &&
-                        !proxyKeyUsage.isCritical()) {
+                            !proxyKeyUsage.isCritical()) {
                         throw new CertPathValidatorException(
-                            "Proxy voilation: issuer key usage is critical, but proxy certificate's is not");
+                                "Proxy voilation: issuer key usage is critical, but proxy certificate's is not");
                     }
                 }
             }
