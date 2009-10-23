@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.security.cert.CertStoreException;
 
 /**
  * FILL ME
@@ -34,10 +35,15 @@ public class FileBasedProxyCredential extends FileBasedObject<X509Credential> {
 
     Logger logger = LoggerFactory.getLogger(FileBasedProxyCredential.class);
 
+    // FIXME: really here it is a keystoreexception
     public FileBasedProxyCredential(File filename)
-        throws FileStoreException {
+        throws CertStoreException {
 
-        init(filename);
+        try {
+            init(filename);
+        } catch (FileStoreException e) {
+            e.printStackTrace();  //CHANGEME To change body of catch statement use File | Settings | File Templates.
+        }
     }
 
     protected X509Credential createObject(File filename) throws FileStoreException {
