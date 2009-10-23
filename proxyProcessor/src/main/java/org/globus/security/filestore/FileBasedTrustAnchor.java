@@ -15,9 +15,6 @@
  */
 package org.globus.security.filestore;
 
-import org.globus.security.util.CertificateIOUtil;
-import org.globus.security.util.CertificateLoadUtil;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FilenameFilter;
@@ -25,6 +22,9 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.cert.TrustAnchor;
 import java.security.cert.X509Certificate;
+
+import org.globus.security.util.CertificateIOUtil;
+import org.globus.security.util.CertificateLoadUtil;
 
 
 /**
@@ -63,7 +63,7 @@ public class FileBasedTrustAnchor extends FileBasedObject<TrustAnchor> {
         }
         try {
             certificate = CertificateLoadUtil.loadCertificate(
-                new FileInputStream(file));
+                    new FileInputStream(file));
         } catch (IOException e) {
             throw new FileStoreException(e);
         } catch (GeneralSecurityException e) {
@@ -85,7 +85,7 @@ public class FileBasedTrustAnchor extends FileBasedObject<TrustAnchor> {
 
         TrustAnchor trustAnchor = getObject();
         this.alias = CertificateIOUtil.nameHash(
-            trustAnchor.getTrustedCert().getSubjectDN());
+                trustAnchor.getTrustedCert().getSubjectDN());
         return trustAnchor;
     }
 
@@ -102,9 +102,9 @@ public class FileBasedTrustAnchor extends FileBasedObject<TrustAnchor> {
             }
             int length = file.length();
             return length > 2 &&
-                   file.charAt(length - 2) == '.' &&
-                   file.charAt(length - 1) >= '0' &&
-                   file.charAt(length - 1) <= '9';
+                    file.charAt(length - 2) == '.' &&
+                    file.charAt(length - 1) >= '0' &&
+                    file.charAt(length - 1) <= '9';
         }
     }
 

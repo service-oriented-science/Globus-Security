@@ -1,11 +1,13 @@
 package org.globus.security.jetty;
 
-import org.globus.security.SigningPolicyStoreParameters;
-import org.globus.security.util.SSLConfigurator;
-import org.mortbay.jetty.security.SslSocketConnector;
+import java.security.cert.CertStoreParameters;
 
 import javax.net.ssl.SSLServerSocketFactory;
-import java.security.cert.CertStoreParameters;
+
+import org.globus.security.SigningPolicyStoreParameters;
+import org.globus.security.util.SSLConfigurator;
+
+import org.mortbay.jetty.security.SslSocketConnector;
 
 /**
  * This is an implementation of the SslSocketConnector from Jetty, which allows
@@ -121,7 +123,8 @@ public class GlobusSslSocketConnector extends SslSocketConnector {
 
     @Override
     public void setWantClientAuth(boolean wantClientAuth) {
-        super.setWantClientAuth(wantClientAuth);    //To change body of overridden methods use File | Settings | File Templates.
+        super.setWantClientAuth(
+                wantClientAuth);    //To change body of overridden methods use File | Settings | File Templates.
     }
 
     @Override
@@ -129,7 +132,7 @@ public class GlobusSslSocketConnector extends SslSocketConnector {
         super.setHandshakeTimeout(msec);    //To change body of overridden methods use File | Settings | File Templates.
     }
 
-    public void setSSLConfigurator(SSLConfigurator configurator){
+    public void setSSLConfigurator(SSLConfigurator configurator) {
         this.sslConfigurator = configurator;
     }
 }

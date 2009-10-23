@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2006 University of Chicago
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,6 +14,20 @@
  * limitations under the License.
  */
 package org.globus.security.util;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.security.cert.CertificateEncodingException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.StringTokenizer;
+
+import javax.security.auth.x500.X500Principal;
+
+import org.globus.security.Constants;
+import org.globus.security.proxyExtension.ProxyCertInfo;
+import org.globus.security.proxyExtension.ProxyPolicy;
 
 import org.bouncycastle.asn1.ASN1InputStream;
 import org.bouncycastle.asn1.ASN1Object;
@@ -28,18 +42,6 @@ import org.bouncycastle.asn1.x509.TBSCertificateStructure;
 import org.bouncycastle.asn1.x509.X509Extension;
 import org.bouncycastle.asn1.x509.X509Extensions;
 import org.bouncycastle.asn1.x509.X509Name;
-import org.globus.security.Constants;
-import org.globus.security.proxyExtension.ProxyCertInfo;
-import org.globus.security.proxyExtension.ProxyPolicy;
-
-import javax.security.auth.x500.X500Principal;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.math.BigInteger;
-import java.security.cert.CertificateEncodingException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-import java.util.StringTokenizer;
 
 /**
  * FILL ME
@@ -56,21 +58,21 @@ public class CertificateUtil {
      * @throws IOException
      */
     public static int getCAPathConstraint(TBSCertificateStructure crt)
-        throws IOException {
+            throws IOException {
 
         X509Extensions extensions = crt.getExtensions();
         if (extensions == null) {
             return -1;
         }
         X509Extension proxyExtension =
-            extensions.getExtension(X509Extensions.BasicConstraints);
+                extensions.getExtension(X509Extensions.BasicConstraints);
         if (proxyExtension != null) {
             BasicConstraints basicExt =
-                getBasicConstraints(proxyExtension);
+                    getBasicConstraints(proxyExtension);
             if (basicExt.isCA()) {
                 BigInteger pathLen = basicExt.getPathLenConstraint();
                 return (pathLen == null) ? Integer.MAX_VALUE :
-                       pathLen.intValue();
+                        pathLen.intValue();
             } else {
                 return -1;
             }
@@ -130,8 +132,8 @@ public class CertificateUtil {
      *                             marked as critical.
      */
     public static Constants.CertificateType getCertificateType(
-        TBSCertificateStructure crt)
-        throws CertificateException, IOException {
+            TBSCertificateStructure crt)
+            throws CertificateException, IOException {
 
         X509Extensions extensions = crt.getExtensions();
         X509Extension ext = null;
@@ -152,9 +154,9 @@ public class CertificateUtil {
         X509Name subject = crt.getSubject();
 
         ASN1Set entry = X509NameHelper.getLastNameEntry(subject);
-        ASN1Sequence ava = (ASN1Sequence)entry.getObjectAt(0);
+        ASN1Sequence ava = (ASN1Sequence) entry.getObjectAt(0);
         if (X509Name.CN.equals(ava.getObjectAt(0))) {
-            String value = ((DERString)ava.getObjectAt(1)).getString();
+            String value = ((DERString) ava.getObjectAt(1)).getString();
             if (value.equalsIgnoreCase("proxy")) {
                 type = Constants.CertificateType.GSI_2_PROXY;
             } else if (value.equalsIgnoreCase("limited proxy")) {
@@ -171,42 +173,42 @@ public class CertificateUtil {
                 if (ext != null) {
                     if (ext.isCritical()) {
                         ProxyCertInfo proxyCertExt =
-                            ProxyCertificateUtil.getProxyCertInfo(ext);
+                                ProxyCertificateUtil.getProxyCertInfo(ext);
                         ProxyPolicy proxyPolicy =
-                            proxyCertExt.getProxyPolicy();
+                                proxyCertExt.getProxyPolicy();
                         DERObjectIdentifier oid =
-                            proxyPolicy.getPolicyLanguage();
+                                proxyPolicy.getPolicyLanguage();
                         if (ProxyPolicy.IMPERSONATION.equals(oid)) {
                             if (gsi4) {
                                 type =
-                                    Constants.CertificateType.GSI_4_IMPERSONATION_PROXY;
+                                        Constants.CertificateType.GSI_4_IMPERSONATION_PROXY;
                             } else {
                                 type =
-                                    Constants.CertificateType.GSI_3_IMPERSONATION_PROXY;
+                                        Constants.CertificateType.GSI_3_IMPERSONATION_PROXY;
                             }
                         } else if (ProxyPolicy.INDEPENDENT.equals(oid)) {
                             if (gsi4) {
                                 type =
-                                    Constants.CertificateType.GSI_4_INDEPENDENT_PROXY;
+                                        Constants.CertificateType.GSI_4_INDEPENDENT_PROXY;
                             } else {
                                 type =
-                                    Constants.CertificateType.GSI_3_INDEPENDENT_PROXY;
+                                        Constants.CertificateType.GSI_3_INDEPENDENT_PROXY;
                             }
                         } else if (ProxyPolicy.LIMITED.equals(oid)) {
                             if (gsi4) {
                                 type =
-                                    Constants.CertificateType.GSI_4_LIMITED_PROXY;
+                                        Constants.CertificateType.GSI_4_LIMITED_PROXY;
                             } else {
                                 type =
-                                    Constants.CertificateType.GSI_3_LIMITED_PROXY;
+                                        Constants.CertificateType.GSI_3_LIMITED_PROXY;
                             }
                         } else {
                             if (gsi4) {
                                 type =
-                                    Constants.CertificateType.GSI_4_RESTRICTED_PROXY;
+                                        Constants.CertificateType.GSI_4_RESTRICTED_PROXY;
                             } else {
                                 type =
-                                    Constants.CertificateType.GSI_3_RESTRICTED_PROXY;
+                                        Constants.CertificateType.GSI_3_RESTRICTED_PROXY;
                             }
                         }
 
@@ -241,7 +243,7 @@ public class CertificateUtil {
      * @throws IOException if something fails.
      */
     public static BasicConstraints getBasicConstraints(X509Extension ext)
-        throws IOException {
+            throws IOException {
 
         ASN1Object object = X509Extension.convertValueToObject(ext);
         return BasicConstraints.getInstance(object);
@@ -256,7 +258,7 @@ public class CertificateUtil {
      * @throws IOException if conversion fails
      */
     public static DERObject toDERObject(byte[] data)
-        throws IOException {
+            throws IOException {
         ByteArrayInputStream inStream = new ByteArrayInputStream(data);
         ASN1InputStream derInputStream = new ASN1InputStream(inStream);
         return derInputStream.readObject();
@@ -272,22 +274,22 @@ public class CertificateUtil {
      * @throws CertificateEncodingException if extraction fails.
      */
     public static TBSCertificateStructure getTBSCertificateStructure(
-        X509Certificate cert)
-        throws CertificateEncodingException, IOException {
+            X509Certificate cert)
+            throws CertificateEncodingException, IOException {
         DERObject obj = toDERObject(cert.getTBSCertificate());
         return TBSCertificateStructure.getInstance(obj);
     }
 
     public static boolean[] getKeyUsage(TBSCertificateStructure crt)
-        throws IOException {
+            throws IOException {
         X509Extensions extensions = crt.getExtensions();
         if (extensions == null) {
             return null;
         }
         X509Extension extension =
-            extensions.getExtension(X509Extensions.KeyUsage);
+                extensions.getExtension(X509Extensions.KeyUsage);
         return (extension != null) ?
-               getKeyUsage(extension) : null;
+                getKeyUsage(extension) : null;
     }
 
     /**
@@ -297,8 +299,8 @@ public class CertificateUtil {
      * @see java.security.cert.X509Certificate#getKeyUsage
      */
     public static boolean[] getKeyUsage(X509Extension ext)
-        throws IOException {
-        DERBitString bits = (DERBitString)getExtensionObject(ext);
+            throws IOException {
+        DERBitString bits = (DERBitString) getExtensionObject(ext);
 
         // copied from X509CertificateObject
         byte[] bytes = bits.getBytes();
@@ -320,7 +322,7 @@ public class CertificateUtil {
      * @throws IOException if extraction fails.
      */
     public static DERObject getExtensionObject(X509Extension ext)
-        throws IOException {
+            throws IOException {
         return toDERObject(ext.getValue().getOctets());
     }
 
@@ -378,5 +380,5 @@ public class CertificateUtil {
         return new X500Principal(dn);
     }
 
-    
+
 }

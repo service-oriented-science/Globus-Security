@@ -15,10 +15,10 @@
  */
 package org.globus.security.filestore;
 
+import java.io.File;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
 
 /**
  * FILL ME
@@ -28,7 +28,7 @@ import java.io.File;
 public abstract class FileBasedObject<T> {
 
     private static Logger logger =
-        LoggerFactory.getLogger(FileBasedObject.class.getName());
+            LoggerFactory.getLogger(FileBasedObject.class.getName());
 
     private T object = null;
     private long lastModified = -1;
@@ -58,7 +58,7 @@ public abstract class FileBasedObject<T> {
         long latestLastModified = this.file.lastModified();
         if (this.lastModified < latestLastModified) {
             this.object =
-                createObject(this.file);
+                    createObject(this.file);
 
             this.lastModified = latestLastModified;
             this.changed = true;
@@ -70,8 +70,8 @@ public abstract class FileBasedObject<T> {
     }
 
     protected abstract T createObject(File filename)
-        throws FileStoreException;
+            throws FileStoreException;
 
     protected abstract void validateFilename(File filename)
-        throws FileStoreException;
+            throws FileStoreException;
 }

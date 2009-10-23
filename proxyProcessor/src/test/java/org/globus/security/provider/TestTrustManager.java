@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2006 University of Chicago
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,17 +15,17 @@
  */
 package org.globus.security.provider;
 
-import org.globus.security.X509ProxyCertPathParameters;
-import org.globus.security.X509ProxyCertPathValidatorResult;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-import org.bouncycastle.jce.X509Principal;
-
 import java.security.KeyStore;
 import java.security.cert.CertPathValidatorResult;
 import java.security.cert.CertStore;
 import java.security.cert.X509Certificate;
 import java.util.Map;
+
+import org.globus.security.X509ProxyCertPathParameters;
+import org.globus.security.X509ProxyCertPathValidatorResult;
+
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 /**
  * FILL ME
@@ -47,36 +47,36 @@ public class TestTrustManager extends TestProxyPathValidator {
 
         KeyStore keyStore = getKeyStore(new X509Certificate[]{goodCertsArr[0]});
         TestCertParameters parameters =
-            new TestCertParameters(null, this.crls);
+                new TestCertParameters(null, this.crls);
 
         CertStore certStore =
-            CertStore.getInstance("TestCertStore", parameters);
+                CertStore.getInstance("TestCertStore", parameters);
         TestPolicyStore policyStore =
-            new TestPolicyStore((Map)null);
+                new TestPolicyStore((Map) null);
         X509ProxyCertPathParameters validatorParam =
-            new X509ProxyCertPathParameters(keyStore, certStore, policyStore,
-                                            false,
-                                            null);
+                new X509ProxyCertPathParameters(keyStore, certStore, policyStore,
+                        false,
+                        null);
         PKITrustManager manager =
-            new PKITrustManager(
-                new MockProxyCertPathValidator(false, false, false),
-                validatorParam);
+                new PKITrustManager(
+                        new MockProxyCertPathValidator(false, false, false),
+                        validatorParam);
         X509Certificate[] certChain =
-            new X509Certificate[]{goodCertsArr[5], goodCertsArr[1],
-                                  goodCertsArr[0]};
+                new X509Certificate[]{goodCertsArr[5], goodCertsArr[1],
+                        goodCertsArr[0]};
         manager.checkClientTrusted(certChain, "RSA");
         manager.checkServerTrusted(certChain, "RSA");
         CertPathValidatorResult result = manager.getValidationResult();
         assert (result != null);
         assert (result instanceof X509ProxyCertPathValidatorResult);
-        assert (!((X509ProxyCertPathValidatorResult)result).isLimited());
+        assert (!((X509ProxyCertPathValidatorResult) result).isLimited());
 
         X509Certificate[] acceptedIssuers = manager.getAcceptedIssuers();
         assert (acceptedIssuers != null);
         assert (acceptedIssuers.length == 1);
 
         assert (acceptedIssuers[0].equals(goodCertsArr[0]));
-        
+
         // FIXME: add a failure case
 
     }

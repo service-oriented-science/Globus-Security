@@ -15,14 +15,14 @@
  */
 package org.globus.security.filestore;
 
-import org.globus.security.util.CertificateLoadUtil;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.cert.X509CRL;
+
+import org.globus.security.util.CertificateLoadUtil;
 
 /**
  * FILL ME
@@ -79,10 +79,10 @@ public class FileBasedCRL extends FileBasedObject<X509CRL> {
 
             int length = file.length();
             return length > 3 &&
-                   file.charAt(length - 3) == '.' &&
-                   file.charAt(length - 2) == 'r' &&
-                   file.charAt(length - 1) >= '0' &&
-                   file.charAt(length - 1) <= '9';
+                    file.charAt(length - 3) == '.' &&
+                    file.charAt(length - 2) == 'r' &&
+                    file.charAt(length - 1) >= '0' &&
+                    file.charAt(length - 1) <= '9';
 
         }
     }

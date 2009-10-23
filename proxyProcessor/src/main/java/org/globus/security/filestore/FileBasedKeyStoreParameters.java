@@ -7,7 +7,7 @@ import java.security.KeyStore;
  * PM To change this template use File | Settings | File Templates.
  */
 public class FileBasedKeyStoreParameters
-    implements KeyStore.LoadStoreParameter {
+        implements KeyStore.LoadStoreParameter {
 
     private String[] certDirs;
     private String defaultCertDir;
@@ -51,7 +51,7 @@ public class FileBasedKeyStoreParameters
                                        KeyStore.ProtectionParameter protectionParameter_,
                                        String proxyFilename_) {
         this(certDirs_, defaultCertDir_, userCertFilename_, userKeyFilename_,
-             protectionParameter_);
+                protectionParameter_);
         this.proxyFilename = proxyFilename_;
     }
 

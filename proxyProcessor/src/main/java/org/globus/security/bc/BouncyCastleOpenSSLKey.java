@@ -15,16 +15,6 @@
  */
 package org.globus.security.bc;
 
-import org.bouncycastle.asn1.ASN1InputStream;
-import org.bouncycastle.asn1.ASN1Sequence;
-import org.bouncycastle.asn1.DERObject;
-import org.bouncycastle.asn1.DERObjectIdentifier;
-import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
-import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
-import org.bouncycastle.asn1.pkcs.RSAPrivateKeyStructure;
-import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
-import org.globus.security.OpenSSLKey;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,14 +27,13 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import org.globus.security.OpenSSLKey;
 
 import org.bouncycastle.asn1.ASN1InputStream;
-import org.bouncycastle.asn1.pkcs.RSAPrivateKeyStructure;
-import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
+import org.bouncycastle.asn1.ASN1Sequence;
 import org.bouncycastle.asn1.DERObject;
 import org.bouncycastle.asn1.DERObjectIdentifier;
-import org.bouncycastle.asn1.DERInputStream;
-import org.bouncycastle.asn1.ASN1Sequence;
-import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
+import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
+import org.bouncycastle.asn1.pkcs.RSAPrivateKeyStructure;
+import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 
 /**
  * BouncyCastle-based implementation of OpenSSLKey.
@@ -52,12 +41,12 @@ import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 public class BouncyCastleOpenSSLKey extends OpenSSLKey {
 
     public BouncyCastleOpenSSLKey(InputStream is)
-        throws IOException, GeneralSecurityException {
+            throws IOException, GeneralSecurityException {
         super(is);
     }
 
     public BouncyCastleOpenSSLKey(String file)
-        throws IOException, GeneralSecurityException {
+            throws IOException, GeneralSecurityException {
         super(file);
     }
 
@@ -66,12 +55,12 @@ public class BouncyCastleOpenSSLKey extends OpenSSLKey {
     }
 
     public BouncyCastleOpenSSLKey(String algorithm, byte[] data)
-        throws GeneralSecurityException {
+            throws GeneralSecurityException {
         super(algorithm, data);
     }
 
     protected PrivateKey getKey(String alg, byte[] data)
-        throws GeneralSecurityException {
+            throws GeneralSecurityException {
         if (alg.equals("RSA")) {
             try {
                 ByteArrayInputStream bis = new ByteArrayInputStream(data);
@@ -104,11 +93,11 @@ public class BouncyCastleOpenSSLKey extends OpenSSLKey {
     protected byte[] getEncoded(PrivateKey key) {
         String format = key.getFormat();
         if (format != null &&
-            (format.equalsIgnoreCase("PKCS#8") ||
-             format.equalsIgnoreCase("PKCS8"))) {
+                (format.equalsIgnoreCase("PKCS#8") ||
+                        format.equalsIgnoreCase("PKCS8"))) {
             try {
                 DERObject keyInfo = BouncyCastleUtil.toDERObject(key.getEncoded());
-                PrivateKeyInfo pkey = new PrivateKeyInfo((ASN1Sequence)keyInfo);
+                PrivateKeyInfo pkey = new PrivateKeyInfo((ASN1Sequence) keyInfo);
                 DERObject derKey = pkey.getPrivateKey();
                 return BouncyCastleUtil.toByteArray(derKey);
             } catch (IOException e) {
@@ -117,18 +106,18 @@ public class BouncyCastleOpenSSLKey extends OpenSSLKey {
                 return null;
             }
         } else if (format != null &&
-                   format.equalsIgnoreCase("PKCS#1") &&
-                   key instanceof RSAPrivateCrtKey) { // this condition will rarely be true
-            RSAPrivateCrtKey pKey = (RSAPrivateCrtKey)key;
+                format.equalsIgnoreCase("PKCS#1") &&
+                key instanceof RSAPrivateCrtKey) { // this condition will rarely be true
+            RSAPrivateCrtKey pKey = (RSAPrivateCrtKey) key;
             RSAPrivateKeyStructure st =
-                new RSAPrivateKeyStructure(pKey.getModulus(),
-                                           pKey.getPublicExponent(),
-                                           pKey.getPrivateExponent(),
-                                           pKey.getPrimeP(),
-                                           pKey.getPrimeQ(),
-                                           pKey.getPrimeExponentP(),
-                                           pKey.getPrimeExponentQ(),
-                                           pKey.getCrtCoefficient());
+                    new RSAPrivateKeyStructure(pKey.getModulus(),
+                            pKey.getPublicExponent(),
+                            pKey.getPrivateExponent(),
+                            pKey.getPrimeP(),
+                            pKey.getPrimeQ(),
+                            pKey.getPrimeExponentP(),
+                            pKey.getPrimeExponentQ(),
+                            pKey.getCrtCoefficient());
             DERObject ob = st.getDERObject();
 
             try {

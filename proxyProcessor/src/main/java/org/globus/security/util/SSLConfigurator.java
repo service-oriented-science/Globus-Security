@@ -1,17 +1,5 @@
 package org.globus.security.util;
 
-import org.globus.security.SigningPolicyStoreParameters;
-import org.globus.security.X509ProxyCertPathParameters;
-import org.globus.security.filestore.FileBasedSigningPolicyStore;
-import org.globus.security.provider.PKITrustManager;
-import org.globus.security.provider.X509ProxyCertPathValidator;
-
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLServerSocketFactory;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -29,6 +17,19 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.CertStore;
 import java.security.cert.CertStoreParameters;
 import java.security.cert.CertificateException;
+
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+
+import org.globus.security.SigningPolicyStoreParameters;
+import org.globus.security.X509ProxyCertPathParameters;
+import org.globus.security.filestore.FileBasedSigningPolicyStore;
+import org.globus.security.provider.PKITrustManager;
+import org.globus.security.provider.X509ProxyCertPathValidator;
 
 /**
  * Created by IntelliJ IDEA.
@@ -50,7 +51,9 @@ public class SSLConfigurator {
     private String keyStoreType = "JKS";
     private String password;
     private String keyPassword;
-    private String sslKeyManagerFactoryAlgorithm = Security.getProperty("ssl.KeyManagerFactory.algorithm") == null ? "SunX509" : Security.getProperty("ssl.KeyManagerFactory.algorithm"); // cert algorithm;
+    private String sslKeyManagerFactoryAlgorithm =
+            Security.getProperty("ssl.KeyManagerFactory.algorithm") == null ? "SunX509" : Security.getProperty(
+                    "ssl.KeyManagerFactory.algorithm"); // cert algorithm;
     private String sslTrustManagerFactoryAlgorithm =
             Security.getProperty("ssl.TrustManagerFactory.algorithm") == null
                     ? "PKITrustManager"
@@ -60,6 +63,7 @@ public class SSLConfigurator {
     private String trustStorePath;
     private String trustStorePassword;
     private String certStoreType = "X509ProxyFileStore";
+
     public SSLSocketFactory createFactory() throws Exception {
         KeyManager[] keyManagers = loadKeyManagers();
 
@@ -117,7 +121,7 @@ public class SSLConfigurator {
     private KeyManager[] loadKeyManagers() throws IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException, UnrecoverableKeyException {
         InputStream keystoreInputStream = null;
 
-        if (keyStore != null){
+        if (keyStore != null) {
             keystoreInputStream = getResource(keyStore);
         }
 
@@ -153,19 +157,19 @@ public class SSLConfigurator {
         return trustStore;
     }
 
-    private InputStream getResource(String source) throws IOException{
+    private InputStream getResource(String source) throws IOException {
         InputStream is;
-             try{
-                URL url = new URL(source);
-                is = url.openStream();
-            }catch(MalformedURLException e){
-                File file= new File(source);
-                if(file.exists()){
-                    is= new FileInputStream(file);
-                }else{
-                    is = getClass().getResource(source).openStream();
-                }
+        try {
+            URL url = new URL(source);
+            is = url.openStream();
+        } catch (MalformedURLException e) {
+            File file = new File(source);
+            if (file.exists()) {
+                is = new FileInputStream(file);
+            } else {
+                is = getClass().getResource(source).openStream();
             }
+        }
         return is;
     }
 

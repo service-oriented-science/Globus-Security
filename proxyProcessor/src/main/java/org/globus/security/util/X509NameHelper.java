@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2006 University of Chicago
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -88,7 +88,7 @@ public class X509NameHelper {
      * @return the name component the specified position.
      */
     public ASN1Set getNameEntryAt(int i) {
-        return (ASN1Set)seq.getObjectAt(i);
+        return (ASN1Set) seq.getObjectAt(i);
     }
 
     /**
@@ -107,9 +107,9 @@ public class X509NameHelper {
      * @return the last name component. Null if there is none.
      */
     public static ASN1Set getLastNameEntry(X509Name name) {
-        ASN1Sequence seq = (ASN1Sequence)name.getDERObject();
+        ASN1Sequence seq = (ASN1Sequence) name.getDERObject();
         int size = seq.size();
-        return (size > 0) ? (ASN1Set)seq.getObjectAt(size - 1) : null;
+        return (size > 0) ? (ASN1Set) seq.getObjectAt(size - 1) : null;
     }
 
     /**

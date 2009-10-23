@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2006 University of Chicago
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,6 +15,10 @@
  */
 package org.globus.security.proxyExtension;
 
+import java.io.IOException;
+
+import org.globus.security.util.CertificateUtil;
+
 import org.bouncycastle.asn1.ASN1EncodableVector;
 import org.bouncycastle.asn1.ASN1Sequence;
 import org.bouncycastle.asn1.DEREncodable;
@@ -22,9 +26,6 @@ import org.bouncycastle.asn1.DERInteger;
 import org.bouncycastle.asn1.DERObject;
 import org.bouncycastle.asn1.DERObjectIdentifier;
 import org.bouncycastle.asn1.DERSequence;
-import org.globus.security.util.CertificateUtil;
-
-import java.io.IOException;
 
 /**
  * Represents ProxyCertInfo extension. <BR> <PRE> ProxyCertInfo ::= SEQUENCE {
@@ -37,9 +38,9 @@ public class ProxyCertInfo implements DEREncodable {
      * ProxyCertInfo extension OID
      */
     public static final DERObjectIdentifier OID
-        = new DERObjectIdentifier("1.3.6.1.5.5.7.1.14");
+            = new DERObjectIdentifier("1.3.6.1.5.5.7.1.14");
     public static final DERObjectIdentifier OLD_OID
-        = new DERObjectIdentifier("1.3.6.1.4.1.3536.1.222");
+            = new DERObjectIdentifier("1.3.6.1.4.1.3536.1.222");
 
     private DERInteger pathLenConstraint;
     private ProxyPolicy proxyPolicy;
@@ -58,12 +59,12 @@ public class ProxyCertInfo implements DEREncodable {
         int seqPos = 0;
 
         if (seq.getObjectAt(seqPos) instanceof DERInteger) {
-            this.pathLenConstraint = (DERInteger)seq.getObjectAt(seqPos);
+            this.pathLenConstraint = (DERInteger) seq.getObjectAt(seqPos);
             seqPos++;
         }
 
         ASN1Sequence policy =
-            (ASN1Sequence)seq.getObjectAt(seqPos);
+                (ASN1Sequence) seq.getObjectAt(seqPos);
 
         this.proxyPolicy = new ProxyPolicy(policy);
     }
@@ -110,19 +111,19 @@ public class ProxyCertInfo implements DEREncodable {
         String err = obj.getClass().getName();
 
         if (obj instanceof ProxyCertInfo) {
-            return (ProxyCertInfo)obj;
+            return (ProxyCertInfo) obj;
         } else if (obj instanceof ASN1Sequence) {
-            return new ProxyCertInfo((ASN1Sequence)obj);
+            return new ProxyCertInfo((ASN1Sequence) obj);
         } else if (obj instanceof byte[]) {
             DERObject derObj = null;
             try {
-                derObj = CertificateUtil.toDERObject((byte[])obj);
+                derObj = CertificateUtil.toDERObject((byte[]) obj);
             } catch (IOException e) {
                 throw new IllegalArgumentException(
-                    e.getMessage());
+                        e.getMessage());
             }
             if (derObj instanceof ASN1Sequence) {
-                return new ProxyCertInfo((ASN1Sequence)derObj);
+                return new ProxyCertInfo((ASN1Sequence) derObj);
             }
         }
         throw new IllegalArgumentException();

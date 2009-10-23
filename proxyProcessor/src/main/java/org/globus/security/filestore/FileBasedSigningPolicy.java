@@ -15,18 +15,19 @@
  */
 package org.globus.security.filestore;
 
-import org.globus.security.SigningPolicy;
-import org.globus.security.SigningPolicyException;
-import org.globus.security.SigningPolicyStoreException;
-import org.globus.security.util.SigningPolicyFileParser;
-
-import javax.security.auth.x500.X500Principal;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.util.Collection;
 import java.util.Map;
+
+import javax.security.auth.x500.X500Principal;
+
+import org.globus.security.SigningPolicy;
+import org.globus.security.SigningPolicyException;
+import org.globus.security.SigningPolicyStoreException;
+import org.globus.security.util.SigningPolicyFileParser;
 
 /**
  * FILL ME
@@ -41,13 +42,13 @@ public class FileBasedSigningPolicy extends FileBasedObject<Map<X500Principal, S
     private static SigningPolicyFilter filter = new SigningPolicyFilter();
 
     public FileBasedSigningPolicy(File filename)
-        throws FileStoreException {
+            throws FileStoreException {
         init(filename);
 
     }
 
     protected Map<X500Principal, SigningPolicy> createObject(File filename)
-        throws FileStoreException {
+            throws FileStoreException {
 
         SigningPolicyFileParser parser = new SigningPolicyFileParser();
         Map<X500Principal, SigningPolicy> policies;
@@ -70,7 +71,7 @@ public class FileBasedSigningPolicy extends FileBasedObject<Map<X500Principal, S
     }
 
     public Collection<SigningPolicy> getSigningPolicies()
-        throws SigningPolicyStoreException {
+            throws SigningPolicyStoreException {
 
         try {
             Map<X500Principal, SigningPolicy> object = getObject();
@@ -84,13 +85,13 @@ public class FileBasedSigningPolicy extends FileBasedObject<Map<X500Principal, S
     }
 
     public SigningPolicy getSigningPolicy(X500Principal caDN)
-        throws SigningPolicyStoreException {
+            throws SigningPolicyStoreException {
 
         try {
             Map<X500Principal, SigningPolicy> object = getObject();
             if (object != null) {
                 Map<X500Principal, SigningPolicy> map =
-                    (object);
+                        (object);
                 return map.get(caDN);
             }
         } catch (FileStoreException e) {

@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2006 University of Chicago
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -41,13 +41,13 @@ public class TestCertStore extends CertStoreSpi {
     private Vector<X509CRL> crl = new Vector();
 
     public TestCertStore(CertStoreParameters param)
-        throws InvalidAlgorithmParameterException {
+            throws InvalidAlgorithmParameterException {
         super(param);
 
         if (param != null) {
             if (param instanceof TestProxyPathValidator.TestCertParameters) {
                 TestProxyPathValidator.TestCertParameters parameters
-                    = (TestProxyPathValidator.TestCertParameters)param;
+                        = (TestProxyPathValidator.TestCertParameters) param;
                 X509Certificate[] certs = parameters.getCertificates();
                 if (certs != null) {
 
@@ -93,7 +93,7 @@ public class TestCertStore extends CertStoreSpi {
      *          if an exception occurs
      */
     public Collection<? extends Certificate> engineGetCertificates(
-        CertSelector selector) throws CertStoreException {
+            CertSelector selector) throws CertStoreException {
 
         // For test, unsupported
         throw new UnsupportedOperationException();
@@ -142,7 +142,7 @@ public class TestCertStore extends CertStoreSpi {
      *          if an exception occurs
      */
     public Collection<? extends CRL> engineGetCRLs(CRLSelector selector)
-        throws CertStoreException {
+            throws CertStoreException {
 
         if (selector == null) {
             return this.crl;

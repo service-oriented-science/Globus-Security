@@ -1,32 +1,37 @@
 package org.globus.security;
 
-import org.globus.security.filestore.FileCertStoreParameters;
-import org.globus.security.filestore.FileSigningPolicyStoreParameters;
-import org.globus.security.jetty.GlobusSslSocketConnector;
-import org.globus.security.util.SSLConfigurator;
-import org.globus.security.provider.GlobusProvider;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.webapp.WebAppContext;
-
 import java.io.File;
 import java.security.Security;
 
+import org.globus.security.filestore.FileCertStoreParameters;
+import org.globus.security.filestore.FileSigningPolicyStoreParameters;
+import org.globus.security.jetty.GlobusSslSocketConnector;
+import org.globus.security.provider.GlobusProvider;
+import org.globus.security.util.SSLConfigurator;
 
-public class TestServer {
+import org.mortbay.jetty.Server;
+import org.mortbay.jetty.webapp.WebAppContext;
+
+
+public final class TestServer {
     public static final String POLICY_LOCATION = "./proxyProcessor/src/test/resources/validatorTest";
     public static final String KEY_STORE = "/Users/turtlebender/keystore.jks";
     public static final String TRUST_STORE = "/Users/turtlebender/cacerts.jks";
     public static final String KEY_PASSWORD = "password";
-    public static final String WAR = "/Users/turtlebender/src/security/integration-example/target/integration-example.war";
+    public static final String WAR =
+            "/Users/turtlebender/src/security/integration-example/target/integration-example.war";
 
     static {
         Security.addProvider(new GlobusProvider());
     }
 
+    private TestServer() {
+    }
+
     public static void main(String[] args) throws Exception {
         Server server = new Server();
         GlobusSslSocketConnector connector = new GlobusSslSocketConnector();
-        SSLConfigurator configurator = configure();        
+        SSLConfigurator configurator = configure();
         connector.setSSLConfigurator(configurator);
         connector.setNeedClientAuth(true);
         connector.setPort(8443);

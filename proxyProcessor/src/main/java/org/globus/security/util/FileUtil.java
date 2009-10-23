@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2006 University of Chicago
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,11 +15,10 @@
  */
 package org.globus.security.util;
 
-import org.apache.commons.io.FileUtils;
-
 import java.io.File;
 import java.io.IOException;
-import java.io.RandomAccessFile;
+
+import org.apache.commons.io.FileUtils;
 
 /**
  * FILL ME
@@ -29,14 +28,14 @@ import java.io.RandomAccessFile;
 public class FileUtil {
 
     public static File createFile(String filename)
-        throws SecurityException, IOException {
+            throws SecurityException, IOException {
 
         File f = new File(filename);
         if (!f.createNewFile()) {
             FileUtils.forceDelete(f);
             if (!f.createNewFile()) {
                 throw new SecurityException(
-                    "Failed to atomically create new file");
+                        "Failed to atomically create new file");
             }
         }
         return f;
