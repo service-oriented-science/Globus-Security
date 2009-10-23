@@ -90,7 +90,7 @@ public class FileBasedTrustAnchor extends FileBasedObject<TrustAnchor> {
         }
     }
 
-    public TrustAnchor getTrustAnchor() throws CertStoreException {
+    public TrustAnchor getTrustAnchor() throws FileStoreException {
 
         TrustAnchor trustAnchor = getObject();
         this.alias = CertificateIOUtil.nameHash(
