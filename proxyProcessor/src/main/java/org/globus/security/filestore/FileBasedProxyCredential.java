@@ -15,16 +15,17 @@
  */
 package org.globus.security.filestore;
 
-import org.globus.security.CredentialException;
-import org.globus.security.X509Credential;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.security.cert.CertStoreException;
+
+import org.globus.security.CredentialException;
+import org.globus.security.X509Credential;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * FILL ME
@@ -37,7 +38,7 @@ public class FileBasedProxyCredential extends FileBasedObject<X509Credential> {
 
     // FIXME: really here it is a keystoreexception
     public FileBasedProxyCredential(File filename)
-        throws CertStoreException {
+            throws CertStoreException {
 
         try {
             init(filename);

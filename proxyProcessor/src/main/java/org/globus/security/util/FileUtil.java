@@ -15,11 +15,10 @@
  */
 package org.globus.security.util;
 
-import org.apache.commons.io.FileUtils;
-
 import java.io.File;
 import java.io.IOException;
-import java.io.RandomAccessFile;
+
+import org.apache.commons.io.FileUtils;
 
 /**
  * FILL ME
@@ -29,14 +28,14 @@ import java.io.RandomAccessFile;
 public class FileUtil {
 
     public static File createFile(String filename)
-        throws SecurityException, IOException {
+            throws SecurityException, IOException {
 
         File f = new File(filename);
         if (!f.createNewFile()) {
             FileUtils.forceDelete(f);
             if (!f.createNewFile()) {
                 throw new SecurityException(
-                    "Failed to atomically create new file");
+                        "Failed to atomically create new file");
             }
         }
         return f;
