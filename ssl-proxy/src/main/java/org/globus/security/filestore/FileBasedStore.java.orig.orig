@@ -27,7 +27,7 @@ public abstract class FileBasedStore<T> {
     }
 
     public abstract void loadWrappers(String[] locations)
-        throws FileStoreException;
+            throws FileStoreException;
 
 
     public abstract Map<String, FileBasedObject<T>> getWrapperMap();

@@ -15,30 +15,31 @@
  */
 package org.globus.security.provider;
 
-import java.security.InvalidAlgorithmParameterException;
-
-import javax.security.auth.x500.X500Principal;
+import java.security.Provider;
 
 /**
  * FILL ME
  *
  * @author ranantha@mcs.anl.gov
  */
-public class TestGlobusProvider extends Provider {
+public class MockGlobusProvider extends Provider {
 
-    public SigningPolicyStore(SigningPolicyStoreParameters parameters)
-            throws InvalidAlgorithmParameterException {
+    public MockGlobusProvider() {
 
         super("GlobusTest", 1.0, "Globus Security Providers");
 
+<<<<<<< HEAD:proxyProcessor/src/test/java/org/globus/security/provider/MockGlobusProvider.java
+        put("CertStore.MockCertStore",
+                "org.globus.security.provider.MockCertStore");
+        put("KeyStore.MockKeyStore",
+                "org.globus.security.provider.MockKeyStore");
+=======
         put("CertStore.TestCertStore",
                 "org.globus.security.provider.TestCertStore");
         put("KeyStore.TestKeyStore",
                 "org.globus.security.provider.TestKeyStore");
+>>>>>>> reformatting:proxyProcessor/src/test/java/org/globus/security/provider/TestGlobusProvider.java
 
     }
 }
 
-    public abstract SigningPolicy getSigningPolicy(X500Principal caPrincipal)
-            throws SigningPolicyStoreException;
-}

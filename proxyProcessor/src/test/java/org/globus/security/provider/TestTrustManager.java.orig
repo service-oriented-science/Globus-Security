@@ -50,7 +50,11 @@ public class TestTrustManager extends TestProxyPathValidator {
                 new TestCertParameters(null, this.crls);
 
         CertStore certStore =
+<<<<<<< HEAD:proxyProcessor/src/test/java/org/globus/security/provider/TestTrustManager.java
+                CertStore.getInstance("MockCertStore", parameters);
+=======
                 CertStore.getInstance("TestCertStore", parameters);
+>>>>>>> reformatting:proxyProcessor/src/test/java/org/globus/security/provider/TestTrustManager.java
         TestPolicyStore policyStore =
                 new TestPolicyStore((Map) null);
         X509ProxyCertPathParameters validatorParam =

@@ -195,7 +195,11 @@ public class TestSigningPolicyFileParser {
 
         SigningPolicyFileParser parser = new SigningPolicyFileParser();
         Map<X500Principal, SigningPolicy> map =
+<<<<<<< HEAD:proxyProcessor/src/test/java/org/globus/security/util/TestSigningPolicyFileParser.java
+                parser.parse(this.successFile.getAbsoluteFilename());
+=======
                 parser.parse(this.successFile.getTempFilename());
+>>>>>>> reformatting:proxyProcessor/src/test/java/org/globus/security/util/TestSigningPolicyFileParser.java
 
         assertTrue(map != null);
 
@@ -237,7 +241,7 @@ public class TestSigningPolicyFileParser {
         // test file with single allows DN without double quotes
         this.singleAllowedDn.copyFileToTemp();
         map.clear();
-        map = parser.parse(this.singleAllowedDn.getTempFilename());
+        map = parser.parse(this.singleAllowedDn.getAbsoluteFilename());
 
         policy = map.get(new X500Principal(
                 "OU=Certification Authority,O=National Computational Science Alliance,C=US"));
@@ -263,7 +267,11 @@ public class TestSigningPolicyFileParser {
         SigningPolicyFileParser parser = new SigningPolicyFileParser();
 
         Map<X500Principal, SigningPolicy> map =
+<<<<<<< HEAD:proxyProcessor/src/test/java/org/globus/security/util/TestSigningPolicyFileParser.java
+                parser.parse(this.tabTestFiles[0].getAbsoluteFilename());
+=======
                 parser.parse(this.tabTestFiles[0].getTempFilename());
+>>>>>>> reformatting:proxyProcessor/src/test/java/org/globus/security/util/TestSigningPolicyFileParser.java
 
         SigningPolicy policy =
                 map.get(new X500Principal("CN=CyGridCA,O=HPCL,O=CyGrid,C=CY"));
@@ -275,7 +283,7 @@ public class TestSigningPolicyFileParser {
         allowedDN.clear();
         map.clear();
         this.tabTestFiles[1].copyFileToTemp();
-        map = parser.parse(this.tabTestFiles[1].getTempFilename());
+        map = parser.parse(this.tabTestFiles[1].getAbsoluteFilename());
         policy = map.get(new X500Principal("CN=CNRS,O=CNRS,C=FR"));
         assertTrue(policy != null);
         allowedDN = policy.getAllowedDNs();
@@ -298,7 +306,7 @@ public class TestSigningPolicyFileParser {
         allowedDN.clear();
         map.clear();
         this.tabTestFiles[2].copyFileToTemp();
-        map = parser.parse(this.tabTestFiles[2].getTempFilename());
+        map = parser.parse(this.tabTestFiles[2].getAbsoluteFilename());
 
         policy = map.get(
                 new X500Principal("CN=INFN Certification Authority,O=INFN,C=IT"));

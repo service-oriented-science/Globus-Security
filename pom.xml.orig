@@ -33,29 +33,30 @@
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <configuration>
 <<<<<<< HEAD:pom.xml
-			<encoding>UTF-8</encoding>
-=======
                     <failsOnError>true</failsOnError>
                     <configLocation>/globus/globus-security-checkstyle.xml</configLocation>
->>>>>>> reformatting:pom.xml
                 </configuration>
-		<executions>
-                        <execution>
-                            <id>validate</id>
-                            <phase>validate</phase>
-                            <configuration>
-                                <configLocation>/globus-security/globus-security-checkstyle.xml</configLocation>
-                                <consoleOutput>true</consoleOutput>
-                                <failsOnError>false</failsOnError>
-                                <linkXRef>false</linkXRef>
-                                <sourceDirectory>${basedir}/src</sourceDirectory>
-                            </configuration>
-                            <goals>
-                                <goal>checkstyle</goal>
-                            </goals>
-                        </execution>
-                    </executions>
+=======
+                    <encoding>UTF-8</encoding>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>validate</id>
+                        <phase>validate</phase>
+                        <configuration>
+                            <configLocation>/globus-security/globus-security-checkstyle.xml</configLocation>
+                            <consoleOutput>true</consoleOutput>
+                            <failsOnError>false</failsOnError>
+                            <linkXRef>false</linkXRef>
+                            <sourceDirectory>${basedir}/src</sourceDirectory>
+                        </configuration>
+                        <goals>
+                            <goal>checkstyle</goal>
+                        </goals>
+                    </execution>
+                </executions>
 
+>>>>>>> reformatting:pom.xml
                 <dependencies>
                     <dependency>
                         <groupId>org.globus.security</groupId>

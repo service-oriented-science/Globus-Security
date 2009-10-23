@@ -27,11 +27,15 @@ import java.io.InputStream;
 public class FileSetupUtil {
 
     String filename;
-    String tempFilename;
+    File tempFile;
 
     public FileSetupUtil(String filename_) {
 
         this.filename = filename_;
+    }
+
+    public File getTempFile() {
+        return this.tempFile;
     }
 
     public void copyFileToTemp() throws Exception {
@@ -43,17 +47,24 @@ public class FileSetupUtil {
 
         InputStream in = null;
         FileWriter writer = null;
-        File temp;
         try {
             ClassLoader loader =
                     FileSetupUtil.class.getClassLoader();
             in = loader.getResourceAsStream(this.filename);
             int index = filename.lastIndexOf(".");
+<<<<<<< HEAD:proxyProcessor/src/test/java/org/globus/security/filestore/FileSetupUtil.java
+            this.tempFile = File.createTempFile("globusSecurityTest",
+                    filename.substring(index,
+                            filename.length()),
+                    dir);
+            writer = new FileWriter(this.tempFile);
+=======
             temp = File.createTempFile("globusProxyTest",
                     filename.substring(index,
                             filename.length()),
                     dir);
             writer = new FileWriter(temp);
+>>>>>>> reformatting:proxyProcessor/src/test/java/org/globus/security/filestore/FileSetupUtil.java
             int c;
             while ((c = in.read()) != -1) {
                 writer.write(c);
@@ -67,27 +78,33 @@ public class FileSetupUtil {
                 writer.close();
             }
         }
+    }
 
-        this.tempFilename = temp.getAbsolutePath();
+    public String getAbsoluteFilename() {
+        return this.tempFile.getAbsolutePath();
     }
 
     public String getTempFilename() {
-        return this.tempFilename;
+        return this.tempFile.getName();
     }
 
     public void deleteFile() {
-        if (this.tempFilename != null) {
-            (new File(this.tempFilename)).delete();
+        if (this.tempFile != null) {
+            this.tempFile.delete();
         }
     }
 
     public void modifyFile() throws Exception {
-        if (this.tempFilename != null) {
+        if (this.tempFile != null) {
             // FIXME: only way for modified time to have some delta
             Thread.sleep(1000);
             FileWriter writer = null;
             try {
+<<<<<<< HEAD:proxyProcessor/src/test/java/org/globus/security/filestore/FileSetupUtil.java
+                writer = new FileWriter(this.tempFile,
+=======
                 writer = new FileWriter(new File(this.tempFilename),
+>>>>>>> reformatting:proxyProcessor/src/test/java/org/globus/security/filestore/FileSetupUtil.java
                         true);
 
                 writer.write("\n");

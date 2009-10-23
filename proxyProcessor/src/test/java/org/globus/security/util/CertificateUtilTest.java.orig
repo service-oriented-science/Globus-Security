@@ -154,7 +154,11 @@ public class CertificateUtilTest {
 
             X509Certificate cert =
                     CertificateLoadUtil
+<<<<<<< HEAD:proxyProcessor/src/test/java/org/globus/security/util/CertificateUtilTest.java
+                            .loadCertificate(testCert1.getAbsoluteFilename());
+=======
                             .loadCertificate(testCert1.getTempFilename());
+>>>>>>> reformatting:proxyProcessor/src/test/java/org/globus/security/util/CertificateUtilTest.java
 
             assert (cert != null);
 
@@ -163,7 +167,11 @@ public class CertificateUtilTest {
             boolean worked = false;
             try {
                 cert = CertificateLoadUtil
+<<<<<<< HEAD:proxyProcessor/src/test/java/org/globus/security/util/CertificateUtilTest.java
+                        .loadCertificate(testCert2.getAbsoluteFilename());
+=======
                         .loadCertificate(testCert2.getTempFilename());
+>>>>>>> reformatting:proxyProcessor/src/test/java/org/globus/security/util/CertificateUtilTest.java
             } catch (GeneralSecurityException e) {
                 String err = e.getMessage();
                 if (err != null &&
@@ -182,7 +190,11 @@ public class CertificateUtilTest {
         this.testCrl1.copyFileToTemp();
 
         X509CRL crl =
+<<<<<<< HEAD:proxyProcessor/src/test/java/org/globus/security/util/CertificateUtilTest.java
+                CertificateLoadUtil.loadCrl(testCrl1.getAbsoluteFilename());
+=======
                 CertificateLoadUtil.loadCrl(testCrl1.getTempFilename());
+>>>>>>> reformatting:proxyProcessor/src/test/java/org/globus/security/util/CertificateUtilTest.java
 
         assert (crl != null);
 
