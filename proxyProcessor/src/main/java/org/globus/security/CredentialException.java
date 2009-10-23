@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2006 University of Chicago
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,21 +15,24 @@
  */
 package org.globus.security;
 
-import javax.security.auth.x500.X500Principal;
-import java.security.InvalidAlgorithmParameterException;
+import java.security.GeneralSecurityException;
 
 /**
  * FILL ME
  *
- * @author ranantha@mcs.anl.gov // FIXME: Maybe a provider  access to this?
+ * @author ranantha@mcs.anl.gov
  */
-public abstract class SigningPolicyStore {
+public class CredentialException extends GeneralSecurityException {
 
-    public SigningPolicyStore(SigningPolicyStoreParameters parameters)
-        throws InvalidAlgorithmParameterException {
-
+    public CredentialException(String msg) {
+        super(msg);
     }
 
-    public abstract SigningPolicy getSigningPolicy(X500Principal caPrincipal)
-        throws SigningPolicyStoreException;
+    public CredentialException(String msg, Throwable ex) {
+        super(msg, ex);
+    }
+
+    public CredentialException(Throwable ex) {
+        super(ex);
+    }
 }

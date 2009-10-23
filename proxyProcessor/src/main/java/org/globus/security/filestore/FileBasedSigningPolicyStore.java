@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2006 University of Chicago
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,6 +17,7 @@ package org.globus.security.filestore;
 
 import org.globus.security.SigningPolicy;
 import org.globus.security.SigningPolicyStore;
+import org.globus.security.SigningPolicyStoreException;
 import org.globus.security.SigningPolicyStoreParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,6 @@ import javax.security.auth.x500.X500Principal;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.security.InvalidAlgorithmParameterException;
-import java.security.cert.CertStoreException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,9 +38,9 @@ import java.util.Map;
 public class FileBasedSigningPolicyStore extends SigningPolicyStore {
 
     Map<String, FileBasedSigningPolicy> signingPolicyFileMap =
-            new HashMap<String, FileBasedSigningPolicy>();
+        new HashMap<String, FileBasedSigningPolicy>();
     Map<X500Principal, SigningPolicy> policyMap =
-            new HashMap<X500Principal, SigningPolicy>();
+        new HashMap<X500Principal, SigningPolicy>();
 
     FileSigningPolicyStoreParameters parameters;
 
@@ -63,7 +63,7 @@ public class FileBasedSigningPolicyStore extends SigningPolicyStore {
     }
 
     public SigningPolicy getSigningPolicy(X500Principal caPrincipal)
-        throws CertStoreException {
+        throws SigningPolicyStoreException {
 
         if (caPrincipal == null) {
             return null;
@@ -72,7 +72,7 @@ public class FileBasedSigningPolicyStore extends SigningPolicyStore {
         return this.policyMap.get(caPrincipal);
     }
 
-    private void loadPolicies() throws CertStoreException {
+    private void loadPolicies() throws SigningPolicyStoreException {
 
         String[] locations = this.parameters.getTrustRootLocations();
 
@@ -81,9 +81,9 @@ public class FileBasedSigningPolicyStore extends SigningPolicyStore {
             FileBasedSigningPolicy.getSigningPolicyFilter();
 
         Map<X500Principal, SigningPolicy> newPolicyMap =
-                new HashMap<X500Principal, SigningPolicy>();
+            new HashMap<X500Principal, SigningPolicy>();
         Map<String, FileBasedSigningPolicy> newPolicyFileMap =
-                new HashMap<String, FileBasedSigningPolicy>();
+            new HashMap<String, FileBasedSigningPolicy>();
 
         for (String location : locations) {
 
@@ -98,24 +98,24 @@ public class FileBasedSigningPolicyStore extends SigningPolicyStore {
                 String[] policyFiles = file.list(policyFilter);
                 if (policyFiles == null) {
                     logger.debug("Cannot load signing policy from " +
-                            file.getAbsolutePath() + " directory.");
+                                 file.getAbsolutePath() + " directory.");
                 } else {
                     logger.debug("Loading signing policy from " +
-                            file.getAbsolutePath() + " directory.");
+                                 file.getAbsolutePath() + " directory.");
                     for (String policyFile : policyFiles) {
                         String policyFilename = file.getPath() +
-                                File.separatorChar +
-                                policyFile;
+                                                File.separatorChar +
+                                                policyFile;
 
                         loadSigningPolicy(policyFilename, newPolicyMap,
-                                newPolicyFileMap);
+                                          newPolicyFileMap);
                     }
                 }
             } else {
                 String filename = file.getAbsolutePath();
                 if (policyFilter.accept(null, filename)) {
                     loadSigningPolicy(filename, newPolicyMap,
-                            newPolicyFileMap);
+                                      newPolicyFileMap);
                 }
             }
         }
@@ -127,18 +127,22 @@ public class FileBasedSigningPolicyStore extends SigningPolicyStore {
     private void loadSigningPolicy(String policyFilename,
                                    Map<X500Principal, SigningPolicy> policyMap_,
                                    Map<String, FileBasedSigningPolicy> policyFileMap_)
-        throws CertStoreException {
+        throws SigningPolicyStoreException {
 
         File policyFile = new File(policyFilename);
         if (!policyFile.canRead()) {
-            throw new CertStoreException("Cannot read file");
+            throw new SigningPolicyStoreException("Cannot read file");
         }
 
         FileBasedSigningPolicy filePolicy =
             this.signingPolicyFileMap
                 .get(policyFilename);
         if (filePolicy == null) {
-            filePolicy = new FileBasedSigningPolicy(new File(policyFilename));
+            try {
+                filePolicy = new FileBasedSigningPolicy(new File(policyFilename));
+            } catch (FileStoreException e) {
+                throw new SigningPolicyStoreException(e);
+            }
 
         }
         Collection<SigningPolicy> policies = filePolicy.getSigningPolicies();

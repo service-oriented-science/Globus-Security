@@ -33,11 +33,11 @@ import java.security.cert.X509Certificate;
  * @author ranantha@mcs.anl.gov
  */
 <<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedTrustAnchor.java
+public class FileBasedTrustAnchor extends FileBasedObject<TrustAnchor> {
+=======
 public class FileBasedTrustAnchor extends FileBasedObject<TrustAnchor>
     implements TrustAnchorWrapper {
-=======
-public class FileBasedTrustAnchor extends FileBasedObject<TrustAnchor> {
->>>>>>> updated poms with interproject dependencies:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedTrustAnchor.java
+>>>>>>> Changed up exception, working to get proxy loaded up in keystore:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedTrustAnchor.java
 
     private static TrustAnchorFilter filter = new TrustAnchorFilter();
     private String alias;
@@ -87,14 +87,17 @@ public class FileBasedTrustAnchor extends FileBasedObject<TrustAnchor> {
     }
 
 <<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedTrustAnchor.java
-<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedTrustAnchor.java
+<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedTrustAnchor.java.orig
     public TrustAnchor getTrustAnchor() throws FileStoreException {
 =======
     public TrustAnchor getTrustAnchor() throws CertStoreException {
 >>>>>>> updated poms with interproject dependencies:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedTrustAnchor.java
 =======
+    public TrustAnchor getTrustAnchor() throws CertStoreException {
+=======
     public TrustAnchor getTrustAnchor() throws FileStoreException {
 >>>>>>> Changed up exception, working to get proxy loaded up in keystore:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedTrustAnchor.java
+>>>>>>> Changed up exception, working to get proxy loaded up in keystore:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedTrustAnchor.java.orig
 
         TrustAnchor trustAnchor = getObject();
         this.alias = CertificateIOUtil.nameHash(
