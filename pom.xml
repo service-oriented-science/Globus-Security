@@ -190,7 +190,7 @@
                         <configuration>
                             <configLocation>/globus-security/globus-security-checkstyle.xml</configLocation>
                             <consoleOutput>true</consoleOutput>
-                            <failsOnError>true</failsOnError>
+                            <failsOnError>false</failsOnError>
                             <linkXRef>false</linkXRef>
                             <sourceDirectory>${basedir}/src</sourceDirectory>
                         </configuration>
@@ -355,4 +355,37 @@
     </dependencyManagement>
 
 
+    <pluginRepositories>
+        <pluginRepository>
+            <id>apache.snapshots</id>
+            <url>https://repository.apache.org/content/groups/snapshots-group/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+        <pluginRepository>
+            <id>globus-repo</id>
+            <url>http://repo.globus.org/content/groups/public/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <repositories>
+        <repository>
+            <id>globus-repo</id>
+            <url>http://repo.globus.org/content/groups/public/</url>
+        </repository>
+        <repository>
+            <id>spring-milestone</id>
+            <name>Spring Portfolio Milestone Repository</name>
+            <url>http://s3.amazonaws.com/maven.springframework.org/milestone</url>
+        </repository>
+
+        <repository>
+            <id>apache.snapshots</id>
+            <url>https://repository.apache.org/content/groups/snapshots-group/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 </project>

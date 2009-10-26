@@ -75,11 +75,5 @@
             <version>6.1.19</version>
             <scope>test</scope>
         </dependency>
-    </dependencies>
-    <repositories>
-        <repository>
-            <id>globus-repo</id>
-            <url>http://repo.globus.org/content/groups/public/</url>
-        </repository>
-    </repositories>
+    </dependencies>    
 </project>
