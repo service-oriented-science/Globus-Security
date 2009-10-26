@@ -156,6 +156,10 @@
     </modules>
 
     <dependencies>
+	<dependency>
+		<groupId>org.globus.security</groupId>
+		<artifactId>build-tools</artifactId>
+		<version>${version}</version>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
