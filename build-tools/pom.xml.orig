@@ -7,18 +7,14 @@
 <<<<<<< HEAD:build-tools/pom.xml
 =======
     <parent>
-        <groupId>org.globus.crux</groupId>
+        <groupId>org.globus.security</groupId>
         <artifactId>security</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
->>>>>>> updating poms for style check:build-tools/pom.xml
+>>>>>>> updated parent groupId:build-tools/pom.xml
     <groupId>org.globus.security</groupId>
     <artifactId>build-tools</artifactId>
     <name>Globus Security Build Tools</name>
     <version>1.0-SNAPSHOT</version>
 
-<<<<<<< HEAD:build-tools/pom.xml
 </project>
-=======
-</project>
->>>>>>> updating poms for style check:build-tools/pom.xml
