@@ -6,7 +6,7 @@
     <groupId>org.globus.security</groupId>
     <artifactId>ssl-proxy</artifactId>
     <parent>
-        <groupId>org.globus.crux</groupId>
+        <groupId>org.globus.security</groupId>
         <artifactId>security</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
