@@ -149,6 +149,7 @@
 
 
     <modules>
+	<module>build-tools</module>
         <module>proxyProcessor</module>
         <module>build-tools</module>
         <module>jetty</module>
