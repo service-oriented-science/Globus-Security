@@ -50,6 +50,8 @@ public abstract class FileBasedObject<T> {
         this.lastModified = this.file.lastModified();
     }
 
+<<<<<<< HEAD:ssl-proxy/src/main/java/org/globus/security/filestore/FileBasedObject.java.orig.orig
+=======
     protected void init(String filename, T object_) throws FileStoreException {
         validateFilename(new File(filename));
         if (object_ == null) {
@@ -60,6 +62,7 @@ public abstract class FileBasedObject<T> {
         this.file = new File(filename);
     }
 
+>>>>>>> Finish first take of keystore class and start of tests.:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedObject.java
     protected T getObject() throws FileStoreException {
 
         reload();
@@ -85,7 +88,10 @@ public abstract class FileBasedObject<T> {
         return this.file;
     }
 
+<<<<<<< HEAD:ssl-proxy/src/main/java/org/globus/security/filestore/FileBasedObject.java.orig.orig
+=======
     // for creation of file from a file
+>>>>>>> Finish first take of keystore class and start of tests.:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedObject.java
     protected abstract T createObject(File filename)
 <<<<<<< HEAD:ssl-proxy/src/main/java/org/globus/security/filestore/FileBasedObject.java.orig
 <<<<<<< HEAD:ssl-proxy/src/main/java/org/globus/security/filestore/FileBasedObject.java

@@ -38,14 +38,6 @@ public class FileBasedCRL extends FileBasedObject<X509CRL> {
         init(file);
     }
 
-    protected X509CRL createObject(X509CRL object) {
-        if (object == null) {
-            throw new IllegalArgumentException("CRL cannot be null");
-        }
-
-        return object;
-    }
-
     protected X509CRL createObject(File file) throws FileStoreException {
 
         X509CRL crl;

@@ -97,21 +97,6 @@ public class TestCertStore extends CertStoreSpi {
 
         // For test, unsupported
         throw new UnsupportedOperationException();
-        /*
-        if (selector == null) {
-            return this.certificate;
-        }
-
-        List certSet = new Vector();
-        Iterator<X509Certificate> iterator = this.certificate.iterator();
-        while (iterator.hasNext()) {
-            X509Certificate cert = iterator.next();
-            if (selector.match(cert)) {
-                certSet.add(cert);
-            }
-        }
-        return certSet;
-         */
     }
 
     /**

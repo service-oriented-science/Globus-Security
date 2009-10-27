@@ -49,7 +49,7 @@ public class FileSetupUtil {
                     FileSetupUtil.class.getClassLoader();
             in = loader.getResourceAsStream(this.filename);
             int index = filename.lastIndexOf(".");
-            temp = File.createTempFile("globusProxyTest",
+            temp = File.createTempFile("globusSecurityTest",
                     filename.substring(index,
                             filename.length()),
                     dir);

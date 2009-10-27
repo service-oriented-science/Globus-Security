@@ -61,13 +61,6 @@ public class FileBasedTrustAnchor extends FileBasedObject<TrustAnchor> {
         super.reload();
     }
 
-    protected TrustAnchor createObject(TrustAnchor object) {
-        if (object == null) {
-            throw new IllegalArgumentException("TrustAnchor cannot be null");
-        }
-        return object;
-    }
-
     protected TrustAnchor createObject(File file) throws FileStoreException {
         X509Certificate certificate;
         try {
