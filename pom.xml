@@ -45,9 +45,6 @@
                             <linkXRef>false</linkXRef>
                             <sourceDirectory>${basedir}/src</sourceDirectory>
                         </configuration>
-                        <goals>
-                            <goal>checkstyle</goal>
-                        </goals>
                     </execution>
                 </executions>
 
@@ -101,15 +98,11 @@
     </build>
     <reporting>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <configuration>
-                    <configLocation>globus-security/checkstyle-checker.xml
-                    </configLocation>
+             <plugin>
+        	<groupId>org.apache.maven.plugins</groupId>
+        	<artifactId>maven-checkstyle-plugin</artifactId>
+		<configuration>
                     <headerLocation>globus-security/LICENSE.txt</headerLocation>
-                    <outputDirectory>${project.build.directory}/resources/
-                    </outputDirectory>
                 </configuration>
             </plugin>
             <plugin>
@@ -142,6 +135,7 @@
                     <excludeRoots>
                         <excludeRoot>target/generated-sources</excludeRoot>
                     </excludeRoots>
+			<configLocation>/globus-security/globus-security-checkstyle.xml</configLocation>
                     <outputDirectory>${project.build.directory}/resources
                     </outputDirectory>
                 </configuration>
