@@ -6,7 +6,15 @@
     <groupId>org.globus.security</groupId>
     <artifactId>ssl-proxy</artifactId>
     <parent>
+<<<<<<< HEAD:ssl-proxy/pom.xml.orig
+<<<<<<< HEAD:ssl-proxy/pom.xml
         <groupId>org.globus.security</groupId>
+=======
+        <groupId>org.globus.crux</groupId>
+>>>>>>> updating poms for style check:proxyProcessor/pom.xml
+=======
+        <groupId>org.globus.security</groupId>
+>>>>>>> fixed parent pom groups:proxyProcessor/pom.xml
         <artifactId>security</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
