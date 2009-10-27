@@ -33,6 +33,7 @@ import java.security.Key;
 import java.security.MessageDigest;
 import java.security.PrivateKey;
 import java.security.SecureRandom;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 import javax.crypto.Cipher;
@@ -142,7 +143,8 @@ public abstract class OpenSSLKey {
         if (data == null) {
             throw new IllegalArgumentException("Data is null");
         }
-        this.keyData = data;
+        this.keyData = Arrays.copyOf(data, data.length);
+
         this.isEncrypted = false;
         this.intKey = getKey(algorithm, data);
     }

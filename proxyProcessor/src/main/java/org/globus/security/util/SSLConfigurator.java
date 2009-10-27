@@ -54,10 +54,6 @@ public class SSLConfigurator {
     private String sslKeyManagerFactoryAlgorithm =
             Security.getProperty("ssl.KeyManagerFactory.algorithm") == null ? "SunX509" : Security.getProperty(
                     "ssl.KeyManagerFactory.algorithm"); // cert algorithm;
-    private String sslTrustManagerFactoryAlgorithm =
-            Security.getProperty("ssl.TrustManagerFactory.algorithm") == null
-                    ? "PKITrustManager"
-                    : Security.getProperty("ssl.TrustManagerFactory.algorithm");
     private String trustStoreType = "PEMFilebasedKeyStore";
     private KeyStore.LoadStoreParameter trustStoreParameters;
     private String trustStorePath;
@@ -286,6 +282,6 @@ public class SSLConfigurator {
     }
 
     public void setSslTrustManagerFactoryAlgorithm(String sslTrustManagerFactoryAlgorithm) {
-        this.sslTrustManagerFactoryAlgorithm = sslTrustManagerFactoryAlgorithm;
+        String sslTrustManagerFactoryAlgorithm1 = sslTrustManagerFactoryAlgorithm;
     }
 }

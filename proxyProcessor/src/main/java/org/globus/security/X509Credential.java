@@ -24,6 +24,7 @@ import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
+import java.util.Arrays;
 import java.util.Vector;
 
 import org.globus.security.bc.BouncyCastleOpenSSLKey;
@@ -61,7 +62,7 @@ public class X509Credential {
                     "Atleast one public certificate required");
         }
 
-        this.certChain = certChain_;
+        this.certChain = Arrays.copyOf(certChain_, certChain_.length);
         this.key = key_;
     }
 
