@@ -150,9 +150,8 @@
 
     <modules>
         <module>proxyProcessor</module>
-        <module>jetty</module>
-        <module>integration-example</module>
         <module>build-tools</module>
+        <module>jetty</module>
     </modules>
 
     <dependencies>
@@ -165,6 +164,11 @@
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
             <version>1.5.8</version>
+        </dependency>
+        <dependency>
+            <groupId>org.globus.security</groupId>
+            <artifactId>build-tools</artifactId>
+            <version>${version}</version>
         </dependency>
     </dependencies>
     <dependencyManagement>
