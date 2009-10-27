@@ -169,11 +169,7 @@
                     <outputDirectory>${project.build.directory}/resources
                     </outputDirectory>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>dashboard-maven-plugin</artifactId>
-            </plugin>
+            </plugin>            
         </plugins>
     </reporting>
 
@@ -194,18 +190,18 @@
                         <artifactId>maven-clover2-plugin</artifactId>
                         <version>2.6.1</version>
                         <configuration>
-                           <snapshot>${user.home}/.clover/globus-security-clover.snapshot</snapshot>
-        <singleCloverDatabase>true</singleCloverDatabase>
-                    </configuration>
+                            <snapshot>${user.home}/.clover/globus-security-clover.snapshot</snapshot>
+                            <singleCloverDatabase>true</singleCloverDatabase>
+                        </configuration>
                         <executions>
-                        <execution>
-                               <id>clover</id>
-                               <goals>
-                                   <goal>setup</goal>
-                                   <goal>optimize</goal>
-                                   <goal>snapshot</goal>
-                               </goals>
-                           </execution>
+                            <execution>
+                                <id>clover</id>
+                                <goals>
+                                    <goal>setup</goal>
+                                    <goal>optimize</goal>
+                                    <goal>snapshot</goal>
+                                </goals>
+                            </execution>
                         </executions>
                     </plugin>
                 </plugins>
