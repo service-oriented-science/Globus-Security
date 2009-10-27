@@ -29,6 +29,7 @@ import java.util.Vector;
 
 import org.globus.security.bc.BouncyCastleOpenSSLKey;
 import org.globus.security.filestore.FileBasedSigningPolicyStore;
+import org.globus.security.util.ArraysUtil;
 import org.globus.security.util.CertificateLoadUtil;
 
 import org.bouncycastle.util.encoders.Base64;
@@ -62,7 +63,7 @@ public class X509Credential {
                     "Atleast one public certificate required");
         }
 
-        this.certChain = Arrays.copyOf(certChain_, certChain_.length);
+        this.certChain = ArraysUtil.copyArray(X509Certificate.class, certChain_, certChain_.length);
         this.key = key_;
     }
 
