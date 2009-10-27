@@ -11,6 +11,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <ansi.color>true</ansi.color>
+        <failIfNoTests>false</failIfNoTests>
     </properties>
 
     <issueManagement>
@@ -63,15 +65,15 @@
                     <target>1.5</target>
                 </configuration>
             </plugin>
-	    <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>findbugs-maven-plugin</artifactId>
-        <version>2.2-SNAPSHOT</version>
-		<configuration>
-			<xmlOutput>true</xmlOutput>
-			<failOnError>false</failOnError>
-		</configuration>
-      </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>2.2-SNAPSHOT</version>
+                <configuration>
+                    <xmlOutput>true</xmlOutput>
+                    <failOnError>false</failOnError>
+                </configuration>
+            </plugin>
 
         </plugins>
         <pluginManagement>
@@ -103,16 +105,33 @@
                     </executions>
                 </plugin>
 
-                
+
             </plugins>
         </pluginManagement>
     </build>
     <reporting>
         <plugins>
-             <plugin>
-        	<groupId>org.apache.maven.plugins</groupId>
-        	<artifactId>maven-checkstyle-plugin</artifactId>
-		<configuration>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jdepend-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>taglist-maven-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <aggregate>true</aggregate>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
                     <headerLocation>globus-security/LICENSE.txt</headerLocation>
                 </configuration>
             </plugin>
@@ -146,70 +165,100 @@
                     <excludeRoots>
                         <excludeRoot>target/generated-sources</excludeRoot>
                     </excludeRoots>
-			<configLocation>/globus-security/globus-security-checkstyle.xml</configLocation>
+                    <configLocation>/globus-security/globus-security-checkstyle.xml</configLocation>
                     <outputDirectory>${project.build.directory}/resources
                     </outputDirectory>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>dashboard-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </reporting>
 
 
     <modules>
-	<module>build-tools</module>
+        <module>build-tools</module>
         <module>proxyProcessor</module>
         <module>jetty</module>
-        <module>integration-example</module>
     </modules>
 
     <profiles>
+        <profile>
+            <id>clover.optimize</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.atlassian.maven.plugins</groupId>
+                        <artifactId>maven-clover2-plugin</artifactId>
+                        <version>2.6.2</version>
+                        <configuration>
+                            <!--<targetPercentage>75%</targetPercentage>-->
+                          <snapshot>${user.home}/.clover/${groupId}-${artifactId}/clover.snapshot</snapshot>
+                          <singleCloverDatabase>true</singleCloverDatabase>
+                    </configuration>
+                        <executions>
+                        <execution>
+                               <id>clover</id>
+                               <goals>
+                                   <goal>setup</goal>
+                                   <goal>optimize</goal>
+                                   <goal>snapshot</goal>
+                               </goals>
+                           </execution>                           
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
         <profile>
             <id>checkstyle</id>
             <build>
                 <defaultGoal>validate</defaultGoal>
                 <plugins>
                     <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <configuration>
-                    <encoding>UTF-8</encoding>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>validate</id>
-                        <phase>validate</phase>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-checkstyle-plugin</artifactId>
                         <configuration>
-                            <configLocation>/globus-security/globus-security-checkstyle.xml</configLocation>
-                            <consoleOutput>true</consoleOutput>
-                            <failsOnError>false</failsOnError>
-                            <linkXRef>false</linkXRef>
-                            <sourceDirectory>${basedir}/src</sourceDirectory>
+                            <encoding>UTF-8</encoding>
                         </configuration>
-                        <goals>
-                            <goal>checkstyle</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                        <executions>
+                            <execution>
+                                <id>validate</id>
+                                <phase>validate</phase>
+                                <configuration>
+                                    <configLocation>/globus-security/globus-security-checkstyle.xml</configLocation>
+                                    <consoleOutput>true</consoleOutput>
+                                    <failsOnError>false</failsOnError>
+                                    <linkXRef>false</linkXRef>
+                                    <sourceDirectory>${basedir}/src</sourceDirectory>
+                                </configuration>
+                                <goals>
+                                    <goal>checkstyle</goal>
+                                </goals>
+                            </execution>
+                        </executions>
 
-                <dependencies>
-                    <dependency>
-                        <groupId>org.globus.security</groupId>
-                        <artifactId>build-tools</artifactId>
-                        <version>1.0-SNAPSHOT</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.globus.security</groupId>
+                                <artifactId>build-tools</artifactId>
+                                <version>1.0-SNAPSHOT</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
                 </plugins>
             </build>
         </profile>
     </profiles>
 
     <dependencies>
-	<dependency>
-		<groupId>org.globus.security</groupId>
-		<artifactId>build-tools</artifactId>
-		<version>${version}</version>
-	</dependency>
+        <dependency>
+            <groupId>org.globus.security</groupId>
+            <artifactId>build-tools</artifactId>
+            <version>${version}</version>
+        </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -347,13 +396,13 @@
 
 
     <pluginRepositories>
-	<pluginRepository>
-		<id>codehaus.snapshot</id>
-		<url>http://snapshots.repository.codehaus.org</url>
-		<snapshots>
-			<enabled>true</enabled>
-		</snapshots>
-	</pluginRepository>
+        <pluginRepository>
+            <id>codehaus.snapshot</id>
+            <url>http://snapshots.repository.codehaus.org</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
         <pluginRepository>
             <id>apache.snapshots</id>
             <url>https://repository.apache.org/content/groups/snapshots-group/</url>
@@ -365,6 +414,11 @@
             <id>globus-repo</id>
             <url>http://repo.globus.org/content/groups/public/</url>
         </pluginRepository>
+        <pluginRepository>
+            <id>Codehaus repository</id>
+            <url>http://repository.codehaus.org/</url>
+        </pluginRepository>
+
     </pluginRepositories>
 
     <repositories>
