@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
@@ -116,6 +117,19 @@ public class CertificateIOUtil {
     public static String certToPEMString(String base64Data) {
         return toStringImpl(base64Data, false);
     }
+
+    /**
+     * Writes certificate to the specified output stream in PEM format.
+     */
+    public static void writeCertificate(OutputStream out,
+                                        X509Certificate cert)
+            throws IOException, CertificateEncodingException {
+        PEMUtil.writeBase64(out,
+                "-----BEGIN CERTIFICATE-----",
+                base64.encode(cert.getEncoded()),
+                "-----END CERTIFICATE-----");
+    }
+
 
     private static String toStringImpl(String base64Data, boolean isKey) {
 

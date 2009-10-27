@@ -35,11 +35,17 @@ public abstract class FileBasedObject<T> {
     private File file = null;
     private boolean changed = false;
 
-    public void init(File filename) throws FileStoreException {
+    protected void init(File filename) throws FileStoreException {
         validateFilename(filename);
         this.file = filename;
         this.object = createObject(this.file);
         this.lastModified = this.file.lastModified();
+    }
+
+    protected void init(String filename, T object_) throws FileStoreException {
+        validateFilename(new File(filename));
+        this.object = createObject(object_);
+        this.file = new File(filename);
     }
 
     protected T getObject() throws FileStoreException {
@@ -69,9 +75,14 @@ public abstract class FileBasedObject<T> {
         return this.file;
     }
 
+    // for validation of object, if needed.
+    protected abstract T createObject(T object);
+
+    // for creation of file from a file
     protected abstract T createObject(File filename)
             throws FileStoreException;
 
+    // for filename validation
     protected abstract void validateFilename(File filename)
             throws FileStoreException;
 }

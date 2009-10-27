@@ -12,7 +12,7 @@ public abstract class FileBasedStore<T> {
 
     public static enum LoadFileType {
 
-        CA_FILE, CRL_FILE //, PRIVATE_KEY
+        CA_FILE, CRL_FILE, PROXY_FILE //, PRIVATE_KEY
     }
 
     public static FileBasedStore getFileBasedStore(LoadFileType fileType) {
@@ -21,6 +21,8 @@ public abstract class FileBasedStore<T> {
                 return new FileBasedCACertStore();
             case CRL_FILE:
                 return new FileBasedCRLStore();
+            case PROXY_FILE:
+                return new FileBasedProxyCredentialStore();
             default:
                 return null;
         }

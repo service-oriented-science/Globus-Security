@@ -41,6 +41,23 @@ public class FileBasedProxyCredential extends FileBasedObject<X509Credential> {
         init(filename);
     }
 
+    public FileBasedProxyCredential(String filename, X509Credential object) throws FileStoreException {
+        init(filename, object);
+    }
+
+    public X509Credential getCredential() throws FileStoreException {
+        X509Credential credential = getObject();
+        return credential;
+    }
+
+    protected X509Credential createObject(X509Credential object) {
+
+        if (object == null) {
+            throw new IllegalArgumentException("X509Credential cannot be null");
+        }
+        return object;
+    }
+
     protected X509Credential createObject(File filename) throws FileStoreException {
 
         InputStream input = null;

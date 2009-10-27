@@ -93,6 +93,19 @@ public class FileBasedTrustAnchor extends FileBasedObject<TrustAnchor> {
     public TrustAnchor getTrustAnchor() throws FileStoreException {
 
         TrustAnchor trustAnchor = getObject();
+<<<<<<< HEAD:ssl-proxy/src/main/java/org/globus/security/filestore/FileBasedTrustAnchor.java.orig.orig.orig
+        this.alias = CertificateIOUtil.nameHash(
+<<<<<<< HEAD:ssl-proxy/src/main/java/org/globus/security/filestore/FileBasedTrustAnchor.java.orig.orig
+<<<<<<< HEAD:ssl-proxy/src/main/java/org/globus/security/filestore/FileBasedTrustAnchor.java
+                trustAnchor.getTrustedCert().getSubjectDN());
+=======
+            trustAnchor.getTrustedCert().getSubjectDN());
+>>>>>>> Changed up exception, working to get proxy loaded up in keystore:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedTrustAnchor.java
+=======
+                trustAnchor.getTrustedCert().getSubjectDN());
+>>>>>>> Updating for merge:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedTrustAnchor.java
+=======
+>>>>>>> Reworked certificate handling, added key handling in KeyStoreImpl:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedTrustAnchor.java
         return trustAnchor;
     }
 

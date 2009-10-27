@@ -18,16 +18,23 @@ package org.globus.security;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.EOFException;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.security.GeneralSecurityException;
+import java.security.Key;
 import java.security.PrivateKey;
+import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
+import java.util.Date;
 import java.util.Vector;
 
 import org.globus.security.bc.BouncyCastleOpenSSLKey;
 import org.globus.security.filestore.FileBasedSigningPolicyStore;
+import org.globus.security.util.CertificateIOUtil;
 import org.globus.security.util.CertificateLoadUtil;
 
 import org.bouncycastle.util.encoders.Base64;
@@ -38,6 +45,7 @@ import org.slf4j.LoggerFactory;
  * FILL ME
  * <p/>
  * This class equivalent was called GlobusCredential in CoG -maybe a better name?
+ * FIXME: add support for encrypted keys.
  *
  * @author ranantha@mcs.anl.gov
  */
@@ -67,6 +75,14 @@ public class X509Credential {
 
     public X509Credential(InputStream stream) throws CredentialException {
         loadCredential(stream);
+    }
+
+    public X509Certificate[] getCertificateChain() {
+        return this.certChain;
+    }
+
+    public Key getPrivateKey() {
+        return this.key;
     }
 
     protected void loadCredential(InputStream input)
@@ -154,5 +170,42 @@ public class X509Credential {
         throw new EOFException("Missing PEM end footer");
     }
 
+    public void save(OutputStream out)
+            throws IOException, CertificateEncodingException {
+
+        CertificateIOUtil.writeCertificate(out, this.certChain[0]);
+
+        OpenSSLKey k = new BouncyCastleOpenSSLKey(key);
+        k.writeTo(out);
+
+        for (int i = 1; i < this.certChain.length; i++) {
+            // FIXME: should we?
+            // this will skip the self-signed certificates
+            if (this.certChain[i].getSubjectDN().equals(certChain[i].getIssuerDN())) continue;
+            CertificateIOUtil.writeCertificate(out, this.certChain[i]);
+        }
+
+        out.flush();
+    }
+
+    public void writeToFile(File file) throws IOException, CertificateEncodingException {
+        FileOutputStream outputStream = new FileOutputStream(file);
+        try {
+            save(outputStream);
+        } finally {
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                } catch (IOException e) {
+                    logger.warn("Could not close stream on save to file.");
+                }
+            }
+        }
+    }
+
+    public Date getNotBefore() {
+        // FILL ME
+        return new Date();
+    }
 
 }
