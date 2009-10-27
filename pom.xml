@@ -192,11 +192,10 @@
                     <plugin>
                         <groupId>com.atlassian.maven.plugins</groupId>
                         <artifactId>maven-clover2-plugin</artifactId>
-                        <version>2.6.2</version>
+                        <version>2.6.1</version>
                         <configuration>
-                            <!--<targetPercentage>75%</targetPercentage>-->
-                          <snapshot>${user.home}/.clover/${groupId}-${artifactId}/clover.snapshot</snapshot>
-                          <singleCloverDatabase>true</singleCloverDatabase>
+                           <snapshot>${user.home}/.clover/globus-security-clover.snapshot</snapshot>
+        <singleCloverDatabase>true</singleCloverDatabase>
                     </configuration>
                         <executions>
                         <execution>
@@ -206,7 +205,7 @@
                                    <goal>optimize</goal>
                                    <goal>snapshot</goal>
                                </goals>
-                           </execution>                           
+                           </execution>
                         </executions>
                     </plugin>
                 </plugins>
