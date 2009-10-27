@@ -108,14 +108,14 @@ public class ProxyCertInfo implements DEREncodable {
      */
     public static ProxyCertInfo getInstance(Object obj) {
 
-        String err = obj.getClass().getName();
+//        String err = obj.getClass().getName();
 
         if (obj instanceof ProxyCertInfo) {
             return (ProxyCertInfo) obj;
         } else if (obj instanceof ASN1Sequence) {
             return new ProxyCertInfo((ASN1Sequence) obj);
         } else if (obj instanceof byte[]) {
-            DERObject derObj = null;
+            DERObject derObj;
             try {
                 derObj = CertificateUtil.toDERObject((byte[]) obj);
             } catch (IOException e) {
