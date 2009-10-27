@@ -74,7 +74,6 @@
                     <failOnError>false</failOnError>
                 </configuration>
             </plugin>
-
         </plugins>
         <pluginManagement>
             <plugins>
@@ -169,7 +168,7 @@
                     <outputDirectory>${project.build.directory}/resources
                     </outputDirectory>
                 </configuration>
-            </plugin>            
+            </plugin>
         </plugins>
     </reporting>
 
@@ -182,7 +181,7 @@
 
     <profiles>
         <profile>
-            <id>clover.optimize</id>
+            <id>clover</id>
             <build>
                 <plugins>
                     <plugin>
@@ -190,12 +189,36 @@
                         <artifactId>maven-clover2-plugin</artifactId>
                         <version>2.6.1</version>
                         <configuration>
-                            <snapshot>${user.home}/.clover/globus-security-clover.snapshot</snapshot>
-                            <singleCloverDatabase>true</singleCloverDatabase>
+                            <includesTestSourceRoots>false</includesTestSourceRoots>
+                            <generatePdf>false</generatePdf>
+                            <generateXml>true</generateXml>
+                            <generateHtml>false</generateHtml>
                         </configuration>
                         <executions>
                             <execution>
-                                <id>clover</id>
+                                <id>main</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>setup</goal>
+                                    <goal>aggregate</goal>
+                                    <goal>clover</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>clover.optimize</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.atlassian.maven.plugins</groupId>
+                        <artifactId>maven-clover2-plugin</artifactId>
+                        <version>2.6.1</version>
+                        <executions>
+                            <execution>
                                 <goals>
                                     <goal>setup</goal>
                                     <goal>optimize</goal>
