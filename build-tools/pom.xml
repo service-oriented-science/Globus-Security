@@ -8,5 +8,17 @@
     <artifactId>build-tools</artifactId>
     <name>Globus Security Build Tools</name>
     <version>1.0-SNAPSHOT</version>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>globus.snapshot.repo</id>
+            <name>Globus Snapshot Repository</name>
+            <url>http://repo.globus.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>globus.release.repo</id>
+            <name>Globus Release Repository</name>
+            <url>http://repo.globus.org/content/repositories/releases</url>
+        </repository>
+    </distributionManagement>
 
 </project>
