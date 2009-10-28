@@ -7,27 +7,13 @@
     <artifactId>ssl-proxy</artifactId>
     <parent>
         <groupId>org.globus.security</groupId>
-        <artifactId>security</artifactId>
+        <artifactId>parent</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <version>1.0-SNAPSHOT</version>
     <name>Globus Support for SSL Proxies</name>
     <packaging>jar</packaging>
 
-    <build>
-        <plugins>
-            <plugin>
-                <inherited>true</inherited>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-
+    
     <dependencies>
         <dependency>
             <artifactId>bcprov-jdk14</artifactId>
@@ -75,5 +61,5 @@
             <version>6.1.19</version>
             <scope>test</scope>
         </dependency>
-    </dependencies>    
+    </dependencies>
 </project>
