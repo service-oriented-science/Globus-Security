@@ -55,7 +55,6 @@
                     </execution>
                 </executions>
 
-<<<<<<< HEAD:pom.xml
                 <dependencies>
                     <dependency>
                         <groupId>org.globus.security</groupId>
@@ -66,11 +65,6 @@
             </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-=======
-<!--            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
->>>>>>> cleaning pom:pom.xml
                 <configuration>
                     <source>1.5</source>
                     <target>1.5</target>
@@ -118,7 +112,6 @@
                     <headerLocation>globus-security/LICENSE.txt</headerLocation>
                 </configuration>
             </plugin>
--->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-changes-plugin</artifactId>
@@ -137,7 +130,7 @@
                     <aggregate>true</aggregate>
                 </configuration>
             </plugin>
-<!--            <plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
                 <!--<version>2.3</version>-->
@@ -159,20 +152,30 @@
                 <artifactId>maven-xradar-plugin</artifactId>
                 <configuration>
                     <autoRadar>false</autoRadar>
+<<<<<<< HEAD:pom.xml
                     <!--need to be set at false-->
                     <reportPmd>${project.build.directory}/resources/pmd.xml
                     </reportPmd>
                     <reportCheckstyle>
                         ${project.build.directory}/resources/checkstyle.xml
                     </reportCheckstyle>
+=======
+                    <reportPmd>${project.build.directory}/pmd.xml</reportPmd>
+                    <reportCheckstyle>${project.build.directory}/resources/checkstyle.xml</reportCheckstyle>
                 </configuration>
             </plugin>
-<<<<<<< HEAD:pom.xml
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>2.0</version>
+                <configuration>
+                    <effort>Max</effort>
+                    <threshold>Low</threshold>
+>>>>>>> cleaning pom:pom.xml
+                </configuration>
+            </plugin>
 
         </plugins>
-=======
-    -->    </plugins>
->>>>>>> cleaning pom:pom.xml
     </reporting>
 
 
