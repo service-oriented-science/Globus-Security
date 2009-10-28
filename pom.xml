@@ -33,13 +33,14 @@
                 </configuration>
             </plugin>
 
-            <plugin>
+<!--            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <configuration>
                     <headerLocation>globus-security/LICENSE.txt</headerLocation>
                 </configuration>
             </plugin>
+-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-changes-plugin</artifactId>
@@ -58,7 +59,7 @@
                     <aggregate>true</aggregate>
                 </configuration>
             </plugin>
-            <plugin>
+<!--            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
             </plugin>
@@ -91,7 +92,7 @@
                     <threshold>Low</threshold>
                 </configuration>
             </plugin>
-        </plugins>
+    -->    </plugins>
     </reporting>
 
 
