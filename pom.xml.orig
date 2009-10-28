@@ -3,17 +3,12 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <groupId>org.globus.security</groupId>
     <artifactId>security</artifactId>
-    <parent>
-        <groupId>org.globus.security</groupId>
-        <artifactId>parent</artifactId>
-        <version>1.0-SNAPSHOT</version>
-        <relativePath>parent</relativePath>
-    </parent>
     <packaging>pom</packaging>
-    <name>Globus Security (Master Project)</name>
+    <version>1.0-SNAPSHOT</version>
+    <name>Security (Master Project)</name>
 
-<<<<<<< HEAD:pom.xml
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -60,6 +55,7 @@
                     </execution>
                 </executions>
 
+<<<<<<< HEAD:pom.xml
                 <dependencies>
                     <dependency>
                         <groupId>org.globus.security</groupId>
@@ -70,6 +66,11 @@
             </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
+=======
+<!--            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+>>>>>>> cleaning pom:pom.xml
                 <configuration>
                     <source>1.5</source>
                     <target>1.5</target>
@@ -108,9 +109,6 @@
             </plugins>
         </pluginManagement>
     </build>
-=======
-
->>>>>>> reorganized structure:pom.xml
     <reporting>
         <plugins>
              <plugin>
@@ -120,6 +118,7 @@
                     <headerLocation>globus-security/LICENSE.txt</headerLocation>
                 </configuration>
             </plugin>
+-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-changes-plugin</artifactId>
@@ -138,10 +137,9 @@
                     <aggregate>true</aggregate>
                 </configuration>
             </plugin>
-            <plugin>
+<!--            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
-<<<<<<< HEAD:pom.xml
                 <!--<version>2.3</version>-->
                 <configuration>
                     <linkXref>true</linkXref>
@@ -155,14 +153,11 @@
                     <outputDirectory>${project.build.directory}/resources
                     </outputDirectory>
                 </configuration>
-=======
->>>>>>> reorganized structure:pom.xml
             </plugin>
             <plugin>
                 <groupId>net.sf.xradar</groupId>
                 <artifactId>maven-xradar-plugin</artifactId>
                 <configuration>
-<<<<<<< HEAD:pom.xml
                     <autoRadar>false</autoRadar>
                     <!--need to be set at false-->
                     <reportPmd>${project.build.directory}/resources/pmd.xml
@@ -170,35 +165,14 @@
                     <reportCheckstyle>
                         ${project.build.directory}/resources/checkstyle.xml
                     </reportCheckstyle>
-=======
-                    <generatePdf>false</generatePdf>
-                    <generateXml>true</generateXml>
-                    <generateHtml>true</generateHtml>
-                    <generateHistorical>true</generateHistorical>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>net.sf.xradar</groupId>
-                <artifactId>maven-xradar-plugin</artifactId>
-                <configuration>
-                    <autoRadar>false</autoRadar>
-                    <!--need to be set at false-->
-                    <reportPmd>${project.build.directory}/pmd.xml</reportPmd>
-                    <reportCheckstyle>${project.build.directory}/resources/checkstyle.xml</reportCheckstyle>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-                <version>2.0</version>
-                <configuration>
-                    <effort>Max</effort>
-                    <threshold>Low</threshold>
->>>>>>> reorganized structure:pom.xml
-                </configuration>
-            </plugin>
+<<<<<<< HEAD:pom.xml
 
         </plugins>
+=======
+    -->    </plugins>
+>>>>>>> cleaning pom:pom.xml
     </reporting>
 
 
@@ -207,7 +181,6 @@
         <module>proxyProcessor</module>
         <module>build-tools</module>
         <module>jetty</module>
-<<<<<<< HEAD:pom.xml
         <module>crux-wss4j</module>
     </modules>
 
@@ -217,94 +190,6 @@
 		<artifactId>build-tools</artifactId>
 		<version>${version}</version>
 	</dependency>
-=======
-        <module>parent</module>
-    </modules>
-
-    <profiles>
-        <profile>
-            <id>checkstyle</id>
-            <build>
-                <defaultGoal>validate</defaultGoal>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-checkstyle-plugin</artifactId>
-                        <configuration>
-                            <encoding>UTF-8</encoding>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>validate</id>
-                                <phase>validate</phase>
-                                <configuration>
-                                    <configLocation>/globus-security/globus-security-checkstyle.xml</configLocation>
-                                    <consoleOutput>true</consoleOutput>
-                                    <failsOnError>false</failsOnError>
-                                    <linkXRef>false</linkXRef>
-                                    <sourceDirectory>${basedir}/src</sourceDirectory>
-                                </configuration>
-                                <goals>
-                                    <goal>checkstyle</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-
-                        <dependencies>
-                            <dependency>
-                                <groupId>org.globus.security</groupId>
-                                <artifactId>build-tools</artifactId>
-                                <version>1.0-SNAPSHOT</version>
-                            </dependency>
-                        </dependencies>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>pmd</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-pmd-plugin</artifactId>
-                        <configuration>
-
-                            <aggregate>true</aggregate>
-                            <minimumTokens>100</minimumTokens>
-                            <outputDirectory>${build.directory}</outputDirectory>
-                            <targetDirectory>${build.directory}</targetDirectory>
-                            <excludes>
-                                <exclude>*/generated/.java</exclude>
-                            </excludes>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <phase>validate</phase>
-                                <goals>
-                                    <goal>pmd</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
-
-
-    <build>
-        <extensions>
-            <extension>
-                <groupId>org.globus.security</groupId>
-                <artifactId>build-tools</artifactId>
-                <version>${version}</version>
-            </extension>
-        </extensions>
-    </build>
-
-    <dependencies>
->>>>>>> reorganized structure:pom.xml
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -321,7 +206,6 @@
             <version>${version}</version>
         </dependency>
     </dependencies>
-<<<<<<< HEAD:pom.xml
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -445,8 +329,6 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-=======
->>>>>>> reorganized structure:pom.xml
 
 
 </project>
