@@ -63,18 +63,6 @@
                     <target>1.5</target>
                 </configuration>
             </plugin>
-<<<<<<< HEAD:pom.xml
-=======
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-                <version>2.2-SNAPSHOT</version>
-                <configuration>
-                    <xmlOutput>true</xmlOutput>
-                    <failOnError>false</failOnError>
-                </configuration>
-            </plugin>
->>>>>>> added clover and clover.optimize profiles:pom.xml
         </plugins>
         <pluginManagement>
             <plugins>
@@ -152,8 +140,8 @@
                     </outputDirectory>
                 </configuration>
             </plugin>
-<<<<<<< HEAD:pom.xml
             <plugin>
+<<<<<<< HEAD:pom.xml
                 <groupId>net.sf.xradar</groupId>
                 <artifactId>maven-xradar-plugin</artifactId>
                 <configuration>
@@ -168,7 +156,16 @@
             </plugin>
 
 =======
->>>>>>> added clover and clover.optimize profiles:pom.xml
+                <groupId>com.atlassian.maven.plugins</groupId>
+                <artifactId>maven-clover2-plugin</artifactId>
+                <configuration>
+                    <generatePdf>false</generatePdf>
+                    <generateXml>true</generateXml>
+                    <generateHtml>false</generateHtml>
+                    <!--<generateHistorical>true</generateHistorical>-->
+                </configuration>
+            </plugin>
+>>>>>>> success configuring clover:pom.xml
         </plugins>
     </reporting>
 
@@ -194,39 +191,26 @@
                         <version>2.6.1</version>
                         <configuration>
                             <includesTestSourceRoots>false</includesTestSourceRoots>
-                            <generatePdf>false</generatePdf>
-                            <generateXml>true</generateXml>
-                            <generateHtml>false</generateHtml>
                         </configuration>
                         <executions>
                             <execution>
                                 <id>main</id>
                                 <phase>verify</phase>
                                 <goals>
-                                    <goal>setup</goal>
+                                    <goal>instrument</goal>
                                     <goal>aggregate</goal>
-                                    <goal>clover</goal>
+                                    <goal>check</goal>
+                                    <goal>log</goal>
                                 </goals>
                             </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>clover.optimize</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.atlassian.maven.plugins</groupId>
-                        <artifactId>maven-clover2-plugin</artifactId>
-                        <version>2.6.1</version>
-                        <executions>
                             <execution>
+                                <id>site</id>
+                                <phase>pre-site</phase>
                                 <goals>
-                                    <goal>setup</goal>
-                                    <goal>optimize</goal>
-                                    <goal>snapshot</goal>
+                                    <goal>instrument</goal>
+                                    <goal>aggregate</goal>
+                                    <goal>clover</goal>
+                                    <!--<goal>save-history</goal>-->
                                 </goals>
                             </execution>
                         </executions>
@@ -275,7 +259,7 @@
         </profile>
     </profiles>
 
->>>>>>> added clover and clover.optimize profiles:pom.xml
+>>>>>>> success configuring clover:pom.xml
     <dependencies>
 	<dependency>
 		<groupId>org.globus.security</groupId>
