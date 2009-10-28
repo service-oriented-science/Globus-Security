@@ -9,25 +9,17 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Globus Security Parent</name>
-<<<<<<< HEAD:parent/pom.xml
-    <url>http://www.globus.org</url>
-=======
->>>>>>> reorganized structure:parent/pom.xml
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <ansi.color>true</ansi.color>
         <failIfNoTests>false</failIfNoTests>
-<<<<<<< HEAD:parent/pom.xml
-=======
         <site.distro.url>file:/Users/turtlebender/Sites/Globus-Security</site.distro.url>
->>>>>>> reorganized structure:parent/pom.xml
     </properties>
 
     <issueManagement>
         <system>JIRA</system>
-<<<<<<< HEAD:parent/pom.xml
-        <url>http://jira.globus.org/browse/SOS/component/10060</url>
+        <url>http://jira.globus.org/browse/SOS</url>
     </issueManagement>
 
     <scm>
@@ -36,11 +28,6 @@
         <url>http://github.com/service-oriented-science/Globus-Security</url>
     </scm>
 
-=======
-        <url>http://jira.globus.org/browse/SOS</url>
-    </issueManagement>
-
->>>>>>> reorganized structure:parent/pom.xml
     <distributionManagement>
         <snapshotRepository>
             <id>globus.snapshot.repo</id>
@@ -55,21 +42,13 @@
         <site>
             <id>maven.site</id>
             <name>Globus Maven Site</name>
-<<<<<<< HEAD:parent/pom.xml
             <url>scpexe://login.mcs.anl.gov/home/trhowe/public_html/</url>
-=======
-            <url>${site.distro.url}</url>
->>>>>>> reorganized structure:parent/pom.xml
         </site>
     </distributionManagement>
 
     <build>
         <plugins>
-<<<<<<< HEAD:parent/pom.xml
-            <!--<plugin>
-=======
             <plugin>
->>>>>>> reorganized structure:parent/pom.xml
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <configuration>
@@ -97,11 +76,7 @@
                         <version>1.0-SNAPSHOT</version>
                     </dependency>
                 </dependencies>
-<<<<<<< HEAD:parent/pom.xml
-            </plugin>-->
-=======
             </plugin>
->>>>>>> reorganized structure:parent/pom.xml
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
@@ -109,11 +84,7 @@
                     <target>1.5</target>
                 </configuration>
             </plugin>
-<<<<<<< HEAD:parent/pom.xml
-            <!--  <plugin>
-=======
             <plugin>
->>>>>>> reorganized structure:parent/pom.xml
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>
                 <version>2.2-SNAPSHOT</version>
@@ -121,18 +92,11 @@
                     <xmlOutput>true</xmlOutput>
                     <failOnError>false</failOnError>
                 </configuration>
-<<<<<<< HEAD:parent/pom.xml
-            </plugin>-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <version>1.0-beta-1</version>
-=======
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
->>>>>>> reorganized structure:parent/pom.xml
+                <version>1.0-beta-1</version>
                 <executions>
                     <execution>
                         <id>enforce-banned-dependencies</id>
@@ -141,17 +105,16 @@
                         </goals>
                         <configuration>
                             <rules>
-                                <requireMavenVersion>
 <<<<<<< HEAD:parent/pom.xml
+                                <requireMavenVersion>
 
                                     <version>2.0.9</version>
-=======
-                                    <version>2.0.10</version>
->>>>>>> reorganized structure:parent/pom.xml
                                 </requireMavenVersion>
                                 <requireJavaVersion>
                                     <version>1.5</version>
                                 </requireJavaVersion>
+=======
+>>>>>>> cleaning pom:parent/pom.xml
                                 <bannedDependencies>
                                     <excludes>
                                         <exclude>commons-logging</exclude>
@@ -290,7 +253,6 @@
                 <version>5.8</version>
                 <scope>test</scope>
             </dependency>
-<<<<<<< HEAD:parent/pom.xml
             <dependency>
                 <groupId>org.apache.neethi</groupId>
                 <artifactId>neethi</artifactId>
@@ -306,8 +268,6 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-=======
->>>>>>> reorganized structure:parent/pom.xml
         </dependencies>
     </dependencyManagement>
 
@@ -342,14 +302,6 @@
             <id>globus-repo</id>
             <url>http://repo.globus.org/content/groups/public/</url>
         </repository>
-<<<<<<< HEAD:parent/pom.xml
-=======
-        <repository>
-            <id>spring-milestone</id>
-            <name>Spring Portfolio Milestone Repository</name>
-            <url>http://s3.amazonaws.com/maven.springframework.org/milestone</url>
-        </repository>
->>>>>>> reorganized structure:parent/pom.xml
 
         <repository>
             <id>apache.snapshots</id>
@@ -360,8 +312,4 @@
         </repository>
     </repositories>
 
-<<<<<<< HEAD:parent/pom.xml
 </project>
-=======
-</project>
->>>>>>> reorganized structure:parent/pom.xml
