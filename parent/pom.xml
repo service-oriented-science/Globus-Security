@@ -9,17 +9,17 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Globus Security Parent</name>
+    <url>http://www.globus.org</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <ansi.color>true</ansi.color>
         <failIfNoTests>false</failIfNoTests>
-        <site.distro.url>file:/Users/turtlebender/Sites/Globus-Security</site.distro.url>
     </properties>
 
     <issueManagement>
         <system>JIRA</system>
-        <url>http://jira.globus.org/browse/SOS</url>
+        <url>http://jira.globus.org/browse/SOS/component/10060</url>
     </issueManagement>
 
     <scm>
