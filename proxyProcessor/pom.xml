@@ -7,13 +7,13 @@
     <artifactId>ssl-proxy</artifactId>
     <parent>
         <groupId>org.globus.security</groupId>
-        <artifactId>parent</artifactId>
+        <artifactId>security</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <name>Globus Support for SSL Proxies</name>
     <packaging>jar</packaging>
 
-    
+
     <dependencies>
         <dependency>
             <artifactId>bcprov-jdk14</artifactId>
