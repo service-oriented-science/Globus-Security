@@ -14,86 +14,131 @@
     <name>Globus Security (Master Project)</name>
 
 
+    <build>
+        <extensions>
+            <extension>
+                <groupId>org.globus.security</groupId>
+                <artifactId>build-tools</artifactId>
+                <version>${version}</version>
+            </extension>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh-external</artifactId>
+                <version>1.0-alpha-5</version>
+            </extension>
+        </extensions>
+        <plugins>
+            <plugin>
+                <groupId>com.atlassian.maven.plugins</groupId>
+                <artifactId>maven-clover2-plugin</artifactId>
+                <version>2.6.1</version>
+                <executions>
+                    <execution>
+                        <id>main</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>instrument</goal>
+                            <goal>aggregate</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>site</id>
+                        <phase>pre-site</phase>
+                        <goals>
+                            <goal>instrument</goal>
+                            <goal>aggregate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
     <reporting>
         <plugins>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>jdepend-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>taglist-maven-plugin</artifactId>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>2.1</version>
                 <configuration>
                     <aggregate>true</aggregate>
                 </configuration>
             </plugin>
-
-<!--            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <configuration>
-                    <headerLocation>globus-security/LICENSE.txt</headerLocation>
-                </configuration>
-            </plugin>
--->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-changes-plugin</artifactId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.6.1</version>
+                <configuration>
+                </configuration>
                 <reportSets>
                     <reportSet>
+                        <id>non-aggregate</id>
+                        <configuration>
+                        </configuration>
                         <reports>
-                            <report>jira-report</report>
+                            <report>javadoc</report>
+                        </reports>
+                    </reportSet>
+                    <reportSet>
+                        <id>aggregate</id>
+                        <configuration>
+                        </configuration>
+                        <reports>
+                            <report>aggregate</report>
                         </reports>
                     </reportSet>
                 </reportSets>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jxr-plugin</artifactId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>2.4.3</version>
                 <configuration>
-                    <aggregate>true</aggregate>
+                    <xrefLocation>${project.reporting.outputDirectory}/../xref-test</xrefLocation>
                 </configuration>
             </plugin>
-<!--            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
+            <plugin>
                 <artifactId>maven-pmd-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <xrefLocation>${project.reporting.outputDirectory}/../xref</xrefLocation>
+                    <targetJdk>1.5</targetJdk>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jdepend-maven-plugin</artifactId>
+                <version>2.0-beta-2</version>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>2.2-SNAPSHOT</version>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>javancss-maven-plugin</artifactId>
+                <version>2.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>taglist-maven-plugin</artifactId>
+                <version>2.4</version>
+            </plugin>
+            <plugin>
+                <groupId>net.sf.xradar</groupId>
+                <artifactId>maven-xradar-plugin</artifactId>
+                <version>1.2.1-RC1</version>
             </plugin>
             <plugin>
                 <groupId>com.atlassian.maven.plugins</groupId>
                 <artifactId>maven-clover2-plugin</artifactId>
                 <configuration>
-                    <generatePdf>false</generatePdf>
-                    <generateXml>true</generateXml>
                     <generateHtml>true</generateHtml>
-                    <generateHistorical>true</generateHistorical>
+                    <generateJson>true</generateJson>
+                    <generateXml>true</generateXml>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>net.sf.xradar</groupId>
-                <artifactId>maven-xradar-plugin</artifactId>
-                <configuration>
-                    <autoRadar>false</autoRadar>
-                    <reportPmd>${project.build.directory}/pmd.xml</reportPmd>
-                    <reportCheckstyle>${project.build.directory}/resources/checkstyle.xml</reportCheckstyle>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-                <version>2.0</version>
-                <configuration>
-                    <effort>Max</effort>
-                    <threshold>Low</threshold>
-                </configuration>
-            </plugin>
-    -->    </plugins>
+        </plugins>
     </reporting>
-
 
     <modules>
         <module>build-tools</module>
@@ -102,87 +147,86 @@
         <module>parent</module>
     </modules>
 
-    <profiles>        
-        <profile>
-            <id>checkstyle</id>
-            <build>
-                <defaultGoal>validate</defaultGoal>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-checkstyle-plugin</artifactId>
-                        <configuration>
-                            <encoding>UTF-8</encoding>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>validate</id>
-                                <phase>validate</phase>
-                                <configuration>
-                                    <configLocation>/globus-security/globus-security-checkstyle.xml</configLocation>
-                                    <consoleOutput>true</consoleOutput>
-                                    <failsOnError>false</failsOnError>
-                                    <linkXRef>false</linkXRef>
-                                    <sourceDirectory>${basedir}/src</sourceDirectory>
-                                </configuration>
-                                <goals>
-                                    <goal>checkstyle</goal>
-                                </goals>
-                            </execution>
-                        </executions>
+    <!--<profiles>-->
+    <!--<profile>-->
+    <!--<id>compliance</id>-->
+    <!--<build>-->
+    <!--<plugins>-->
+    <!--<plugin>-->
+    <!--<groupId>org.apache.maven.plugins</groupId>-->
+    <!--<artifactId>maven-pmd-plugin</artifactId>-->
+    <!--<configuration>-->
 
-                        <dependencies>
-                            <dependency>
-                                <groupId>org.globus.security</groupId>
-                                <artifactId>build-tools</artifactId>
-                                <version>1.0-SNAPSHOT</version>
-                            </dependency>
-                        </dependencies>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>pmd</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-pmd-plugin</artifactId>
-                        <configuration>
+    <!--<aggregate>true</aggregate>-->
+    <!--<minimumTokens>100</minimumTokens>-->
+    <!--<outputDirectory>${build.directory}</outputDirectory>-->
+    <!--<targetDirectory>${build.directory}</targetDirectory>-->
+    <!--<excludes>-->
+    <!--<exclude>*/generated/.java</exclude>-->
+    <!--</excludes>-->
+    <!--</configuration>-->
+    <!--<executions>-->
+    <!--<execution>-->
+    <!--<phase>validate</phase>-->
+    <!--<goals>-->
+    <!--<goal>pmd</goal>-->
+    <!--</goals>-->
+    <!--</execution>-->
+    <!--</executions>-->
+    <!--</plugin>-->
+    <!--<plugin>-->
+    <!--<groupId>org.apache.maven.plugins</groupId>-->
+    <!--<artifactId>maven-checkstyle-plugin</artifactId>-->
+    <!--<configuration>-->
+    <!--<encoding>UTF-8</encoding>-->
+    <!--</configuration>-->
+    <!--<executions>-->
+    <!--<execution>-->
+    <!--<id>validate</id>-->
+    <!--<phase>validate</phase>-->
+    <!--<configuration>-->
+    <!--<configLocation>/globus-security/globus-security-checkstyle.xml</configLocation>-->
+    <!--<consoleOutput>true</consoleOutput>-->
+    <!--<failsOnError>false</failsOnError>-->
+    <!--<linkXRef>false</linkXRef>-->
+    <!--<sourceDirectory>${basedir}/src</sourceDirectory>-->
+    <!--</configuration>-->
+    <!--<goals>-->
+    <!--<goal>checkstyle</goal>-->
+    <!--</goals>-->
+    <!--</execution>-->
+    <!--</executions>-->
 
-                            <aggregate>true</aggregate>
-                            <minimumTokens>100</minimumTokens>
-                            <outputDirectory>${build.directory}</outputDirectory>
-                            <targetDirectory>${build.directory}</targetDirectory>
-                            <excludes>
-                                <exclude>*/generated/.java</exclude>
-                            </excludes>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <phase>validate</phase>
-                                <goals>
-                                    <goal>pmd</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
+    <!--<dependencies>-->
+    <!--<dependency>-->
+    <!--<groupId>org.globus.security</groupId>-->
+    <!--<artifactId>build-tools</artifactId>-->
+    <!--<version>1.0-SNAPSHOT</version>-->
+    <!--</dependency>-->
+    <!--</dependencies>-->
+    <!--</plugin>-->
+    <!--</plugins>-->
+    <!--</build>-->
+    <!--</profile>-->
+    <!--<profile>-->
+    <!--<id>clover</id>-->
+    <!--<reporting>-->
+    <!--<plugins>-->
+    <!--<plugin>-->
+    <!--<groupId>com.atlassian.maven.plugins</groupId>-->
+    <!--<artifactId>maven-clover2-plugin</artifactId>-->
+    <!--<configuration>-->
+    <!--<generatePdf>false</generatePdf>-->
+    <!--<generateXml>true</generateXml>-->
+    <!--<generateHtml>true</generateHtml>-->
+    <!--<generateHistorical>true</generateHistorical>-->
+    <!--</configuration>-->
+    <!--</plugin>-->
+    <!--</plugins>-->
+    <!--</reporting>-->
+    <!--</profile>-->
+    <!--</profiles>-->
 
-
-    <build>
-        <extensions>
-            <extension>
-                <groupId>org.globus.security</groupId>
-                <artifactId>build-tools</artifactId>
-                <version>${version}</version>
-            </extension>
-        </extensions>
-    </build>
 
     <dependencies>
         <dependency>
