@@ -9,7 +9,21 @@
 <<<<<<< HEAD:ssl-proxy/pom.xml.orig
 <<<<<<< HEAD:ssl-proxy/pom.xml
         <groupId>org.globus.security</groupId>
+<<<<<<< HEAD:ssl-proxy/pom.xml.orig.orig.orig
+<<<<<<< HEAD:ssl-proxy/pom.xml.orig.orig
+=======
+        <groupId>org.globus.crux</groupId>
+>>>>>>> updating poms for style check:proxyProcessor/pom.xml
+=======
+        <groupId>org.globus.security</groupId>
+>>>>>>> fixed parent pom groups:proxyProcessor/pom.xml
         <artifactId>security</artifactId>
+=======
+        <artifactId>parent</artifactId>
+>>>>>>> reorganized structure:proxyProcessor/pom.xml
+=======
+        <artifactId>security</artifactId>
+>>>>>>> Changed pom hierarchy:proxyProcessor/pom.xml
         <version>1.0-SNAPSHOT</version>
     </parent>
     <name>Globus Support for SSL Proxies</name>
