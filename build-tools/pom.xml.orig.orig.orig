@@ -4,6 +4,25 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
+<<<<<<< HEAD:build-tools/pom.xml.orig.orig
+<<<<<<< HEAD:build-tools/pom.xml
+<<<<<<< HEAD:build-tools/pom.xml.orig
+    <parent>
+        <groupId>org.globus.security</groupId>
+        <artifactId>parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+=======
+    <groupId>org.globus.security</groupId>
+>>>>>>> fixed parent pom groups:build-tools/pom.xml
+    <artifactId>build-tools</artifactId>
+    <name>Globus Security Build Tools</name>
+
+</project>
+=======
+=======
+    <parent>
+=======
 <<<<<<< HEAD:build-tools/pom.xml.orig
 <<<<<<< HEAD:build-tools/pom.xml
 =======
@@ -22,10 +41,25 @@
 =======
     <parent>
 <<<<<<< HEAD:build-tools/pom.xml
+>>>>>>> merging:build-tools/pom.xml.orig.orig
         <groupId>org.globus.crux</groupId>
         <artifactId>security</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
+<<<<<<< HEAD:build-tools/pom.xml.orig.orig
+>>>>>>> updating poms for style check:build-tools/pom.xml
+    <groupId>org.globus.security</groupId>
+    <artifactId>build-tools</artifactId>
+    <name>Globus Security Build Tools</name>
+    <version>1.0-SNAPSHOT</version>
+
+<<<<<<< HEAD:build-tools/pom.xml
+</project>
+=======
+</project>
+>>>>>>> updating poms for style check:build-tools/pom.xml
+>>>>>>> updating poms for style check:build-tools/pom.xml.orig
+=======
     <groupId>org.globus.security</groupId>
 =======
         <groupId>org.globus.security</groupId>
@@ -38,3 +72,4 @@
 
 </project>
 >>>>>>> merging:build-tools/pom.xml.orig
+>>>>>>> merging:build-tools/pom.xml.orig.orig

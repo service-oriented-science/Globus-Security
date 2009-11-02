@@ -19,6 +19,16 @@
     </issueManagement>
 
     <distributionManagement>
+<<<<<<< HEAD:pom.xml.orig.orig
+        <site>
+            <id>website</id>
+            <url>file:/Users/turtlebender/sites/security</url>
+        </site>
+    </distributionManagement>
+
+    <build>
+
+=======
         <snapshotRepository>
             <id>globus.snapshot.repo</id>
             <name>Globus Snapshot Repository</name>
@@ -34,13 +44,29 @@
 
 
     <build>
+>>>>>>> merging:pom.xml.orig.orig
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <configuration>
+<<<<<<< HEAD:pom.xml.orig.orig
+<<<<<<< HEAD:pom.xml.orig
+<<<<<<< HEAD:pom.xml
+                    <failsOnError>true</failsOnError>
+                    <configLocation>/globus/globus-security-checkstyle.xml</configLocation>
+                </configuration>
+=======
                     <encoding>UTF-8</encoding>
                 </configuration>
+=======
+                    <encoding>UTF-8</encoding>
+                </configuration>
+>>>>>>> added checkstyle profile:pom.xml.orig
+=======
+                    <encoding>UTF-8</encoding>
+                </configuration>
+>>>>>>> merging:pom.xml.orig.orig
                 <executions>
                     <execution>
                         <id>validate</id>
@@ -52,9 +78,19 @@
                             <linkXRef>false</linkXRef>
                             <sourceDirectory>${basedir}/src</sourceDirectory>
                         </configuration>
+<<<<<<< HEAD:pom.xml.orig.orig
+                        <goals>
+                            <goal>checkstyle</goal>
+                        </goals>
                     </execution>
                 </executions>
 
+>>>>>>> reformatting:pom.xml
+=======
+                    </execution>
+                </executions>
+
+>>>>>>> merging:pom.xml.orig.orig
                 <dependencies>
                     <dependency>
                         <groupId>org.globus.security</groupId>
@@ -105,11 +141,23 @@
     </build>
     <reporting>
         <plugins>
+<<<<<<< HEAD:pom.xml.orig.orig
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <configLocation>globus-security/checkstyle-checker.xml
+                    </configLocation>
+                    <headerLocation>globus-security/LICENSE.txt</headerLocation>
+                    <outputDirectory>${project.build.directory}/resources/
+                    </outputDirectory>
+=======
              <plugin>
 		<groupId>org.apache.maven.plugins</groupId>
 		<artifactId>maven-checkstyle-plugin</artifactId>
 		<configuration>
                     <headerLocation>globus-security/LICENSE.txt</headerLocation>
+>>>>>>> merging:pom.xml.orig.orig
                 </configuration>
             </plugin>
             <plugin>
@@ -142,7 +190,10 @@
                     <excludeRoots>
                         <excludeRoot>target/generated-sources</excludeRoot>
                     </excludeRoots>
+<<<<<<< HEAD:pom.xml.orig.orig
+=======
 			<configLocation>/globus-security/globus-security-checkstyle.xml</configLocation>
+>>>>>>> merging:pom.xml.orig.orig
                     <outputDirectory>${project.build.directory}/resources
                     </outputDirectory>
                 </configuration>
@@ -166,6 +217,62 @@
 
 
     <modules>
+<<<<<<< HEAD:pom.xml.orig.orig
+        <module>proxyProcessor</module>
+<<<<<<< HEAD:pom.xml
+        <module>build-tools</module>
+        <module>jetty</module>
+        <module>crux-wss4j</module>
+=======
+        <module>jetty</module>
+        <module>integration-example</module>
+>>>>>>> added checkstyle profile:pom.xml
+    </modules>
+
+    <profiles>
+        <profile>
+            <id>checkstyle</id>
+            <build>
+                <defaultGoal>validate</defaultGoal>
+                <plugins>
+                    <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>validate</id>
+                        <phase>validate</phase>
+                        <configuration>
+                            <configLocation>/globus-security/globus-security-checkstyle.xml</configLocation>
+                            <consoleOutput>true</consoleOutput>
+                            <failsOnError>true</failsOnError>
+                            <linkXRef>false</linkXRef>
+                            <sourceDirectory>${basedir}/src</sourceDirectory>
+                        </configuration>
+                        <goals>
+                            <goal>checkstyle</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+                <dependencies>
+                    <dependency>
+                        <groupId>org.globus.security</groupId>
+                        <artifactId>build-tools</artifactId>
+                        <version>1.0-SNAPSHOT</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+    <dependencies>
+=======
 	<module>build-tools</module>
         <module>proxyProcessor</module>
         <module>jetty</module>
@@ -182,6 +289,7 @@
 		<artifactId>build-tools</artifactId>
 		<version>${version}</version>
 	</dependency>
+>>>>>>> merging:pom.xml.orig.orig
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
