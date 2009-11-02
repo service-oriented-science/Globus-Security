@@ -282,6 +282,6 @@ public class SSLConfigurator {
     }
 
     public void setSslTrustManagerFactoryAlgorithm(String sslTrustManagerFactoryAlgorithm) {
-        String sslTrustManagerFactoryAlgorithm1 = sslTrustManagerFactoryAlgorithm;
+        this.sslTrustManagerFactoryAlgorithm = sslTrustManagerFactoryAlgorithm;
     }
 }

@@ -75,25 +75,25 @@ public class SigningPolicyFileParser {
     private final static Logger logger =
             LoggerFactory.getLogger(SigningPolicyFileParser.class.getName());
 
-    public final static String ACCESS_ID_PREFIX = "access_id_";
-    public final static String ACCESS_ID_CA = "access_id_CA";
+    public static String ACCESS_ID_PREFIX = "access_id_";
+    public static String ACCESS_ID_CA = "access_id_CA";
 
-    public final static String DEF_AUTH_X509 = "X509";
-    public final static String DEF_AUTH_GLOBUS = "globus";
+    public static String DEF_AUTH_X509 = "X509";
+    public static String DEF_AUTH_GLOBUS = "globus";
 
-    public final static String POS_RIGHTS = "pos_rights";
-    public final static String NEG_RIGHTS = "neg_rights";
+    public static String POS_RIGHTS = "pos_rights";
+    public static String NEG_RIGHTS = "neg_rights";
 
-    public final static String CONDITION_PREFIX = "cond_";
-    public final static String CONDITION_SUBJECT = "cond_subjects";
+    public static String CONDITION_PREFIX = "cond_";
+    public static String CONDITION_SUBJECT = "cond_subjects";
 
-    public final static String VALUE_CA_SIGN = "CA:sign";
+    public static String VALUE_CA_SIGN = "CA:sign";
 
-    public final static String SINGLE_CHAR = "?";
-    public final static String WILDCARD = "*";
+    public static String SINGLE_CHAR = "?";
+    public static String WILDCARD = "*";
 
-    public final static String SINGLE_PATTERN = "[\\p{Print}\\p{Blank}]";
-    public final static String WILDCARD_PATTERN = SINGLE_PATTERN + "*";
+    public static String SINGLE_PATTERN = "[\\p{Print}\\p{Blank}]";
+    public static String WILDCARD_PATTERN = SINGLE_PATTERN + "*";
 
     public final static String[] ALLOWED_LINE_START =
             new String[]{ACCESS_ID_PREFIX, POS_RIGHTS, NEG_RIGHTS,

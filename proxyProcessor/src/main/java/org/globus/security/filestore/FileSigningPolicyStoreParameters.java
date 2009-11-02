@@ -15,10 +15,7 @@
  */
 package org.globus.security.filestore;
 
-import java.util.Arrays;
-
 import org.globus.security.SigningPolicyStoreParameters;
-import org.globus.security.util.ArraysUtil;
 
 /**
  * FILL ME
@@ -34,7 +31,7 @@ public class FileSigningPolicyStoreParameters
         if (locations_ == null) {
             throw new IllegalArgumentException();
         }
-        this.locations = ArraysUtil.copyArray(String.class, locations_, locations_.length);
+        this.locations = locations_;
     }
 
     public String[] getTrustRootLocations() {
