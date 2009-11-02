@@ -34,8 +34,11 @@ import java.security.PrivateKey;
 import java.security.interfaces.RSAPrivateCrtKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 
+<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/bc/BouncyCastleOpenSSLKey.java.orig
 <<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/bc/BouncyCastleOpenSSLKey.java
 =======
+=======
+>>>>>>> 830bf62... merging:proxyProcessor/src/main/java/org/globus/security/bc/BouncyCastleOpenSSLKey.java.orig
 import org.globus.security.OpenSSLKey;
 
 import org.bouncycastle.asn1.ASN1InputStream;
@@ -48,19 +51,30 @@ import org.bouncycastle.asn1.ASN1Sequence;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 
+<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/bc/BouncyCastleOpenSSLKey.java.orig
 >>>>>>> fixed compilation errors:proxyProcessor/src/main/java/org/globus/security/bc/BouncyCastleOpenSSLKey.java
+=======
+>>>>>>> 830bf62... merging:proxyProcessor/src/main/java/org/globus/security/bc/BouncyCastleOpenSSLKey.java.orig
 /**
  * BouncyCastle-based implementation of OpenSSLKey.
  */
 public class BouncyCastleOpenSSLKey extends OpenSSLKey {
 
     public BouncyCastleOpenSSLKey(InputStream is)
+<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/bc/BouncyCastleOpenSSLKey.java.orig
         throws IOException, GeneralSecurityException {
+=======
+            throws IOException, GeneralSecurityException {
+>>>>>>> 830bf62... merging:proxyProcessor/src/main/java/org/globus/security/bc/BouncyCastleOpenSSLKey.java.orig
         super(is);
     }
 
     public BouncyCastleOpenSSLKey(String file)
+<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/bc/BouncyCastleOpenSSLKey.java.orig
         throws IOException, GeneralSecurityException {
+=======
+            throws IOException, GeneralSecurityException {
+>>>>>>> 830bf62... merging:proxyProcessor/src/main/java/org/globus/security/bc/BouncyCastleOpenSSLKey.java.orig
         super(file);
     }
 
@@ -69,12 +83,20 @@ public class BouncyCastleOpenSSLKey extends OpenSSLKey {
     }
 
     public BouncyCastleOpenSSLKey(String algorithm, byte[] data)
+<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/bc/BouncyCastleOpenSSLKey.java.orig
         throws GeneralSecurityException {
+=======
+            throws GeneralSecurityException {
+>>>>>>> 830bf62... merging:proxyProcessor/src/main/java/org/globus/security/bc/BouncyCastleOpenSSLKey.java.orig
         super(algorithm, data);
     }
 
     protected PrivateKey getKey(String alg, byte[] data)
+<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/bc/BouncyCastleOpenSSLKey.java.orig
         throws GeneralSecurityException {
+=======
+            throws GeneralSecurityException {
+>>>>>>> 830bf62... merging:proxyProcessor/src/main/java/org/globus/security/bc/BouncyCastleOpenSSLKey.java.orig
         if (alg.equals("RSA")) {
             try {
                 ByteArrayInputStream bis = new ByteArrayInputStream(data);
@@ -107,11 +129,19 @@ public class BouncyCastleOpenSSLKey extends OpenSSLKey {
     protected byte[] getEncoded(PrivateKey key) {
         String format = key.getFormat();
         if (format != null &&
+<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/bc/BouncyCastleOpenSSLKey.java.orig
             (format.equalsIgnoreCase("PKCS#8") ||
              format.equalsIgnoreCase("PKCS8"))) {
             try {
                 DERObject keyInfo = BouncyCastleUtil.toDERObject(key.getEncoded());
                 PrivateKeyInfo pkey = new PrivateKeyInfo((ASN1Sequence)keyInfo);
+=======
+                (format.equalsIgnoreCase("PKCS#8") ||
+                        format.equalsIgnoreCase("PKCS8"))) {
+            try {
+                DERObject keyInfo = BouncyCastleUtil.toDERObject(key.getEncoded());
+                PrivateKeyInfo pkey = new PrivateKeyInfo((ASN1Sequence) keyInfo);
+>>>>>>> 830bf62... merging:proxyProcessor/src/main/java/org/globus/security/bc/BouncyCastleOpenSSLKey.java.orig
                 DERObject derKey = pkey.getPrivateKey();
                 return BouncyCastleUtil.toByteArray(derKey);
             } catch (IOException e) {
@@ -120,6 +150,7 @@ public class BouncyCastleOpenSSLKey extends OpenSSLKey {
                 return null;
             }
         } else if (format != null &&
+<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/bc/BouncyCastleOpenSSLKey.java.orig
                    format.equalsIgnoreCase("PKCS#1") &&
                    key instanceof RSAPrivateCrtKey) { // this condition will rarely be true
             RSAPrivateCrtKey pKey = (RSAPrivateCrtKey)key;
@@ -132,6 +163,20 @@ public class BouncyCastleOpenSSLKey extends OpenSSLKey {
                                            pKey.getPrimeExponentP(),
                                            pKey.getPrimeExponentQ(),
                                            pKey.getCrtCoefficient());
+=======
+                format.equalsIgnoreCase("PKCS#1") &&
+                key instanceof RSAPrivateCrtKey) { // this condition will rarely be true
+            RSAPrivateCrtKey pKey = (RSAPrivateCrtKey) key;
+            RSAPrivateKeyStructure st =
+                    new RSAPrivateKeyStructure(pKey.getModulus(),
+                            pKey.getPublicExponent(),
+                            pKey.getPrivateExponent(),
+                            pKey.getPrimeP(),
+                            pKey.getPrimeQ(),
+                            pKey.getPrimeExponentP(),
+                            pKey.getPrimeExponentQ(),
+                            pKey.getCrtCoefficient());
+>>>>>>> 830bf62... merging:proxyProcessor/src/main/java/org/globus/security/bc/BouncyCastleOpenSSLKey.java.orig
             DERObject ob = st.getDERObject();
 
             try {

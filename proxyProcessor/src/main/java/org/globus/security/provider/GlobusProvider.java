@@ -26,7 +26,7 @@ import java.security.Provider;
  */
 public class GlobusProvider extends Provider {
 
-    public static final String PROVIDER_NAME = "Globus";
+    public static String PROVIDER_NAME = "Globus";
 
     public GlobusProvider() {
 

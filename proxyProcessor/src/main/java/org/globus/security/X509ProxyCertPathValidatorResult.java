@@ -57,12 +57,6 @@ public class X509ProxyCertPathValidatorResult
      * @return a copy of this <code>CertPathValidatorResult</code>
      */
     public Object clone() {
-        //TODO: at a minimum this requires call to super
-        try {
-            super.clone();
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();  //CHANGEME To change body of catch statement use File | Settings | File Templates.
-        }
         return null;  //CHANGEME To change body of implemented methods use File | Settings | File Templates.
     }
 }

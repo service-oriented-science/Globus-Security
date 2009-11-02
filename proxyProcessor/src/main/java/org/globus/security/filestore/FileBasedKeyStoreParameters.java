@@ -1,9 +1,6 @@
 package org.globus.security.filestore;
 
 import java.security.KeyStore;
-import java.util.Arrays;
-
-import org.globus.security.util.ArraysUtil;
 
 /**
  * Created by IntelliJ IDEA. User: turtlebender Date: Oct 14, 2009 Time: 3:54:08
@@ -24,7 +21,7 @@ public class FileBasedKeyStoreParameters
 
     public FileBasedKeyStoreParameters(String[] certDirs,
                                        String defaultCertDir) {
-        this.certDirs = ArraysUtil.copyArray(String.class, certDirs, certDirs.length);
+        this.certDirs = certDirs;
         this.defaultCertDir = defaultCertDir;
 
     }
@@ -63,11 +60,11 @@ public class FileBasedKeyStoreParameters
     }
 
     public String[] getCertDirs() {
-        return ArraysUtil.copyArray(String.class, certDirs, certDirs.length);
+        return certDirs;
     }
 
     public void setCertDirs(String[] certDirs) {
-        this.certDirs = ArraysUtil.copyArray(String.class, certDirs, certDirs.length);
+        this.certDirs = certDirs;
     }
 
     public String getDefaultCertDir() {

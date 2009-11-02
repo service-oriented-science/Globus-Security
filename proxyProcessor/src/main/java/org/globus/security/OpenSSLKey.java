@@ -73,9 +73,9 @@ public abstract class OpenSSLKey {
     private String encAlgStr = null;
 
     /*
-    * Java string representation of the encryption algorithm:
-    * DES, DESede, AES.
-    */
+     * Java string representation of the encryption algorithm:
+     * DES, DESede, AES.
+     */
     private String encAlg = null;
     private int keyLength = -1;
     private int ivLength = -1;
