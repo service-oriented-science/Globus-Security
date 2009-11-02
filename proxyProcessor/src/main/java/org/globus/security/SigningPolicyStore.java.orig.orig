@@ -16,8 +16,16 @@
 package org.globus.security;
 
 import java.security.InvalidAlgorithmParameterException;
+<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/SigningPolicyStore.java.orig
+<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/SigningPolicyStore.java
 
 import javax.security.auth.x500.X500Principal;
+=======
+>>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/SigningPolicyStore.java
+=======
+
+import javax.security.auth.x500.X500Principal;
+>>>>>>> merging:proxyProcessor/src/main/java/org/globus/security/SigningPolicyStore.java.orig
 
 /**
  * FILL ME
@@ -32,5 +40,13 @@ public abstract class SigningPolicyStore {
     }
 
     public abstract SigningPolicy getSigningPolicy(X500Principal caPrincipal)
+<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/SigningPolicyStore.java.orig
+<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/SigningPolicyStore.java
             throws SigningPolicyStoreException;
+=======
+        throws SigningPolicyStoreException;
+>>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/SigningPolicyStore.java
+=======
+            throws SigningPolicyStoreException;
+>>>>>>> merging:proxyProcessor/src/main/java/org/globus/security/SigningPolicyStore.java.orig
 }

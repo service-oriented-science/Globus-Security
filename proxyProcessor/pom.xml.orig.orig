@@ -6,6 +6,33 @@
     <groupId>org.globus.security</groupId>
     <artifactId>ssl-proxy</artifactId>
     <parent>
+<<<<<<< HEAD:proxyProcessor/pom.xml.orig
+<<<<<<< HEAD:proxyProcessor/pom.xml
+        <groupId>org.globus.security</groupId>
+=======
+        <groupId>org.globus.crux</groupId>
+>>>>>>> updating poms for style check:proxyProcessor/pom.xml
+        <artifactId>security</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <version>1.0-SNAPSHOT</version>
+    <name>Globus Support for SSL Proxies</name>
+    <packaging>jar</packaging>
+
+    <build>
+        <plugins>
+            <plugin>
+                <inherited>true</inherited>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+=======
         <groupId>org.globus.crux</groupId>
         <artifactId>security</artifactId>
         <version>1.0-SNAPSHOT</version>
@@ -13,6 +40,7 @@
     <name>Globus Support for SSL Proxies</name>
     <packaging>jar</packaging>
 
+>>>>>>> merging:proxyProcessor/pom.xml.orig
 
     <dependencies>
         <dependency>
@@ -62,4 +90,13 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+<<<<<<< HEAD:proxyProcessor/pom.xml.orig
+    <repositories>
+        <repository>
+            <id>globus-repo</id>
+            <url>http://repo.globus.org/content/groups/public/</url>
+        </repository>
+    </repositories>
+=======
+>>>>>>> merging:proxyProcessor/pom.xml.orig
 </project>

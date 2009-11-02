@@ -15,6 +15,20 @@
  */
 package org.globus.security.filestore;
 
+<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedSigningPolicyStore.java.orig
+<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedSigningPolicyStore.java
+=======
+import org.globus.security.SigningPolicy;
+import org.globus.security.SigningPolicyStore;
+import org.globus.security.SigningPolicyStoreException;
+import org.globus.security.SigningPolicyStoreParameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.security.auth.x500.X500Principal;
+>>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedSigningPolicyStore.java
+=======
+>>>>>>> merging:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedSigningPolicyStore.java.orig
 import java.io.File;
 import java.io.FilenameFilter;
 import java.security.InvalidAlgorithmParameterException;
@@ -40,9 +54,15 @@ import org.slf4j.LoggerFactory;
 public class FileBasedSigningPolicyStore extends SigningPolicyStore {
 
     Map<String, FileBasedSigningPolicy> signingPolicyFileMap =
+<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedSigningPolicyStore.java.orig
+        new HashMap<String, FileBasedSigningPolicy>();
+    Map<X500Principal, SigningPolicy> policyMap =
+        new HashMap<X500Principal, SigningPolicy>();
+=======
             new HashMap<String, FileBasedSigningPolicy>();
     Map<X500Principal, SigningPolicy> policyMap =
             new HashMap<X500Principal, SigningPolicy>();
+>>>>>>> merging:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedSigningPolicyStore.java.orig
 
     FileSigningPolicyStoreParameters parameters;
 
@@ -65,7 +85,15 @@ public class FileBasedSigningPolicyStore extends SigningPolicyStore {
     }
 
     public SigningPolicy getSigningPolicy(X500Principal caPrincipal)
+<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedSigningPolicyStore.java.orig
+<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedSigningPolicyStore.java
             throws SigningPolicyStoreException {
+=======
+        throws SigningPolicyStoreException {
+>>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedSigningPolicyStore.java
+=======
+            throws SigningPolicyStoreException {
+>>>>>>> merging:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedSigningPolicyStore.java.orig
 
         if (caPrincipal == null) {
             return null;
@@ -83,9 +111,15 @@ public class FileBasedSigningPolicyStore extends SigningPolicyStore {
                 FileBasedSigningPolicy.getSigningPolicyFilter();
 
         Map<X500Principal, SigningPolicy> newPolicyMap =
+<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedSigningPolicyStore.java.orig
+            new HashMap<X500Principal, SigningPolicy>();
+        Map<String, FileBasedSigningPolicy> newPolicyFileMap =
+            new HashMap<String, FileBasedSigningPolicy>();
+=======
                 new HashMap<X500Principal, SigningPolicy>();
         Map<String, FileBasedSigningPolicy> newPolicyFileMap =
                 new HashMap<String, FileBasedSigningPolicy>();
+>>>>>>> merging:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedSigningPolicyStore.java.orig
 
         for (String location : locations) {
 
@@ -100,6 +134,19 @@ public class FileBasedSigningPolicyStore extends SigningPolicyStore {
                 String[] policyFiles = file.list(policyFilter);
                 if (policyFiles == null) {
                     logger.debug("Cannot load signing policy from " +
+<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedSigningPolicyStore.java.orig
+                                 file.getAbsolutePath() + " directory.");
+                } else {
+                    logger.debug("Loading signing policy from " +
+                                 file.getAbsolutePath() + " directory.");
+                    for (String policyFile : policyFiles) {
+                        String policyFilename = file.getPath() +
+                                                File.separatorChar +
+                                                policyFile;
+
+                        loadSigningPolicy(policyFilename, newPolicyMap,
+                                          newPolicyFileMap);
+=======
                             file.getAbsolutePath() + " directory.");
                 } else {
                     logger.debug("Loading signing policy from " +
@@ -111,13 +158,18 @@ public class FileBasedSigningPolicyStore extends SigningPolicyStore {
 
                         loadSigningPolicy(policyFilename, newPolicyMap,
                                 newPolicyFileMap);
+>>>>>>> merging:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedSigningPolicyStore.java.orig
                     }
                 }
             } else {
                 String filename = file.getAbsolutePath();
                 if (policyFilter.accept(null, filename)) {
                     loadSigningPolicy(filename, newPolicyMap,
+<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedSigningPolicyStore.java.orig
+                                      newPolicyFileMap);
+=======
                             newPolicyFileMap);
+>>>>>>> merging:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedSigningPolicyStore.java.orig
                 }
             }
         }
@@ -129,7 +181,15 @@ public class FileBasedSigningPolicyStore extends SigningPolicyStore {
     private void loadSigningPolicy(String policyFilename,
                                    Map<X500Principal, SigningPolicy> policyMap_,
                                    Map<String, FileBasedSigningPolicy> policyFileMap_)
+<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedSigningPolicyStore.java.orig
+<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedSigningPolicyStore.java
             throws SigningPolicyStoreException {
+=======
+        throws SigningPolicyStoreException {
+>>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedSigningPolicyStore.java
+=======
+            throws SigningPolicyStoreException {
+>>>>>>> merging:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedSigningPolicyStore.java.orig
 
         File policyFile = new File(policyFilename);
         if (!policyFile.canRead()) {
