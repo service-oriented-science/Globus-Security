@@ -87,39 +87,76 @@
                 <version>1.0-alpha-5</version>
             </extension>
         </extensions>
-
+        <plugins>
+            <plugin>
+                <groupId>com.atlassian.maven.plugins</groupId>
+                <artifactId>maven-clover2-plugin</artifactId>
+                <version>2.6.2</version>
+                <configuration>
+                    <snapshot>${user.home}/.clover/${groupId}-${artifactId}/clover.snapshot</snapshot>
+                    <cloverDatabase>${user.home}/.clover/${groupId}-${artfactId}/clover.db</cloverDatabase>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 >>>>>>> fixed poms:pom.xml
 
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-enforcer-plugin</artifactId>
-                    <executions>
-                        <execution>
-                            <id>enforce-banned-dependencies</id>
-                            <goals>
-                                <goal>enforce</goal>
-                            </goals>
-                            <configuration>
-                                <rules>
-                                    <bannedDependencies>
-                                        <excludes>
-                                            <exclude>commons-logging</exclude>
-                                            <exclude>
-                                                org.springframework:*:(,3.0.0.RC1)
-                                            </exclude>
-                                        </excludes>
-                                    </bannedDependencies>
-                                </rules>
-                                <fail>true</fail>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-
-            </plugins>
-        </pluginManagement>
-    </build>
+    <profiles>
+        <profile>
+            <id>clover.optimize</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.atlassian.maven.plugins</groupId>
+                        <artifactId>maven-clover2-plugin</artifactId>
+                        <version>2.6.2</version>
+                        <executions>
+                            <execution>
+                                <id>clover</id>
+                                <goals>
+                                    <goal>setup</goal>
+                                    <goal>optimize</goal>
+                                    <goal>snapshot</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>clover.all</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.atlassian.maven.plugins</groupId>
+                        <artifactId>maven-clover2-plugin</artifactId>
+                        <configuration>
+                            <!--<targetPercentage>93%</targetPercentage>-->
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>clover</id>
+                                <goals>
+                                    <goal>setup</goal>
+                                    <goal>optimize</goal>
+                                    <goal>snapshot</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>clover</goal>
+                                    <goal>log</goal>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
     <reporting>
         <plugins>
              <plugin>
@@ -134,8 +171,19 @@
                 <artifactId>maven-changes-plugin</artifactId>
                 <reportSets>
                     <reportSet>
+                        <id>non-aggregate</id>
+                        <configuration>
+                        </configuration>
                         <reports>
                             <report>jira-report</report>
+                        </reports>
+                    </reportSet>
+                    <reportSet>
+                        <id>aggregate</id>
+                        <configuration>
+                        </configuration>
+                        <reports>
+                            <report>aggregate</report>
                         </reports>
                     </reportSet>
                 </reportSets>
@@ -191,11 +239,14 @@
     </modules>
 
     <dependencies>
-	<dependency>
-		<groupId>org.globus.security</groupId>
-		<artifactId>build-tools</artifactId>
-		<version>${version}</version>
-	</dependency>
+<<<<<<< HEAD:pom.xml
+=======
+        <dependency>
+            <groupId>org.globus.security</groupId>
+            <artifactId>build-tools</artifactId>
+            <version>${version}</version>
+        </dependency>
+>>>>>>> eaacc07... adding clover profiles:pom.xml
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>

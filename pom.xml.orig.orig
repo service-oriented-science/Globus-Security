@@ -13,6 +13,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+<<<<<<< HEAD:pom.xml
     <issueManagement>
         <system>JIRA</system>
         <url>http://jira.globus.org/browse/SOS</url>
@@ -34,6 +35,91 @@
 
 
     <build>
+=======
+    <build>
+        <extensions>
+            <extension>
+                <groupId>org.globus.security</groupId>
+                <artifactId>build-tools</artifactId>
+                <version>${version}</version>
+            </extension>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh-external</artifactId>
+                <version>1.0-alpha-5</version>
+            </extension>
+        </extensions>
+        <plugins>
+            <plugin>
+                <groupId>com.atlassian.maven.plugins</groupId>
+                <artifactId>maven-clover2-plugin</artifactId>
+                <version>2.6.2</version>
+                <configuration>
+                    <snapshot>${user.home}/.clover/${groupId}-${artifactId}/clover.snapshot</snapshot>
+                    <cloverDatabase>${user.home}/.clover/${groupId}-${artfactId}/clover.db</cloverDatabase>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>clover.optimize</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.atlassian.maven.plugins</groupId>
+                        <artifactId>maven-clover2-plugin</artifactId>
+                        <version>2.6.2</version>
+                        <executions>
+                            <execution>
+                                <id>clover</id>
+                                <goals>
+                                    <goal>setup</goal>
+                                    <goal>optimize</goal>
+                                    <goal>snapshot</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>clover.all</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.atlassian.maven.plugins</groupId>
+                        <artifactId>maven-clover2-plugin</artifactId>
+                        <configuration>
+                            <!--<targetPercentage>93%</targetPercentage>-->
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>clover</id>
+                                <goals>
+                                    <goal>setup</goal>
+                                    <goal>optimize</goal>
+                                    <goal>snapshot</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>clover</goal>
+                                    <goal>log</goal>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+    <reporting>
+>>>>>>> adding clover profiles:pom.xml
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -168,12 +254,9 @@
     <modules>
 	<module>build-tools</module>
         <module>proxyProcessor</module>
+        <module>build-tools</module>
         <module>jetty</module>
-<<<<<<< HEAD:pom.xml
         <module>crux-wss4j</module>
-=======
-        <module>parent</module>
->>>>>>> merging:pom.xml
     </modules>
 
     <dependencies>
@@ -182,6 +265,11 @@
 		<artifactId>build-tools</artifactId>
 		<version>${version}</version>
 	</dependency>
+        <dependency>
+            <groupId>org.globus.security</groupId>
+            <artifactId>build-tools</artifactId>
+            <version>${version}</version>
+        </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
