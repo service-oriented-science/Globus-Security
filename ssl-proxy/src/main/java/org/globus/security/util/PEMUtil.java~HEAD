@@ -21,10 +21,10 @@ import java.io.OutputStream;
 // FIXME: how much of this can be borrwed directly form BC?
 public class PEMUtil {
 
-    static final int LINE_LENGTH = 64;
+    public static final int LINE_LENGTH = 64;
 
-    public static String lineSep;
-    public static byte[] lineSepBytes;
+    public static final String lineSep;
+    public static final byte[] lineSepBytes;
 
     static {
         lineSep = System.getProperty("line.separator");

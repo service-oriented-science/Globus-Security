@@ -97,6 +97,8 @@ public class TestCertStore extends CertStoreSpi {
 
         // For test, unsupported
         throw new UnsupportedOperationException();
+<<<<<<< HEAD:ssl-proxy/src/test/java/org/globus/security/provider/TestCertStore.java
+=======
         /*
         if (selector == null) {
             return this.certificate;
@@ -112,6 +114,7 @@ public class TestCertStore extends CertStoreSpi {
         }
         return certSet;
          */
+>>>>>>> renamed ssl-proxy support:ssl-proxy/src/test/java/org/globus/security/provider/TestCertStore.java
     }
 
     /**

@@ -33,14 +33,12 @@ import java.security.Key;
 import java.security.MessageDigest;
 import java.security.PrivateKey;
 import java.security.SecureRandom;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.globus.security.util.ArraysUtil;
 import org.globus.security.util.FileUtil;
 import org.globus.security.util.PEMUtil;
 
@@ -144,9 +142,7 @@ public abstract class OpenSSLKey {
         if (data == null) {
             throw new IllegalArgumentException("Data is null");
         }
-        byte[] result = new byte[data.length];
-        System.arraycopy(data, 0, result, 0, data.length);
-        this.keyData = result;
+        this.keyData = data;
         this.isEncrypted = false;
         this.intKey = getKey(algorithm, data);
     }

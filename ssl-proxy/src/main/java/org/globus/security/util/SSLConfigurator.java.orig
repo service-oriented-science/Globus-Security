@@ -54,13 +54,6 @@ public class SSLConfigurator {
     private String sslKeyManagerFactoryAlgorithm =
             Security.getProperty("ssl.KeyManagerFactory.algorithm") == null ? "SunX509" : Security.getProperty(
                     "ssl.KeyManagerFactory.algorithm"); // cert algorithm;
-<<<<<<< HEAD:ssl-proxy/src/main/java/org/globus/security/util/SSLConfigurator.java
-=======
-    private String sslTrustManagerFactoryAlgorithm =
-            Security.getProperty("ssl.TrustManagerFactory.algorithm") == null
-                    ? "PKITrustManager"
-                    : Security.getProperty("ssl.TrustManagerFactory.algorithm");
->>>>>>> Updating for merge:proxyProcessor/src/main/java/org/globus/security/util/SSLConfigurator.java
     private String trustStoreType = "PEMFilebasedKeyStore";
     private KeyStore.LoadStoreParameter trustStoreParameters;
     private String trustStorePath;
@@ -288,7 +281,7 @@ public class SSLConfigurator {
         this.trustStorePassword = trustStorePassword;
     }
 
-    public void setSslTrustManagerFactoryAlgorithm(String sslTrustManagerFactoryAlgorithm) {
-        this.sslTrustManagerFactoryAlgorithm = sslTrustManagerFactoryAlgorithm;
-    }
+//    public void setSslTrustManagerFactoryAlgorithm(String sslTrustManagerFactoryAlgorithm) {
+//        this.sslTrustManagerFactoryAlgorithm = sslTrustManagerFactoryAlgorithm;
+//    }
 }

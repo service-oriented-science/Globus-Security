@@ -23,11 +23,12 @@ import java.security.cert.CertStoreException;
 import java.security.cert.CertStoreParameters;
 import java.security.cert.CertStoreSpi;
 import java.security.cert.Certificate;
+import java.security.cert.TrustAnchor;
 import java.security.cert.X509CRL;
+import java.security.cert.X509CRLSelector;
+import java.security.cert.X509CertSelector;
 import java.security.cert.X509Certificate;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Vector;
 
 import org.globus.security.filestore.FileBasedStore;
@@ -43,37 +44,6 @@ import org.slf4j.LoggerFactory;
  *
  * @author ranantha@mcs.anl.gov
  */
-<<<<<<< HEAD:ssl-proxy/src/test/java/org/globus/security/provider/TestCertStore.java.orig
-public class TestCertStore extends CertStoreSpi {
-
-    private Vector<X509Certificate> certificate = new Vector();
-    private Vector<X509CRL> crl = new Vector();
-
-    public TestCertStore(CertStoreParameters param)
-            throws InvalidAlgorithmParameterException {
-        super(param);
-
-        if (param != null) {
-            if (param instanceof TestProxyPathValidator.TestCertParameters) {
-                TestProxyPathValidator.TestCertParameters parameters
-                        = (TestProxyPathValidator.TestCertParameters) param;
-                X509Certificate[] certs = parameters.getCertificates();
-                if (certs != null) {
-
-<<<<<<< HEAD:ssl-proxy/src/test/java/org/globus/security/provider/TestCertStore.java
-                    for (int i = 0; i < certs.length; i++) {
-                        this.certificate.add(certs[i]);
-                    }
-                }
-                X509CRL[] crls = parameters.getCRLs();
-                if (crls != null) {
-                    for (int i = 0; i < crls.length; i++) {
-                        this.crl.add(crls[i]);
-                    }
-                }
-            }
-=======
-=======
 public class FileBasedCertStore extends CertStoreSpi {
 
     private static Logger logger =
@@ -83,7 +53,6 @@ public class FileBasedCertStore extends CertStoreSpi {
     private FileBasedStore caDelegate =
             FileBasedStore.getFileBasedStore(FileBasedStore.LoadFileType.CA_FILE);
 
->>>>>>> Updating for merge:proxyProcessor/src/main/java/org/globus/security/provider/FileBasedCertStore.java
     private FileBasedStore crlDelegate =
             FileBasedStore.getFileBasedStore(FileBasedStore.LoadFileType.CRL_FILE);
 
@@ -107,7 +76,6 @@ public class FileBasedCertStore extends CertStoreSpi {
             this.storeParams = (FileCertStoreParameters) params;
         } else {
             throw new InvalidAlgorithmParameterException();
->>>>>>> Some compilation errors fixed.:proxyProcessor/src/main/java/org/globus/security/provider/FileBasedCertStore.java
         }
     }
 
@@ -131,14 +99,15 @@ public class FileBasedCertStore extends CertStoreSpi {
      * @throws java.security.cert.CertStoreException
      *          if an exception occurs
      */
-    public Collection<? extends Certificate> engineGetCertificates(
-            CertSelector selector) throws CertStoreException {
+    public Collection<? extends Certificate>
+    engineGetCertificates(CertSelector selector) throws CertStoreException {
+        logger.debug("selecting Certificates");
+        if (selector != null) {
+            if (!(selector instanceof X509CertSelector)) {
+                throw new IllegalArgumentException();
+            }
+        }
 
-<<<<<<< HEAD:ssl-proxy/src/test/java/org/globus/security/provider/TestCertStore.java
-        // For test, unsupported
-        throw new UnsupportedOperationException();
-        /*
-=======
         try {
             caDelegate.loadWrappers(this.storeParams.getTrustRootLocations());
         } catch (FileStoreException e) {
@@ -151,7 +120,6 @@ public class FileBasedCertStore extends CertStoreSpi {
         // Given that we always only use subject, how can we improve performance
         // here. Custom
         Vector<X509Certificate> certSet = new Vector<X509Certificate>();
->>>>>>> Some compilation errors fixed.:proxyProcessor/src/main/java/org/globus/security/provider/FileBasedCertStore.java
         if (selector == null) {
             for (TrustAnchor trustAnchor : (Collection<TrustAnchor>) caDelegate
                     .getCollection()) {
@@ -165,11 +133,10 @@ public class FileBasedCertStore extends CertStoreSpi {
                 if (selector.match(cert)) {
                     certSet.add(cert);
                 }
->>>>>>> Updating for merge:proxyProcessor/src/main/java/org/globus/security/provider/FileBasedCertStore.java
             }
         }
+
         return certSet;
-         */
     }
 
     /**
@@ -201,12 +168,7 @@ public class FileBasedCertStore extends CertStoreSpi {
                 throw new IllegalArgumentException();
             }
         }
->>>>>>> Updating for merge:proxyProcessor/src/main/java/org/globus/security/provider/FileBasedCertStore.java
 
-<<<<<<< HEAD:ssl-proxy/src/test/java/org/globus/security/provider/TestCertStore.java
-        if (selector == null) {
-            return this.crl;
-=======
         try {
             crlDelegate.loadWrappers(this.storeParams.getTrustRootLocations());
         } catch (FileStoreException e) {
@@ -215,17 +177,8 @@ public class FileBasedCertStore extends CertStoreSpi {
 
         if (crlDelegate.getCollection() == null) {
             return new Vector<X509CRL>();
->>>>>>> Some compilation errors fixed.:proxyProcessor/src/main/java/org/globus/security/provider/FileBasedCertStore.java
         }
 
-<<<<<<< HEAD:ssl-proxy/src/test/java/org/globus/security/provider/TestCertStore.java.orig
-        List crlList = new Vector();
-        Iterator<X509CRL> iterator = this.crl.iterator();
-        while (iterator.hasNext()) {
-            X509CRL crl = iterator.next();
-            if (selector.match(crl)) {
-                crlList.add(crl);
-=======
         // Given that we always only use subject, how can we improve performance
         // here. Custom
 
@@ -238,9 +191,9 @@ public class FileBasedCertStore extends CertStoreSpi {
                 if (selector.match(crl)) {
                     certSet.add(crl);
                 }
->>>>>>> Updating for merge:proxyProcessor/src/main/java/org/globus/security/provider/FileBasedCertStore.java
             }
+            return certSet;
         }
-        return crlList;
     }
 }
+

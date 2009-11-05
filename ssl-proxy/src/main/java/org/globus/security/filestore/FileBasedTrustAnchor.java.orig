@@ -63,7 +63,7 @@ public class FileBasedTrustAnchor extends FileBasedObject<TrustAnchor> {
         }
         try {
             certificate = CertificateLoadUtil.loadCertificate(
-                new FileInputStream(file));
+                    new FileInputStream(file));
         } catch (IOException e) {
             throw new FileStoreException(e);
         } catch (GeneralSecurityException e) {
@@ -81,15 +81,11 @@ public class FileBasedTrustAnchor extends FileBasedObject<TrustAnchor> {
         }
     }
 
-    public TrustAnchor getTrustAnchor() throws CertStoreException {
+    public TrustAnchor getTrustAnchor() throws FileStoreException {
 
         TrustAnchor trustAnchor = getObject();
         this.alias = CertificateIOUtil.nameHash(
-<<<<<<< HEAD:ssl-proxy/src/main/java/org/globus/security/filestore/FileBasedTrustAnchor.java
                 trustAnchor.getTrustedCert().getSubjectDN());
-=======
-            trustAnchor.getTrustedCert().getSubjectDN());
->>>>>>> Changed up exception, working to get proxy loaded up in keystore:proxyProcessor/src/main/java/org/globus/security/filestore/FileBasedTrustAnchor.java
         return trustAnchor;
     }
 
@@ -106,9 +102,9 @@ public class FileBasedTrustAnchor extends FileBasedObject<TrustAnchor> {
             }
             int length = file.length();
             return length > 2 &&
-                   file.charAt(length - 2) == '.' &&
-                   file.charAt(length - 1) >= '0' &&
-                   file.charAt(length - 1) <= '9';
+                    file.charAt(length - 2) == '.' &&
+                    file.charAt(length - 1) >= '0' &&
+                    file.charAt(length - 1) <= '9';
         }
     }
 

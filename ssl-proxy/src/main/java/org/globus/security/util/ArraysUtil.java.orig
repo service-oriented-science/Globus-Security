@@ -13,26 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.globus.security;
+package org.globus.security.util;
 
-import java.security.GeneralSecurityException;
+import java.lang.reflect.Array;
 
 /**
  * FILL ME
  *
  * @author ranantha@mcs.anl.gov
  */
-public class CredentialException extends GeneralSecurityException {
+public class ArraysUtil {
 
-    public CredentialException(String msg) {
-        super(msg);
+    @SuppressWarnings("unchecked")
+    public  static <T> T[] copyArray(Class<T> clazz, T[] array, int length){
+        Object[] copy = (Object[]) Array.newInstance(clazz, length);
+        System.arraycopy(array, 0, copy, 0, length);
+        return (T[]) copy;
     }
-
-    public CredentialException(String msg, Throwable ex) {
-        super(msg, ex);
-    }
-
-    public CredentialException(Throwable ex) {
-        super(ex);
-    }
+        
 }

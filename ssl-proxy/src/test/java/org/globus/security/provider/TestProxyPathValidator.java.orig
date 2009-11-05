@@ -40,6 +40,7 @@ import javax.security.auth.x500.X500Principal;
 
 import org.globus.security.SigningPolicy;
 import org.globus.security.SigningPolicyStore;
+import org.globus.security.SigningPolicyStoreException;
 import org.globus.security.SigningPolicyStoreParameters;
 import org.globus.security.X509ProxyCertPathParameters;
 import org.globus.security.X509ProxyCertPathValidatorResult;
@@ -1109,7 +1110,7 @@ public class TestProxyPathValidator {
         }
 
         public SigningPolicy getSigningPolicy(X500Principal caPrincipal)
-                throws CertStoreException {
+                throws SigningPolicyStoreException {
             return this.policies.get(caPrincipal);
         }
     }

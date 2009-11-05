@@ -5,70 +5,70 @@ Certificate Revocation List (CRL):
         Last Update: Jul 16 18:41:13 2009 GMT
         Next Update: Jul 16 18:41:13 2010 GMT
         CRL extensions:
-            X509v3 CRL Number: 
+            X509v3 CRL Number:
                 90
 Revoked Certificates:
     Serial Number: 2C
         Revocation Date: May 25 00:48:19 2007 GMT
         CRL entry extensions:
-            X509v3 CRL Reason Code: 
+            X509v3 CRL Reason Code:
                 Cessation Of Operation
     Serial Number: 26
         Revocation Date: Oct 26 19:35:16 2006 GMT
         CRL entry extensions:
-            X509v3 CRL Reason Code: 
+            X509v3 CRL Reason Code:
                 Superseded
     Serial Number: 25
         Revocation Date: Oct 26 19:35:00 2006 GMT
         CRL entry extensions:
-            X509v3 CRL Reason Code: 
+            X509v3 CRL Reason Code:
                 Superseded
     Serial Number: 0E
         Revocation Date: Jun 11 00:41:12 2003 GMT
     Serial Number: 23
         Revocation Date: Oct 26 19:34:31 2006 GMT
         CRL entry extensions:
-            X509v3 CRL Reason Code: 
+            X509v3 CRL Reason Code:
                 Superseded
     Serial Number: 22
         Revocation Date: Oct 26 19:34:02 2006 GMT
         CRL entry extensions:
-            X509v3 CRL Reason Code: 
+            X509v3 CRL Reason Code:
                 Superseded
     Serial Number: 0A
         Revocation Date: May  6 18:43:40 2003 GMT
         CRL entry extensions:
-            X509v3 CRL Reason Code: 
+            X509v3 CRL Reason Code:
                 Superseded
-            Invalidity Date: 
+            Invalidity Date:
                 May  6 07:00:00 2003 GMT
     Serial Number: 09
         Revocation Date: Dec  6 02:13:21 2002 GMT
         CRL entry extensions:
-            X509v3 CRL Reason Code: 
+            X509v3 CRL Reason Code:
                 Superseded
-            Invalidity Date: 
+            Invalidity Date:
                 Dec  5 08:00:00 2002 GMT
     Serial Number: 06
         Revocation Date: Dec  6 02:08:21 2002 GMT
         CRL entry extensions:
-            X509v3 CRL Reason Code: 
+            X509v3 CRL Reason Code:
                 Cessation Of Operation
-            Invalidity Date: 
+            Invalidity Date:
                 Dec  5 08:00:00 2002 GMT
     Serial Number: 05
         Revocation Date: Dec  6 02:12:49 2002 GMT
         CRL entry extensions:
-            X509v3 CRL Reason Code: 
+            X509v3 CRL Reason Code:
                 Superseded
-            Invalidity Date: 
+            Invalidity Date:
                 Dec  5 08:00:00 2002 GMT
     Serial Number: 32
         Revocation Date: Jan 30 23:16:39 2008 GMT
         CRL entry extensions:
-            X509v3 CRL Reason Code: 
+            X509v3 CRL Reason Code:
                 Cessation Of Operation
-            Invalidity Date: 
+            Invalidity Date:
                 Jan 30 08:00:00 2008 GMT
     Signature Algorithm: sha1WithRSAEncryption
         72:a5:36:9e:bf:2b:0b:47:63:46:5a:09:37:2b:89:50:ec:e3:
