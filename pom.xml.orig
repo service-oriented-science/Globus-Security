@@ -166,14 +166,14 @@
 
 
     <modules>
-<<<<<<< HEAD:pom.xml
 	<module>build-tools</module>
         <module>proxyProcessor</module>
         <module>build-tools</module>
+<<<<<<< HEAD:pom.xml
 =======
-        <module>build-tools</module>
         <module>ssl-proxy</module>
->>>>>>> remove commons-logging from neethi and update pom files:pom.xml
+        <module>ssl-proxy-osgi</module>
+>>>>>>> adding osgi support for ssl-proxies:pom.xml
         <module>jetty</module>
         <module>crux-wss4j</module>
     </modules>
