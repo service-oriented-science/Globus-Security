@@ -166,21 +166,18 @@
 
 
     <modules>
+<<<<<<< HEAD:pom.xml
 	<module>build-tools</module>
         <module>proxyProcessor</module>
         <module>build-tools</module>
+=======
+        <module>build-tools</module>
+        <module>ssl-proxy</module>
+>>>>>>> remove commons-logging from neethi and update pom files:pom.xml
         <module>jetty</module>
-<<<<<<< HEAD:pom.xml
         <module>crux-wss4j</module>
     </modules>
 
-=======
-        <module>parent</module>
-        <module>integration-example</module>
-    </modules>
-
-
->>>>>>> added integration test back:pom.xml
     <dependencies>
 	<dependency>
 		<groupId>org.globus.security</groupId>
