@@ -185,6 +185,7 @@
     <modules>
         <module>build-tools</module>
         <module>ssl-proxy</module>
+        <module>ssl-proxy-osgi</module>
         <module>jetty</module>
         <module>parent</module>
         <module>integration-example</module>
