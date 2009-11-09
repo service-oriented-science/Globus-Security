@@ -22,6 +22,12 @@
         <url>http://jira.globus.org/browse/SOS/component/10060</url>
     </issueManagement>
 
+    <scm>
+        <connection>scm:git://github.com/service-oriented-science/Globus-Security.git</connection>
+        <developerConnection>scm:git@github.com:service-oriented-science/Globus-Security.git</developerConnection>
+        <url>http://github.com/service-oriented-science/Globus-Security</url>
+    </scm>
+
     <distributionManagement>
         <snapshotRepository>
             <id>globus.snapshot.repo</id>
