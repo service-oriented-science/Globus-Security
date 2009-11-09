@@ -25,7 +25,7 @@
                         <Embed-Dependency>bcprov-jdk14,ssl-proxy;inline=true</Embed-Dependency>
                         <Export-Package>org.globus.security.provider</Export-Package>
                         <Private-Package>org.globus.security.*</Private-Package>
-                        <Import-Package>!junit.*,!org.junit,*</Import-Package>
+                        <Import-Package>!junit.*,*</Import-Package>
                         <Bundle-Activator>org.globus.security.osgi.SecurityProviderActivator</Bundle-Activator>
                     </instructions>
                 </configuration>
