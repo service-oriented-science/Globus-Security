@@ -106,10 +106,10 @@ public class GlobusSslSocketConnector extends SslSocketConnector {
         sslConfigurator.setKeyStoreType(keystoreType);
     }
 
-    @Override
-    public void setSslTrustManagerFactoryAlgorithm(String algorithm) {
-        sslConfigurator.setSslTrustManagerFactoryAlgorithm(algorithm);
-    }
+//    @Override
+//    public void setSslTrustManagerFactoryAlgorithm(String algorithm) {
+//        sslConfigurator.setSslTrustManagerFactoryAlgorithm(algorithm);
+//    }
 
     @Override
     public void setTruststore(String truststore) {
