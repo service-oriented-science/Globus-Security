@@ -35,12 +35,12 @@ import java.util.Vector;
  *
  * @author ranantha@mcs.anl.gov
  */
-public class TestCertStore extends CertStoreSpi {
+public class MockCertStore extends CertStoreSpi {
 
     private Vector<X509Certificate> certificate = new Vector();
     private Vector<X509CRL> crl = new Vector();
 
-    public TestCertStore(CertStoreParameters param)
+    public MockCertStore(CertStoreParameters param)
             throws InvalidAlgorithmParameterException {
         super(param);
 
@@ -97,21 +97,6 @@ public class TestCertStore extends CertStoreSpi {
 
         // For test, unsupported
         throw new UnsupportedOperationException();
-        /*
-        if (selector == null) {
-            return this.certificate;
-        }
-
-        List certSet = new Vector();
-        Iterator<X509Certificate> iterator = this.certificate.iterator();
-        while (iterator.hasNext()) {
-            X509Certificate cert = iterator.next();
-            if (selector.match(cert)) {
-                certSet.add(cert);
-            }
-        }
-        return certSet;
-         */
     }
 
     /**

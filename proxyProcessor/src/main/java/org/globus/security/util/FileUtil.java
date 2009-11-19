@@ -13,31 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.globus.security.provider;
+package org.globus.security.util;
 
-import java.security.InvalidAlgorithmParameterException;
+import java.io.File;
+import java.io.IOException;
 
-import javax.security.auth.x500.X500Principal;
+import org.apache.commons.io.FileUtils;
 
 /**
  * FILL ME
  *
  * @author ranantha@mcs.anl.gov
  */
-public class MockGlobusProvider extends Provider {
+public class FileUtil {
 
-    public MockGlobusProvider() {
+    public static File createFile(String filename)
+            throws SecurityException, IOException {
 
-        super("GlobusTest", 1.0, "Globus Security Providers");
-
-        put("CertStore.MockCertStore",
-                "org.globus.security.provider.MockCertStore");
-        put("KeyStore.MockKeyStore",
-                "org.globus.security.provider.MockKeyStore");
-
+        File f = new File(filename);
+        if (!f.createNewFile()) {
+            FileUtils.forceDelete(f);
+            if (!f.createNewFile()) {
+                throw new SecurityException(
+                        "Failed to atomically create new file");
+            }
+        }
+        return f;
     }
-}
 
-    public abstract SigningPolicy getSigningPolicy(X500Principal caPrincipal)
-            throws SigningPolicyStoreException;
 }

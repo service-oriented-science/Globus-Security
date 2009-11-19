@@ -13,31 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.globus.security.provider;
+package org.globus.security;
 
-import java.security.InvalidAlgorithmParameterException;
-
-import javax.security.auth.x500.X500Principal;
+import org.bouncycastle.asn1.DERObjectIdentifier;
 
 /**
  * FILL ME
  *
  * @author ranantha@mcs.anl.gov
  */
-public class MockGlobusProvider extends Provider {
+public class Constants {
 
-    public MockGlobusProvider() {
+    public enum CertificateType {
 
-        super("GlobusTest", 1.0, "Globus Security Providers");
-
-        put("CertStore.MockCertStore",
-                "org.globus.security.provider.MockCertStore");
-        put("KeyStore.MockKeyStore",
-                "org.globus.security.provider.MockKeyStore");
-
+        CA, EEC, GSI_2_PROXY, GSI_2_LIMITED_PROXY, GSI_3_LIMITED_PROXY,
+        GSI_3_RESTRICTED_PROXY, GSI_3_INDEPENDENT_PROXY,
+        GSI_3_IMPERSONATION_PROXY,
+        GSI_4_LIMITED_PROXY, GSI_4_RESTRICTED_PROXY, GSI_4_INDEPENDENT_PROXY,
+        GSI_4_IMPERSONATION_PROXY
     }
-}
 
-    public abstract SigningPolicy getSigningPolicy(X500Principal caPrincipal)
-            throws SigningPolicyStoreException;
+    public static final DERObjectIdentifier PROXY_OID
+            = new DERObjectIdentifier("1.3.6.1.5.5.7.1.14");
+    public static final DERObjectIdentifier PROXY_OLD_OID
+            = new DERObjectIdentifier("1.3.6.1.4.1.3536.1.222");
+
 }

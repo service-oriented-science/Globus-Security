@@ -26,7 +26,12 @@ import javax.security.auth.x500.X500Principal;
  */
 public class MockGlobusProvider extends Provider {
 
+<<<<<<< HEAD:ssl-proxy/src/test/java/org/globus/security/provider/TestGlobusProvider.java.orig~HEAD
+    public SigningPolicyStore(SigningPolicyStoreParameters parameters)
+            throws InvalidAlgorithmParameterException {
+=======
     public MockGlobusProvider() {
+>>>>>>> merging:proxyProcessor/src/test/java/org/globus/security/provider/MockGlobusProvider.java
 
         super("GlobusTest", 1.0, "Globus Security Providers");
 

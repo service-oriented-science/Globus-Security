@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.globus.security.provider;
+package org.globus.security;
 
 import java.security.InvalidAlgorithmParameterException;
 
@@ -22,21 +22,14 @@ import javax.security.auth.x500.X500Principal;
 /**
  * FILL ME
  *
- * @author ranantha@mcs.anl.gov
+ * @author ranantha@mcs.anl.gov // FIXME: Maybe a provider  access to this?
  */
-public class MockGlobusProvider extends Provider {
+public abstract class SigningPolicyStore {
 
-    public MockGlobusProvider() {
-
-        super("GlobusTest", 1.0, "Globus Security Providers");
-
-        put("CertStore.MockCertStore",
-                "org.globus.security.provider.MockCertStore");
-        put("KeyStore.MockKeyStore",
-                "org.globus.security.provider.MockKeyStore");
+    public SigningPolicyStore(SigningPolicyStoreParameters parameters)
+            throws InvalidAlgorithmParameterException {
 
     }
-}
 
     public abstract SigningPolicy getSigningPolicy(X500Principal caPrincipal)
             throws SigningPolicyStoreException;
