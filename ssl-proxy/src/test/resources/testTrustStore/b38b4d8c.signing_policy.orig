@@ -2,8 +2,14 @@
 
 	access_id_CA      X509         '/C=US/O=Globus Alliance/CN=Globus Certificate Service'
 
+<<<<<<< HEAD:ssl-proxy/src/test/resources/testTrustStore/b38b4d8c.signing_policy
   	pos_rights        globus        CA:sign
 
    	cond_subjects     globus    	'"/C=US/O=Globus Alliance/OU=Service/*" "/C=US/O=Globus Alliance/OU=User/*"'
+=======
+	pos_rights        globus        CA:sign
+
+	cond_subjects     globus    	'"/C=US/O=Globus Alliance/OU=Service/*" "/C=US/O=Globus Alliance/OU=User/*"'
+>>>>>>> moving proxyProcessor to ssl-proxy project:ssl-proxy/src/test/resources/testTrustStore/b38b4d8c.signing_policy
 
 # end of EACL

@@ -60,47 +60,26 @@ public abstract class OpenSSLKey {
     private boolean isEncrypted = false;
 
     // base64 encoded key value
-<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
-    private byte[] encodedKey   = null;
-    private PrivateKey intKey   = null;
-    private IvParameterSpec iv  = null;
-=======
     private byte[] encodedKey = null;
     private PrivateKey intKey = null;
     private IvParameterSpec iv = null;
->>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
 
     /*
      * String representation of the encryption algorithm:
      * DES-EDE3-CBC, AES-256-CBC, etc.
      */
-<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
-    private String encAlgStr    = null;
+    private String encAlgStr = null;
 
     /*
      * Java string representation of the encryption algorithm:
      * DES, DESede, AES.
      */
-    private String encAlg       = null;
-    private int keyLength       = -1;
-    private int ivLength        = -1;
-
-    // ASN.1 encoded key value
-    private byte[] keyData      = null;
-=======
-    private String encAlgStr = null;
-
-    /*
-    * Java string representation of the encryption algorithm:
-    * DES, DESede, AES.
-    */
     private String encAlg = null;
     private int keyLength = -1;
     private int ivLength = -1;
 
     // ASN.1 encoded key value
     private byte[] keyData = null;
->>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
 
     /**
      * Reads a OpenSSL private key from the specified input stream.
@@ -111,11 +90,7 @@ public abstract class OpenSSLKey {
      * @throws GeneralSecurityException if problems with the key
      */
     public OpenSSLKey(InputStream is)
-<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
-        throws IOException,  GeneralSecurityException {
-=======
             throws IOException, GeneralSecurityException {
->>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
         InputStreamReader isr = new InputStreamReader(is);
         readPEM(isr);
     }
@@ -154,18 +129,6 @@ public abstract class OpenSSLKey {
     /**
      * Initializes the OpenSSL key from raw byte array.
      *
-<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
-     * @param algorithm  the algorithm of the key. Currently
-     *                   only RSA algorithm is supported.
-     * @param data       the DER encoded key data. If RSA
-     *                   algorithm, the key must be in
-     *                   PKCS#1 format.
-     * @exception GeneralSecurityException if any security
-     *            problems.
-     */
-    public OpenSSLKey(String algorithm, byte [] data)
-        throws GeneralSecurityException {
-=======
      * @param algorithm the algorithm of the key. Currently
      *                  only RSA algorithm is supported.
      * @param data      the DER encoded key data. If RSA
@@ -176,7 +139,6 @@ public abstract class OpenSSLKey {
      */
     public OpenSSLKey(String algorithm, byte[] data)
             throws GeneralSecurityException {
->>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
         if (data == null) {
             throw new IllegalArgumentException("Data is null");
         }
@@ -190,11 +152,7 @@ public abstract class OpenSSLKey {
     }
 
     private void readPEM(Reader rd)
-<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
-        throws IOException, GeneralSecurityException {
-=======
             throws IOException, GeneralSecurityException {
->>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
 
         BufferedReader in = new BufferedReader(rd);
 
@@ -202,11 +160,7 @@ public abstract class OpenSSLKey {
 
         String next = null;
 
-<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
-        while( (next = in.readLine()) != null) {
-=======
         while ((next = in.readLine()) != null) {
->>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
             if (next.indexOf("PRIVATE KEY") != -1) {
                 keyAlg = getKeyAlgorithm(next);
                 break;
@@ -231,11 +185,7 @@ public abstract class OpenSSLKey {
             sb.append(next);
         }
 
-<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
-        while ( (next = in.readLine()) != null ) {
-=======
         while ((next = in.readLine()) != null) {
->>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
             if (next.startsWith("-----END")) break;
             sb.append(next);
         }
@@ -269,11 +219,7 @@ public abstract class OpenSSLKey {
      * @throws InvalidKeyException      whenever an error occurs during decryption.
      */
     public void decrypt(String password)
-<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
-        throws GeneralSecurityException, InvalidKeyException {
-=======
             throws GeneralSecurityException, InvalidKeyException {
->>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
         decrypt(password.getBytes());
     }
 
@@ -285,22 +231,13 @@ public abstract class OpenSSLKey {
      * @throws GeneralSecurityException whenever an error occurs during decryption.
      * @throws InvalidKeyException      whenever an error occurs during decryption.
      */
-<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
-    public void decrypt(byte [] password)
-        throws GeneralSecurityException, InvalidKeyException {
-=======
     public void decrypt(byte[] password)
             throws GeneralSecurityException, InvalidKeyException {
->>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
         if (!isEncrypted()) {
             return;
         }
 
-<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
-        byte [] enc = Base64.decode(this.encodedKey);
-=======
         byte[] enc = Base64.decode(this.encodedKey);
->>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
 
         SecretKeySpec key = getSecretKey(password, this.iv.getIV());
 
@@ -322,11 +259,7 @@ public abstract class OpenSSLKey {
      * @throws GeneralSecurityException whenever an error occurs during encryption.
      */
     public void encrypt(String password)
-<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
-        throws GeneralSecurityException {
-=======
             throws GeneralSecurityException {
->>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
         encrypt(password.getBytes());
     }
 
@@ -337,13 +270,8 @@ public abstract class OpenSSLKey {
      * @param password password to encrypt the key with.
      * @throws GeneralSecurityException whenever an error occurs during encryption.
      */
-<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
-    public void encrypt(byte [] password)
-        throws GeneralSecurityException {
-=======
     public void encrypt(byte[] password)
             throws GeneralSecurityException {
->>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
 
         if (isEncrypted()) {
             return;
@@ -364,11 +292,7 @@ public abstract class OpenSSLKey {
 
         /* encrypt the raw PKCS11 */
 
-<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
-        this.keyData = cipher.doFinal( getEncoded(this.intKey) );
-=======
         this.keyData = cipher.doFinal(getEncoded(this.intKey));
->>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
         this.isEncrypted = true;
         this.encodedKey = null;
     }
@@ -380,11 +304,7 @@ public abstract class OpenSSLKey {
      * @throws GeneralSecurityException if algorithm is not supported
      */
     public void setEncryptionAlgorithm(String alg)
-<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
-        throws GeneralSecurityException {
-=======
             throws GeneralSecurityException {
->>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
         setAlgorithmSettings(alg);
     }
 
@@ -407,13 +327,8 @@ public abstract class OpenSSLKey {
      * @throws IOException if I/O problems writing the key
      */
     public void writeTo(OutputStream output)
-<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
-        throws IOException {
-        output.write( toPEM().getBytes() );
-=======
             throws IOException {
         output.write(toPEM().getBytes());
->>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
     }
 
     /**
@@ -425,13 +340,8 @@ public abstract class OpenSSLKey {
      * @throws IOException if I/O problems writing the key
      */
     public void writeTo(Writer w)
-<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
-        throws IOException {
-        w.write( toPEM() );
-=======
             throws IOException {
         w.write(toPEM());
->>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
     }
 
     /**
@@ -443,11 +353,7 @@ public abstract class OpenSSLKey {
      * @throws IOException if I/O problems writing the key
      */
     public void writeTo(String file)
-<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
-        throws IOException {
-=======
             throws IOException {
->>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
         PrintWriter p = null;
         try {
             File f = FileUtil.createFile(file);
@@ -469,24 +375,15 @@ public abstract class OpenSSLKey {
      * Returns PrivateKey object initialized from give byte array
      * (in PKCS#1 format)
      */
-<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
-    protected abstract PrivateKey getKey(String alg, byte [] data)
-        throws GeneralSecurityException;
-=======
     protected abstract PrivateKey getKey(String alg, byte[] data)
             throws GeneralSecurityException;
->>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
 
     protected String getProvider() {
         return null;
     }
 
     private Cipher getCipher()
-<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
-        throws GeneralSecurityException {
-=======
             throws GeneralSecurityException {
->>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
         String provider = getProvider();
         if (provider == null) {
             return Cipher.getInstance(this.encAlg + "/CBC/PKCS5Padding");
@@ -507,11 +404,7 @@ public abstract class OpenSSLKey {
     }
 
     private void parseEncryptionInfo(String line)
-<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
-        throws GeneralSecurityException {
-=======
             throws GeneralSecurityException {
->>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
         // TODO: can make this better
         String keyInfo = line.substring(10);
         StringTokenizer tknz = new StringTokenizer(keyInfo, ",", false);
@@ -522,11 +415,7 @@ public abstract class OpenSSLKey {
     }
 
     private void setAlgorithmSettings(String alg)
-<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
-        throws GeneralSecurityException {
-=======
             throws GeneralSecurityException {
->>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
         if (alg.equals("DES-EDE3-CBC")) {
             this.encAlg = "DESede";
             this.keyLength = 24;
@@ -555,11 +444,7 @@ public abstract class OpenSSLKey {
     }
 
     private void setIV(String s)
-<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
-        throws GeneralSecurityException {
-=======
             throws GeneralSecurityException {
->>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
         int len = s.length() / 2;
         if (len != this.ivLength) {
             String err = "ivLength";
@@ -569,13 +454,8 @@ public abstract class OpenSSLKey {
             throw new GeneralSecurityException(err);
         }
         byte[] ivBytes = new byte[len];
-<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
-        for (int j=0; j<len; j++) {
-            ivBytes[j] = (byte)Integer.parseInt(s.substring(j*2, j*2 + 2), 16);
-=======
         for (int j = 0; j < len; j++) {
             ivBytes[j] = (byte) Integer.parseInt(s.substring(j * 2, j * 2 + 2), 16);
->>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
         }
         this.iv = new IvParameterSpec(ivBytes);
     }
@@ -629,13 +509,8 @@ public abstract class OpenSSLKey {
      */
     private String toPEM() {
 
-<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
-        byte [] data = (this.keyData == null) ?
-            this.encodedKey : Base64.encode(this.keyData);
-=======
         byte[] data = (this.keyData == null) ?
                 this.encodedKey : Base64.encode(this.keyData);
->>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/OpenSSLKey.java
 
         String header = HEADER;
 

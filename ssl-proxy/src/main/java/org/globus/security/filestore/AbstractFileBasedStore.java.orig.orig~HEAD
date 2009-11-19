@@ -1,5 +1,8 @@
 package org.globus.security.filestore;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.Collection;
@@ -7,9 +10,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Delegator class for handling FileBasedStore implementations
@@ -30,15 +30,7 @@ public abstract class AbstractFileBasedStore<T> extends FileBasedStore<T> {
 
     @Override
     public void loadWrappers(String[] locations)
-<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/filestore/AbstractFileBasedStore.java.orig
-<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/filestore/AbstractFileBasedStore.java
-            throws FileStoreException {
-=======
         throws FileStoreException {
->>>>>>> reformatting:proxyProcessor/src/main/java/org/globus/security/filestore/AbstractFileBasedStore.java
-=======
-            throws FileStoreException {
->>>>>>> merging:proxyProcessor/src/main/java/org/globus/security/filestore/AbstractFileBasedStore.java.orig
 
         if (locations == null) {
             return;
@@ -64,7 +56,6 @@ public abstract class AbstractFileBasedStore<T> extends FileBasedStore<T> {
                 String[] caCertFiles = file.list(getFilenameFilter());
                 if (caCertFiles == null) {
                     logger.debug("Cannot load certificates from " +
-<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/filestore/AbstractFileBasedStore.java.orig
                                  file.getAbsolutePath() + " directory.");
                 } else {
                     logger.debug("Loading certificates from " +
@@ -75,20 +66,7 @@ public abstract class AbstractFileBasedStore<T> extends FileBasedStore<T> {
                                             caCertFile;
 
                         FileBasedObject<T> loaded = load(caFilename, updatedList);
-                        newWrapperMap.put(caFilename, loaded);
-=======
-                            file.getAbsolutePath() + " directory.");
-                } else {
-                    logger.debug("Loading certificates from " +
-                            file.getAbsolutePath() + " directory.");
-                    for (String caCertFile : caCertFiles) {
-                        String caFilename = file.getPath() +
-                                File.separatorChar +
-                                caCertFile;
-
-                        FileBasedObject<T> loaded = load(caFilename, updatedList);
                         wrapperMap.put(caFilename, loaded);
->>>>>>> merging:proxyProcessor/src/main/java/org/globus/security/filestore/AbstractFileBasedStore.java.orig
                         updatedList.add(loaded.getObject());
                         changed = true;
                     }
@@ -97,11 +75,7 @@ public abstract class AbstractFileBasedStore<T> extends FileBasedStore<T> {
                 String filename = file.getAbsolutePath();
                 if (getFilenameFilter().accept(null, filename)) {
                     FileBasedObject<T> loaded = load(filename, updatedList);
-<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/filestore/AbstractFileBasedStore.java.orig
-                    newWrapperMap.put(filename, loaded);
-=======
                     wrapperMap.put(filename, loaded);
->>>>>>> merging:proxyProcessor/src/main/java/org/globus/security/filestore/AbstractFileBasedStore.java.orig
                     updatedList.add(loaded.getObject());
                     changed = true;
                 }
@@ -109,11 +83,7 @@ public abstract class AbstractFileBasedStore<T> extends FileBasedStore<T> {
             // in case certificates were removed
             if (!changed) {
                 if (this.rootObjects != null &&
-<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/filestore/AbstractFileBasedStore.java.orig
                     this.wrapperMap.size() != newWrapperMap.size()) {
-=======
-                        this.wrapperMap.size() != newWrapperMap.size()) {
->>>>>>> merging:proxyProcessor/src/main/java/org/globus/security/filestore/AbstractFileBasedStore.java.orig
                     changed = true;
                 }
             }
@@ -151,8 +121,6 @@ public abstract class AbstractFileBasedStore<T> extends FileBasedStore<T> {
 
     protected abstract FilenameFilter getFilenameFilter();
 
-<<<<<<< HEAD:proxyProcessor/src/main/java/org/globus/security/filestore/AbstractFileBasedStore.java.orig
-=======
 
 //                        break;
 //                    case CRL_FILE:
@@ -243,5 +211,4 @@ public abstract class AbstractFileBasedStore<T> extends FileBasedStore<T> {
 //        return this.rootObjects;
 //    }
 
->>>>>>> merging:proxyProcessor/src/main/java/org/globus/security/filestore/AbstractFileBasedStore.java.orig
 }

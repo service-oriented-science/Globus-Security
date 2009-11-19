@@ -15,9 +15,7 @@
  */
 package org.globus.security.provider;
 
-import java.security.InvalidAlgorithmParameterException;
-
-import javax.security.auth.x500.X500Principal;
+import java.security.Provider;
 
 /**
  * FILL ME
@@ -38,6 +36,3 @@ public class MockGlobusProvider extends Provider {
     }
 }
 
-    public abstract SigningPolicy getSigningPolicy(X500Principal caPrincipal)
-            throws SigningPolicyStoreException;
-}
