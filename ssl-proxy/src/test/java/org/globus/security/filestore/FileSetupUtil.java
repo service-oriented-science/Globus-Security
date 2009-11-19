@@ -34,6 +34,10 @@ public class FileSetupUtil {
         this.filename = filename_;
     }
 
+    public File getTempFile() {
+        return this.tempFile;
+    }
+
     public void copyFileToTemp() throws Exception {
 
         copyFileToTemp(null);
