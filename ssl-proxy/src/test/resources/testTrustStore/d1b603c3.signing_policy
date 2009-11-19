@@ -7,10 +7,10 @@
 #    ?    Matches any single character.
 #
 # CA names must be specified (no wildcards). Names containing whitespaces
-# must be included in single quotes, e.g. 'Certification Authority'.
-# Names must not contain new line symbols.
-# The value of condition attribute is represented as a set of regular
-# expressions. Each regular expression must be included in double quotes.
+# must be included in single quotes, e.g. 'Certification Authority'. 
+# Names must not contain new line symbols. 
+# The value of condition attribute is represented as a set of regular 
+# expressions. Each regular expression must be included in double quotes.  
 #
 # This policy file dictates the following policy:
 #
@@ -18,19 +18,19 @@
 #
 # Format:
 #------------------------------------------------------------------------
-#  token type  | def.authority |                value
+#  token type  | def.authority |                value              
 #--------------|---------------|-----------------------------------------
 # EACL entry #1|
 
  access_id_CA      X509         '/DC=net/DC=ES/O=ESnet/OU=Certificate Authorities/CN=ESnet Root CA 1'
-
+ 
  pos_rights        globus        CA:sign
-
+ 
  cond_subjects     globus     	'"/DC=org/DC=DOEGrids/OU=Certificate Authorities/*" "/DC=net/DC=ES/*" "/DC=org/DC=fusiongrid/OU=Certificate Authorities/*"'
 
 #
 # End DOE SG CA Policy
-#
+# 
 # $Log: d1b603c3.signing_policy,v $
 # Revision 1.5  2006/04/20 20:23:16  helm
 # Added fusion grid subdir from mrt, removed misleading doc

@@ -10,10 +10,10 @@
 #    ?    Matches any single character.
 #
 # CA names must be specified (no wildcards). Names containing whitespaces
-# must be included in single quotes, e.g. 'Certification Authority'.
-# Names must not contain new line symbols.
-# The value of condition attribute is represented as a set of regular
-# expressions. Each regular expression must be included in double quotes.
+# must be included in single quotes, e.g. 'Certification Authority'. 
+# Names must not contain new line symbols. 
+# The value of condition attribute is represented as a set of regular 
+# expressions. Each regular expression must be included in double quotes.  
 #
 # This policy file dictates the following policy:
 #   -The Globus CA can sign certificates for the Globus or the Alliance
@@ -22,7 +22,7 @@
 #
 # Format:
 #------------------------------------------------------------------------
-#  token type  | def.authority |                value
+#  token type  | def.authority |                value              
 #--------------|---------------|-----------------------------------------
 # ACL entry #1 |
 

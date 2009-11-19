@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>crux-wss4j</artifactId>
-
+    <name>Crux SSL-Proxy support for WSS4J</name>
     <dependencies>
         <dependency>
             <groupId>org.apache.ws.security</groupId>
