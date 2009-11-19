@@ -13,32 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.globus.security.util;
+package org.globus.security.provider;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.apache.commons.io.FileUtils;
+import java.security.Provider;
 
 /**
  * FILL ME
  *
  * @author ranantha@mcs.anl.gov
  */
-public class FileUtil {
+public class MockGlobusProvider extends Provider {
 
-    public static File createFile(String filename)
-            throws SecurityException, IOException {
+    public MockGlobusProvider() {
 
-        File f = new File(filename);
-        if (!f.createNewFile()) {
-            FileUtils.forceDelete(f);
-            if (!f.createNewFile()) {
-                throw new SecurityException(
-                        "Failed to atomically create new file");
-            }
-        }
-        return f;
+        super("GlobusTest", 1.0, "Globus Security Providers");
+
+        put("CertStore.MockCertStore",
+                "org.globus.security.provider.MockCertStore");
+        put("KeyStore.MockKeyStore",
+                "org.globus.security.provider.MockKeyStore");
+
     }
-
 }
+
