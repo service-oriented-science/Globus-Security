@@ -296,7 +296,7 @@ public class TestProxyPathValidator {
     @BeforeClass
     public void setup() throws Exception {
 
-        Security.addProvider(new TestGlobusProvider());
+        Security.addProvider(new MockGlobusProvider());
 
         factory = CertificateFactory.getInstance("X.509");
 
@@ -447,7 +447,7 @@ public class TestProxyPathValidator {
     protected KeyStore getKeyStore(X509Certificate[] certificates)
             throws Exception {
 
-        KeyStore keyStore = KeyStore.getInstance("TestKeyStore");
+        KeyStore keyStore = KeyStore.getInstance("MockKeyStore");
         keyStore.load(null, null);
         if (certificates != null) {
             for (int i = 0; i < certificates.length; i++) {
@@ -469,7 +469,7 @@ public class TestProxyPathValidator {
                 new TestCertParameters(null,
                         this.crls);
         CertStore certStore =
-                CertStore.getInstance("TestCertStore", parameters);
+                CertStore.getInstance("MockCertStore", parameters);
         TestPolicyStore policyStore =
                 new TestPolicyStore((Map) null);
 
@@ -525,7 +525,7 @@ public class TestProxyPathValidator {
                         this.crls);
 
         CertStore certStore =
-                CertStore.getInstance("TestCertStore", certStoreParameters);
+                CertStore.getInstance("MockCertStore", certStoreParameters);
         TestPolicyStore policyStore =
                 new TestPolicyStore((Map) null);
 
@@ -592,7 +592,7 @@ public class TestProxyPathValidator {
                         this.crls);
 
         CertStore certStore =
-                CertStore.getInstance("TestCertStore", certStoreParameters);
+                CertStore.getInstance("MockCertStore", certStoreParameters);
         TestPolicyStore policyStore =
                 new TestPolicyStore((Map) null);
 
@@ -682,7 +682,7 @@ public class TestProxyPathValidator {
                         this.crls);
 
         CertStore certStore =
-                CertStore.getInstance("TestCertStore", certStoreParameters);
+                CertStore.getInstance("MockCertStore", certStoreParameters);
         TestPolicyStore policyStore =
                 new TestPolicyStore((Map) null);
 
@@ -737,7 +737,7 @@ public class TestProxyPathValidator {
 
         X509Certificate[] chain;
 
-        CertStore certStore = CertStore.getInstance("TestCertStore", null);
+        CertStore certStore = CertStore.getInstance("MockCertStore", null);
         TestPolicyStore policyStore =
                 new TestPolicyStore((Map) null);
         // proxy, CA
@@ -775,7 +775,7 @@ public class TestProxyPathValidator {
                 new TestCertParameters(null, this.crls);
 
         CertStore certStore =
-                CertStore.getInstance("TestCertStore", certStoreParameters);
+                CertStore.getInstance("MockCertStore", certStoreParameters);
         TestPolicyStore policyStore =
                 new TestPolicyStore((Map) null);
 
@@ -805,7 +805,7 @@ public class TestProxyPathValidator {
                         this.crls);
 
         CertStore certStore =
-                CertStore.getInstance("TestCertStore", certStoreParameters);
+                CertStore.getInstance("MockCertStore", certStoreParameters);
         TestPolicyStore policyStore =
                 new TestPolicyStore((Map) null);
 
@@ -848,7 +848,7 @@ public class TestProxyPathValidator {
                 new TestCertParameters(null, this.crls);
 
         CertStore certStore =
-                CertStore.getInstance("TestCertStore", certStoreParameters);
+                CertStore.getInstance("MockCertStore", certStoreParameters);
         TestPolicyStore policyStore =
                 new TestPolicyStore((Map) null);
 
@@ -932,7 +932,7 @@ public class TestProxyPathValidator {
                 new TestCertParameters(null, this.crls);
 
         CertStore certStore =
-                CertStore.getInstance("TestCertStore", certStoreParameters);
+                CertStore.getInstance("MockCertStore", certStoreParameters);
         TestPolicyStore policyStore =
                 new TestPolicyStore((Map) null);
 
@@ -952,7 +952,7 @@ public class TestProxyPathValidator {
         KeyStore keyStore = getKeyStore(null);
 
         X509Certificate[] chain = null;
-        CertStore certStore = CertStore.getInstance("TestCertStore", null);
+        CertStore certStore = CertStore.getInstance("MockCertStore", null);
         TestPolicyStore policyStore =
                 new TestPolicyStore((Map) null);
 
@@ -970,7 +970,7 @@ public class TestProxyPathValidator {
 
         // this makes the PathValidator think the chain is:
         // CA, CA, CA - which is ok.
-        certStore = CertStore.getInstance("TestCertStore", parameters);
+        certStore = CertStore.getInstance("MockCertStore", parameters);
         validateChain(chain, keyStore, certStore, policyStore, goodCertsArr[1],
                 false);
     }
@@ -986,7 +986,7 @@ public class TestProxyPathValidator {
         TestCertParameters parameters =
                 new TestCertParameters(null, this.crls);
         CertStore certStore =
-                CertStore.getInstance("TestCertStore", parameters);
+                CertStore.getInstance("MockCertStore", parameters);
         TestPolicyStore policyStore =
                 new TestPolicyStore((Map) null);
 
@@ -1024,7 +1024,7 @@ public class TestProxyPathValidator {
         TestCertParameters parameters =
                 new TestCertParameters(null, null);
         CertStore certStore =
-                CertStore.getInstance("TestCertStore", parameters);
+                CertStore.getInstance("MockCertStore", parameters);
 
         X509Certificate[] chain = null;
         SigningPolicyFileParser parser = new SigningPolicyFileParser();

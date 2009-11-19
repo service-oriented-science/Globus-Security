@@ -53,7 +53,7 @@ public class TestFileBasedTrustAnchor {
         FileBasedTrustAnchor fileAnchor =
                 new FileBasedTrustAnchor(new File(tempFileName));
 
-//        assert (fileAnchor != null);
+        assert (fileAnchor != null);
 
         TrustAnchor anchor = fileAnchor.getTrustAnchor();
 

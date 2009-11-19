@@ -50,7 +50,7 @@ public class TestTrustManager extends TestProxyPathValidator {
                 new TestCertParameters(null, this.crls);
 
         CertStore certStore =
-                CertStore.getInstance("TestCertStore", parameters);
+                CertStore.getInstance("MockCertStore", parameters);
         TestPolicyStore policyStore =
                 new TestPolicyStore((Map) null);
         X509ProxyCertPathParameters validatorParam =

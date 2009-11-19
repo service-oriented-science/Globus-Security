@@ -51,7 +51,7 @@ public class TestFileBasedCRL {
 
         FileBasedCRL fileCrl = new FileBasedCRL(new File(tempFileName));
 
-//        assert (fileCrl != null);
+        assert (fileCrl != null);
 
         X509CRL crl = fileCrl.getCrl();
 

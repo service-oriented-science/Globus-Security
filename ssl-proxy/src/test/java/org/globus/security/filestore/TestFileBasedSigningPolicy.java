@@ -57,7 +57,7 @@ public class TestFileBasedSigningPolicy {
         FileBasedSigningPolicy filePolicy =
                 new FileBasedSigningPolicy(new File(tempFileName));
 
-//        assert (filePolicy != null);
+        assert (filePolicy != null);
 
         Collection<SigningPolicy> policies = filePolicy.getSigningPolicies();
 
