@@ -52,7 +52,7 @@ public class TestFileBasedSigningPolicy {
 
         this.testPolicy1.copyFileToTemp();
 
-        String tempFileName = this.testPolicy1.getTempFilename();
+        String tempFileName = this.testPolicy1.getAbsoluteFilename();
 
         FileBasedSigningPolicy filePolicy =
                 new FileBasedSigningPolicy(new File(tempFileName));

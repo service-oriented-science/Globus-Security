@@ -47,7 +47,7 @@ public class TestFileBasedCRL {
 
         this.testCrl1.copyFileToTemp();
 
-        String tempFileName = this.testCrl1.getTempFilename();
+        String tempFileName = this.testCrl1.getAbsoluteFilename();
 
         FileBasedCRL fileCrl = new FileBasedCRL(new File(tempFileName));
 

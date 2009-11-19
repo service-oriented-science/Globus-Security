@@ -17,6 +17,8 @@ package org.globus.security.filestore;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 
@@ -27,6 +29,7 @@ import org.apache.commons.io.FileUtils;
  */
 public class DirSetupUtil {
 
+    Map<String, FileSetupUtil> map = new HashMap<String, FileSetupUtil>();
     String[] fileNames;
     File tempDir;
 
@@ -59,7 +62,14 @@ public class DirSetupUtil {
         for (int i = 0; i < this.fileNames.length; i++) {
             FileSetupUtil util = new FileSetupUtil(fileNames[i]);
             util.copyFileToTemp(this.tempDir);
+            this.map.put(fileNames[i], util);
         }
+    }
+
+    // Original file name.
+    public FileSetupUtil getFileSetupUtil(String filename) {
+
+        return this.map.get(filename);
     }
 
     public File getTempDirectory() {

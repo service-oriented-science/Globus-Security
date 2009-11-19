@@ -48,7 +48,7 @@ public class TestFileBasedTrustAnchor {
 
         this.testCert1.copyFileToTemp();
 
-        String tempFileName = this.testCert1.getTempFilename();
+        String tempFileName = this.testCert1.getAbsoluteFilename();
 
         FileBasedTrustAnchor fileAnchor =
                 new FileBasedTrustAnchor(new File(tempFileName));

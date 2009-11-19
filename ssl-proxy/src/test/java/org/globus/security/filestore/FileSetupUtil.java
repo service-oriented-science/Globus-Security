@@ -27,7 +27,7 @@ import java.io.InputStream;
 public class FileSetupUtil {
 
     String filename;
-    String tempFilename;
+    File tempFile;
 
     public FileSetupUtil(String filename_) {
 
@@ -43,17 +43,16 @@ public class FileSetupUtil {
 
         InputStream in = null;
         FileWriter writer = null;
-        File temp;
         try {
             ClassLoader loader =
                     FileSetupUtil.class.getClassLoader();
             in = loader.getResourceAsStream(this.filename);
             int index = filename.lastIndexOf(".");
-            temp = File.createTempFile("globusSecurityTest",
+            this.tempFile = File.createTempFile("globusSecurityTest",
                     filename.substring(index,
                             filename.length()),
                     dir);
-            writer = new FileWriter(temp);
+            writer = new FileWriter(this.tempFile);
             int c;
             while ((c = in.read()) != -1) {
                 writer.write(c);
@@ -67,27 +66,29 @@ public class FileSetupUtil {
                 writer.close();
             }
         }
+    }
 
-        this.tempFilename = temp.getAbsolutePath();
+    public String getAbsoluteFilename() {
+        return this.tempFile.getAbsolutePath();
     }
 
     public String getTempFilename() {
-        return this.tempFilename;
+        return this.tempFile.getName();
     }
 
     public void deleteFile() {
-        if (this.tempFilename != null) {
-            (new File(this.tempFilename)).delete();
+        if (this.tempFile != null) {
+            this.tempFile.delete();
         }
     }
 
     public void modifyFile() throws Exception {
-        if (this.tempFilename != null) {
+        if (this.tempFile != null) {
             // FIXME: only way for modified time to have some delta
             Thread.sleep(1000);
             FileWriter writer = null;
             try {
-                writer = new FileWriter(new File(this.tempFilename),
+                writer = new FileWriter(this.tempFile,
                         true);
 
                 writer.write("\n");

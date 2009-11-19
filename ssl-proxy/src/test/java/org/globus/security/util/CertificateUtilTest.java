@@ -154,7 +154,7 @@ public class CertificateUtilTest {
 
             X509Certificate cert =
                     CertificateLoadUtil
-                            .loadCertificate(testCert1.getTempFilename());
+                            .loadCertificate(testCert1.getAbsoluteFilename());
 
             assert (cert != null);
 
@@ -163,7 +163,7 @@ public class CertificateUtilTest {
             boolean worked = false;
             try {
                 cert = CertificateLoadUtil
-                        .loadCertificate(testCert2.getTempFilename());
+                        .loadCertificate(testCert2.getAbsoluteFilename());
             } catch (GeneralSecurityException e) {
                 String err = e.getMessage();
                 if (err != null &&
@@ -182,7 +182,7 @@ public class CertificateUtilTest {
         this.testCrl1.copyFileToTemp();
 
         X509CRL crl =
-                CertificateLoadUtil.loadCrl(testCrl1.getTempFilename());
+                CertificateLoadUtil.loadCrl(testCrl1.getAbsoluteFilename());
 
         assert (crl != null);
 
