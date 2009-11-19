@@ -64,13 +64,11 @@ public class TestPEMFileBasedKeyStore {
         ClassLoader loader = TestPEMFileBasedKeyStore.class.getClassLoader();
 
         String[] trustedCertFilenames =
-                new String[]{"testTrustStore/1c3f2ca8.0",
-                        "testTrustStore/b38b4d8c.0"};
+                new String[]{"testTrustStore/1c3f2ca8.0", "testTrustStore/b38b4d8c.0"};
         this.trustedDirectory = new DirSetupUtil(trustedCertFilenames);
         this.trustedDirectory.createTempDirectory();
         this.trustedDirectory.copy();
-        String[] files = this.trustedDirectory.getTempDirectory().list();
-        for (int i = 0; i < files.length; i++) {
+        for (int i = 0; i < trustedCertFilenames.length; i++) {
             InputStream in = null;
             try {
                 in = loader.getResourceAsStream(trustedCertFilenames[i]);
@@ -78,7 +76,9 @@ public class TestPEMFileBasedKeyStore {
                 if (in == null) {
                     throw new Exception("Unable to load: " + trustedCertFilenames[i]);
                 }
-                this.trustedCertificates.put(files[i], CertificateLoadUtil.loadCertificate(in));
+                this.trustedCertificates.put(
+                        this.trustedDirectory.getFileSetupUtil(trustedCertFilenames[i]).getTempFilename(),
+                        CertificateLoadUtil.loadCertificate(in));
             } finally {
                 if (in != null) {
                     in.close();
@@ -92,15 +92,16 @@ public class TestPEMFileBasedKeyStore {
         this.defaultTrustedDirectory = new DirSetupUtil(defaultTrustedCert);
         this.defaultTrustedDirectory.createTempDirectory();
         this.defaultTrustedDirectory.copy();
-        files = this.defaultTrustedDirectory.getTempDirectory().list();
-        for (int i = 0; i < files.length; i++) {
+        for (int i = 0; i < defaultTrustedCert.length; i++) {
             InputStream in = null;
             try {
                 in = loader.getResourceAsStream(defaultTrustedCert[i]);
                 if (in == null) {
                     throw new Exception("Unable to load: " + defaultTrustedCert[i]);
                 }
-                this.trustedCertificates.put(files[i], CertificateLoadUtil.loadCertificate(in));
+                this.trustedCertificates.put(
+                        this.defaultTrustedDirectory.getFileSetupUtil(defaultTrustedCert[i]).getTempFilename(),
+                        CertificateLoadUtil.loadCertificate(in));
             } finally {
                 if (in != null) {
                     in.close();
@@ -155,6 +156,7 @@ public class TestPEMFileBasedKeyStore {
             assert (certificate != null);
             assert ((certificate).equals(this.trustedCertificates.get(alias)));
         }
+
     }
 
     public void testProxyCerts() throws Exception {
