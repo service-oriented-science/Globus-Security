@@ -130,20 +130,6 @@
                     </outputDirectory>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>net.sf.xradar</groupId>
-                <artifactId>maven-xradar-plugin</artifactId>
-                <configuration>
-                    <autoRadar>false</autoRadar>
-                    <!--need to be set at false-->
-                    <reportPmd>${project.build.directory}/resources/pmd.xml
-                    </reportPmd>
-                    <reportCheckstyle>
-                        ${project.build.directory}/resources/checkstyle.xml
-                    </reportCheckstyle>
-                </configuration>
-            </plugin>
-
         </plugins>
     </reporting>
 
@@ -151,7 +137,6 @@
     <modules>
 	<module>build-tools</module>
         <module>proxyProcessor</module>
-        <module>build-tools</module>
         <module>jetty</module>
         <module>crux-wss4j</module>
     </modules>
