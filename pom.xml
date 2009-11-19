@@ -152,6 +152,7 @@
         <module>proxyProcessor</module>
         <module>build-tools</module>
         <module>jetty</module>
+        <module>crux-wss4j</module>
     </modules>
 
     <dependencies>
