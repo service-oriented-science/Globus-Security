@@ -135,13 +135,14 @@
 
 
     <modules>
-	    <module>ssl-proxy</module>
+	<module>build-tools</module>
+        <module>ssl-proxy</module>
         <module>jetty</module>
         <module>crux-wss4j</module>
     </modules>
 
     <dependencies>
-	    <dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.5.8</version>
@@ -150,11 +151,6 @@
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
             <version>1.5.8</version>
-        </dependency>
-        <dependency>
-            <groupId>org.globus.security</groupId>
-            <artifactId>build-tools</artifactId>
-            <version>${version}</version>
         </dependency>
     </dependencies>
     <dependencyManagement>
