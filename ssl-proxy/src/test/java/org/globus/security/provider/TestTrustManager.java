@@ -16,8 +16,10 @@
 package org.globus.security.provider;
 
 import java.security.KeyStore;
+import java.security.cert.CertPathValidatorException;
 import java.security.cert.CertPathValidatorResult;
 import java.security.cert.CertStore;
+import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Map;
 
@@ -77,8 +79,36 @@ public class TestTrustManager extends TestProxyPathValidator {
 
         assert (acceptedIssuers[0].equals(goodCertsArr[0]));
 
-        // FIXME: add a failure case
 
+        // Fail because of reject limited proxy
+        validatorParam = new X509ProxyCertPathParameters(keyStore, certStore, policyStore, true, null);
+        manager = new PKITrustManager(new MockProxyCertPathValidator(false, false, false), validatorParam);
+        certChain = new X509Certificate[]{goodCertsArr[3], goodCertsArr[1], goodCertsArr[0]};
+        boolean exception = false;
+        try {
+            manager.checkClientTrusted(certChain, "RSA");
+        } catch (CertificateException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof CertPathValidatorException) {
+                if (cause.getMessage().indexOf("Limited") != -1) {
+                    exception = true;
+                }
+            }
+        }
+        assert (exception);
+
+        exception = false;
+        try {
+            manager.checkServerTrusted(certChain, "RSA");
+        } catch (CertificateException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof CertPathValidatorException) {
+                if (cause.getMessage().indexOf("Limited") != -1) {
+                    exception = true;
+                }
+            }
+        }
+        assert (exception);
     }
 
 }

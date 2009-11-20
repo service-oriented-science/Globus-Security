@@ -80,8 +80,7 @@ public class PKITrustManager implements X509TrustManager {
         // FIXME: anonymous clients?
         CertPath certPath = getCertPath(x509Certificates);
         try {
-            this.result = this.validator
-                    .engineValidate(certPath, parameters);
+            this.result = this.validator.engineValidate(certPath, parameters);
         } catch (CertPathValidatorException exception) {
             throw new CertificateException("Pathvalidation failed", exception);
         } catch (InvalidAlgorithmParameterException exception) {
@@ -97,9 +96,9 @@ public class PKITrustManager implements X509TrustManager {
             this.result = this.validator
                     .engineValidate(certPath, parameters);
         } catch (CertPathValidatorException exception) {
-            throw new CertificateException("Pathvalidation failed", exception);
+            throw new CertificateException("Path validation failed", exception);
         } catch (InvalidAlgorithmParameterException exception) {
-            throw new CertificateException("Pathvalidation failed", exception);
+            throw new CertificateException("Path validation failed", exception);
         }
     }
 
