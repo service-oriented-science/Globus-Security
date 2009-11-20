@@ -287,5 +287,12 @@
         </dependencies>
     </dependencyManagement>
 
+    <repositories>
+        <repository>
+            <id>globus-repo</id>
+            <url>http://repo.globus.org/content/groups/public/</url>
+        </repository>
+    </repositories>
+
 
 </project>
