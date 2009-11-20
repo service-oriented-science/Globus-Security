@@ -9,7 +9,6 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.globus.security</groupId>
     <artifactId>intgration-example</artifactId>
-    <packaging>war</packaging>
     <name>integration-example</name>
     <url>http://maven.apache.org</url>
 
@@ -45,7 +44,6 @@
     </build>
 
     <dependencies>
-
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-frontend-jaxws</artifactId>
@@ -93,6 +91,6 @@
             <id>spring-milestone</id>
             <name>Spring Portfolio Milestone Repository</name>
             <url>http://s3.amazonaws.com/maven.springframework.org/milestone</url>
-        </repository>        
+        </repository>
     </repositories>
 </project>

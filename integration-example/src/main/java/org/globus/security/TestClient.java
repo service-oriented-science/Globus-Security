@@ -31,7 +31,7 @@ public final class TestClient {
 
     public static void main(String[] args) throws Exception {
         HelloService service =
-                new HelloService(new File("cxf-service/src/main/resources/hello_world.wsdl").toURI().toURL());
+                new HelloService(TestClient.class.getResource("/hello_world.wsdl"));
         HelloPortType port = service.getHelloPort();
         Client client = ClientProxy.getClient(port);
         HTTPConduit conduit = (HTTPConduit) client.getConduit();
