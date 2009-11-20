@@ -6,10 +6,17 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.globus.security</groupId>
-        <artifactId>security</artifactId>
+        <artifactId>parent</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <artifactId>build-tools</artifactId>
     <name>Globus Security Build Tools</name>
+
+    <repositories>
+        <repository>
+            <id>globus-repo</id>
+            <url>http://repo.globus.org/content/groups/public/</url>
+        </repository>
+    </repositories>
 
 </project>
