@@ -15,7 +15,7 @@ http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
                     implementor="org.globus.security.sample.services.HelloWorldImpl"
                     endpointName="e:Hello_Port"
                     serviceName="e:Hello_Service"
-                    address="/counter"
+                    address="/"
                     xmlns:e="http://www.ecerami.com/wsdl/HelloService.wsdl"/>
 
 </beans>
