@@ -139,6 +139,7 @@
         <module>ssl-proxy</module>
         <module>jetty</module>
         <module>crux-wss4j</module>
+        <module>integration-example</module>
     </modules>
 
     <dependencies>
