@@ -1,7 +1,7 @@
-    
+
 	access_id_CA      X509         '/C=US/ST=Illinois/L=Chicago/O=University of Chicago/OU=Globus/CN=Tom Howe'
 
-  	pos_rights        globus        CA:sign
+	pos_rights        globus        CA:sign
 
-   	cond_subjects     globus    	'"/C=US/*"'
+	cond_subjects     globus    	'"/C=US/*"'
 
