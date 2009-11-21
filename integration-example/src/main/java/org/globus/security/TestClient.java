@@ -11,12 +11,9 @@ import org.globus.security.filestore.FileSigningPolicyStoreParameters;
 import org.globus.security.provider.GlobusProvider;
 import org.globus.security.util.SSLConfigurator;
 
-import org.apache.cxf.Bus;
-import org.apache.cxf.BusFactory;
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
-import org.apache.cxf.frontend.ClientProxyFactoryBean;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.transport.http.HTTPConduit;
 
