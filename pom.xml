@@ -135,7 +135,7 @@
 
 
     <modules>
-	<module>build-tools</module>
+        <module>build-tools</module>
         <module>ssl-proxy</module>
         <module>jetty</module>
         <module>crux-wss4j</module>

@@ -19,7 +19,7 @@ import org.springframework.web.context.ContextLoaderListener;
 
 
 public final class TestServer {
-    public static final String POLICY_LOCATION = "/policies";
+    public static final String POLICY_LOCATION = "classes/policies";
     public static final String KEY_STORE = "/keystore.jks";
     public static final String TRUST_STORE = "/cacerts.jks";
     public static final String KEY_PASSWORD = "password";
