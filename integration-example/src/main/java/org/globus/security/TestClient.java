@@ -5,18 +5,21 @@ import java.security.Security;
 
 import javax.net.ssl.SSLSocketFactory;
 
+import org.globus.hello.HelloPortType;
 import org.globus.security.filestore.FileCertStoreParameters;
 import org.globus.security.filestore.FileSigningPolicyStoreParameters;
 import org.globus.security.provider.GlobusProvider;
 import org.globus.security.util.SSLConfigurator;
 
+import org.apache.cxf.Bus;
+import org.apache.cxf.BusFactory;
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
+import org.apache.cxf.frontend.ClientProxyFactoryBean;
+import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.transport.http.HTTPConduit;
 
-import com.ecerami.wsdl.helloservice_wsdl.HelloPortType;
-import com.ecerami.wsdl.helloservice_wsdl.HelloService;
 
 /**
  * Hello world!
@@ -30,18 +33,24 @@ public final class TestClient {
     }
 
     public static void main(String[] args) throws Exception {
-        HelloService service =
-                new HelloService(TestClient.class.getResource("/hello_world.wsdl"));
-        HelloPortType port = service.getHelloPort();
-        Client client = ClientProxy.getClient(port);
-        HTTPConduit conduit = (HTTPConduit) client.getConduit();
+        JaxWsProxyFactoryBean beanFac = new JaxWsProxyFactoryBean();
+        beanFac.setServiceClass(HelloPortType.class);
+        beanFac.setAddress("https://localhost:8443/counter");
+        HelloPortType service = (HelloPortType) beanFac.create();
+        Client proxy = ClientProxy.getClient(service);
+        HTTPConduit conduit = (HTTPConduit) proxy.getConduit();
+        TLSClientParameters tlsParams = configureTLS();
+        conduit.setTlsClientParameters(tlsParams);
+        System.out.println(service.sayHello("hello"));
+    }
+
+    private static TLSClientParameters configureTLS() throws Exception {
         TLSClientParameters tlsParams = new TLSClientParameters();
         SSLConfigurator configurator = configure();
         SSLSocketFactory socketFactory = configurator.createFactory();
         tlsParams.setSSLSocketFactory(socketFactory);
         tlsParams.setDisableCNCheck(true);
-        conduit.setTlsClientParameters(tlsParams);
-        System.out.println(port.sayHello("hello"));
+        return tlsParams;
     }
 
     private static SSLConfigurator configure() {
