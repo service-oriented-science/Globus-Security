@@ -755,7 +755,7 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
         if (!valid) {
             throw new CertPathValidatorException(
                     "Certificate " + certificate.getSubjectDN() +
-                            " voilates signing policy for CA " + caPrincipal.getName());
+                            " violates signing policy for CA " + caPrincipal.getName());
         }
 
     }
