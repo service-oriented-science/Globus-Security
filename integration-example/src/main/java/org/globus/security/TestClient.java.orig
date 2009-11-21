@@ -7,17 +7,23 @@ import javax.net.ssl.SSLSocketFactory;
 
 import org.globus.hello.HelloPortType;
 <<<<<<< HEAD:integration-example/src/main/java/org/globus/security/TestClient.java
-=======
 import org.globus.hello.HelloService;
->>>>>>> changed HelloService package names:integration-example/src/main/java/org/globus/security/TestClient.java
+=======
+>>>>>>> ecc5bec... coded test to use FactoryBean so that Conduit Config is picked up:integration-example/src/main/java/org/globus/security/TestClient.java
 import org.globus.security.filestore.FileCertStoreParameters;
 import org.globus.security.filestore.FileSigningPolicyStoreParameters;
 import org.globus.security.provider.GlobusProvider;
 import org.globus.security.util.SSLConfigurator;
 
+import org.apache.cxf.Bus;
+import org.apache.cxf.BusFactory;
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
+<<<<<<< HEAD:integration-example/src/main/java/org/globus/security/TestClient.java
+=======
+import org.apache.cxf.frontend.ClientProxyFactoryBean;
+>>>>>>> coded test to use FactoryBean so that Conduit Config is picked up:integration-example/src/main/java/org/globus/security/TestClient.java
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.transport.http.HTTPConduit;
 
