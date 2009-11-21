@@ -39,7 +39,7 @@ public final class TestServer {
         servletHolder.setServlet(new CXFServlet());
         servletHolder.setName("CXFServlet");
         servletHolder.setDisplayName("CXF Servlet");
-        context.addServlet(servletHolder, "/");
+        context.addServlet(servletHolder, "/counter");
         context.addEventListener(new ContextLoaderListener());
         Properties initParams = new Properties();
         initParams.put("contextConfigLocation", "classpath:/applicationContext.xml");
