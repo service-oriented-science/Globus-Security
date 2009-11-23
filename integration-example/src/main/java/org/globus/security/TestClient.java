@@ -6,6 +6,7 @@ import java.security.Security;
 import javax.net.ssl.SSLSocketFactory;
 
 import org.globus.hello.HelloPortType;
+import org.globus.hello.HelloService;
 import org.globus.security.filestore.FileCertStoreParameters;
 import org.globus.security.filestore.FileSigningPolicyStoreParameters;
 import org.globus.security.provider.GlobusProvider;
