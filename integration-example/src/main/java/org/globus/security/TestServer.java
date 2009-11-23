@@ -19,9 +19,11 @@ import org.springframework.web.context.ContextLoaderListener;
 
 
 public final class TestServer {
-    public static final String POLICY_LOCATION = "classes/policies";
-    public static final String KEY_STORE = "/keystore.jks";
-    public static final String TRUST_STORE = "/cacerts.jks";
+    public static final String POLICY_LOCATION = "/Users/ranantha/.globus/certificates";
+    //    public static final String KEY_STORE = "/keystore.jks";
+    public static final String KEY_STORE = "/myKeystore";
+    //    public static final String TRUST_STORE = "/cacerts.jks";
+    public static final String TRUST_STORE = "/myTruststore";
     public static final String KEY_PASSWORD = "password";
     private static int port = 8443;
 
@@ -65,21 +67,22 @@ public final class TestServer {
 
     private static SSLConfigurator configure() {
         SSLConfigurator configurator = new SSLConfigurator();
-        configurator.setKeyStoreType("JKS");
+        configurator.setKeyStoreType("PEMFilebasedKeyStore");
         configurator.setKeyStore(KEY_STORE);
         configurator.setKeyPassword(KEY_PASSWORD);
         configurator.setPassword(KEY_PASSWORD);
         configurator.setProtocol("TLS");
 
         SigningPolicyStoreParameters spsParams =
-                new FileSigningPolicyStoreParameters(new String[]{new File(POLICY_LOCATION).getAbsolutePath()});
+                new FileSigningPolicyStoreParameters(new String[]{POLICY_LOCATION});
         configurator.setSigningPolicyStoreParameters(spsParams);
-        configurator.setTrustStoreType("JKS");
+        configurator.setTrustStoreType("PEMFilebasedKeyStore");
         configurator.setTrustStorePath(TRUST_STORE);
         configurator.setTrustStorePassword("password");
         FileCertStoreParameters certStoreParams =
-                new FileCertStoreParameters(new String[]{new File(KEY_PASSWORD).getAbsolutePath()});
+                new FileCertStoreParameters(new String[]{new File(TRUST_STORE).getAbsolutePath()});
         configurator.setCertStoreParameters(certStoreParams);
+
         return configurator;
     }
 }

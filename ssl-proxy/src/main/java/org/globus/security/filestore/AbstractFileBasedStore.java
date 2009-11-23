@@ -48,7 +48,7 @@ public abstract class AbstractFileBasedStore<T> extends FileBasedStore<T> {
             file = new File(location.trim());
 
             if (!file.canRead()) {
-                logger.debug("Cannot read: " + file.getAbsolutePath());
+                logger.warn("Cannot read: " + file.getAbsolutePath());
                 continue;
             }
 
