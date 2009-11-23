@@ -34,7 +34,10 @@ public class FileBasedProxyCredentialStore extends AbstractFileBasedStore<X509Cr
 
     @Override
     protected FilenameFilter getFilenameFilter() {
-        // FIXME: a filename filter that always returns true?
-        return null;
+        return new FilenameFilter() {
+            public boolean accept(File f, String s) {
+                return true;
+            }
+        };
     }
 }

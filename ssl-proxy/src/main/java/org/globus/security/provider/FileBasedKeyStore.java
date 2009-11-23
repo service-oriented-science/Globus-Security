@@ -29,13 +29,14 @@ import org.globus.security.filestore.FileBasedKeyStoreParameters;
 import org.globus.security.filestore.FileBasedObject;
 import org.globus.security.filestore.FileBasedProxyCredential;
 import org.globus.security.filestore.FileBasedStore;
-import static org.globus.security.filestore.FileBasedStore.LoadFileType;
 import org.globus.security.filestore.FileBasedTrustAnchor;
 import org.globus.security.filestore.FileStoreException;
-import static org.globus.security.util.CertificateIOUtil.writeCertificate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static org.globus.security.filestore.FileBasedStore.LoadFileType;
+import static org.globus.security.util.CertificateIOUtil.writeCertificate;
 
 
 /**
@@ -233,8 +234,11 @@ public class FileBasedKeyStore extends KeyStoreSpi {
         try {
             Properties properties = new Properties();
             properties.load(inputStream);
+            if (properties == null) {
+                throw new CertificateException("Properties file for configuration was null");
+            }
             String defaultDirectoryString =
-                    properties.get(DEFAULT_DIRECTORY_KEY).toString();
+                    properties.getProperty(DEFAULT_DIRECTORY_KEY);
             if (defaultDirectoryString != null) {
                 defaultDirectory = new File(defaultDirectoryString);
                 if (!defaultDirectory.exists()) {
@@ -244,13 +248,23 @@ public class FileBasedKeyStore extends KeyStoreSpi {
                                 "Unable to create default certificate directory");
                     }
                 }
+                try {
+                    loadDirectories(new String[]{defaultDirectoryString});
+                } catch (FileStoreException e) {
+                    throw new CertificateException(e);
+                }
             }
             String directoryListString =
                     properties.getProperty(DIRECTORY_LIST_KEY);
+            if (directoryListString != null) {
+                try {
+                    String[] directoryList = directoryListString.split(",");
+                    loadDirectories(directoryList);
+                } catch (FileStoreException e) {
+                    throw new CertificateException(e);
+                }
+            }
             try {
-                String[] directoryList = directoryListString.split(",");
-                loadDirectories(directoryList);
-                loadDirectories(new String[]{defaultDirectoryString});
                 String proxyFilename =
                         properties.getProperty(PROXY_FILENAME);
                 if (proxyFilename != null) {
