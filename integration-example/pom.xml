@@ -130,7 +130,7 @@
                                 <phase>verify</phase>
                                 <goals>
                                     <goal>java</goal>
-                                </goals>
+                                </goals>   
                                 <configuration>
                                     <classpathScope>test</classpathScope>
                                     <mainClass>org.globus.security.TestClient</mainClass>

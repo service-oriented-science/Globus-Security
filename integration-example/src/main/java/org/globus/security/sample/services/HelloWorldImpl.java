@@ -4,11 +4,11 @@ package org.globus.security.sample.services;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 
-import com.ecerami.wsdl.helloservice_wsdl.HelloPortType;
+import org.globus.hello.HelloPortType;
 
-@WebService(targetNamespace = "http://www.ecerami.com/wsdl/HelloService.wsdl", name = "Hello_PortType",
+@WebService(targetNamespace = "http://www.globus.org/hello", name = "Hello_PortType",
         portName = "Hello_Port", serviceName = "Hello_Service",
-        endpointInterface = "com.ecerami.wsdl.helloservice_wsdl.HelloPortType")
+        endpointInterface = "org.globus.hello.HelloPortType")
 public class HelloWorldImpl implements HelloPortType {
 
     public String sayHello(@WebParam(partName = "firstName", name = "firstName",

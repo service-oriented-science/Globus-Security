@@ -1,7 +1,9 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:jaxws="http://cxf.apache.org/jaxws"
+       xmlns:cxf="http://cxf.apache.org/core"
        xsi:schemaLocation="
+http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd
 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
 http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
 
@@ -16,6 +18,10 @@ http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
                     endpointName="e:Hello_Port"
                     serviceName="e:Hello_Service"
                     address="/"
-                    xmlns:e="http://www.ecerami.com/wsdl/HelloService.wsdl"/>
+                    xmlns:e="http://www.globus.org/hello">
+        <jaxws:features>
+            <cxf:logging/>
+        </jaxws:features>
+        </jaxws:endpoint>
 
 </beans>
