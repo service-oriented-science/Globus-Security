@@ -1,0 +1,3 @@
+# Properties file as input to the keystore (PEMFilebasedKeystore)
+# Name of directory with trusted certificates.
+directory_list=/Users/ranantha/.globus/certificates

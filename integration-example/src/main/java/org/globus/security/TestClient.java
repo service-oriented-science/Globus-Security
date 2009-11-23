@@ -46,7 +46,7 @@ public final class TestClient {
 
     private static SSLConfigurator configure() {
         SSLConfigurator configurator = new SSLConfigurator();
-        configurator.setKeyStoreType("JKS");
+        configurator.setKeyStoreType("PEMFilebasedKeyStore");
         configurator.setKeyStore(TestServer.KEY_STORE);
         configurator.setKeyPassword(TestServer.KEY_PASSWORD);
         configurator.setPassword(TestServer.KEY_PASSWORD);
@@ -55,7 +55,7 @@ public final class TestClient {
                 new FileSigningPolicyStoreParameters(
                         new String[]{new File(TestServer.POLICY_LOCATION).getAbsolutePath()});
         configurator.setSigningPolicyStoreParameters(spsParams);
-        configurator.setTrustStoreType("JKS");
+        configurator.setTrustStoreType("PEMFilebasedKeyStore");
         configurator.setTrustStorePath(TestServer.TRUST_STORE);
         configurator.setTrustStorePassword(TestServer.KEY_PASSWORD);
         FileCertStoreParameters certStoreParams =
