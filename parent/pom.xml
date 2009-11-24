@@ -46,6 +46,10 @@
         </site>
     </distributionManagement>
 
+    <reporting>
+
+    </reporting>
+
     <build>
         <plugins>
             <plugin>
@@ -53,7 +57,7 @@
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <configuration>
                     <headerLocation>globus-security/LICENSE.txt</headerLocation>
-<encoding>UTF-8</encoding>
+                    <encoding>UTF-8</encoding>
                     <configLocation>/globus-security/globus-security-checkstyle.xml</configLocation>
                     <consoleOutput>true</consoleOutput>
                     <failsOnError>false</failsOnError>
@@ -126,7 +130,7 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>            
         </plugins>
     </build>
 
@@ -269,6 +273,55 @@
         </dependencies>
     </dependencyManagement>
 
+    <profiles>
+        <profile>
+            <id>clover.report</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.atlassian.maven.plugins</groupId>
+                        <artifactId>maven-clover2-plugin</artifactId>
+                        <version>2.6.3</version>
+                        <executions>
+                            <execution>
+                                <id>main</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>instrument</goal>
+                                    <goal>aggregate</goal>
+                                    <goal>check</goal>
+                                    <goal>log</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>site</id>
+                                <phase>pre-site</phase>
+                                <goals>
+                                    <goal>instrument</goal>
+                                    <goal>aggregate</goal>
+                                    <goal>save-history</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+            <reporting>
+                <excludeDefaults>true</excludeDefaults>
+                <plugins>
+                    <plugin>
+                        <groupId>com.atlassian.maven.plugins</groupId>
+                        <artifactId>maven-clover2-plugin</artifactId>
+                        <configuration>
+                            <generateHistorical>true</generateHistorical>
+                            <generateHtml>true</generateHtml>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </reporting>
+        </profile>
+    </profiles>
+
     <pluginRepositories>
         <pluginRepository>
             <id>codehaus.snapshot</id>
@@ -307,6 +360,10 @@
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
+        </repository>
+        <repository>
+            <id>atlassian</id>
+            <url>https://maven.atlassian.com/repository/public</url>
         </repository>
     </repositories>
 
