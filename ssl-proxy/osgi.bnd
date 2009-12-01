@@ -1,0 +1,7 @@
+#-----------------------------------------------------------------
+# Use this file to add customized Bnd instructions for the bundle
+#-----------------------------------------------------------------
+
+Export-Package: org.globus.security.provider,org.globus.security,org.globus.security.filestore
+
+Private-Package: org.globus.security.bc,org.globus.security.proxyExtension,org.globus.security.util
