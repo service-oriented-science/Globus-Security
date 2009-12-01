@@ -1,6 +1,5 @@
 package org.globus.security;
 
-import java.io.File;
 import java.security.Security;
 import java.util.Properties;
 
@@ -24,6 +23,7 @@ public final class TestServer {
     public static final String KEY_STORE = "/myKeystore";
     //    public static final String TRUST_STORE = "/cacerts.jks";
     public static final String TRUST_STORE = "/myTruststore";
+    public static final String CRL_TRUST_STORE = "/Users/ranantha/.globus/certificates";
     public static final String KEY_PASSWORD = "password";
     private static int port = 8443;
 
@@ -35,6 +35,7 @@ public final class TestServer {
     }
 
     private static Context createWebContext() {
+
         Context context = new Context();
         ServletHolder servletHolder = new ServletHolder();
         servletHolder.setInitOrder(1);
@@ -50,6 +51,7 @@ public final class TestServer {
     }
 
     public static void main(String[] args) throws Exception {
+
         Server server = new Server();
         server.addHandler(createWebContext());
         server.addConnector(createSSLConnector());
@@ -57,6 +59,7 @@ public final class TestServer {
     }
 
     private static GlobusSslSocketConnector createSSLConnector() {
+
         GlobusSslSocketConnector connector = new GlobusSslSocketConnector();
         SSLConfigurator configurator = configure();
         connector.setSSLConfigurator(configurator);
@@ -66,21 +69,27 @@ public final class TestServer {
     }
 
     private static SSLConfigurator configure() {
+
         SSLConfigurator configurator = new SSLConfigurator();
+
+        // key store that configures the public and private key for the server
         configurator.setKeyStoreType("PEMFilebasedKeyStore");
         configurator.setKeyStore(KEY_STORE);
+        configurator.setKeyStorePassword(KEY_PASSWORD);
         configurator.setKeyPassword(KEY_PASSWORD);
-        configurator.setPassword(KEY_PASSWORD);
+        // Protocol to use
         configurator.setProtocol("TLS");
-
-        SigningPolicyStoreParameters spsParams =
-                new FileSigningPolicyStoreParameters(new String[]{POLICY_LOCATION});
-        configurator.setSigningPolicyStoreParameters(spsParams);
+        // Trust roots, CAs, for accepting client connections
         configurator.setTrustStoreType("PEMFilebasedKeyStore");
         configurator.setTrustStorePath(TRUST_STORE);
         configurator.setTrustStorePassword("password");
+        // Signing policy
+        SigningPolicyStoreParameters spsParams =
+                new FileSigningPolicyStoreParameters(new String[]{POLICY_LOCATION});
+        configurator.setSigningPolicyStoreParameters(spsParams);
+        // Trust root, CRLs, for accepting client connections
         FileCertStoreParameters certStoreParams =
-                new FileCertStoreParameters(new String[]{new File(TRUST_STORE).getAbsolutePath()});
+                new FileCertStoreParameters(new String[]{CRL_TRUST_STORE});
         configurator.setCertStoreParameters(certStoreParams);
 
         return configurator;
