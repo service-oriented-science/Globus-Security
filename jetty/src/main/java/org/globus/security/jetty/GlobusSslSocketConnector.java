@@ -62,7 +62,7 @@ public class GlobusSslSocketConnector extends SslSocketConnector {
 
 
     public void setPassword(String password) {
-        sslConfigurator.setPassword(password);
+        sslConfigurator.setKeyPassword(password);
     }
 
     public String getSslKeyManagerFactoryAlgorithm() {

@@ -37,6 +37,7 @@ import org.globus.security.provider.X509ProxyCertPathValidator;
  * Date: Oct 15, 2009
  * Time: 7:34:57 PM
  * To change this template use File | Settings | File Templates.
+ * FIXME: does this take null passwords for keystore and certstore?
  */
 public class SSLConfigurator {
 
@@ -49,8 +50,8 @@ public class SSLConfigurator {
     private SigningPolicyStoreParameters signingPolicyStoreParameters;
     private String keyStore = DEFAULT_KEYSTORE;
     private String keyStoreType = "JKS";
-    private String password;
     private String keyPassword;
+    private String keyStorePassword;
     private String sslKeyManagerFactoryAlgorithm =
             Security.getProperty("ssl.KeyManagerFactory.algorithm") == null ? "SunX509" : Security.getProperty(
                     "ssl.KeyManagerFactory.algorithm"); // cert algorithm;
@@ -62,7 +63,7 @@ public class SSLConfigurator {
     private KeyStore.LoadStoreParameter trustStoreParameters;
     private String trustStorePath;
     private String trustStorePassword;
-    private String certStoreType = "X509ProxyFileStore";
+    private String certStoreType = "PEMFilebasedCertStore";
 
     public SSLSocketFactory createFactory() throws Exception {
         KeyManager[] keyManagers = loadKeyManagers();
@@ -85,7 +86,7 @@ public class SSLConfigurator {
 
         KeyStore trustStore = loadTrustStore();
 
-        CertStore certStore = CertStore.getInstance("X509ProxyFileStore", certStoreParameters);
+        CertStore certStore = CertStore.getInstance("PEMFilebasedCertStore", certStoreParameters);
 
         TrustManager[] trustManagers = loadTrustManagers(trustStore, certStore);
 
@@ -127,14 +128,14 @@ public class SSLConfigurator {
 
 
         KeyStore keyStore = KeyStore.getInstance(keyStoreType);
-        keyStore.load(keystoreInputStream, password == null ? null : password.toCharArray());
+        keyStore.load(keystoreInputStream, keyPassword == null ? null : keyPassword.toCharArray());
 
 
         KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(sslKeyManagerFactoryAlgorithm);
         keyManagerFactory.init(keyStore,
-                keyPassword == null
+                keyStorePassword == null
                         ? null
-                        : keyPassword.toCharArray());
+                        : keyStorePassword.toCharArray());
         return keyManagerFactory.getKeyManagers();
     }
 
@@ -143,7 +144,7 @@ public class SSLConfigurator {
         if (trustStoreParameters == null) {
             if (this.trustStorePath == null || this.trustStorePassword == null) {
                 this.trustStorePath = this.keyStore;
-                this.trustStorePassword = this.keyPassword;
+                this.trustStorePassword = this.keyStorePassword;
             }
             InputStream trustStoreInputStream =
                     getResource(trustStorePath);
@@ -229,12 +230,12 @@ public class SSLConfigurator {
         this.keyStoreType = keyStoreType;
     }
 
-    public String getPassword() {
-        return password;
+    public String getKeyPassword() {
+        return this.keyPassword;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setKeyPassword(String keyPassword) {
+        this.keyPassword = keyPassword;
     }
 
     public String getSslKeyManagerFactoryAlgorithm() {
@@ -245,12 +246,12 @@ public class SSLConfigurator {
         this.sslKeyManagerFactoryAlgorithm = sslKeyManagerFactoryAlgorithm;
     }
 
-    public String getKeyPassword() {
-        return keyPassword;
+    public String getKeyStorePassword() {
+        return keyStorePassword;
     }
 
-    public void setKeyPassword(String keyPassword) {
-        this.keyPassword = keyPassword;
+    public void setKeyStorePassword(String keyStorePassword) {
+        this.keyStorePassword = keyStorePassword;
     }
 
     public String getTrustStoreType() {

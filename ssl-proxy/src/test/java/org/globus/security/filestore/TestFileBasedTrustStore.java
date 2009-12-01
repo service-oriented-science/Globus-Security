@@ -34,11 +34,12 @@ import org.globus.security.SigningPolicyStore;
 import org.globus.security.SigningPolicyStoreParameters;
 import org.globus.security.provider.GlobusProvider;
 
-import static org.testng.AssertJUnit.assertFalse;
-import static org.testng.AssertJUnit.assertTrue;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import static org.testng.AssertJUnit.assertFalse;
+import static org.testng.AssertJUnit.assertTrue;
 
 /**
  * FILL ME
@@ -92,7 +93,7 @@ public class TestFileBasedTrustStore {
 
 
         // Get comparison parameters
-        this.certStore = CertStore.getInstance("X509ProxyFileStore",
+        this.certStore = CertStore.getInstance("PEMFilebasedCertStore",
                 parameters);
 
         assert certStore != null;
@@ -132,7 +133,7 @@ public class TestFileBasedTrustStore {
 
 
         // Get comparison parameters
-        this.certStore = CertStore.getInstance("X509ProxyFileStore",
+        this.certStore = CertStore.getInstance("PEMFilebasedCertStore",
                 parameters);
 
         assert certStore != null;

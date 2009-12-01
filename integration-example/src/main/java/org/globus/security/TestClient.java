@@ -54,8 +54,8 @@ public final class TestClient {
         SSLConfigurator configurator = new SSLConfigurator();
         configurator.setKeyStoreType("PEMFilebasedKeyStore");
         configurator.setKeyStore(TestServer.KEY_STORE);
+        configurator.setKeyStorePassword(TestServer.KEY_PASSWORD);
         configurator.setKeyPassword(TestServer.KEY_PASSWORD);
-        configurator.setPassword(TestServer.KEY_PASSWORD);
         configurator.setProtocol("TLS");
         SigningPolicyStoreParameters spsParams =
                 new FileSigningPolicyStoreParameters(
@@ -65,7 +65,7 @@ public final class TestClient {
         configurator.setTrustStorePath(TestServer.TRUST_STORE);
         configurator.setTrustStorePassword(TestServer.KEY_PASSWORD);
         FileCertStoreParameters certStoreParams =
-                new FileCertStoreParameters(new String[]{new File(TestServer.KEY_PASSWORD).getAbsolutePath()});
+                new FileCertStoreParameters(new String[]{TestServer.CRL_TRUST_STORE});
         configurator.setCertStoreParameters(certStoreParams);
         return configurator;
     }
