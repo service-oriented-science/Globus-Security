@@ -1,0 +1,11 @@
+#-----------------------------------------------------------------
+# Use this file to add customized Bnd instructions for the bundle
+#-----------------------------------------------------------------
+
+Bundle-Activator: ${bundle.namespace}.internal.SecurityProviderActivator
+
+Import-Package: !junit.*,*
+
+Embed-Dependency:\
+ ssl-proxy;groupId=org.globus.security;inline=false,\
+ bcprov-jdk14;groupId=org.bc;inline=false
