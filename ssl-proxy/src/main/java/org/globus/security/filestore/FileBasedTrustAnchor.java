@@ -31,7 +31,7 @@ import org.globus.security.util.CertificateLoadUtil;
  *
  * @author ranantha@mcs.anl.gov
  */
-public class FileBasedTrustAnchor extends FileBasedObject<TrustAnchor> {
+public class FileBasedTrustAnchor extends SingleFileBasedObject<TrustAnchor> {
 
     private static TrustAnchorFilter filter = new TrustAnchorFilter();
 
