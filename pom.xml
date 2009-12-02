@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.globus.security</groupId>
     <artifactId>security</artifactId>
+
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+
     <name>Security (Master Project)</name>
 
     <properties>
@@ -38,172 +40,56 @@
             <url>http://repo.globus.org/content/repositories/releases</url>
         </repository>
         <site>
-            <id>maven.site</id>
+            <id>maven.local</id>
+            <!--<id>maven.site</id>-->
             <name>Globus Maven Site</name>
-            <url>scpexe://login.mcs.anl.gov/home/trhowe/public_html/</url>
+            <!--<url>scpexe://login.mcs.anl.gov/home/trhowe/public_html/</url>-->
+            <url>file:////Users/turtlebender/Sites/security</url>
         </site>
     </distributionManagement>
-    <build>
 
+    <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.5</source>
                     <target>1.5</target>
+                    <source>1.5</source>
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
+                <groupId>org.ops4j</groupId>
+                <artifactId>maven-pax-plugin</artifactId>
+                <version>1.4</version>
                 <configuration>
-                    <headerLocation>globus-security/LICENSE.txt</headerLocation>
-                    <encoding>UTF-8</encoding>
-                    <configLocation>/globus-security/globus-security-checkstyle.xml</configLocation>
-                    <consoleOutput>true</consoleOutput>
-                    <failsOnError>false</failsOnError>
-                    <linkXRef>false</linkXRef>
-                    <sourceDirectory>${basedir}/src</sourceDirectory>
+                    <provision>
+                        <param>--platform=felix</param>
+                    </provision>
                 </configuration>
                 <executions>
+                    <!--
+                     | uncomment to auto-generate IDE files
                     <execution>
-                        <id>validate</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>checkstyle</goal>
-                        </goals>
+                      <id>ide-support</id>
+                      <goals>
+                        <goal>eclipse</goal>
+                      </goals>
                     </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.globus.security</groupId>
-                        <artifactId>build-tools</artifactId>
-                        <version>1.0-SNAPSHOT</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-                <!-- version>2.2-SNAPSHOT</version -->
-                <configuration>
-                    <xmlOutput>true</xmlOutput>
-                    <failOnError>false</failOnError>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <version>1.0-beta-1</version>
-                <executions>
-                    <execution>
-                        <id>enforce-banned-dependencies</id>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <requireMavenVersion>
-
-                                    <version>2.0.9</version>
-                                </requireMavenVersion>
-                                <requireJavaVersion>
-                                    <version>1.5</version>
-                                </requireJavaVersion>
-                                <bannedDependencies>
-                                    <excludes>
-                                        <exclude>commons-logging</exclude>
-                                        <exclude>
-                                            org.springframework:*:(,3.0.0.RC1)
-                                        </exclude>
-                                    </excludes>
-                                </bannedDependencies>
-                            </rules>
-                            <fail>true</fail>
-                        </configuration>
-                    </execution>
+                    -->
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>enforce-banned-dependencies</id>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <bannedDependencies>
-                                    <excludes>
-                                        <exclude>commons-logging</exclude>
-                                        <exclude>
-                                            org.springframework:*:(,3.0.0.RC1)
-                                        </exclude>
-                                    </excludes>
-                                </bannedDependencies>
-                            </rules>
-                            <fail>true</fail>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
         </plugins>
     </build>
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-changes-plugin</artifactId>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>jira-report</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jxr-plugin</artifactId>
-                <configuration>
-                    <aggregate>true</aggregate>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-pmd-plugin</artifactId>
-                <!--<version>2.3</version>-->
-                <configuration>
-                    <linkXref>true</linkXref>
-                    <sourceEncoding>utf-8</sourceEncoding>
-                    <minimumTokens>100</minimumTokens>
-                    <targetJdk>1.5</targetJdk>
-                    <excludeRoots>
-                        <excludeRoot>target/generated-sources</excludeRoot>
-                    </excludeRoots>
-                    <outputDirectory>${project.build.directory}/resources
-                    </outputDirectory>
-                </configuration>
-            </plugin>
-        </plugins>
-    </reporting>
-
 
     <modules>
         <module>build-tools</module>
         <module>ssl-proxy</module>
         <module>jetty</module>
         <module>crux-wss4j</module>
-        <module>integration-example</module>
+        <module>poms</module>
+        <module>provision</module>
+        <module>crux.security.osgi</module>
     </modules>
 
     <dependencies>
@@ -218,6 +104,7 @@
             <version>1.5.8</version>
         </dependency>
     </dependencies>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -325,12 +212,10 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
-                <version>1.5.8
-                </version>
+                <version>1.5.8</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -373,8 +258,7 @@
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
-                <version>1.5.8
-                </version>
+                <version>1.5.8</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -453,6 +337,13 @@
 
     <pluginRepositories>
         <pluginRepository>
+            <id>apache.snapshots1</id>
+            <url>http://repository.apache.org/snapshots/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+        <pluginRepository>
             <id>codehaus.snapshot</id>
             <url>http://snapshots.repository.codehaus.org</url>
             <snapshots>
@@ -474,16 +365,13 @@
             <id>Codehaus repository</id>
             <url>http://repository.codehaus.org/</url>
         </pluginRepository>
-
     </pluginRepositories>
-
 
     <repositories>
         <repository>
             <id>globus-repo</id>
             <url>http://repo.globus.org/content/groups/public/</url>
         </repository>
-
         <repository>
             <id>apache.snapshots</id>
             <url>https://repository.apache.org/content/groups/snapshots-group/</url>
@@ -496,6 +384,5 @@
             <url>https://maven.atlassian.com/repository/public</url>
         </repository>
     </repositories>
-
 
 </project>
