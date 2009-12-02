@@ -17,24 +17,11 @@ package org.globus.security.filestore;
 
 /**
  * FILL ME
+ * <p/>
+ * Marker interface
  *
  * @author ranantha@mcs.anl.gov
  */
-public abstract class FileBasedObject<T> {
-
-    protected T object = null;
-    protected boolean changed = false;
-
-    protected T getObject() throws FileStoreException {
-
-        reload();
-        return this.object;
-    }
-
-    public boolean hasChanged() {
-        return this.changed;
-    }
-
-    protected abstract void reload() throws FileStoreException;
+public interface FileObjectParameters {
 
 }
