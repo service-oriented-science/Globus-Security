@@ -15,6 +15,17 @@
   <name>SSL Proxy Jetty Instance</name>
   <repositories>
     <repository>
+      <id>globus-public-repo</id>
+      <url>http://repo.globus.org/content/groups/public/</url>
+    </repository>
+    <repository>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>globus-public</id>
+      <url>http://repo.globus.org/content/groups/public/</url>
+    </repository>
+    <repository>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
