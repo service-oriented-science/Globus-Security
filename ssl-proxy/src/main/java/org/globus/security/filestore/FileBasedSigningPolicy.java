@@ -34,7 +34,7 @@ import org.globus.security.util.SigningPolicyFileParser;
  *
  * @author ranantha@mcs.anl.gov
  */
-public class FileBasedSigningPolicy extends FileBasedObject<Map<X500Principal, SigningPolicy>> {
+public class FileBasedSigningPolicy extends SingleFileBasedObject<Map<X500Principal, SigningPolicy>> {
 
 
     public final static String SIGNING_POLICY_FILE_SUFFIX = ".signing_policy";

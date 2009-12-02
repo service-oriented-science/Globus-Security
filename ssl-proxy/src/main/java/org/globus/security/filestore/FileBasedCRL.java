@@ -29,7 +29,7 @@ import org.globus.security.util.CertificateLoadUtil;
  *
  * @author ranantha@mcs.anl.gov
  */
-public class FileBasedCRL extends FileBasedObject<X509CRL> {
+public class FileBasedCRL extends SingleFileBasedObject<X509CRL> {
 
     private static CrlFilter filter = new CrlFilter();
 
