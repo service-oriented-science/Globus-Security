@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.security.GeneralSecurityException;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
+import java.security.Security;
 import java.security.interfaces.RSAPrivateCrtKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 
@@ -34,11 +35,16 @@ import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.asn1.pkcs.RSAPrivateKeyStructure;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 /**
  * BouncyCastle-based implementation of OpenSSLKey.
  */
 public class BouncyCastleOpenSSLKey extends OpenSSLKey {
+
+    static {
+        Security.addProvider(new BouncyCastleProvider());
+    }
 
     public BouncyCastleOpenSSLKey(InputStream is)
             throws IOException, GeneralSecurityException {
