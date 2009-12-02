@@ -24,6 +24,7 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.Properties;
 
+import org.globus.security.CredentialException;
 import org.globus.security.X509Credential;
 import org.globus.security.filestore.FileBasedKeyStoreParameters;
 import org.globus.security.filestore.FileBasedObject;
@@ -217,15 +218,17 @@ public class FileBasedKeyStore extends KeyStoreSpi {
             loadDirectories(new String[]{params.getDefaultCertDir()});
             // load proxy certificate, if configured
             loadProxyCertificate(params.getProxyFilename());
+
+            // load usercert/key, if configured
+            loadCertificateKey(params.getUserCertFilename(),
+                    params.getUserKeyFilename(),
+                    params.getProtectionParameter());
+
         } catch (FileStoreException e) {
             throw new CertificateException(e);
+        } catch (CredentialException e) {
+            throw new CertificateException(e);
         }
-
-
-        // load usercert/key, if configured
-        loadCertificateKey(params.getUserCertFilename(),
-                params.getUserKeyFilename(),
-                params.getProtectionParameter());
     }
 
     @Override
@@ -279,6 +282,9 @@ public class FileBasedKeyStore extends KeyStoreSpi {
                 }
             } catch (FileStoreException e) {
                 throw new CertificateException(e);
+            } catch (CredentialException e) {
+                e.printStackTrace();
+                throw new CertificateException(e);
             }
         } finally {
             try {
@@ -292,6 +298,10 @@ public class FileBasedKeyStore extends KeyStoreSpi {
 
     private void loadProxyCertificate(String proxyFilename) throws FileStoreException {
 
+        if (proxyFilename == null) {
+            return;
+        }
+
         proxyDelegate.loadWrappers(new String[]{proxyFilename});
         Map<String, FileBasedProxyCredential> wrapperMap =
                 proxyDelegate.getWrapperMap();
@@ -302,8 +312,20 @@ public class FileBasedKeyStore extends KeyStoreSpi {
 
 
     private void loadCertificateKey(String userCertFilename, String userKeyFilename,
-                                    KeyStore.ProtectionParameter protectionParameter) {
-        //TODO: implement me.
+                                    KeyStore.ProtectionParameter protectionParameter)
+            throws CredentialException {
+
+        if ((userCertFilename == null) ||
+                (userKeyFilename == null)) {
+            return;
+        }
+
+        String password = null;
+        if (protectionParameter instanceof KeyStore.PasswordProtection) {
+            password = new String(((KeyStore.PasswordProtection) protectionParameter).getPassword());
+        }
+        // FIXME: decrytps it. probably should not?
+        X509Credential credential = new X509Credential(userKeyFilename, userCertFilename, password);
     }
 
 
