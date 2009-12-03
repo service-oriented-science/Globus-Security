@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author ranantha@mcs.anl.gov
  */
-public class FileBasedProxyCredential extends FileBasedObject<X509Credential> {
+public class FileBasedProxyCredential extends SingleFileBasedObject<X509Credential> {
 
     Logger logger = LoggerFactory.getLogger(FileBasedProxyCredential.class);
 

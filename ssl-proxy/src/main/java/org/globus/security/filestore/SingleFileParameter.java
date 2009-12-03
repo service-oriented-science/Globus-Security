@@ -20,21 +20,20 @@ package org.globus.security.filestore;
  *
  * @author ranantha@mcs.anl.gov
  */
-public abstract class FileBasedObject<T> {
+public class SingleFileParameter implements FileObjectParameters {
 
-    protected T object = null;
-    protected boolean changed = false;
+    String filename;
 
-    protected T getObject() throws FileStoreException {
+    public SingleFileParameter(String filename_) {
 
-        reload();
-        return this.object;
+        if (filename_ == null) {
+            throw new IllegalArgumentException();
+        }
+
+        this.filename = filename_;
     }
 
-    public boolean hasChanged() {
-        return this.changed;
+    public String getFilename() {
+        return this.filename;
     }
-
-    protected abstract void reload() throws FileStoreException;
-
 }
