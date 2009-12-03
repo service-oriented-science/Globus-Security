@@ -86,31 +86,16 @@ public class SecurityProviderActivator implements BundleActivator {
                     server = new Server();
                     ServiceReference configurationAdminReference =
                             bundleContext.getServiceReference(ConfigurationAdmin.class.getName());
-                    if (configurationAdminReference != null) {
-                        ConfigurationAdmin configurationAdmin =
-                                (ConfigurationAdmin) bundleContext.getService(configurationAdminReference);
-                        log.info("configAdmin found");
-                        Configuration config = configurationAdmin.getConfiguration(
-                                "org.globus.crux.security.jetty");
-                        if (config != null) {
-                            log.info("found configurations");
-                            Dictionary props = config.getProperties();
-                            jcService = new JettyConfigService(server, props);
-                        } else {
-                            jcService = new JettyConfigService(server);
-                        }
-                    } else {
-                        log.info("no configAdmin found");
-                        jcService = new JettyConfigService(server);
-                    }
 
+
+                    jcService = new JettyConfigService(server);
                     log.info("Succesfully started Jetty " + Server.getVersion(), null, null);
 
                     // publish server as an OSGi service
                     serviceRegistration = publishServerAsAService(server);
                     jcService = new JettyConfigService(server);
                     Dictionary<String, String> props = new Hashtable<String, String>();
-                    props.put("service.pid", JettyConfigService.class.getCanonicalName());
+                    props.put(Constants.SERVICE_PID, JettyConfigService.class.getCanonicalName());
                     configRegistration = bundleContext.registerService(ManagedService.class.getName(),
                             jcService, props);
 
