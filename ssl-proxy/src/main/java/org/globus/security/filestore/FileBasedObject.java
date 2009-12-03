@@ -15,6 +15,11 @@
  */
 package org.globus.security.filestore;
 
+import java.io.File;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * FILL ME
  *
@@ -22,8 +27,30 @@ package org.globus.security.filestore;
  */
 public abstract class FileBasedObject<T> {
 
-    protected T object = null;
-    protected boolean changed = false;
+    private static Logger logger =
+            LoggerFactory.getLogger(FileBasedObject.class.getName());
+
+    private T object = null;
+    private long lastModified = -1;
+    private File file = null;
+    private boolean changed = false;
+
+    protected void init(File filename) throws FileStoreException {
+        validateFilename(filename);
+        this.file = filename;
+        this.object = createObject(this.file);
+        this.lastModified = this.file.lastModified();
+    }
+
+    protected void init(String filename, T object_) throws FileStoreException {
+        validateFilename(new File(filename));
+        if (object_ == null) {
+            // FIXME: better exception?
+            throw new IllegalArgumentException("Object cannot be null");
+        }
+        this.object = object_;
+        this.file = new File(filename);
+    }
 
     protected T getObject() throws FileStoreException {
 
@@ -35,6 +62,26 @@ public abstract class FileBasedObject<T> {
         return this.changed;
     }
 
-    protected abstract void reload() throws FileStoreException;
+    protected void reload() throws FileStoreException {
 
+        this.changed = false;
+        long latestLastModified = this.file.lastModified();
+        if (this.lastModified < latestLastModified) {
+            this.object = createObject(this.file);
+            this.lastModified = latestLastModified;
+            this.changed = true;
+        }
+    }
+
+    public File getFile() {
+        return this.file;
+    }
+
+    // for creation of file from a file
+    protected abstract T createObject(File filename)
+            throws FileStoreException;
+
+    // for filename validation
+    protected abstract void validateFilename(File filename)
+            throws FileStoreException;
 }

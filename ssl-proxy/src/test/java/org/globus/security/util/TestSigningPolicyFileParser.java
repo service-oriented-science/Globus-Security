@@ -27,12 +27,11 @@ import org.globus.security.SigningPolicy;
 import org.globus.security.SigningPolicyException;
 import org.globus.security.filestore.FileSetupUtil;
 
+import static org.testng.AssertJUnit.assertFalse;
+import static org.testng.AssertJUnit.assertTrue;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-
-import static org.testng.AssertJUnit.assertFalse;
-import static org.testng.AssertJUnit.assertTrue;
 
 @Test(groups = {"Util"})
 public class TestSigningPolicyFileParser {

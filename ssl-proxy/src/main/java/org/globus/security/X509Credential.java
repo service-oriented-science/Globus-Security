@@ -33,6 +33,7 @@ import java.util.Date;
 import java.util.Vector;
 
 import org.globus.security.bc.BouncyCastleOpenSSLKey;
+import org.globus.security.filestore.FileBasedSigningPolicyStore;
 import org.globus.security.util.CertificateIOUtil;
 import org.globus.security.util.CertificateLoadUtil;
 
@@ -44,15 +45,16 @@ import org.slf4j.LoggerFactory;
  * FILL ME
  * <p/>
  * This class equivalent was called GlobusCredential in CoG -maybe a better name?
+ * FIXME: add support for encrypted keys.
  *
  * @author ranantha@mcs.anl.gov
  */
 public class X509Credential {
 
     private static Logger logger =
-            LoggerFactory.getLogger(X509Credential.class.getName());
+            LoggerFactory.getLogger(FileBasedSigningPolicyStore.class.getName());
 
-    private OpenSSLKey opensslKey;
+    private PrivateKey key;
     private X509Certificate[] certChain;
 
     public X509Credential(PrivateKey key_, X509Certificate[] certChain_) {
@@ -68,57 +70,31 @@ public class X509Credential {
         }
 
         this.certChain = certChain_;
-        this.opensslKey = new BouncyCastleOpenSSLKey(key_);
+        this.key = key_;
     }
 
     public X509Credential(InputStream stream) throws CredentialException {
-
-        this(stream, stream);
-    }
-
-    public X509Credential(InputStream certInputStream, InputStream keyInputStream)
-            throws CredentialException {
-
-        loadKey(keyInputStream);
-        loadCertificate(certInputStream);
-        validateCredential();
+        loadCredential(stream);
     }
 
     public X509Certificate[] getCertificateChain() {
         return this.certChain;
     }
 
-    public Key getPrivateKey() throws CredentialException {
-
-        return getPrivateKey(null);
+    public Key getPrivateKey() {
+        return this.key;
     }
 
-    public Key getPrivateKey(String password) throws CredentialException {
-
-        if (this.opensslKey.isEncrypted()) {
-            if (password == null) {
-                throw new CredentialException("Key encrypted, password required");
-            } else {
-                try {
-                    this.opensslKey.decrypt(password);
-                } catch (GeneralSecurityException exp) {
-                    throw new CredentialException(exp.getMessage(), exp);
-                }
-            }
-        }
-        return this.opensslKey.getPrivateKey();
-
-    }
-
-    protected void loadCertificate(InputStream input)
+    protected void loadCredential(InputStream input)
             throws CredentialException {
 
         if (input == null) {
             throw new IllegalArgumentException(
-                    "Input stream to load X509Credential is null");
+                    "Inputstream to load X509Credential is null");
         }
 
-        X509Certificate cert;
+        PrivateKey key = null;
+        X509Certificate cert = null;
         Vector chain = new Vector();
 
         String line;
@@ -134,6 +110,14 @@ public class X509Credential {
                     cert = CertificateLoadUtil
                             .loadCertificate(new ByteArrayInputStream(data));
                     chain.addElement(cert);
+                } else if (line.indexOf("BEGIN RSA PRIVATE KEY") != -1) {
+                    byte[] data = getDecodedPEMObject(reader);
+                    // FIXME: BC seems to have some PEM utility but the actual
+                    // load is in private methods and cannot be leveraged.
+                    // Investigate availability of standard libraries for these
+                    // low level reads. FOr now, copying from CoG
+                    OpenSSLKey k = new BouncyCastleOpenSSLKey("RSA", data);
+                    key = k.getPrivateKey();
                 }
             }
 
@@ -151,41 +135,21 @@ public class X509Credential {
         }
 
         int size = chain.size();
-        if (size > 0) {
-            // set chain
-            this.certChain = new X509Certificate[size];
-            chain.copyInto(this.certChain);
-        }
 
-    }
-
-    protected void loadKey(InputStream input) throws CredentialException {
-
-        // FIXME: BC seems to have some PEM utility but the actual
-        // load is in private methods and cannot be leveraged.
-        // Investigate availability of standard libraries for these
-        // low level reads. FOr now, copying from CoG
-
-        try {
-            this.opensslKey = new BouncyCastleOpenSSLKey(input);
-        } catch (IOException e) {
-            throw new CredentialException(e.getMessage(), e);
-        } catch (GeneralSecurityException e) {
-            throw new CredentialException(e.getMessage(), e);
-        }
-    }
-
-    private void validateCredential() throws CredentialException {
-
-        int size = this.certChain.length;
-
-        if (size < 0) {
+        if (size == 0) {
             throw new CredentialException("No certificates found.");
         }
 
-        if (this.opensslKey == null) {
+        if (key == null) {
             throw new CredentialException("NO private key found");
         }
+
+        // set chain
+        this.certChain = new X509Certificate[size];
+        chain.copyInto(this.certChain);
+
+        // set key
+        this.key = key;
     }
 
     /**
@@ -206,19 +170,17 @@ public class X509Credential {
         throw new EOFException("Missing PEM end footer");
     }
 
-    public void saveKey(OutputStream out) throws IOException {
-
-        this.opensslKey.writeTo(out);
-        out.flush();
-    }
-
-    public void saveCertificateChain(OutputStream out)
+    public void save(OutputStream out)
             throws IOException, CertificateEncodingException {
 
         CertificateIOUtil.writeCertificate(out, this.certChain[0]);
 
+        OpenSSLKey k = new BouncyCastleOpenSSLKey(key);
+        k.writeTo(out);
+
         for (int i = 1; i < this.certChain.length; i++) {
-            // FIXME: should we skip the self-signed certificates?
+            // FIXME: should we?
+            // this will skip the self-signed certificates
             if (this.certChain[i].getSubjectDN().equals(certChain[i].getIssuerDN())) continue;
             CertificateIOUtil.writeCertificate(out, this.certChain[i]);
         }
@@ -226,44 +188,24 @@ public class X509Credential {
         out.flush();
     }
 
-    public void save(OutputStream out) throws IOException, CertificateEncodingException {
-        saveKey(out);
-        saveCertificateChain(out);
-    }
-
     public void writeToFile(File file) throws IOException, CertificateEncodingException {
-        writeToFile(file, file);
-    }
-
-    public void writeToFile(File certFile, File keyFile) throws IOException, CertificateEncodingException {
-
-        FileOutputStream keyOutputStream = new FileOutputStream(keyFile);
-        FileOutputStream certOutputStream = new FileOutputStream(certFile);
+        FileOutputStream outputStream = new FileOutputStream(file);
         try {
-            saveKey(keyOutputStream);
-            saveCertificateChain(certOutputStream);
+            save(outputStream);
         } finally {
-            if (keyOutputStream != null) {
+            if (outputStream != null) {
                 try {
-                    keyOutputStream.close();
+                    outputStream.close();
                 } catch (IOException e) {
-                    logger.warn("Could not close stream on save of key to file. " + keyFile.getPath());
-                }
-            }
-            if (certOutputStream != null) {
-                try {
-                    certOutputStream.close();
-                } catch (IOException e) {
-                    logger.warn("Could not close stream on save certificate chain to file. " + certFile.getPath());
+                    logger.warn("Could not close stream on save to file.");
                 }
             }
         }
     }
 
     public Date getNotBefore() {
-
-        // FIXME
-        return null;
+        // FILL ME
+        return new Date();
     }
 
 }
