@@ -100,7 +100,7 @@ public class SecurityProviderActivator implements BundleActivator {
                             jcService, props);
 
                     log.info("Published Jetty " + Server.getVersion() + " as an OSGi service", null, null);
-
+                    server.start();
                     server.join();
                 }
                 catch (Exception ex) {
