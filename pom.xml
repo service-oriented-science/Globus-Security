@@ -89,7 +89,7 @@
         <!--<module>crux-wss4j</module>-->
         <module>poms</module>
         <module>provision</module>
-        <module>crux.security.osgi</module>
+        <module>jetty-plugin</module>
     </modules>
 
     <dependencies>
