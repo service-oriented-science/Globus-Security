@@ -27,10 +27,18 @@ public class FileSigningPolicyStoreParameters
 
     String[] locations;
 
+    public FileSigningPolicyStoreParameters(){
+
+    }
+
     public FileSigningPolicyStoreParameters(String[] locations_) {
         if (locations_ == null) {
             throw new IllegalArgumentException();
         }
+        this.locations = locations_;
+    }
+
+    public void setTrustRootLocations(String[] locations_){
         this.locations = locations_;
     }
 

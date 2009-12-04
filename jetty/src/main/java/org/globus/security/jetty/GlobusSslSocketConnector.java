@@ -31,6 +31,7 @@ public class GlobusSslSocketConnector extends SslSocketConnector {
         sslConfigurator.setCertStoreParameters(certStoreParameters);
     }
 
+
     public String getProvider() {
         return sslConfigurator.getProvider();
     }
@@ -58,6 +59,10 @@ public class GlobusSslSocketConnector extends SslSocketConnector {
 
     public void setSigningPolicyStoreParameters(SigningPolicyStoreParameters signingPolicyStoreParameters) {
         sslConfigurator.setSigningPolicyStoreParameters(signingPolicyStoreParameters);
+    }
+
+    public SigningPolicyStoreParameters getSigningPolicyStoreParameters(){
+        return sslConfigurator.getSigningPolicyStoreParameters();
     }
 
 

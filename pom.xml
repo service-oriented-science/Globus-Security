@@ -3,7 +3,7 @@
          xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.globus.security</groupId>
+    <groupId>org.globus.crux.security</groupId>
     <artifactId>security</artifactId>
 
     <packaging>pom</packaging>
@@ -86,10 +86,10 @@
         <module>build-tools</module>
         <module>ssl-proxy</module>
         <module>jetty</module>
-        <module>crux-wss4j</module>
+        <!--<module>crux-wss4j</module>-->
         <module>poms</module>
         <module>provision</module>
-        <module>crux.security.osgi</module>
+        <module>jetty-plugin</module>
     </modules>
 
     <dependencies>
