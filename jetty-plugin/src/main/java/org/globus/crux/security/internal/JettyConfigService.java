@@ -16,13 +16,14 @@
 package org.globus.crux.security.internal;
 
 import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Server;
@@ -70,27 +71,11 @@ public class JettyConfigService implements ManagedService {
                     } else {
                         contents = new String[]{name};
                     }
-                    if (contents.length == 1) {
-                        String connectorName = contents[0];
-                        Class connectorClass = Class.forName(dictionary.get(key).toString());
-                        Connector conn = (Connector) connectorClass.newInstance();
-                        connectorMap.put(connectorName, conn);
-                        this.jettyServer.addConnector(conn);
-                    } else {
-                        Connector connector = connectorMap.get(contents[0]);
-                        BeanInfo info = Introspector.getBeanInfo(connector.getClass());
-                        if (contents.length == 2) {
-                            String propName = contents[1];
-                            Object value = dictionary.get(key);
-                            for (PropertyDescriptor descriptor : info.getPropertyDescriptors()) {
-                                if (propName.equals(descriptor.getName())) {
-                                    Class<?> propType = descriptor.getPropertyType();
-                                    Object o = convertArg(value.toString(), propType);
-                                    descriptor.getWriteMethod().invoke(connector, o);
-                                }
-                            }
-                            info.getBeanDescriptor().setValue(propName, value);
-                        }
+                    String currentName = CONNECTOR_PREFIX +  contents[0];
+                    Object parent = getConnector(currentName, dictionary);
+                    for(int i = 1 ; i < contents.length ; i++){
+                        currentName = currentName + "." + contents[i];
+                        parent = getProperty(parent, currentName, dictionary);
                     }
                 }
                 log.debug(key);
@@ -99,6 +84,53 @@ public class JettyConfigService implements ManagedService {
         } catch (Exception e) {
             throw new ConfigurationException(key, e.getLocalizedMessage(), e);
         }
+    }
+
+    private  Connector getConnector(String connectorName, Dictionary dictionary) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+        Connector conn = connectorMap.get(connectorName);
+        if (conn == null) {
+            Class connectorClass = Class.forName(dictionary.get(connectorName).toString());
+            conn = (Connector) connectorClass.newInstance();
+            connectorMap.put(connectorName, conn);
+            this.jettyServer.addConnector(conn);
+        }
+        return conn;
+    }
+
+    Map<String, Object> propertyCache = new HashMap<String, Object>();
+    Map<Class<?>, BeanInfo> beanInfoCache = new HashMap<Class<?>, BeanInfo>();
+
+    private PropertyDescriptor getDescriptor(BeanInfo info, String propName) {
+        propName = propName.substring(propName.lastIndexOf(".") + 1);
+        for (PropertyDescriptor desc : info.getPropertyDescriptors()) {
+            if (desc.getName().equals(propName)) {
+                return desc;
+            }
+        }
+        return null;
+    }
+
+    private Object getProperty(Object parent, String propName, Dictionary dict) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IntrospectionException, InvocationTargetException {
+        Object o = propertyCache.get(propName);
+        BeanInfo info = getBeanInfo(parent);
+        String localPropName = propName.substring(propName.lastIndexOf(".") + 1);
+        if (o == null) {
+            PropertyDescriptor desc = getDescriptor(info, localPropName);
+            String value = dict.get(propName).toString();
+            o = this.convertArg(value, desc.getPropertyType());
+        }
+        PropertyDescriptor desc = getDescriptor(info, propName);
+        desc.getWriteMethod().invoke(parent, o);
+        return o;
+    }
+
+    private BeanInfo getBeanInfo(Object o) throws IntrospectionException {
+        BeanInfo info = beanInfoCache.get(o.getClass());
+        if (info == null) {
+            info = Introspector.getBeanInfo(o.getClass());
+            beanInfoCache.put(o.getClass(), info);
+        }
+        return info;
     }
 
     Object convertArg(String val, Class type) {

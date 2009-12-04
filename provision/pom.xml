@@ -2,16 +2,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
   <parent>
-    <groupId>org.globus.security</groupId>
+    <groupId>org.globus.crux.security</groupId>
     <artifactId>security</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.globus.crux.security.osgi-support.build</groupId>
+  <groupId>org.globus.crux.security.osgi</groupId>
   <artifactId>provision</artifactId>
 
-  <name>osgi-support - imported bundles</name>
+  <name>Imported Bundles (OSGi Support)</name>
 
   <packaging>pom</packaging>
 

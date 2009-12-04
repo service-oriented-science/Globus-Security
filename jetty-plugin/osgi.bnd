@@ -4,8 +4,7 @@
 
 Bundle-Activator: ${bundle.namespace}.internal.SecurityProviderActivator
 
-Import-Package: !junit.*,*
+Import-Package: !junit.*,*,org.mortbay.jetty.nio
 
 Embed-Dependency:\
- ssl-proxy;groupId=org.globus.security;inline=false,\
  bcprov-jdk14;groupId=org.bc;inline=false
