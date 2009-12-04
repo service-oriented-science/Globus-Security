@@ -16,10 +16,13 @@
 package org.globus.crux.security.jetty;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.globus.crux.security.internal.JettyConfigService;
+import org.globus.security.filestore.FileSigningPolicyStoreParameters;
 import org.globus.security.jetty.GlobusSslSocketConnector;
 
 import org.mockito.Mockito;
@@ -28,6 +31,8 @@ import org.mockito.stubbing.Answer;
 import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.nio.SelectChannelConnector;
+import org.testng.Assert;
+import org.testng.TestNG;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -40,26 +45,27 @@ import org.testng.annotations.Test;
 @Test
 public class JettyConfigTest {
     private Server spy;
-    List<Connector> connectors;
+    Map<Class<? extends Connector>, Connector> connectors;
 
     @BeforeTest
     public void setup() throws Exception{
-        connectors = new ArrayList<Connector>();
+        connectors = new HashMap<Class<? extends Connector>, Connector>();
         spy = Mockito.spy(new Server());
         Mockito.doNothing().when(spy).start();
         Mockito.doNothing().when(spy).stop();
         Mockito.doReturn(false).when(spy).isRunning();
-//        Mockito.doAnswer(new Answer(){
-//            public Object answer(InvocationOnMock invocation) throws Throwable {
-//                Object[] args = invocation.getArguments();
-//                for(Object o: args){
-//                    if(o instanceof Connector){
-//                        connectors.add((Connector) o);
-//                    }
-//                }
-//                return null;
-//            }
-//        }).when(spy).addConnector(Mockito.any(Connector.class));
+        Mockito.doAnswer(new Answer(){
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] args = invocation.getArguments();
+                for(Object o: args){
+                    if(o instanceof Connector){
+                        Connector connector = (Connector) o;
+                        connectors.put(connector.getClass(), connector);
+                    }
+                }
+                return null;
+            }
+        }).when(spy).addConnector(Mockito.any(Connector.class));
     }
 
     public void testLoadProperties() throws Exception{
@@ -69,6 +75,10 @@ public class JettyConfigTest {
         service.updated(properties);
         Mockito.verify(spy).isRunning();
         Mockito.verify(spy, Mockito.times(2)).addConnector(Mockito.any(Connector.class));
-
+        GlobusSslSocketConnector connector = (GlobusSslSocketConnector) connectors.get(GlobusSslSocketConnector.class);
+        Assert.assertEquals(connector.getPort(), 55555);
+        Assert.assertEquals(connector.getProtocol(), "TLS");
+        Assert.assertEquals(connector.getProvider(), "Globus");
+        Assert.assertTrue(connector.getSigningPolicyStoreParameters() instanceof FileSigningPolicyStoreParameters);
     }
 }

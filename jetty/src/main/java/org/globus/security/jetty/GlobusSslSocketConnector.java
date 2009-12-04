@@ -60,6 +60,10 @@ public class GlobusSslSocketConnector extends SslSocketConnector {
         sslConfigurator.setSigningPolicyStoreParameters(signingPolicyStoreParameters);
     }
 
+    public SigningPolicyStoreParameters getSigningPolicyStoreParameters(){
+        return sslConfigurator.getSigningPolicyStoreParameters();
+    }
+
 
     public void setPassword(String password) {
         sslConfigurator.setKeyPassword(password);
