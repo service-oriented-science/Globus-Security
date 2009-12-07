@@ -40,11 +40,9 @@
             <url>http://repo.globus.org/content/repositories/releases</url>
         </repository>
         <site>
-            <id>maven.local</id>
-            <!--<id>maven.site</id>-->
+            <id>maven.site</id>
             <name>Globus Maven Site</name>
-            <!--<url>scpexe://login.mcs.anl.gov/home/trhowe/public_html/</url>-->
-            <url>file:////Users/turtlebender/Sites/security</url>
+            <url>scpexe://login.mcs.anl.gov/home/trhowe/public_html/</url>
         </site>
     </distributionManagement>
 
