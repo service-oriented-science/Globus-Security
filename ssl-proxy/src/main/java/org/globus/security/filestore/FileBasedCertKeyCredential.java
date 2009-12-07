@@ -51,4 +51,9 @@ public class FileBasedCertKeyCredential extends MultipleFileBasedObject<X509Cred
             throw new FileStoreException(e);
         }
     }
+
+    public X509Credential getCredential() throws FileStoreException {
+        X509Credential credential = getObject();
+        return credential;
+    }
 }
