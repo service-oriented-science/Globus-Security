@@ -15,6 +15,7 @@
  */
 package org.globus.security.filestore;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -54,7 +55,7 @@ public class FileBasedProxyCredential extends SingleFileBasedObject<X509Credenti
 
         InputStream input = null;
         try {
-            input = new FileInputStream(filename);
+            input = new BufferedInputStream(new FileInputStream(filename));
             return new X509Credential(input);
         } catch (FileNotFoundException e) {
             throw new FileStoreException(e);

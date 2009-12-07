@@ -15,6 +15,7 @@
  */
 package org.globus.security;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.EOFException;
@@ -49,6 +50,8 @@ import org.slf4j.LoggerFactory;
  */
 public class X509Credential {
 
+    public final static int BUFFER_SIZE = Integer.MAX_VALUE;
+
     private static Logger logger =
             LoggerFactory.getLogger(X509Credential.class.getName());
 
@@ -72,13 +75,20 @@ public class X509Credential {
     }
 
     public X509Credential(InputStream stream) throws CredentialException {
+        init(stream, stream);
 
-        this(stream, stream);
     }
 
     public X509Credential(InputStream certInputStream, InputStream keyInputStream)
             throws CredentialException {
+        init(certInputStream, keyInputStream);
 
+    }
+
+    private void init(InputStream certInputStream, InputStream keyInputStream) throws CredentialException {
+        if(certInputStream.markSupported()){
+            certInputStream.mark(BUFFER_SIZE);
+        }
         loadKey(keyInputStream);
         loadCertificate(certInputStream);
         validateCredential();
@@ -123,8 +133,10 @@ public class X509Credential {
 
         String line;
         BufferedReader reader = null;
-
         try {
+            if(input.markSupported()){
+                input.reset();
+            }
             reader = new BufferedReader(new InputStreamReader(input));
 
             while ((line = reader.readLine()) != null) {
