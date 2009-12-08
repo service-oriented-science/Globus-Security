@@ -33,21 +33,21 @@ public abstract class SingleFileBasedObject<T> extends FileBasedObject<T> {
     private long lastModified = -1;
     private File file = null;
 
-    protected void init(File filename) throws FileStoreException {
-        validateFilename(filename);
-        this.file = filename;
+    protected void init(File file_) throws FileStoreException {
+        validateFilename(file_);
+        this.file = file_;
         this.object = createObject(this.file);
         this.lastModified = this.file.lastModified();
     }
 
-    protected void init(String filename, T object_) throws FileStoreException {
-        validateFilename(new File(filename));
+    protected void init(File file_, T object_) throws FileStoreException {
+        validateFilename(file_);
         if (object_ == null) {
             // FIXME: better exception?
             throw new IllegalArgumentException("Object cannot be null");
         }
         this.object = object_;
-        this.file = new File(filename);
+        this.file = file_;
     }
 
     protected void reload() throws FileStoreException {

@@ -31,18 +31,17 @@ import org.slf4j.LoggerFactory;
  *
  * @author ranantha@mcs.anl.gov
  */
-public class FileBasedProxyCredential extends SingleFileBasedObject<X509Credential> {
+public class FileBasedProxyCredential extends SingleFileBasedObject<X509Credential> implements FileBasedCredential {
 
     Logger logger = LoggerFactory.getLogger(FileBasedProxyCredential.class);
 
-    public FileBasedProxyCredential(File filename)
-            throws FileStoreException {
+    public FileBasedProxyCredential(File file) throws FileStoreException {
 
-        init(filename);
+        init(file);
     }
 
-    public FileBasedProxyCredential(String filename, X509Credential object) throws FileStoreException {
-        init(filename, object);
+    public FileBasedProxyCredential(File file, X509Credential object) throws FileStoreException {
+        init(file, object);
     }
 
     public X509Credential getCredential() throws FileStoreException {
@@ -50,31 +49,41 @@ public class FileBasedProxyCredential extends SingleFileBasedObject<X509Credenti
         return credential;
     }
 
-    protected X509Credential createObject(File filename) throws FileStoreException {
+    protected X509Credential createObject(File file) throws FileStoreException {
 
-        InputStream input = null;
+        InputStream keyInput = null;
+        InputStream certInput = null;
         try {
-            input = new FileInputStream(filename);
-            return new X509Credential(input);
+            keyInput = new FileInputStream(file);
+            certInput = new FileInputStream(file);
+            return new X509Credential(certInput, keyInput);
         } catch (FileNotFoundException e) {
             throw new FileStoreException(e);
         } catch (CredentialException e) {
             throw new FileStoreException(e);
         } finally {
 
-            if (input != null) {
+            if (keyInput != null) {
                 try {
-                    input.close();
-
+                    keyInput.close();
                 } catch (Exception e) {
                     logger.warn("Unable to close stream.");
                 }
             }
+
+            if (certInput != null) {
+                try {
+                    certInput.close();
+                } catch (Exception e) {
+                    logger.warn("Unable to close stream.");
+                }
+            }
+
         }
     }
 
     // no restrictions on proxy file name.
-    protected void validateFilename(File filename) throws FileStoreException {
+    protected void validateFilename(File file) throws FileStoreException {
 
     }
 }

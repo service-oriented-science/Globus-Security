@@ -40,8 +40,8 @@ public class FileBasedTrustAnchor extends SingleFileBasedObject<TrustAnchor> {
 
     }
 
-    public FileBasedTrustAnchor(String fileName, TrustAnchor cachedAnchor) throws FileStoreException {
-        init(fileName, cachedAnchor);
+    public FileBasedTrustAnchor(File file, TrustAnchor cachedAnchor) throws FileStoreException {
+        init(file, cachedAnchor);
     }
 
     public void refresh() throws FileStoreException {

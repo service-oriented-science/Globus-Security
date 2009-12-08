@@ -27,14 +27,19 @@ import org.globus.security.X509Credential;
  *
  * @author ranantha@mcs.anl.gov
  */
-public class FileBasedCertKeyCredential extends MultipleFileBasedObject<X509Credential> {
+public class FileBasedCertKeyCredential extends MultipleFileBasedObject<X509Credential> implements FileBasedCredential {
 
 
-    public FileBasedCertKeyCredential(String certFilename, String keyFilename) throws FileStoreException {
+    public FileBasedCertKeyCredential(File certFile, File keyFile) throws FileStoreException {
 
-        init(new File(certFilename), new File(keyFilename));
+        init(certFile, keyFile);
     }
 
+    public FileBasedCertKeyCredential(File certFile, File keyFile,
+                                      X509Credential credential) throws FileStoreException {
+
+        init(certFile, keyFile, credential);
+    }
 
     @Override
     protected X509Credential createObject(File certFilename, File keyFilename) throws FileStoreException {

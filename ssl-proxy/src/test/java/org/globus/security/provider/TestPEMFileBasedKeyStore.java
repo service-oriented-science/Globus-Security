@@ -107,17 +107,19 @@ public class TestPEMFileBasedKeyStore {
         }
 
 
-        String proxyFilename1 = "validatorTest/gsi2fullproxy.pem";
+        String proxyFilename1 = "validatorTest/gsi3independentFromLimitedProxy.pem";
         this.proxyFile1 = new FileSetupUtil(proxyFilename1);
         this.proxyFile1.copyFileToTemp();
         this.proxyCertificates.put(this.proxyFile1,
-                new X509Credential(loader.getResourceAsStream(proxyFilename1)));
+                new X509Credential(loader.getResourceAsStream(proxyFilename1),
+                        loader.getResourceAsStream(proxyFilename1)));
 
-        String proxyFilename2 = "validatorTest/gsi2limitedproxy.pem";
+        String proxyFilename2 = "validatorTest/gsi3FromPathOneProxy.pem";
         this.proxyFile2 = new FileSetupUtil(proxyFilename2);
         this.proxyFile2.copyFileToTemp();
         this.proxyCertificates.put(this.proxyFile2,
-                new X509Credential(loader.getResourceAsStream(proxyFilename2)));
+                new X509Credential(loader.getResourceAsStream(proxyFilename2),
+                        loader.getResourceAsStream(proxyFilename2)));
 
         Security.addProvider(new GlobusProvider());
     }

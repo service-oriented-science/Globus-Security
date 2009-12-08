@@ -39,15 +39,15 @@ public abstract class MultipleFileBasedObject<T> extends FileBasedObject<T> {
         this.keyLastModified = this.keyFile.lastModified();
     }
 
-    protected void init(String certFilename, String keyFilename, T object_) throws FileStoreException {
+    protected void init(File certFile_, File keyFile_, T object_) throws FileStoreException {
 
         if (object_ == null) {
             // FIXME: better exception?
             throw new IllegalArgumentException("Object cannot be null");
         }
         this.object = object_;
-        this.certFile = new File(certFilename);
-        this.keyFile = new File(keyFilename);
+        this.certFile = certFile_;
+        this.keyFile = keyFile_;
     }
 
 
@@ -74,7 +74,7 @@ public abstract class MultipleFileBasedObject<T> extends FileBasedObject<T> {
     }
 
     // for creation of object from a file
-    protected abstract T createObject(File certFilename, File keyFilename)
+    protected abstract T createObject(File certFile, File keyFile)
             throws FileStoreException;
 
 
