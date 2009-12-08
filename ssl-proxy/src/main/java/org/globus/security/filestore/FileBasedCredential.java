@@ -15,9 +15,6 @@
  */
 package org.globus.security.filestore;
 
-import java.io.File;
-import java.io.FilenameFilter;
-
 import org.globus.security.X509Credential;
 
 /**
@@ -25,19 +22,9 @@ import org.globus.security.X509Credential;
  *
  * @author ranantha@mcs.anl.gov
  */
-public class FileBasedProxyCredentialStore extends AbstractFileBasedStore<X509Credential> {
 
-    @Override
-    protected FileBasedObject<X509Credential> create(String fileName) throws FileStoreException {
-        return new FileBasedProxyCredential(new File(fileName));
-    }
+public interface FileBasedCredential {
 
-    @Override
-    protected FilenameFilter getFilenameFilter() {
-        return new FilenameFilter() {
-            public boolean accept(File f, String s) {
-                return true;
-            }
-        };
-    }
+    public X509Credential getCredential() throws FileStoreException;
+
 }

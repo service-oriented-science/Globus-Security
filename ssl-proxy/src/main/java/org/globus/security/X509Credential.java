@@ -71,14 +71,8 @@ public class X509Credential {
         this.opensslKey = new BouncyCastleOpenSSLKey(key_);
     }
 
-    public X509Credential(InputStream stream) throws CredentialException {
-
-        this(stream, stream);
-    }
-
     public X509Credential(InputStream certInputStream, InputStream keyInputStream)
             throws CredentialException {
-
         loadKey(keyInputStream);
         loadCertificate(certInputStream);
         validateCredential();
@@ -108,6 +102,10 @@ public class X509Credential {
         }
         return this.opensslKey.getPrivateKey();
 
+    }
+
+    public boolean isEncryptedKey() {
+        return this.opensslKey.isEncrypted();
     }
 
     protected void loadCertificate(InputStream input)
@@ -176,6 +174,10 @@ public class X509Credential {
     }
 
     private void validateCredential() throws CredentialException {
+
+        if (this.certChain == null) {
+            throw new CredentialException("No certificates found");
+        }
 
         int size = this.certChain.length;
 
