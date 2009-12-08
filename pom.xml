@@ -331,6 +331,15 @@
                 </plugins>
             </reporting>
         </profile>
+        <profile>
+            <id>integration-testing</id>
+            <build>
+                <defaultGoal>verify</defaultGoal>
+            </build>
+            <modules>
+                <module>integration-example</module>
+            </modules>
+        </profile>
     </profiles>
 
     <pluginRepositories>

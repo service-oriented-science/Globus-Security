@@ -1,0 +1,16 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="Suite1" verbose="1">
+
+    <test name="integration">
+        <parameter name="port" value="${integration.test.port}"/>
+        <parameter name="policy_location" value="${integration.test.policyLocation}"/>
+        <parameter name="key_store" value="${integration.test.keyStore}"/>
+        <parameter name="trust_store" value="${integration.test.trustStore}"/>
+        <parameter name="crl_trust_store" value="${integration.test.crlTrustStore}"/>
+        <parameter name="key_password" value="${integration.test.keyPassword}"/>
+        <classes>
+            <class name="com.counter.IntegrationTest"/>
+        </classes>
+    </test>
+</suite>

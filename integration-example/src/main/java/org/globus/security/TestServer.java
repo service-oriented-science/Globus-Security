@@ -17,7 +17,7 @@ import org.mortbay.jetty.servlet.ServletHolder;
 import org.springframework.web.context.ContextLoaderListener;
 
 
-public final class TestServer {
+public class TestServer {
     public static final String POLICY_LOCATION = "/Users/ranantha/.globus/certificates";
     //    public static final String KEY_STORE = "/keystore.jks";
     public static final String KEY_STORE = "/myKeystore";
@@ -25,16 +25,63 @@ public final class TestServer {
     public static final String TRUST_STORE = "/myTruststore";
     public static final String CRL_TRUST_STORE = "/Users/ranantha/.globus/certificates";
     public static final String KEY_PASSWORD = "password";
-    private static int port = 8443;
+    private Server server;
+
+    public String policyLocation = POLICY_LOCATION;
+    public String keyStore = KEY_STORE;
+    public String trustStore = TRUST_STORE;
+    public String crlTrustStore = CRL_TRUST_STORE;
+    public String keyPassword = KEY_PASSWORD;
+
+    public int port = 8443;
 
     static {
         Security.addProvider(new GlobusProvider());
     }
 
-    private TestServer() {
+    public TestServer() {
+
     }
 
-    private static Context createWebContext() {
+    public void setPolicyLocation(String policyLocation) {
+        this.policyLocation = policyLocation;
+    }
+
+    public void setKeyStore(String keyStore) {
+        this.keyStore = keyStore;
+    }
+
+    public void setTrustStore(String trustStore) {
+        this.trustStore = trustStore;
+    }
+
+    public void setCrlTrustStore(String crlTrustStore) {
+        this.crlTrustStore = crlTrustStore;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public void setKeyPassword(String keyPassword) {
+        this.keyPassword = keyPassword;
+    }
+
+    public void init() throws Exception {
+        server = new Server();
+        server.addHandler(createWebContext());
+        server.addConnector(createSSLConnector());
+        server.start();
+    }
+
+    public void destroy() throws Exception{
+        if(server.isRunning()){
+            server.stop();
+        }
+    }
+
+
+    private Context createWebContext() {
 
         Context context = new Context();
         ServletHolder servletHolder = new ServletHolder();
@@ -50,15 +97,8 @@ public final class TestServer {
         return context;
     }
 
-    public static void main(String[] args) throws Exception {
 
-        Server server = new Server();
-        server.addHandler(createWebContext());
-        server.addConnector(createSSLConnector());
-        server.start();
-    }
-
-    private static GlobusSslSocketConnector createSSLConnector() {
+    private GlobusSslSocketConnector createSSLConnector() {
 
         GlobusSslSocketConnector connector = new GlobusSslSocketConnector();
         SSLConfigurator configurator = configure();
@@ -68,14 +108,14 @@ public final class TestServer {
         return connector;
     }
 
-    private static SSLConfigurator configure() {
+    private SSLConfigurator configure() {
 
         SSLConfigurator configurator = new SSLConfigurator();
 
         // key store that configures the public and private key for the server
         configurator.setKeyStoreType("PEMFilebasedKeyStore");
         configurator.setKeyStore(KEY_STORE);
-        configurator.setKeyStorePassword(KEY_PASSWORD);
+//        configurator.setKeyStorePassword(KEY_PASSWORD);
         configurator.setKeyPassword(KEY_PASSWORD);
         // Protocol to use
         configurator.setProtocol("TLS");
