@@ -134,21 +134,10 @@ public class FileBasedKeyStore extends KeyStoreSpi {
                 if (object instanceof FileBasedTrustAnchor) {
                     File file = ((FileBasedTrustAnchor) object).getFile();
                     FileBasedTrustAnchor desc = (FileBasedTrustAnchor) object;
-                    if (file == null) {
-                        // FIXME:
-                        //String filename = this.trustedCertFilenameMap.get(desc.getTrustAnchor().getTrustedCert());
-                        //file = new File(this.defaultDirectory, filename + ".0");
-                    }
                     writeCertificate(desc.getTrustAnchor().getTrustedCert(), file);
-                } else if (object instanceof FileBasedProxyCredential) {
-                    FileBasedProxyCredential proxy = (FileBasedProxyCredential) object;
-                    File file = proxy.getFile();
-                    X509Credential credential = proxy.getCredential();
-                    if (file == null) {
-                        // String filename = this.certKeyFilenameMap.get(credential);
-                        //file = new File(this.defaultDirectory, filename + ".pem");
-                    }
-                    credential.writeToFile(file);
+                } else if (object instanceof FileBasedCredential) {
+                    FileBasedCredential credential = (FileBasedCredential) object;
+                    credential.storeCredential();
                 }
             } catch (FileStoreException e) {
                 throw new CertificateException(e);

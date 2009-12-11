@@ -18,7 +18,9 @@ package org.globus.security.filestore;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.security.cert.CertificateEncodingException;
 
 import org.globus.security.CredentialException;
 import org.globus.security.X509Credential;
@@ -82,7 +84,19 @@ public class FileBasedProxyCredential extends SingleFileBasedObject<X509Credenti
         }
     }
 
+    public void storeCredential() throws FileStoreException {
+
+        try {
+            this.object.writeToFile(this.file);
+        } catch (IOException e) {
+            throw new FileStoreException(e);
+        } catch (CertificateEncodingException e) {
+            throw new FileStoreException(e);
+        }
+    }
+
     // no restrictions on proxy file name.
+
     protected void validateFilename(File file) throws FileStoreException {
 
     }

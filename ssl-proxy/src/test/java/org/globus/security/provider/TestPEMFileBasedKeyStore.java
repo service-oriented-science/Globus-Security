@@ -211,12 +211,22 @@ public class TestPEMFileBasedKeyStore {
         assert (certificates instanceof X509Certificate[]);
         //     assert (this.proxyCertificates.get(this.proxyFile1.getAbsoluteFilename()).equals(certificates[0]));
 
+        properties.setProperty(FileBasedKeyStore.PROXY_FILENAME,
+                this.proxyFile2.getAbsoluteFilename());
+        try {
+            ins = getProperties(properties);
+            store.load(ins, null);
+        } finally {
+            if (ins != null)
+                ins.close();
+        }
+
         // proxy file 2
-        key = store.getKey(this.proxyFile2.getTempFilename(), null);
+        key = store.getKey(this.proxyFile2.getAbsoluteFilename(), null);
         assert (key != null);
         assert (key instanceof PrivateKey);
 
-        certificates = store.getCertificateChain(this.proxyFile1.getAbsoluteFilename());
+        certificates = store.getCertificateChain(this.proxyFile2.getAbsoluteFilename());
         assert (certificates != null);
         assert (certificates instanceof X509Certificate[]);
 //        assert (this.proxyCertificates.get(this.proxyFile2.getTempFilename()).equals(certificates[0]));
@@ -274,7 +284,7 @@ public class TestPEMFileBasedKeyStore {
             assert (chain[i].equals(x509CredentialChain[i]));
         }
 
-
+        store = KeyStore.getInstance("PEMFilebasedKeyStore", "Globus");
         properties.setProperty(FileBasedKeyStore.CERTIFICATE_FILENAME,
                 this.certFile.getAbsoluteFilename());
         properties.setProperty(FileBasedKeyStore.KEY_FILENAME,
@@ -306,6 +316,13 @@ public class TestPEMFileBasedKeyStore {
         chain = store.getCertificateChain(alias);
         assert (chain != null);
         assert (chain instanceof Certificate[]);
+
+        // test delete
+        store.deleteEntry(alias);
+        assert (store.getCertificateChain(alias) == null);
+        assert (store.getKey(alias, null) == null);
+        assert (!this.certFile.getTempFile().exists());
+        assert (!this.keyEncFile.getTempFile().exists());
     }
 
     private InputStream getProperties(Properties properties) throws Exception {
