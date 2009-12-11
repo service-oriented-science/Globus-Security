@@ -23,6 +23,7 @@ import java.security.Key;
 import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.Security;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.Enumeration;
@@ -53,7 +54,7 @@ public class TestPEMFileBasedKeyStore {
     FileSetupUtil proxyFile2;
     FileSetupUtil certFile;
     FileSetupUtil keyFile;
-
+    FileSetupUtil keyEncFile;
 
     Map<FileSetupUtil, X509Certificate> trustedCertificates = new HashMap<FileSetupUtil, X509Certificate>();
     Map<FileSetupUtil, X509Credential> proxyCertificates = new HashMap<FileSetupUtil, X509Credential>();
@@ -128,6 +129,9 @@ public class TestPEMFileBasedKeyStore {
         String keyFilename = "validatorTest/testeec2-private.pem";
         this.keyFile = new FileSetupUtil(keyFilename);
         this.keyFile.copyFileToTemp();
+        String keyEncFilename = "validatorTest/testeec2-private-enc.pem";
+        this.keyEncFile = new FileSetupUtil(keyEncFilename);
+        this.keyEncFile.copyFileToTemp();
 
         Security.addProvider(new GlobusProvider());
     }
@@ -269,6 +273,39 @@ public class TestPEMFileBasedKeyStore {
         for (int i = 0; i < chain.length; i++) {
             assert (chain[i].equals(x509CredentialChain[i]));
         }
+
+
+        properties.setProperty(FileBasedKeyStore.CERTIFICATE_FILENAME,
+                this.certFile.getAbsoluteFilename());
+        properties.setProperty(FileBasedKeyStore.KEY_FILENAME,
+                this.keyEncFile.getAbsoluteFilename());
+        try {
+            ins = getProperties(properties);
+            store.load(ins, null);
+        } finally {
+            if (ins != null)
+                ins.close();
+        }
+
+        aliases = store.aliases();
+        assert (aliases.hasMoreElements());
+        alias = (String) aliases.nextElement();
+
+        boolean exception = false;
+        try {
+            key = store.getKey(alias, null);
+        } catch (UnrecoverableKeyException e) {
+            exception = true;
+        }
+        assert (exception);
+
+        key = store.getKey(alias, "test".toCharArray());
+        assert (key != null);
+        assert (key instanceof PrivateKey);
+
+        chain = store.getCertificateChain(alias);
+        assert (chain != null);
+        assert (chain instanceof Certificate[]);
     }
 
     private InputStream getProperties(Properties properties) throws Exception {
@@ -297,5 +334,8 @@ public class TestPEMFileBasedKeyStore {
         this.trustedDirectory.delete();
         this.proxyFile1.deleteFile();
         this.proxyFile2.deleteFile();
+        this.certFile.deleteFile();
+        this.keyFile.deleteFile();
+        this.keyEncFile.deleteFile();
     }
 }
