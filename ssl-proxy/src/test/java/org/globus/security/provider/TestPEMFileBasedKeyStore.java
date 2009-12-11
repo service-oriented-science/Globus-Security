@@ -17,6 +17,7 @@ package org.globus.security.provider;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.security.Key;
 import java.security.KeyStore;
@@ -29,7 +30,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Vector;
 
 import org.globus.security.X509Credential;
 import org.globus.security.filestore.DirSetupUtil;
@@ -49,9 +49,11 @@ public class TestPEMFileBasedKeyStore {
 
     DirSetupUtil trustedDirectory;
     DirSetupUtil defaultTrustedDirectory;
-    Vector<X509Certificate> testTrustedCertificates = new Vector<X509Certificate>();
     FileSetupUtil proxyFile1;
     FileSetupUtil proxyFile2;
+    FileSetupUtil certFile;
+    FileSetupUtil keyFile;
+
 
     Map<FileSetupUtil, X509Certificate> trustedCertificates = new HashMap<FileSetupUtil, X509Certificate>();
     Map<FileSetupUtil, X509Credential> proxyCertificates = new HashMap<FileSetupUtil, X509Credential>();
@@ -106,7 +108,6 @@ public class TestPEMFileBasedKeyStore {
             }
         }
 
-
         String proxyFilename1 = "validatorTest/gsi3independentFromLimitedProxy.pem";
         this.proxyFile1 = new FileSetupUtil(proxyFilename1);
         this.proxyFile1.copyFileToTemp();
@@ -120,6 +121,13 @@ public class TestPEMFileBasedKeyStore {
         this.proxyCertificates.put(this.proxyFile2,
                 new X509Credential(loader.getResourceAsStream(proxyFilename2),
                         loader.getResourceAsStream(proxyFilename2)));
+
+        String certFilename = "validatorTest/testeec2.pem";
+        this.certFile = new FileSetupUtil(certFilename);
+        this.certFile.copyFileToTemp();
+        String keyFilename = "validatorTest/testeec2-private.pem";
+        this.keyFile = new FileSetupUtil(keyFilename);
+        this.keyFile.copyFileToTemp();
 
         Security.addProvider(new GlobusProvider());
     }
@@ -197,28 +205,70 @@ public class TestPEMFileBasedKeyStore {
         Certificate[] certificates = store.getCertificateChain(this.proxyFile1.getAbsoluteFilename());
         assert (certificates != null);
         assert (certificates instanceof X509Certificate[]);
-
         //     assert (this.proxyCertificates.get(this.proxyFile1.getAbsoluteFilename()).equals(certificates[0]));
 
         // proxy file 2
-        store.getKey(this.proxyFile2.getTempFilename(), null);
+        key = store.getKey(this.proxyFile2.getTempFilename(), null);
         assert (key != null);
         assert (key instanceof PrivateKey);
 
         certificates = store.getCertificateChain(this.proxyFile1.getAbsoluteFilename());
         assert (certificates != null);
         assert (certificates instanceof X509Certificate[]);
-
 //        assert (this.proxyCertificates.get(this.proxyFile2.getTempFilename()).equals(certificates[0]));
 
 
         // test delete
         store.deleteEntry(this.proxyFile1.getAbsoluteFilename());
-
         assert (store.getCertificateChain(this.proxyFile1.getAbsoluteFilename()) == null);
         assert (!this.proxyFile1.getTempFile().exists());
+    }
 
+    @Test
+    public void testUserCerts() throws Exception {
 
+        KeyStore store = KeyStore.getInstance("PEMFilebasedKeyStore", "Globus");
+
+        // Parameters in properties file
+        Properties properties = new Properties();
+        properties.setProperty(FileBasedKeyStore.CERTIFICATE_FILENAME,
+                this.certFile.getAbsoluteFilename());
+        properties.setProperty(FileBasedKeyStore.KEY_FILENAME,
+                this.keyFile.getAbsoluteFilename());
+        InputStream ins = null;
+        try {
+            ins = getProperties(properties);
+            store.load(ins, null);
+        } finally {
+            if (ins != null)
+                ins.close();
+        }
+
+        Enumeration aliases = store.aliases();
+        assert (aliases.hasMoreElements());
+
+        String alias = (String) aliases.nextElement();
+
+        Key key = store.getKey(alias, null);
+        assert (key != null);
+        assert (key instanceof PrivateKey);
+
+        Certificate[] chain = store.getCertificateChain(alias);
+        assert (chain != null);
+        assert (chain instanceof Certificate[]);
+
+        Certificate certificate = store.getCertificate(alias);
+        assert (certificate == null);
+
+        X509Credential x509Credential = new X509Credential(new FileInputStream(this.certFile.getAbsoluteFilename()),
+                new FileInputStream(this.keyFile.getAbsoluteFilename()));
+
+        assert (key.equals(x509Credential.getPrivateKey()));
+        Certificate[] x509CredentialChain = x509Credential.getCertificateChain();
+        assert (chain.length == x509CredentialChain.length);
+        for (int i = 0; i < chain.length; i++) {
+            assert (chain[i].equals(x509CredentialChain[i]));
+        }
     }
 
     private InputStream getProperties(Properties properties) throws Exception {

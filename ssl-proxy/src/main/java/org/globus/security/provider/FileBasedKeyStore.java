@@ -335,13 +335,13 @@ public class FileBasedKeyStore extends KeyStoreSpi {
         }
 
         // Relative to what?
-        FileBasedCertKeyCredential credential = new FileBasedCertKeyCredential(new File(userCertFilename),
-                new File(userKeyFilename));
+        File certFile = new File(userCertFilename);
+        File keyFile = new File(userKeyFilename);
+        FileBasedCertKeyCredential credential = new FileBasedCertKeyCredential(certFile, keyFile);
         // What do we name this alias?
-        String alias = userCertFilename + ":" + userKeyFilename;
+        String alias = certFile.getName() + ":" + keyFile.getName();
         this.aliasObjectMap.put(alias, credential);
 
-        // FIXME: Here the credential needs to be loaded and added to the Map.
     }
 
 
