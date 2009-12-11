@@ -22,7 +22,9 @@ import javax.security.auth.x500.X500Principal;
 /**
  * FILL ME
  *
- * @author ranantha@mcs.anl.gov // FIXME: Maybe a provider  access to this?
+ * @author ranantha@mcs.anl.gov
+ *         <p/>
+ *         // FIXME: Maybe a provider  access to this?
  */
 public abstract class SigningPolicyStore {
 

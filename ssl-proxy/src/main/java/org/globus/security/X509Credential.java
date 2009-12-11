@@ -264,8 +264,13 @@ public class X509Credential {
 
     public Date getNotBefore() {
 
-        // FIXME
-        return null;
+        Date notBefore = this.certChain[0].getNotBefore();
+        for (int i = 1; i < this.certChain.length; i++) {
+            Date date = this.certChain[i].getNotBefore();
+            if (date.before(notBefore)) {
+                notBefore = date;
+            }
+        }
+        return notBefore;
     }
-
 }
