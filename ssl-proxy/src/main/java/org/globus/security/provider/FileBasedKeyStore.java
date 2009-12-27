@@ -23,7 +23,6 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.Properties;
 
-import org.globus.security.CredentialException;
 import org.globus.security.X509Credential;
 import org.globus.security.filestore.FileBasedCertKeyCredential;
 import org.globus.security.filestore.FileBasedCredential;
@@ -212,6 +211,7 @@ public class FileBasedKeyStore extends KeyStoreSpi {
         FileBasedKeyStoreParameters params =
                 (FileBasedKeyStoreParameters) loadStoreParameter;
         try {
+<<<<<<< HEAD
 
             // load trusted CAs, if configured
             String[] certs = params.getCertDirs();
@@ -237,9 +237,21 @@ public class FileBasedKeyStore extends KeyStoreSpi {
                 loadCertificateKey(userCert, userKey);
             }
 
+=======
+            loadDirectories(params.getCertDirs());
+            loadDirectories(new String[]{params.getDefaultCertDir()});
+            // load proxy certificate, if configured
+            loadProxyCertificate(params.getProxyFilename());
+>>>>>>> 1cd74b7... Rework X509Credential class to support clear or encrypted private key, and cert/file from separate streams.
         } catch (FileStoreException e) {
             throw new CertificateException(e);
         }
+
+
+        // load usercert/key, if configured
+        loadCertificateKey(params.getUserCertFilename(),
+                params.getUserKeyFilename(),
+                params.getProtectionParameter());
     }
 
     @Override
@@ -306,6 +318,7 @@ public class FileBasedKeyStore extends KeyStoreSpi {
 
     private void loadProxyCertificate(String proxyFilename) throws FileStoreException {
 
+<<<<<<< HEAD
         if (proxyFilename == null) {
             return;
         }
@@ -331,6 +344,20 @@ public class FileBasedKeyStore extends KeyStoreSpi {
         String alias = certFile.getName() + ":" + keyFile.getName();
         this.aliasObjectMap.put(alias, credential);
 
+=======
+        proxyDelegate.loadWrappers(new String[]{proxyFilename});
+        Map<String, FileBasedProxyCredential> wrapperMap =
+                proxyDelegate.getWrapperMap();
+        for (FileBasedProxyCredential credential : wrapperMap.values()) {
+            this.aliasObjectMap.put(proxyFilename, credential);
+        }
+    }
+
+
+    private void loadCertificateKey(String userCertFilename, String userKeyFilename,
+                                    KeyStore.ProtectionParameter protectionParameter) {
+        //TODO: implement me.
+>>>>>>> 1cd74b7... Rework X509Credential class to support clear or encrypted private key, and cert/file from separate streams.
     }
 
 
