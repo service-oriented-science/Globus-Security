@@ -1,0 +1,95 @@
+From 775dec1d1741683ef593c02dc14abff914dc81ae Mon Sep 17 00:00:00 2001
+From: Rachana Ananthakrishnan <ranantha@mcs.anl.gov>
+Date: Fri, 11 Dec 2009 13:15:11 -0600
+Subject: [PATCH 7/8] Remove unused files.
+
+
+Signed-off-by: Rachana Ananthakrishnan <ranantha@mcs.anl.gov>
+---
+ .../security/filestore/FileObjectParameters.java   |   27 --------------
+ .../security/filestore/SingleFileParameter.java    |   39 --------------------
+ 2 files changed, 0 insertions(+), 66 deletions(-)
+ delete mode 100644 ssl-proxy/src/main/java/org/globus/security/filestore/FileObjectParameters.java
+ delete mode 100644 ssl-proxy/src/main/java/org/globus/security/filestore/SingleFileParameter.java
+
+diff --git a/ssl-proxy/src/main/java/org/globus/security/filestore/FileObjectParameters.java b/ssl-proxy/src/main/java/org/globus/security/filestore/FileObjectParameters.java
+deleted file mode 100644
+index 31a9ebe..0000000
+--- a/ssl-proxy/src/main/java/org/globus/security/filestore/FileObjectParameters.java
++++ /dev/null
+@@ -1,27 +0,0 @@
+-/*
+- * Copyright 1999-2006 University of Chicago
+- *
+- * Licensed under the Apache License, Version 2.0 (the "License");
+- * you may not use this file except in compliance with the License.
+- * You may obtain a copy of the License at
+- *
+- * http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS,
+- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+- * See the License for the specific language governing permissions and
+- * limitations under the License.
+- */
+-package org.globus.security.filestore;
+-
+-/**
+- * FILL ME
+- * <p/>
+- * Marker interface
+- *
+- * @author ranantha@mcs.anl.gov
+- */
+-public interface FileObjectParameters {
+-
+-}
+diff --git a/ssl-proxy/src/main/java/org/globus/security/filestore/SingleFileParameter.java b/ssl-proxy/src/main/java/org/globus/security/filestore/SingleFileParameter.java
+deleted file mode 100644
+index 5ccb93d..0000000
+--- a/ssl-proxy/src/main/java/org/globus/security/filestore/SingleFileParameter.java
++++ /dev/null
+@@ -1,39 +0,0 @@
+-/*
+- * Copyright 1999-2006 University of Chicago
+- *
+- * Licensed under the Apache License, Version 2.0 (the "License");
+- * you may not use this file except in compliance with the License.
+- * You may obtain a copy of the License at
+- *
+- * http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS,
+- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+- * See the License for the specific language governing permissions and
+- * limitations under the License.
+- */
+-package org.globus.security.filestore;
+-
+-/**
+- * FILL ME
+- *
+- * @author ranantha@mcs.anl.gov
+- */
+-public class SingleFileParameter implements FileObjectParameters {
+-
+-    String filename;
+-
+-    public SingleFileParameter(String filename_) {
+-
+-        if (filename_ == null) {
+-            throw new IllegalArgumentException();
+-        }
+-
+-        this.filename = filename_;
+-    }
+-
+-    public String getFilename() {
+-        return this.filename;
+-    }
+-}
+-- 
+1.6.3.2
+

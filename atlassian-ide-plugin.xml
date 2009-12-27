@@ -1,0 +1,36 @@
+<atlassian-ide-plugin>
+  <project-configuration>
+    <servers>
+      <jira>
+        <server-id>3b998924-5bb7-4705-a10c-16d9fec1684d</server-id>
+        <name>globus</name>
+        <url>http://jira.globus.org</url>
+        <dontUseBasicAuth>true</dontUseBasicAuth>
+      </jira>
+      <bamboo>
+        <server-id>fa55d83b-4fac-430b-ac8b-59471a458cb2</server-id>
+        <name>Globus CI</name>
+        <url>http://bamboo.globus.org</url>
+        <use-favourites>false</use-favourites>
+        <bamboo2>true</bamboo2>
+        <isBamboo2M9>true</isBamboo2M9>
+        <plans>
+          <plan key="CRUX-TRUNK" />
+          <plan key="SEC-COMP" />
+          <plan key="SEC-DEF" />
+          <plan key="SEC-DEPLOY" />
+          <plan key="SEC-SITE" />
+        </plans>
+        <isBamboo24>false</isBamboo24>
+      </bamboo>
+      <crucible>
+        <server-id>4f00af75-12c3-435f-a6eb-43801f0dec14</server-id>
+        <name>Globus Code Review</name>
+        <url>http://fisheye.globus.org</url>
+        <isFisheyeInstance>false</isFisheyeInstance>
+      </crucible>
+    </servers>
+    <default-crucible-server>4f00af75-12c3-435f-a6eb-43801f0dec14</default-crucible-server>
+    <default-jira-server>3b998924-5bb7-4705-a10c-16d9fec1684d</default-jira-server>
+  </project-configuration>
+</atlassian-ide-plugin>

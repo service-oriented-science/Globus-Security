@@ -1,0 +1,22 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite thread-count="5" skipfailedinvocationCounts="false" verbose="1" name="Failed suite [Custom suite]" junit="false" parallel="none" annotations="JDK">
+  <test name="Globus-Security(failed)" junit="false" parallel="none" annotations="JDK">
+    <classes>
+      <class name="org.globus.security.provider.TestProxyPathValidator">
+        <methods>
+          <include name="validateRejectLimitedCheck"/>
+          <include name="validateGsi3PathGood"/>
+          <include name="validateGsi2PathGood"/>
+          <include name="setup"/>
+          <include name="testCrlsChecks"/>
+          <include name="validatePathProxyPathConstraint"/>
+          <include name="validatePathCAPathConstraint"/>
+          <include name="validatePathWithRestrictedProxy"/>
+          <include name="testKeyUsage"/>
+          <include name="testNoBasicConstraintsExtension"/>
+          <include name="validatePathMixedProxy"/>
+        </methods>
+      </class>
+    </classes>
+  </test>
+</suite>

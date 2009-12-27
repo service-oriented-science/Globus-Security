@@ -1,0 +1,308 @@
+From e3d9a21674c9cb2eabac3470d20605d8cd1a2d12 Mon Sep 17 00:00:00 2001
+From: Rachana Ananthakrishnan <ranantha@mcs.anl.gov>
+Date: Fri, 11 Dec 2009 14:51:54 -0600
+Subject: [PATCH 8/8] Write to file improved. Tests work now.
+
+
+Signed-off-by: Rachana Ananthakrishnan <ranantha@mcs.anl.gov>
+---
+ .../main/java/org/globus/security/OpenSSLKey.java  |    2 +-
+ .../org/globus/security/SigningPolicyStore.java    |    4 ++-
+ .../java/org/globus/security/X509Credential.java   |   11 +++++++--
+ .../filestore/FileBasedCertKeyCredential.java      |   13 +++++++++++
+ .../security/filestore/FileBasedCredential.java    |    2 +
+ .../filestore/FileBasedProxyCredential.java        |   14 ++++++++++++
+ .../filestore/MultipleFileBasedObject.java         |   12 +++++++--
+ .../security/filestore/SingleFileBasedObject.java  |    5 +++-
+ .../security/provider/FileBasedKeyStore.java       |   17 ++------------
+ .../globus/security/provider/PKITrustManager.java  |    2 +
+ .../provider/TestPEMFileBasedKeyStore.java         |   23 +++++++++++++++++--
+ 11 files changed, 79 insertions(+), 26 deletions(-)
+
+diff --git a/ssl-proxy/src/main/java/org/globus/security/OpenSSLKey.java b/ssl-proxy/src/main/java/org/globus/security/OpenSSLKey.java
+index cbcc62b..719c8b9 100644
+--- a/ssl-proxy/src/main/java/org/globus/security/OpenSSLKey.java
++++ b/ssl-proxy/src/main/java/org/globus/security/OpenSSLKey.java
+@@ -534,7 +534,7 @@ public abstract class OpenSSLKey {
+                     "-----END RSA PRIVATE KEY-----");
+         } catch (IOException e) {
+             // FIXME !!
+-            throw new RuntimeException("Unexpcted error");
++            throw new RuntimeException("Unexpected error");
+         }
+ 
+         return new String(out.toByteArray());
+diff --git a/ssl-proxy/src/main/java/org/globus/security/SigningPolicyStore.java b/ssl-proxy/src/main/java/org/globus/security/SigningPolicyStore.java
+index 7b09efc..ad8b6c4 100644
+--- a/ssl-proxy/src/main/java/org/globus/security/SigningPolicyStore.java
++++ b/ssl-proxy/src/main/java/org/globus/security/SigningPolicyStore.java
+@@ -22,7 +22,9 @@ import javax.security.auth.x500.X500Principal;
+ /**
+  * FILL ME
+  *
+- * @author ranantha@mcs.anl.gov // FIXME: Maybe a provider  access to this?
++ * @author ranantha@mcs.anl.gov
++ *         <p/>
++ *         // FIXME: Maybe a provider  access to this?
+  */
+ public abstract class SigningPolicyStore {
+ 
+diff --git a/ssl-proxy/src/main/java/org/globus/security/X509Credential.java b/ssl-proxy/src/main/java/org/globus/security/X509Credential.java
+index d0ae8e1..ba705e4 100644
+--- a/ssl-proxy/src/main/java/org/globus/security/X509Credential.java
++++ b/ssl-proxy/src/main/java/org/globus/security/X509Credential.java
+@@ -264,8 +264,13 @@ public class X509Credential {
+ 
+     public Date getNotBefore() {
+ 
+-        // FIXME
+-        return null;
++        Date notBefore = this.certChain[0].getNotBefore();
++        for (int i = 1; i < this.certChain.length; i++) {
++            Date date = this.certChain[i].getNotBefore();
++            if (date.before(notBefore)) {
++                notBefore = date;
++            }
++        }
++        return notBefore;
+     }
+-
+ }
+diff --git a/ssl-proxy/src/main/java/org/globus/security/filestore/FileBasedCertKeyCredential.java b/ssl-proxy/src/main/java/org/globus/security/filestore/FileBasedCertKeyCredential.java
+index ca0e3ea..198b3e3 100644
+--- a/ssl-proxy/src/main/java/org/globus/security/filestore/FileBasedCertKeyCredential.java
++++ b/ssl-proxy/src/main/java/org/globus/security/filestore/FileBasedCertKeyCredential.java
+@@ -18,6 +18,8 @@ package org.globus.security.filestore;
+ import java.io.File;
+ import java.io.FileInputStream;
+ import java.io.FileNotFoundException;
++import java.io.IOException;
++import java.security.cert.CertificateEncodingException;
+ 
+ import org.globus.security.CredentialException;
+ import org.globus.security.X509Credential;
+@@ -61,4 +63,15 @@ public class FileBasedCertKeyCredential extends MultipleFileBasedObject<X509Cred
+         X509Credential credential = getObject();
+         return credential;
+     }
++
++    public void storeCredential() throws FileStoreException {
++
++        try {
++            this.object.writeToFile(this.certFile, this.keyFile);
++        } catch (IOException e) {
++            throw new FileStoreException(e);
++        } catch (CertificateEncodingException e) {
++            throw new FileStoreException(e);
++        }
++    }
+ }
+diff --git a/ssl-proxy/src/main/java/org/globus/security/filestore/FileBasedCredential.java b/ssl-proxy/src/main/java/org/globus/security/filestore/FileBasedCredential.java
+index 6956a60..444fb30 100644
+--- a/ssl-proxy/src/main/java/org/globus/security/filestore/FileBasedCredential.java
++++ b/ssl-proxy/src/main/java/org/globus/security/filestore/FileBasedCredential.java
+@@ -27,4 +27,6 @@ public interface FileBasedCredential {
+ 
+     public X509Credential getCredential() throws FileStoreException;
+ 
++    public void storeCredential() throws FileStoreException;
++
+ }
+diff --git a/ssl-proxy/src/main/java/org/globus/security/filestore/FileBasedProxyCredential.java b/ssl-proxy/src/main/java/org/globus/security/filestore/FileBasedProxyCredential.java
+index 5e26f26..577c806 100644
+--- a/ssl-proxy/src/main/java/org/globus/security/filestore/FileBasedProxyCredential.java
++++ b/ssl-proxy/src/main/java/org/globus/security/filestore/FileBasedProxyCredential.java
+@@ -18,7 +18,9 @@ package org.globus.security.filestore;
+ import java.io.File;
+ import java.io.FileInputStream;
+ import java.io.FileNotFoundException;
++import java.io.IOException;
+ import java.io.InputStream;
++import java.security.cert.CertificateEncodingException;
+ 
+ import org.globus.security.CredentialException;
+ import org.globus.security.X509Credential;
+@@ -82,7 +84,19 @@ public class FileBasedProxyCredential extends SingleFileBasedObject<X509Credenti
+         }
+     }
+ 
++    public void storeCredential() throws FileStoreException {
++
++        try {
++            this.object.writeToFile(this.file);
++        } catch (IOException e) {
++            throw new FileStoreException(e);
++        } catch (CertificateEncodingException e) {
++            throw new FileStoreException(e);
++        }
++    }
++
+     // no restrictions on proxy file name.
++
+     protected void validateFilename(File file) throws FileStoreException {
+ 
+     }
+diff --git a/ssl-proxy/src/main/java/org/globus/security/filestore/MultipleFileBasedObject.java b/ssl-proxy/src/main/java/org/globus/security/filestore/MultipleFileBasedObject.java
+index fece8f3..f16544c 100644
+--- a/ssl-proxy/src/main/java/org/globus/security/filestore/MultipleFileBasedObject.java
++++ b/ssl-proxy/src/main/java/org/globus/security/filestore/MultipleFileBasedObject.java
+@@ -26,12 +26,17 @@ public abstract class MultipleFileBasedObject<T> extends FileBasedObject<T> {
+ 
+     private long certLastModified = -1;
+     private long keyLastModified = -1;
+-    private File certFile = null;
+-    private File keyFile = null;
++
++    protected File certFile = null;
++    protected File keyFile = null;
+ 
+ 
+     protected void init(File certFile_, File keyFile_) throws FileStoreException {
+-        // FIXME: null checks
++
++        if ((certFile_ == null) || (keyFile_ == null)) {
++            throw new IllegalArgumentException();
++        }
++
+         this.certFile = certFile_;
+         this.keyFile = keyFile_;
+         this.object = createObject(this.certFile, this.keyFile);
+@@ -74,6 +79,7 @@ public abstract class MultipleFileBasedObject<T> extends FileBasedObject<T> {
+     }
+ 
+     // for creation of object from a file
++
+     protected abstract T createObject(File certFile, File keyFile)
+             throws FileStoreException;
+ 
+diff --git a/ssl-proxy/src/main/java/org/globus/security/filestore/SingleFileBasedObject.java b/ssl-proxy/src/main/java/org/globus/security/filestore/SingleFileBasedObject.java
+index 91dba24..885d4c7 100644
+--- a/ssl-proxy/src/main/java/org/globus/security/filestore/SingleFileBasedObject.java
++++ b/ssl-proxy/src/main/java/org/globus/security/filestore/SingleFileBasedObject.java
+@@ -31,7 +31,8 @@ public abstract class SingleFileBasedObject<T> extends FileBasedObject<T> {
+             LoggerFactory.getLogger(SingleFileBasedObject.class.getName());
+ 
+     private long lastModified = -1;
+-    private File file = null;
++
++    protected File file = null;
+ 
+     protected void init(File file_) throws FileStoreException {
+         validateFilename(file_);
+@@ -66,10 +67,12 @@ public abstract class SingleFileBasedObject<T> extends FileBasedObject<T> {
+     }
+ 
+     // for creation of object from a file
++
+     protected abstract T createObject(File filename)
+             throws FileStoreException;
+ 
+     // for filename validation
++
+     protected abstract void validateFilename(File filename)
+             throws FileStoreException;
+ }
+diff --git a/ssl-proxy/src/main/java/org/globus/security/provider/FileBasedKeyStore.java b/ssl-proxy/src/main/java/org/globus/security/provider/FileBasedKeyStore.java
+index 576b32f..0b747f8 100644
+--- a/ssl-proxy/src/main/java/org/globus/security/provider/FileBasedKeyStore.java
++++ b/ssl-proxy/src/main/java/org/globus/security/provider/FileBasedKeyStore.java
+@@ -134,21 +134,10 @@ public class FileBasedKeyStore extends KeyStoreSpi {
+                 if (object instanceof FileBasedTrustAnchor) {
+                     File file = ((FileBasedTrustAnchor) object).getFile();
+                     FileBasedTrustAnchor desc = (FileBasedTrustAnchor) object;
+-                    if (file == null) {
+-                        // FIXME:
+-                        //String filename = this.trustedCertFilenameMap.get(desc.getTrustAnchor().getTrustedCert());
+-                        //file = new File(this.defaultDirectory, filename + ".0");
+-                    }
+                     writeCertificate(desc.getTrustAnchor().getTrustedCert(), file);
+-                } else if (object instanceof FileBasedProxyCredential) {
+-                    FileBasedProxyCredential proxy = (FileBasedProxyCredential) object;
+-                    File file = proxy.getFile();
+-                    X509Credential credential = proxy.getCredential();
+-                    if (file == null) {
+-                        // String filename = this.certKeyFilenameMap.get(credential);
+-                        //file = new File(this.defaultDirectory, filename + ".pem");
+-                    }
+-                    credential.writeToFile(file);
++                } else if (object instanceof FileBasedCredential) {
++                    FileBasedCredential credential = (FileBasedCredential) object;
++                    credential.storeCredential();
+                 }
+             } catch (FileStoreException e) {
+                 throw new CertificateException(e);
+diff --git a/ssl-proxy/src/main/java/org/globus/security/provider/PKITrustManager.java b/ssl-proxy/src/main/java/org/globus/security/provider/PKITrustManager.java
+index 1f1d28b..7a39c94 100644
+--- a/ssl-proxy/src/main/java/org/globus/security/provider/PKITrustManager.java
++++ b/ssl-proxy/src/main/java/org/globus/security/provider/PKITrustManager.java
+@@ -43,6 +43,7 @@ import org.slf4j.LoggerFactory;
+  * @author ranantha@mcs.anl.gov
+  *         <p/>
+  *         FIXME: ability to accept anonymous connections?
++ *         FIXME: client side authorization
+  */
+ public class PKITrustManager implements X509TrustManager {
+ 
+@@ -122,6 +123,7 @@ public class PKITrustManager implements X509TrustManager {
+     }
+ 
+     // FIXME: THis is super naive, fix it.
++
+     private CertPath getCertPath(X509Certificate[] certs)
+             throws CertificateException {
+ 
+diff --git a/ssl-proxy/src/test/java/org/globus/security/provider/TestPEMFileBasedKeyStore.java b/ssl-proxy/src/test/java/org/globus/security/provider/TestPEMFileBasedKeyStore.java
+index 6acfabf..caf5b2d 100644
+--- a/ssl-proxy/src/test/java/org/globus/security/provider/TestPEMFileBasedKeyStore.java
++++ b/ssl-proxy/src/test/java/org/globus/security/provider/TestPEMFileBasedKeyStore.java
+@@ -211,12 +211,22 @@ public class TestPEMFileBasedKeyStore {
+         assert (certificates instanceof X509Certificate[]);
+         //     assert (this.proxyCertificates.get(this.proxyFile1.getAbsoluteFilename()).equals(certificates[0]));
+ 
++        properties.setProperty(FileBasedKeyStore.PROXY_FILENAME,
++                this.proxyFile2.getAbsoluteFilename());
++        try {
++            ins = getProperties(properties);
++            store.load(ins, null);
++        } finally {
++            if (ins != null)
++                ins.close();
++        }
++
+         // proxy file 2
+-        key = store.getKey(this.proxyFile2.getTempFilename(), null);
++        key = store.getKey(this.proxyFile2.getAbsoluteFilename(), null);
+         assert (key != null);
+         assert (key instanceof PrivateKey);
+ 
+-        certificates = store.getCertificateChain(this.proxyFile1.getAbsoluteFilename());
++        certificates = store.getCertificateChain(this.proxyFile2.getAbsoluteFilename());
+         assert (certificates != null);
+         assert (certificates instanceof X509Certificate[]);
+ //        assert (this.proxyCertificates.get(this.proxyFile2.getTempFilename()).equals(certificates[0]));
+@@ -274,7 +284,7 @@ public class TestPEMFileBasedKeyStore {
+             assert (chain[i].equals(x509CredentialChain[i]));
+         }
+ 
+-
++        store = KeyStore.getInstance("PEMFilebasedKeyStore", "Globus");
+         properties.setProperty(FileBasedKeyStore.CERTIFICATE_FILENAME,
+                 this.certFile.getAbsoluteFilename());
+         properties.setProperty(FileBasedKeyStore.KEY_FILENAME,
+@@ -306,6 +316,13 @@ public class TestPEMFileBasedKeyStore {
+         chain = store.getCertificateChain(alias);
+         assert (chain != null);
+         assert (chain instanceof Certificate[]);
++
++        // test delete
++        store.deleteEntry(alias);
++        assert (store.getCertificateChain(alias) == null);
++        assert (store.getKey(alias, null) == null);
++        assert (!this.certFile.getTempFile().exists());
++        assert (!this.keyEncFile.getTempFile().exists());
+     }
+ 
+     private InputStream getProperties(Properties properties) throws Exception {
+-- 
+1.6.3.2
+

@@ -1,0 +1,120 @@
+From 752be2eb34f606221d6bfd1b72f8130b42024704 Mon Sep 17 00:00:00 2001
+From: Rachana Ananthakrishnan <ranantha@mcs.anl.gov>
+Date: Fri, 11 Dec 2009 11:49:57 -0600
+Subject: [PATCH 6/8] Test for certificate and encrypted key.
+
+
+Signed-off-by: Rachana Ananthakrishnan <ranantha@mcs.anl.gov>
+---
+ .../provider/TestPEMFileBasedKeyStore.java         |   42 +++++++++++++++++++-
+ .../validatorTest/testeec2-private-enc.pem         |   18 ++++++++
+ 2 files changed, 59 insertions(+), 1 deletions(-)
+ create mode 100644 ssl-proxy/src/test/resources/validatorTest/testeec2-private-enc.pem
+
+diff --git a/ssl-proxy/src/test/java/org/globus/security/provider/TestPEMFileBasedKeyStore.java b/ssl-proxy/src/test/java/org/globus/security/provider/TestPEMFileBasedKeyStore.java
+index a2de46b..6acfabf 100644
+--- a/ssl-proxy/src/test/java/org/globus/security/provider/TestPEMFileBasedKeyStore.java
++++ b/ssl-proxy/src/test/java/org/globus/security/provider/TestPEMFileBasedKeyStore.java
+@@ -23,6 +23,7 @@ import java.security.Key;
+ import java.security.KeyStore;
+ import java.security.PrivateKey;
+ import java.security.Security;
++import java.security.UnrecoverableKeyException;
+ import java.security.cert.Certificate;
+ import java.security.cert.X509Certificate;
+ import java.util.Enumeration;
+@@ -53,7 +54,7 @@ public class TestPEMFileBasedKeyStore {
+     FileSetupUtil proxyFile2;
+     FileSetupUtil certFile;
+     FileSetupUtil keyFile;
+-
++    FileSetupUtil keyEncFile;
+ 
+     Map<FileSetupUtil, X509Certificate> trustedCertificates = new HashMap<FileSetupUtil, X509Certificate>();
+     Map<FileSetupUtil, X509Credential> proxyCertificates = new HashMap<FileSetupUtil, X509Credential>();
+@@ -128,6 +129,9 @@ public class TestPEMFileBasedKeyStore {
+         String keyFilename = "validatorTest/testeec2-private.pem";
+         this.keyFile = new FileSetupUtil(keyFilename);
+         this.keyFile.copyFileToTemp();
++        String keyEncFilename = "validatorTest/testeec2-private-enc.pem";
++        this.keyEncFile = new FileSetupUtil(keyEncFilename);
++        this.keyEncFile.copyFileToTemp();
+ 
+         Security.addProvider(new GlobusProvider());
+     }
+@@ -269,6 +273,39 @@ public class TestPEMFileBasedKeyStore {
+         for (int i = 0; i < chain.length; i++) {
+             assert (chain[i].equals(x509CredentialChain[i]));
+         }
++
++
++        properties.setProperty(FileBasedKeyStore.CERTIFICATE_FILENAME,
++                this.certFile.getAbsoluteFilename());
++        properties.setProperty(FileBasedKeyStore.KEY_FILENAME,
++                this.keyEncFile.getAbsoluteFilename());
++        try {
++            ins = getProperties(properties);
++            store.load(ins, null);
++        } finally {
++            if (ins != null)
++                ins.close();
++        }
++
++        aliases = store.aliases();
++        assert (aliases.hasMoreElements());
++        alias = (String) aliases.nextElement();
++
++        boolean exception = false;
++        try {
++            key = store.getKey(alias, null);
++        } catch (UnrecoverableKeyException e) {
++            exception = true;
++        }
++        assert (exception);
++
++        key = store.getKey(alias, "test".toCharArray());
++        assert (key != null);
++        assert (key instanceof PrivateKey);
++
++        chain = store.getCertificateChain(alias);
++        assert (chain != null);
++        assert (chain instanceof Certificate[]);
+     }
+ 
+     private InputStream getProperties(Properties properties) throws Exception {
+@@ -297,5 +334,8 @@ public class TestPEMFileBasedKeyStore {
+         this.trustedDirectory.delete();
+         this.proxyFile1.deleteFile();
+         this.proxyFile2.deleteFile();
++        this.certFile.deleteFile();
++        this.keyFile.deleteFile();
++        this.keyEncFile.deleteFile();
+     }
+ }
+diff --git a/ssl-proxy/src/test/resources/validatorTest/testeec2-private-enc.pem b/ssl-proxy/src/test/resources/validatorTest/testeec2-private-enc.pem
+new file mode 100644
+index 0000000..e28de3f
+--- /dev/null
++++ b/ssl-proxy/src/test/resources/validatorTest/testeec2-private-enc.pem
+@@ -0,0 +1,18 @@
++-----BEGIN RSA PRIVATE KEY-----
++Proc-Type: 4,ENCRYPTED
++DEK-Info: DES-EDE3-CBC,8BF1FF58816F480B
++
++G9UZoHBkwTBL/twhbxjB9JuNGWxgNZw/fuFolLvMc/dEPrXu27w6P2HZB66J3DWz
++S+vcOaGCKIYtWPQGx9d0oG9Bu051uE9slqCzOU3K+LmJelXl6jV0x/exhoUeoVPE
++zdobg1Az1U77Rve+CmMntgjdt6NVzs/Axp0eD+8RQF+gZwABy4uNymV5/v/7NR8d
++MCsKjM459hmFRZr40T1ZEF5vUJ4muNj0leyo5oGSKDOyDIdP4B08kkeVHKXptBv4
++tc7ImnM8LJDSz27NRjawrF02So6DgVTp/12tbuQH8NhlKsxPNXi4m/8ylNgUh20e
++EBlDle1Q4Fi7yr+qe6A4fvz2k5ZnsMFx5NBP0wv7o8PZ16KFral4pR7m/7hHA7nm
++BNaiUHM5xBvd1pfGeWo2cmxR1IXlxi8kBB0P8tVBZyCALsOdH3yaWAA7oxxd7bqo
++LpgQGClK+YZwlQ3eUuq/PDH91o/OSNST3sdYflB4KmKP81NHu+8n9tI53owX56B3
++LXF0bWgzCrDkoWBfKFlMBC3sN+tJcO7yQBKhwoDN2qwjm1t7mwM1SY0x4bb8pSo4
++QxQ0xzIrUWxDBC2NglWdb7j6hRlQVI/itB6swLxMiRpwk8a0yAxvkCEU/YHYZ9/x
++t6I9qqEeA7+wb611DEYlAy8Aj5cnKhuy+WZ0HOYLU/YNTwIFq61BhEVZoDk51cDP
++K6xrWqWP4v3EnD0NI2F9p1mvzXJ4zE2e6CkSpxQ08bbEimbvoi60lPoWKY0ebovF
++AFNmg4+hHS0SIQcFFN6n3StcKr0m5DrGwxbR7Z3tRgE/c8UJ+PvPFw==
++-----END RSA PRIVATE KEY-----
+-- 
+1.6.3.2
+

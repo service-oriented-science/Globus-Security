@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_5" inherit-compiler-output="false">
+    <output url="file://$MODULE_DIR$/target/classes" />
+    <output-test url="file://$MODULE_DIR$/target/test-classes" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/target" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" exported="" name="Maven: org.apache.felix:org.osgi.compendium:1.0.0" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.apache.felix:org.osgi.core:1.0.0" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.apache.felix:javax.servlet:1.0.0" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.apache.felix:org.osgi.foundation:1.0.0" level="project" />
+    <orderEntry type="library" exported="" name="Maven: commons-codec:commons-codec:1.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: commons-io:commons-io:1.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.mortbay.jetty:jetty:6.1.19" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.mortbay.jetty:jetty-util:6.1.19" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.mortbay.jetty:servlet-api:2.5-20081211" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.slf4j:slf4j-api:1.5.6" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.slf4j:jcl-over-slf4j:1.5.8" level="project" />
+  </component>
+</module>
+

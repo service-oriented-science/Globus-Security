@@ -1,0 +1,438 @@
+<testng-results>
+  <reporter-output>
+  </reporter-output>
+  <suite name="Custom suite">
+    <groups>
+    </groups>
+    <test name="Globus-Security">
+      <class name="org.globus.security.provider.TestProxyPathValidator">
+        <test-method status="FAIL" signature="validatePathCAPathConstraint()" name="validatePathCAPathConstraint" duration-ms="4115" started-at="2009-12-27T09:49:47Z" finished-at="2009-12-27T09:49:51Z">
+          <exception class="java.security.cert.CertPathValidatorException">
+            <message>
+              <![CDATA[Certificate DC=gov,DC=fnal,O=Fermilab,OU=People,CN=Vijay . Sekhri,UID=sekhri expired]]>
+            </message>
+            <full-stacktrace>
+              <![CDATA[java.security.cert.CertPathValidatorException: Certificate DC=gov,DC=fnal,O=Fermilab,OU=People,CN=Vijay . Sekhri,UID=sekhri expired
+	at org.globus.security.provider.DateValidityChecker.isValid(DateValidityChecker.java:27)
+	at org.globus.security.provider.X509ProxyCertPathValidator.checkCertificate(X509ProxyCertPathValidator.java:712)
+	at org.globus.security.provider.X509ProxyCertPathValidator.validate(X509ProxyCertPathValidator.java:217)
+	at org.globus.security.provider.X509ProxyCertPathValidator.engineValidate(X509ProxyCertPathValidator.java:136)
+	at org.globus.security.provider.TestProxyPathValidator$MockProxyCertPathValidator.engineValidate(TestProxyPathValidator.java:1089)
+	at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:349)
+	at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:331)
+	at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:316)
+	at org.globus.security.provider.TestProxyPathValidator.validatePathCAPathConstraint(TestProxyPathValidator.java:834)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:585)
+	at org.testng.internal.MethodHelper.invokeMethod(MethodHelper.java:607)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:517)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:669)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:956)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:110)
+	at org.testng.TestRunner.runWorkers(TestRunner.java:759)
+	at org.testng.TestRunner.privateRun(TestRunner.java:592)
+	at org.testng.TestRunner.run(TestRunner.java:486)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:332)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:327)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:299)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:204)
+	at org.testng.TestNG.createAndRunSuiteRunners(TestNG.java:867)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:832)
+	at org.testng.TestNG.run(TestNG.java:748)
+	at org.testng.remote.RemoteTestNG.run(RemoteTestNG.java:73)
+	at org.testng.RemoteTestNGStarter.main(RemoteTestNGStarter.java:79)
+Caused by: java.security.cert.CertificateExpiredException: certificate expired on 20030424200032GMT+00:00
+	at org.bouncycastle.jce.provider.X509CertificateObject.checkValidity(Unknown Source)
+	at org.bouncycastle.jce.provider.X509CertificateObject.checkValidity(Unknown Source)
+	at org.globus.security.provider.DateValidityChecker.isValid(DateValidityChecker.java:25)
+	... 30 more
+]]>
+            </full-stacktrace>
+          </exception>
+        </test-method>
+        <test-method status="PASS" signature="testSigningPolicy()" name="testSigningPolicy" duration-ms="18" started-at="2009-12-27T09:49:51Z" finished-at="2009-12-27T09:49:51Z">
+        </test-method>
+        <test-method status="FAIL" signature="testCrlsChecks()" name="testCrlsChecks" duration-ms="2805" started-at="2009-12-27T09:49:43Z" finished-at="2009-12-27T09:49:45Z">
+          <exception class="java.security.cert.CertPathValidatorException">
+            <message>
+              <![CDATA[Certificate O=test CA1,OU=simple ca,CN=user1 expired]]>
+            </message>
+            <full-stacktrace>
+              <![CDATA[java.security.cert.CertPathValidatorException: Certificate O=test CA1,OU=simple ca,CN=user1 expired
+	at org.globus.security.provider.DateValidityChecker.isValid(DateValidityChecker.java:27)
+	at org.globus.security.provider.X509ProxyCertPathValidator.checkCertificate(X509ProxyCertPathValidator.java:712)
+	at org.globus.security.provider.X509ProxyCertPathValidator.validate(X509ProxyCertPathValidator.java:217)
+	at org.globus.security.provider.X509ProxyCertPathValidator.engineValidate(X509ProxyCertPathValidator.java:136)
+	at org.globus.security.provider.TestProxyPathValidator$MockProxyCertPathValidator.engineValidate(TestProxyPathValidator.java:1089)
+	at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:349)
+	at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:331)
+	at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:316)
+	at org.globus.security.provider.TestProxyPathValidator.testCrlsChecks(TestProxyPathValidator.java:972)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:585)
+	at org.testng.internal.MethodHelper.invokeMethod(MethodHelper.java:607)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:517)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:669)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:956)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:110)
+	at org.testng.TestRunner.runWorkers(TestRunner.java:759)
+	at org.testng.TestRunner.privateRun(TestRunner.java:592)
+	at org.testng.TestRunner.run(TestRunner.java:486)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:332)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:327)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:299)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:204)
+	at org.testng.TestNG.createAndRunSuiteRunners(TestNG.java:867)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:832)
+	at org.testng.TestNG.run(TestNG.java:748)
+	at org.testng.remote.RemoteTestNG.run(RemoteTestNG.java:73)
+	at org.testng.RemoteTestNGStarter.main(RemoteTestNGStarter.java:79)
+Caused by: java.security.cert.CertificateExpiredException: certificate expired on 20090215235910GMT+00:00
+	at org.bouncycastle.jce.provider.X509CertificateObject.checkValidity(Unknown Source)
+	at org.bouncycastle.jce.provider.X509CertificateObject.checkValidity(Unknown Source)
+	at org.globus.security.provider.DateValidityChecker.isValid(DateValidityChecker.java:25)
+	... 30 more
+]]>
+            </full-stacktrace>
+          </exception>
+        </test-method>
+        <test-method status="FAIL" signature="validatePathProxyPathConstraint()" name="validatePathProxyPathConstraint" duration-ms="19" started-at="2009-12-27T09:49:51Z" finished-at="2009-12-27T09:49:51Z">
+          <exception class="java.security.cert.CertPathValidatorException">
+            <message>
+              <![CDATA[Certificate C=TestCA1,CN=EEC1,CN=1352712353 expired]]>
+            </message>
+            <full-stacktrace>
+              <![CDATA[java.security.cert.CertPathValidatorException: Certificate C=TestCA1,CN=EEC1,CN=1352712353 expired
+	at org.globus.security.provider.DateValidityChecker.isValid(DateValidityChecker.java:27)
+	at org.globus.security.provider.X509ProxyCertPathValidator.checkCertificate(X509ProxyCertPathValidator.java:712)
+	at org.globus.security.provider.X509ProxyCertPathValidator.validate(X509ProxyCertPathValidator.java:217)
+	at org.globus.security.provider.X509ProxyCertPathValidator.engineValidate(X509ProxyCertPathValidator.java:136)
+	at org.globus.security.provider.TestProxyPathValidator$MockProxyCertPathValidator.engineValidate(TestProxyPathValidator.java:1089)
+	at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:349)
+	at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:331)
+	at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:316)
+	at org.globus.security.provider.TestProxyPathValidator.validatePathProxyPathConstraint(TestProxyPathValidator.java:791)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:585)
+	at org.testng.internal.MethodHelper.invokeMethod(MethodHelper.java:607)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:517)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:669)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:956)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:110)
+	at org.testng.TestRunner.runWorkers(TestRunner.java:759)
+	at org.testng.TestRunner.privateRun(TestRunner.java:592)
+	at org.testng.TestRunner.run(TestRunner.java:486)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:332)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:327)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:299)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:204)
+	at org.testng.TestNG.createAndRunSuiteRunners(TestNG.java:867)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:832)
+	at org.testng.TestNG.run(TestNG.java:748)
+	at org.testng.remote.RemoteTestNG.run(RemoteTestNG.java:73)
+	at org.testng.RemoteTestNGStarter.main(RemoteTestNGStarter.java:79)
+Caused by: java.security.cert.CertificateExpiredException: certificate expired on 20090929033111GMT+00:00
+	at org.bouncycastle.jce.provider.X509CertificateObject.checkValidity(Unknown Source)
+	at org.bouncycastle.jce.provider.X509CertificateObject.checkValidity(Unknown Source)
+	at org.globus.security.provider.DateValidityChecker.isValid(DateValidityChecker.java:25)
+	... 30 more
+]]>
+            </full-stacktrace>
+          </exception>
+        </test-method>
+        <test-method status="FAIL" signature="validatePathMixedProxy()" name="validatePathMixedProxy" duration-ms="13" started-at="2009-12-27T09:49:51Z" finished-at="2009-12-27T09:49:51Z">
+          <exception class="java.lang.AssertionError">
+            <full-stacktrace>
+              <![CDATA[java.lang.AssertionError
+	at org.globus.security.provider.TestProxyPathValidator.validateError(TestProxyPathValidator.java:390)
+	at org.globus.security.provider.TestProxyPathValidator.validatePathMixedProxy(TestProxyPathValidator.java:762)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:585)
+	at org.testng.internal.MethodHelper.invokeMethod(MethodHelper.java:607)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:517)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:669)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:956)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:110)
+	at org.testng.TestRunner.runWorkers(TestRunner.java:759)
+	at org.testng.TestRunner.privateRun(TestRunner.java:592)
+	at org.testng.TestRunner.run(TestRunner.java:486)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:332)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:327)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:299)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:204)
+	at org.testng.TestNG.createAndRunSuiteRunners(TestNG.java:867)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:832)
+	at org.testng.TestNG.run(TestNG.java:748)
+	at org.testng.remote.RemoteTestNG.run(RemoteTestNG.java:73)
+	at org.testng.RemoteTestNGStarter.main(RemoteTestNGStarter.java:79)
+]]>
+            </full-stacktrace>
+          </exception>
+        </test-method>
+        <test-method status="FAIL" signature="validateGsi2PathGood()" name="validateGsi2PathGood" duration-ms="1597" started-at="2009-12-27T09:49:41Z" finished-at="2009-12-27T09:49:43Z">
+          <exception class="java.lang.NullPointerException">
+            <full-stacktrace>
+              <![CDATA[java.lang.NullPointerException
+	at org.globus.security.provider.TestProxyPathValidator$TestPolicyStore.getSigningPolicy(TestProxyPathValidator.java:1112)
+	at org.globus.security.provider.SigningPolicyChecker.isValid(SigningPolicyChecker.java:51)
+	at org.globus.security.provider.X509ProxyCertPathValidator.checkCertificate(X509ProxyCertPathValidator.java:712)
+	at org.globus.security.provider.X509ProxyCertPathValidator.validate(X509ProxyCertPathValidator.java:217)
+	at org.globus.security.provider.X509ProxyCertPathValidator.engineValidate(X509ProxyCertPathValidator.java:136)
+	at org.globus.security.provider.TestProxyPathValidator$MockProxyCertPathValidator.engineValidate(TestProxyPathValidator.java:1089)
+	at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:349)
+	at org.globus.security.provider.TestProxyPathValidator.validateGsi2PathGood(TestProxyPathValidator.java:458)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:585)
+	at org.testng.internal.MethodHelper.invokeMethod(MethodHelper.java:607)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:517)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:669)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:956)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:110)
+	at org.testng.TestRunner.runWorkers(TestRunner.java:759)
+	at org.testng.TestRunner.privateRun(TestRunner.java:592)
+	at org.testng.TestRunner.run(TestRunner.java:486)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:332)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:327)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:299)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:204)
+	at org.testng.TestNG.createAndRunSuiteRunners(TestNG.java:867)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:832)
+	at org.testng.TestNG.run(TestNG.java:748)
+	at org.testng.remote.RemoteTestNG.run(RemoteTestNG.java:73)
+	at org.testng.RemoteTestNGStarter.main(RemoteTestNGStarter.java:79)
+]]>
+            </full-stacktrace>
+          </exception>
+        </test-method>
+        <test-method status="PASS" signature="setup()" name="setup" is-config="true" duration-ms="575" started-at="2009-12-27T09:49:08Z" finished-at="2009-12-27T09:49:09Z">
+        </test-method>
+        <test-method status="FAIL" signature="testKeyUsage()" name="testKeyUsage" duration-ms="21" started-at="2009-12-27T09:49:51Z" finished-at="2009-12-27T09:49:51Z">
+          <exception class="java.security.cert.CertPathValidatorException">
+            <message>
+              <![CDATA[Certificate O=doesciencegrid.org,OU=People,CN=Vijaya Lakshmi Natarajan 17908,CN=proxy expired]]>
+            </message>
+            <full-stacktrace>
+              <![CDATA[java.security.cert.CertPathValidatorException: Certificate O=doesciencegrid.org,OU=People,CN=Vijaya Lakshmi Natarajan 17908,CN=proxy expired
+	at org.globus.security.provider.DateValidityChecker.isValid(DateValidityChecker.java:27)
+	at org.globus.security.provider.X509ProxyCertPathValidator.checkCertificate(X509ProxyCertPathValidator.java:712)
+	at org.globus.security.provider.X509ProxyCertPathValidator.validate(X509ProxyCertPathValidator.java:217)
+	at org.globus.security.provider.X509ProxyCertPathValidator.engineValidate(X509ProxyCertPathValidator.java:136)
+	at org.globus.security.provider.TestProxyPathValidator$MockProxyCertPathValidator.engineValidate(TestProxyPathValidator.java:1089)
+	at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:349)
+	at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:331)
+	at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:316)
+	at org.globus.security.provider.TestProxyPathValidator.testKeyUsage(TestProxyPathValidator.java:921)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:585)
+	at org.testng.internal.MethodHelper.invokeMethod(MethodHelper.java:607)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:517)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:669)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:956)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:110)
+	at org.testng.TestRunner.runWorkers(TestRunner.java:759)
+	at org.testng.TestRunner.privateRun(TestRunner.java:592)
+	at org.testng.TestRunner.run(TestRunner.java:486)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:332)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:327)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:299)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:204)
+	at org.testng.TestNG.createAndRunSuiteRunners(TestNG.java:867)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:832)
+	at org.testng.TestNG.run(TestNG.java:748)
+	at org.testng.remote.RemoteTestNG.run(RemoteTestNG.java:73)
+	at org.testng.RemoteTestNGStarter.main(RemoteTestNGStarter.java:79)
+Caused by: java.security.cert.CertificateExpiredException: certificate expired on 20030118101622GMT+00:00
+	at org.bouncycastle.jce.provider.X509CertificateObject.checkValidity(Unknown Source)
+	at org.bouncycastle.jce.provider.X509CertificateObject.checkValidity(Unknown Source)
+	at org.globus.security.provider.DateValidityChecker.isValid(DateValidityChecker.java:25)
+	... 30 more
+]]>
+            </full-stacktrace>
+          </exception>
+        </test-method>
+        <test-method status="PASS" signature="validatePathBad()" name="validatePathBad" duration-ms="5" started-at="2009-12-27T09:49:51Z" finished-at="2009-12-27T09:49:51Z">
+        </test-method>
+        <test-method status="FAIL" signature="testNoBasicConstraintsExtension()" name="testNoBasicConstraintsExtension" duration-ms="2" started-at="2009-12-27T09:49:51Z" finished-at="2009-12-27T09:49:51Z">
+          <exception class="java.lang.NullPointerException">
+            <full-stacktrace>
+              <![CDATA[java.lang.NullPointerException
+	at org.globus.security.provider.TestProxyPathValidator$TestPolicyStore.getSigningPolicy(TestProxyPathValidator.java:1112)
+	at org.globus.security.provider.SigningPolicyChecker.isValid(SigningPolicyChecker.java:51)
+	at org.globus.security.provider.X509ProxyCertPathValidator.checkCertificate(X509ProxyCertPathValidator.java:712)
+	at org.globus.security.provider.X509ProxyCertPathValidator.validate(X509ProxyCertPathValidator.java:217)
+	at org.globus.security.provider.X509ProxyCertPathValidator.engineValidate(X509ProxyCertPathValidator.java:136)
+	at org.globus.security.provider.TestProxyPathValidator$MockProxyCertPathValidator.engineValidate(TestProxyPathValidator.java:1089)
+	at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:349)
+	at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:331)
+	at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:316)
+	at org.globus.security.provider.TestProxyPathValidator.testNoBasicConstraintsExtension(TestProxyPathValidator.java:950)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:585)
+	at org.testng.internal.MethodHelper.invokeMethod(MethodHelper.java:607)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:517)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:669)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:956)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:110)
+	at org.testng.TestRunner.runWorkers(TestRunner.java:759)
+	at org.testng.TestRunner.privateRun(TestRunner.java:592)
+	at org.testng.TestRunner.run(TestRunner.java:486)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:332)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:327)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:299)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:204)
+	at org.testng.TestNG.createAndRunSuiteRunners(TestNG.java:867)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:832)
+	at org.testng.TestNG.run(TestNG.java:748)
+	at org.testng.remote.RemoteTestNG.run(RemoteTestNG.java:73)
+	at org.testng.RemoteTestNGStarter.main(RemoteTestNGStarter.java:79)
+]]>
+            </full-stacktrace>
+          </exception>
+        </test-method>
+        <test-method status="FAIL" signature="validateRejectLimitedCheck()" name="validateRejectLimitedCheck" duration-ms="29119" started-at="2009-12-27T09:49:09Z" finished-at="2009-12-27T09:49:38Z">
+          <exception class="java.security.cert.CertPathValidatorException">
+            <message>
+              <![CDATA[Certificate C=TestCA1,CN=EEC1,CN=limited proxy expired]]>
+            </message>
+            <full-stacktrace>
+              <![CDATA[java.security.cert.CertPathValidatorException: Certificate C=TestCA1,CN=EEC1,CN=limited proxy expired
+	at org.globus.security.provider.DateValidityChecker.isValid(DateValidityChecker.java:27)
+	at org.globus.security.provider.X509ProxyCertPathValidator.checkCertificate(X509ProxyCertPathValidator.java:712)
+	at org.globus.security.provider.X509ProxyCertPathValidator.validate(X509ProxyCertPathValidator.java:217)
+	at org.globus.security.provider.X509ProxyCertPathValidator.engineValidate(X509ProxyCertPathValidator.java:136)
+	at org.globus.security.provider.TestProxyPathValidator$MockProxyCertPathValidator.engineValidate(TestProxyPathValidator.java:1089)
+	at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:349)
+	at org.globus.security.provider.TestProxyPathValidator.validateRejectLimitedCheck(TestProxyPathValidator.java:514)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:585)
+	at org.testng.internal.MethodHelper.invokeMethod(MethodHelper.java:607)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:517)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:669)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:956)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:110)
+	at org.testng.TestRunner.runWorkers(TestRunner.java:759)
+	at org.testng.TestRunner.privateRun(TestRunner.java:592)
+	at org.testng.TestRunner.run(TestRunner.java:486)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:332)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:327)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:299)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:204)
+	at org.testng.TestNG.createAndRunSuiteRunners(TestNG.java:867)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:832)
+	at org.testng.TestNG.run(TestNG.java:748)
+	at org.testng.remote.RemoteTestNG.run(RemoteTestNG.java:73)
+	at org.testng.RemoteTestNGStarter.main(RemoteTestNGStarter.java:79)
+Caused by: java.security.cert.CertificateExpiredException: certificate expired on 20090929033105GMT+00:00
+	at org.bouncycastle.jce.provider.X509CertificateObject.checkValidity(Unknown Source)
+	at org.bouncycastle.jce.provider.X509CertificateObject.checkValidity(Unknown Source)
+	at org.globus.security.provider.DateValidityChecker.isValid(DateValidityChecker.java:25)
+	... 28 more
+]]>
+            </full-stacktrace>
+          </exception>
+        </test-method>
+        <test-method status="FAIL" signature="validatePathWithRestrictedProxy()" name="validatePathWithRestrictedProxy" duration-ms="1340" started-at="2009-12-27T09:49:45Z" finished-at="2009-12-27T09:49:47Z">
+          <exception class="java.lang.AssertionError">
+            <full-stacktrace>
+              <![CDATA[java.lang.AssertionError
+	at org.globus.security.provider.TestProxyPathValidator.validateError(TestProxyPathValidator.java:390)
+	at org.globus.security.provider.TestProxyPathValidator.validatePathWithRestrictedProxy(TestProxyPathValidator.java:671)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:585)
+	at org.testng.internal.MethodHelper.invokeMethod(MethodHelper.java:607)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:517)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:669)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:956)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:110)
+	at org.testng.TestRunner.runWorkers(TestRunner.java:759)
+	at org.testng.TestRunner.privateRun(TestRunner.java:592)
+	at org.testng.TestRunner.run(TestRunner.java:486)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:332)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:327)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:299)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:204)
+	at org.testng.TestNG.createAndRunSuiteRunners(TestNG.java:867)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:832)
+	at org.testng.TestNG.run(TestNG.java:748)
+	at org.testng.remote.RemoteTestNG.run(RemoteTestNG.java:73)
+	at org.testng.RemoteTestNGStarter.main(RemoteTestNGStarter.java:79)
+]]>
+            </full-stacktrace>
+          </exception>
+        </test-method>
+        <test-method status="FAIL" signature="validateGsi3PathGood()" name="validateGsi3PathGood" duration-ms="2845" started-at="2009-12-27T09:49:38Z" finished-at="2009-12-27T09:49:41Z">
+          <exception class="java.security.cert.CertPathValidatorException">
+            <message>
+              <![CDATA[Certificate C=TestCA1,CN=EEC1,CN=1137184420 expired]]>
+            </message>
+            <full-stacktrace>
+              <![CDATA[java.security.cert.CertPathValidatorException: Certificate C=TestCA1,CN=EEC1,CN=1137184420 expired
+	at org.globus.security.provider.DateValidityChecker.isValid(DateValidityChecker.java:27)
+	at org.globus.security.provider.X509ProxyCertPathValidator.checkCertificate(X509ProxyCertPathValidator.java:712)
+	at org.globus.security.provider.X509ProxyCertPathValidator.validate(X509ProxyCertPathValidator.java:217)
+	at org.globus.security.provider.X509ProxyCertPathValidator.engineValidate(X509ProxyCertPathValidator.java:136)
+	at org.globus.security.provider.TestProxyPathValidator$MockProxyCertPathValidator.engineValidate(TestProxyPathValidator.java:1089)
+	at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:349)
+	at org.globus.security.provider.TestProxyPathValidator.validateGsi3PathGood(TestProxyPathValidator.java:581)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:585)
+	at org.testng.internal.MethodHelper.invokeMethod(MethodHelper.java:607)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:517)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:669)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:956)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:110)
+	at org.testng.TestRunner.runWorkers(TestRunner.java:759)
+	at org.testng.TestRunner.privateRun(TestRunner.java:592)
+	at org.testng.TestRunner.run(TestRunner.java:486)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:332)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:327)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:299)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:204)
+	at org.testng.TestNG.createAndRunSuiteRunners(TestNG.java:867)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:832)
+	at org.testng.TestNG.run(TestNG.java:748)
+	at org.testng.remote.RemoteTestNG.run(RemoteTestNG.java:73)
+	at org.testng.RemoteTestNGStarter.main(RemoteTestNGStarter.java:79)
+Caused by: java.security.cert.CertificateExpiredException: certificate expired on 20090929033107GMT+00:00
+	at org.bouncycastle.jce.provider.X509CertificateObject.checkValidity(Unknown Source)
+	at org.bouncycastle.jce.provider.X509CertificateObject.checkValidity(Unknown Source)
+	at org.globus.security.provider.DateValidityChecker.isValid(DateValidityChecker.java:25)
+	... 28 more
+]]>
+            </full-stacktrace>
+          </exception>
+        </test-method>
+      </class>
+    </test>
+  </suite>
+</testng-results>

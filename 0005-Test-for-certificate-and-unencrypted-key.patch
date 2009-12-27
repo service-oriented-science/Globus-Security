@@ -1,0 +1,190 @@
+From 98621918b9c060922ae1c59827f8bb7fbd752e41 Mon Sep 17 00:00:00 2001
+From: Rachana Ananthakrishnan <ranantha@mcs.anl.gov>
+Date: Fri, 11 Dec 2009 11:13:50 -0600
+Subject: [PATCH 5/8] Test for certificate and unencrypted key.
+
+
+Signed-off-by: Rachana Ananthakrishnan <ranantha@mcs.anl.gov>
+---
+ .../security/provider/FileBasedKeyStore.java       |    8 +-
+ .../provider/TestPEMFileBasedKeyStore.java         |   64 +++++++++++++++++--
+ .../resources/validatorTest/testeec2-private.pem   |   15 +++++
+ 3 files changed, 76 insertions(+), 11 deletions(-)
+ create mode 100644 ssl-proxy/src/test/resources/validatorTest/testeec2-private.pem
+
+diff --git a/ssl-proxy/src/main/java/org/globus/security/provider/FileBasedKeyStore.java b/ssl-proxy/src/main/java/org/globus/security/provider/FileBasedKeyStore.java
+index adb62de..576b32f 100644
+--- a/ssl-proxy/src/main/java/org/globus/security/provider/FileBasedKeyStore.java
++++ b/ssl-proxy/src/main/java/org/globus/security/provider/FileBasedKeyStore.java
+@@ -335,13 +335,13 @@ public class FileBasedKeyStore extends KeyStoreSpi {
+         }
+ 
+         // Relative to what?
+-        FileBasedCertKeyCredential credential = new FileBasedCertKeyCredential(new File(userCertFilename),
+-                new File(userKeyFilename));
++        File certFile = new File(userCertFilename);
++        File keyFile = new File(userKeyFilename);
++        FileBasedCertKeyCredential credential = new FileBasedCertKeyCredential(certFile, keyFile);
+         // What do we name this alias?
+-        String alias = userCertFilename + ":" + userKeyFilename;
++        String alias = certFile.getName() + ":" + keyFile.getName();
+         this.aliasObjectMap.put(alias, credential);
+ 
+-        // FIXME: Here the credential needs to be loaded and added to the Map.
+     }
+ 
+ 
+diff --git a/ssl-proxy/src/test/java/org/globus/security/provider/TestPEMFileBasedKeyStore.java b/ssl-proxy/src/test/java/org/globus/security/provider/TestPEMFileBasedKeyStore.java
+index f281e0a..a2de46b 100644
+--- a/ssl-proxy/src/test/java/org/globus/security/provider/TestPEMFileBasedKeyStore.java
++++ b/ssl-proxy/src/test/java/org/globus/security/provider/TestPEMFileBasedKeyStore.java
+@@ -17,6 +17,7 @@ package org.globus.security.provider;
+ 
+ import java.io.ByteArrayInputStream;
+ import java.io.ByteArrayOutputStream;
++import java.io.FileInputStream;
+ import java.io.InputStream;
+ import java.security.Key;
+ import java.security.KeyStore;
+@@ -29,7 +30,6 @@ import java.util.HashMap;
+ import java.util.Iterator;
+ import java.util.Map;
+ import java.util.Properties;
+-import java.util.Vector;
+ 
+ import org.globus.security.X509Credential;
+ import org.globus.security.filestore.DirSetupUtil;
+@@ -49,9 +49,11 @@ public class TestPEMFileBasedKeyStore {
+ 
+     DirSetupUtil trustedDirectory;
+     DirSetupUtil defaultTrustedDirectory;
+-    Vector<X509Certificate> testTrustedCertificates = new Vector<X509Certificate>();
+     FileSetupUtil proxyFile1;
+     FileSetupUtil proxyFile2;
++    FileSetupUtil certFile;
++    FileSetupUtil keyFile;
++
+ 
+     Map<FileSetupUtil, X509Certificate> trustedCertificates = new HashMap<FileSetupUtil, X509Certificate>();
+     Map<FileSetupUtil, X509Credential> proxyCertificates = new HashMap<FileSetupUtil, X509Credential>();
+@@ -106,7 +108,6 @@ public class TestPEMFileBasedKeyStore {
+             }
+         }
+ 
+-
+         String proxyFilename1 = "validatorTest/gsi3independentFromLimitedProxy.pem";
+         this.proxyFile1 = new FileSetupUtil(proxyFilename1);
+         this.proxyFile1.copyFileToTemp();
+@@ -121,6 +122,13 @@ public class TestPEMFileBasedKeyStore {
+                 new X509Credential(loader.getResourceAsStream(proxyFilename2),
+                         loader.getResourceAsStream(proxyFilename2)));
+ 
++        String certFilename = "validatorTest/testeec2.pem";
++        this.certFile = new FileSetupUtil(certFilename);
++        this.certFile.copyFileToTemp();
++        String keyFilename = "validatorTest/testeec2-private.pem";
++        this.keyFile = new FileSetupUtil(keyFilename);
++        this.keyFile.copyFileToTemp();
++
+         Security.addProvider(new GlobusProvider());
+     }
+ 
+@@ -197,28 +205,70 @@ public class TestPEMFileBasedKeyStore {
+         Certificate[] certificates = store.getCertificateChain(this.proxyFile1.getAbsoluteFilename());
+         assert (certificates != null);
+         assert (certificates instanceof X509Certificate[]);
+-
+         //     assert (this.proxyCertificates.get(this.proxyFile1.getAbsoluteFilename()).equals(certificates[0]));
+ 
+         // proxy file 2
+-        store.getKey(this.proxyFile2.getTempFilename(), null);
++        key = store.getKey(this.proxyFile2.getTempFilename(), null);
+         assert (key != null);
+         assert (key instanceof PrivateKey);
+ 
+         certificates = store.getCertificateChain(this.proxyFile1.getAbsoluteFilename());
+         assert (certificates != null);
+         assert (certificates instanceof X509Certificate[]);
+-
+ //        assert (this.proxyCertificates.get(this.proxyFile2.getTempFilename()).equals(certificates[0]));
+ 
+ 
+         // test delete
+         store.deleteEntry(this.proxyFile1.getAbsoluteFilename());
+-
+         assert (store.getCertificateChain(this.proxyFile1.getAbsoluteFilename()) == null);
+         assert (!this.proxyFile1.getTempFile().exists());
++    }
++
++    @Test
++    public void testUserCerts() throws Exception {
++
++        KeyStore store = KeyStore.getInstance("PEMFilebasedKeyStore", "Globus");
++
++        // Parameters in properties file
++        Properties properties = new Properties();
++        properties.setProperty(FileBasedKeyStore.CERTIFICATE_FILENAME,
++                this.certFile.getAbsoluteFilename());
++        properties.setProperty(FileBasedKeyStore.KEY_FILENAME,
++                this.keyFile.getAbsoluteFilename());
++        InputStream ins = null;
++        try {
++            ins = getProperties(properties);
++            store.load(ins, null);
++        } finally {
++            if (ins != null)
++                ins.close();
++        }
++
++        Enumeration aliases = store.aliases();
++        assert (aliases.hasMoreElements());
++
++        String alias = (String) aliases.nextElement();
++
++        Key key = store.getKey(alias, null);
++        assert (key != null);
++        assert (key instanceof PrivateKey);
++
++        Certificate[] chain = store.getCertificateChain(alias);
++        assert (chain != null);
++        assert (chain instanceof Certificate[]);
+ 
++        Certificate certificate = store.getCertificate(alias);
++        assert (certificate == null);
+ 
++        X509Credential x509Credential = new X509Credential(new FileInputStream(this.certFile.getAbsoluteFilename()),
++                new FileInputStream(this.keyFile.getAbsoluteFilename()));
++
++        assert (key.equals(x509Credential.getPrivateKey()));
++        Certificate[] x509CredentialChain = x509Credential.getCertificateChain();
++        assert (chain.length == x509CredentialChain.length);
++        for (int i = 0; i < chain.length; i++) {
++            assert (chain[i].equals(x509CredentialChain[i]));
++        }
+     }
+ 
+     private InputStream getProperties(Properties properties) throws Exception {
+diff --git a/ssl-proxy/src/test/resources/validatorTest/testeec2-private.pem b/ssl-proxy/src/test/resources/validatorTest/testeec2-private.pem
+new file mode 100644
+index 0000000..31d390c
+--- /dev/null
++++ b/ssl-proxy/src/test/resources/validatorTest/testeec2-private.pem
+@@ -0,0 +1,15 @@
++-----BEGIN RSA PRIVATE KEY-----
++MIICXQIBAAKBgQCnHrsbUWnSbm/z2ULEjRsXWO0ZY3Fu39WPk5+oQ7ioACrygIYR
++CPqxAuonB6FNaKEwbhOjbTT7RVfUPpnu+xBcgCMFEZbKvZekFB7I2csUyFbNXCAV
++a3uJGUxk47CrC6zG4slXhce8cettxbwe+oqFsjBobmXbKhivnhzEecFXeQIDAQAB
++AoGBAJMH84AuWZb8+NwmSprYtnwNDdTna7Yrkh3WuIH2yvBr7V0bfFhieQThVpbu
++HJkZM6+DOR3wh8uGD6a5SP87vgDmi1i8XNfuaQmSFuRNyTNNiZyhpW2TXW8cyDIe
++uoO7EscPYh+AYFR6qPhpRyFcY5V1emceLL+0Cf/b6C7HQmkxAkEA4gZzbRlmH3sb
++n3kl2HL8CZVijDCOQDr1UW4ihVAYdXeJ4t9ecvOhuQU5CmAm+Doev0V78c7GgZis
++Smlr7XycFQJBAL1Ic5zEKec+3ejnVipXA097tKapgD+BzBdKydx/odAfyLs7fW3Y
++35wJtQNAiUja+xqBIJT096Bs2dGbYpoyEtUCQGKDFUPz0gLekUeMceZJF3jF11Hq
++x9VO3SVEr18TbdWk6EAtwuivL0mI8TeIePOvwT70dfUKfpJ1jIJSOGwl55ECQQCe
++ar7oG31+nq0XOlZxRTXuFfjR69b8T+PCMsPTmbaR+6gCm/2ULAiqDa3DtQWxRiUW
++v6/HO2bsi22Z8lSJ/RKpAkAfUhvLrOH6gnVmyu4JbV/s6auRQUgOe7tSnuX+4FMy
++As25Hb6hN+U2WTyZ6f61b/1UyiPqQsTzoQ7RElseN4SN
++-----END RSA PRIVATE KEY-----
+-- 
+1.6.3.2
+

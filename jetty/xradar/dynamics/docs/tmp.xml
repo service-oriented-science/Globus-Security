@@ -1,0 +1,690 @@
+<?xml version="1.0" encoding="UTF-8"?><!-- =======================================================================
+XRadar
+Copyright (c) 2004, 2005, Kristoffer Kvam
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+Neither the name of Kristoffer Kvam nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+See licence.txt for dependancies to other open projects.
+======================================================================= -->
+<radar-report system="1.0">
+    <sources>
+        <source>
+            <source link="http://www.clarkware.com/software/JDepend.html">JDepend</source>
+        </source>
+        <source>
+            <source link="http://pmd.sourceforge.net/">PMD</source>
+        </source>
+        <source>
+            <source link="http://pmd.sourceforge.net/cpd.html">PMD-CPD</source>
+        </source>
+        <source>
+            <source link="http://www.kclee.com/clemens/java/javancss/">JavaNCSS</source>
+        </source>
+        <source>
+            <source link="http://www.spinellis.gr/sw/ckjm/">CKJM</source>
+        </source>
+        <source>
+            <source link="http://cobertura.sourceforge.net/">Cobertura</source>
+        </source>
+        <source>
+            <source link="http://checkstyle.sourceforge.net/">Checkstyle</source>
+        </source>
+    </sources>
+    <reports>
+        <report seq-id="1">
+            <version>0</version>
+            <date>Today</date>
+            <days-since-last>0</days-since-last>
+        </report>
+    </reports>
+    <packages>
+        <package name="org.globus.security.jetty" subsystem="The system">
+            <statistics>
+                <source-metrics>
+                    <total-classes>
+                        <value seq-id="1" value="1"/>
+                    </total-classes>
+                    <concrete-classes>
+                        <value seq-id="1" value="1"/>
+                    </concrete-classes>
+                    <abstract-classes>
+                        <value seq-id="1" value="0"/>
+                    </abstract-classes>
+                    <functions>
+                        <value seq-id="1" value="25"/>
+                    </functions>
+                    <ncss>
+                        <value seq-id="1" value="58"/>
+                    </ncss>
+                    <code-violations>
+                        <value seq-id="1" value="0"/>
+                    </code-violations>
+                    <classes-with-code-violations>
+                        <value seq-id="1" value="0"/>
+                    </classes-with-code-violations>
+                    <style-errors>
+                        <value seq-id="1" value="78"/>
+                    </style-errors>
+                    <classes-with-style-errors>
+                        <value seq-id="1" value="1"/>
+                    </classes-with-style-errors>
+                    <ccn>
+                        <value seq-id="1" value="25"/>
+                    </ccn>
+                    <analysed-classes>
+                        <value seq-id="1" value="1"/>
+                    </analysed-classes>
+                    <package-changed>
+                        <value seq-id="1" value="0"/>
+                    </package-changed>
+                    <classes-changed>
+                        <value seq-id="1" value="0"/>
+                    </classes-changed>
+                    <methods-changed>
+                        <value seq-id="1" value="0"/>
+                    </methods-changed>
+                    <source-statements-in-methods-changed>
+                        <value seq-id="1" value="0"/>
+                    </source-statements-in-methods-changed>
+                </source-metrics>
+                <package-oo-metrics>
+                    <afferent-coupling>
+                        <value seq-id="1" value="0"/>
+                    </afferent-coupling>
+                    <efferent-coupling>
+                        <value seq-id="1" value="6"/>
+                    </efferent-coupling>
+                    <abstractness>
+                        <value seq-id="1" value="0"/>
+                    </abstractness>
+                    <instability>
+                        <value seq-id="1" value="1"/>
+                    </instability>
+                    <distance>
+                        <value seq-id="1" value="0"/>
+                    </distance>
+                    <cycles>
+                        <value seq-id="1" value="false"/>
+                    </cycles>
+                    <has-cycles>
+                        <value seq-id="1" value="0"/>
+                    </has-cycles>
+                </package-oo-metrics>
+                <documentation-metrics>
+                    <javadocs>
+                        <value seq-id="1" value="1"/>
+                    </javadocs>
+                    <javadoc-lines>
+                        <value seq-id="1" value="8"/>
+                    </javadoc-lines>
+                    <single-comment-lines>
+                        <value seq-id="1" value="2"/>
+                    </single-comment-lines>
+                    <multi-comment-lines>
+                        <value seq-id="1" value="0"/>
+                    </multi-comment-lines>
+                </documentation-metrics>
+                <dependancy-metrics>
+                    <legal-dependencies>
+                        <value seq-id="1" value="6"/>
+                    </legal-dependencies>
+                    <illegal-dependencies>
+                        <value seq-id="1" value="0"/>
+                    </illegal-dependencies>
+                    <subsystem legal="true" name="The system">
+                        <value seq-id="1" value="6"/>
+                    </subsystem>
+                    <subsystem name="External">
+                        <value seq-id="1" value="4"/>
+                    </subsystem>
+                    <has-illegal-dependencies>
+                        <value seq-id="1" value="0"/>
+                    </has-illegal-dependencies>
+                </dependancy-metrics>
+                <test-metrics>
+                    <line-coverage>
+                        <value seq-id="1" value="0.0"/>
+                    </line-coverage>
+                    <source-statements-covered>
+                        <value seq-id="1" value="0"/>
+                    </source-statements-covered>
+                    <methods-referenced>
+                        <value seq-id="1" value="0"/>
+                    </methods-referenced>
+                    <method-coverage>
+                        <value seq-id="1" value="0"/>
+                    </method-coverage>
+                    <coverage-on-methods-changed>
+                        <value seq-id="1" value="0"/>
+                    </coverage-on-methods-changed>
+                    <source-statements-covered-on-methods-changed>
+                        <value seq-id="1" value="0"/>
+                    </source-statements-covered-on-methods-changed>
+                </test-metrics>
+                <oo-metrics>
+                    <wmc>
+                        <value seq-id="1" value="26"/>
+                    </wmc>
+                    <dit>
+                        <value seq-id="1" value="0"/>
+                    </dit>
+                    <noc>
+                        <value seq-id="1" value="0"/>
+                    </noc>
+                    <cbo>
+                        <value seq-id="1" value="3"/>
+                    </cbo>
+                    <rfc>
+                        <value seq-id="1" value="49"/>
+                    </rfc>
+                    <lcom>
+                        <value seq-id="1" value="0"/>
+                    </lcom>
+                    <ca>
+                        <value seq-id="1" value="0"/>
+                    </ca>
+                    <npm>
+                        <value seq-id="1" value="25"/>
+                    </npm>
+                </oo-metrics>
+                <bugs/>
+            </statistics>
+            <classes>
+                <class abstract="false" name="GlobusSslSocketConnector">
+                    <methods>
+                        <method name="createFactory()">
+                            <statistics>
+                                <ncss>
+                                    <value changed-since-last="false" seq-id="1" value="2"/>
+                                </ncss>
+                                <ccn>
+                                    <value changed-since-last="false" seq-id="1" value="1"/>
+                                </ccn>
+                                <line-coverage>
+                                    <value changed-since-last="false" seq-id="1" value="0.0"/>
+                                </line-coverage>
+                                <source-statements-covered>
+                                    <value changed-since-last="false" seq-id="1" value="0"/>
+                                </source-statements-covered>
+                            </statistics>
+                        </method>
+                        <method name="setCertStoreParameters(CertStoreParameters)">
+                            <statistics>
+                                <ncss>
+                                    <value changed-since-last="false" seq-id="1" value="2"/>
+                                </ncss>
+                                <ccn>
+                                    <value changed-since-last="false" seq-id="1" value="1"/>
+                                </ccn>
+                                <line-coverage>
+                                    <value changed-since-last="false" seq-id="1" value="0.0"/>
+                                </line-coverage>
+                                <source-statements-covered>
+                                    <value changed-since-last="false" seq-id="1" value="0"/>
+                                </source-statements-covered>
+                            </statistics>
+                        </method>
+                        <method name="getProvider()">
+                            <statistics>
+                                <ncss>
+                                    <value changed-since-last="false" seq-id="1" value="2"/>
+                                </ncss>
+                                <ccn>
+                                    <value changed-since-last="false" seq-id="1" value="1"/>
+                                </ccn>
+                                <line-coverage>
+                                    <value changed-since-last="false" seq-id="1" value="0.0"/>
+                                </line-coverage>
+                                <source-statements-covered>
+                                    <value changed-since-last="false" seq-id="1" value="0"/>
+                                </source-statements-covered>
+                            </statistics>
+                        </method>
+                        <method name="setProvider(String)">
+                            <statistics>
+                                <ncss>
+                                    <value changed-since-last="false" seq-id="1" value="2"/>
+                                </ncss>
+                                <ccn>
+                                    <value changed-since-last="false" seq-id="1" value="1"/>
+                                </ccn>
+                                <line-coverage>
+                                    <value changed-since-last="false" seq-id="1" value="0.0"/>
+                                </line-coverage>
+                                <source-statements-covered>
+                                    <value changed-since-last="false" seq-id="1" value="0"/>
+                                </source-statements-covered>
+                            </statistics>
+                        </method>
+                        <method name="getProtocol()">
+                            <statistics>
+                                <ncss>
+                                    <value changed-since-last="false" seq-id="1" value="2"/>
+                                </ncss>
+                                <ccn>
+                                    <value changed-since-last="false" seq-id="1" value="1"/>
+                                </ccn>
+                                <line-coverage>
+                                    <value changed-since-last="false" seq-id="1" value="0.0"/>
+                                </line-coverage>
+                                <source-statements-covered>
+                                    <value changed-since-last="false" seq-id="1" value="0"/>
+                                </source-statements-covered>
+                            </statistics>
+                        </method>
+                        <method name="setProtocol(String)">
+                            <statistics>
+                                <ncss>
+                                    <value changed-since-last="false" seq-id="1" value="2"/>
+                                </ncss>
+                                <ccn>
+                                    <value changed-since-last="false" seq-id="1" value="1"/>
+                                </ccn>
+                                <line-coverage>
+                                    <value changed-since-last="false" seq-id="1" value="0.0"/>
+                                </line-coverage>
+                                <source-statements-covered>
+                                    <value changed-since-last="false" seq-id="1" value="0"/>
+                                </source-statements-covered>
+                            </statistics>
+                        </method>
+                        <method name="getSecureRandomAlgorithm()">
+                            <statistics>
+                                <ncss>
+                                    <value changed-since-last="false" seq-id="1" value="2"/>
+                                </ncss>
+                                <ccn>
+                                    <value changed-since-last="false" seq-id="1" value="1"/>
+                                </ccn>
+                                <line-coverage>
+                                    <value changed-since-last="false" seq-id="1" value="0.0"/>
+                                </line-coverage>
+                                <source-statements-covered>
+                                    <value changed-since-last="false" seq-id="1" value="0"/>
+                                </source-statements-covered>
+                            </statistics>
+                        </method>
+                        <method name="setSecureRandomAlgorithm(String)">
+                            <statistics>
+                                <ncss>
+                                    <value changed-since-last="false" seq-id="1" value="2"/>
+                                </ncss>
+                                <ccn>
+                                    <value changed-since-last="false" seq-id="1" value="1"/>
+                                </ccn>
+                                <line-coverage>
+                                    <value changed-since-last="false" seq-id="1" value="0.0"/>
+                                </line-coverage>
+                                <source-statements-covered>
+                                    <value changed-since-last="false" seq-id="1" value="0"/>
+                                </source-statements-covered>
+                            </statistics>
+                        </method>
+                        <method name="setSigningPolicyStoreParameters(SigningPolicyStoreParameters)">
+                            <statistics>
+                                <ncss>
+                                    <value changed-since-last="false" seq-id="1" value="2"/>
+                                </ncss>
+                                <ccn>
+                                    <value changed-since-last="false" seq-id="1" value="1"/>
+                                </ccn>
+                                <line-coverage>
+                                    <value changed-since-last="false" seq-id="1" value="0.0"/>
+                                </line-coverage>
+                                <source-statements-covered>
+                                    <value changed-since-last="false" seq-id="1" value="0"/>
+                                </source-statements-covered>
+                            </statistics>
+                        </method>
+                        <method name="setPassword(String)">
+                            <statistics>
+                                <ncss>
+                                    <value changed-since-last="false" seq-id="1" value="2"/>
+                                </ncss>
+                                <ccn>
+                                    <value changed-since-last="false" seq-id="1" value="1"/>
+                                </ccn>
+                                <line-coverage>
+                                    <value changed-since-last="false" seq-id="1" value="0.0"/>
+                                </line-coverage>
+                                <source-statements-covered>
+                                    <value changed-since-last="false" seq-id="1" value="0"/>
+                                </source-statements-covered>
+                            </statistics>
+                        </method>
+                        <method name="getSslKeyManagerFactoryAlgorithm()">
+                            <statistics>
+                                <ncss>
+                                    <value changed-since-last="false" seq-id="1" value="2"/>
+                                </ncss>
+                                <ccn>
+                                    <value changed-since-last="false" seq-id="1" value="1"/>
+                                </ccn>
+                                <line-coverage>
+                                    <value changed-since-last="false" seq-id="1" value="0.0"/>
+                                </line-coverage>
+                                <source-statements-covered>
+                                    <value changed-since-last="false" seq-id="1" value="0"/>
+                                </source-statements-covered>
+                            </statistics>
+                        </method>
+                        <method name="setSslKeyManagerFactoryAlgorithm(String)">
+                            <statistics>
+                                <ncss>
+                                    <value changed-since-last="false" seq-id="1" value="2"/>
+                                </ncss>
+                                <ccn>
+                                    <value changed-since-last="false" seq-id="1" value="1"/>
+                                </ccn>
+                                <line-coverage>
+                                    <value changed-since-last="false" seq-id="1" value="0.0"/>
+                                </line-coverage>
+                                <source-statements-covered>
+                                    <value changed-since-last="false" seq-id="1" value="0"/>
+                                </source-statements-covered>
+                            </statistics>
+                        </method>
+                        <method name="setKeyPassword(String)">
+                            <statistics>
+                                <ncss>
+                                    <value changed-since-last="false" seq-id="1" value="2"/>
+                                </ncss>
+                                <ccn>
+                                    <value changed-since-last="false" seq-id="1" value="1"/>
+                                </ccn>
+                                <line-coverage>
+                                    <value changed-since-last="false" seq-id="1" value="0.0"/>
+                                </line-coverage>
+                                <source-statements-covered>
+                                    <value changed-since-last="false" seq-id="1" value="0"/>
+                                </source-statements-covered>
+                            </statistics>
+                        </method>
+                        <method name="setTrustStoreType(String)">
+                            <statistics>
+                                <ncss>
+                                    <value changed-since-last="false" seq-id="1" value="2"/>
+                                </ncss>
+                                <ccn>
+                                    <value changed-since-last="false" seq-id="1" value="1"/>
+                                </ccn>
+                                <line-coverage>
+                                    <value changed-since-last="false" seq-id="1" value="0.0"/>
+                                </line-coverage>
+                                <source-statements-covered>
+                                    <value changed-since-last="false" seq-id="1" value="0"/>
+                                </source-statements-covered>
+                            </statistics>
+                        </method>
+                        <method name="setTrustStore(String)">
+                            <statistics>
+                                <ncss>
+                                    <value changed-since-last="false" seq-id="1" value="2"/>
+                                </ncss>
+                                <ccn>
+                                    <value changed-since-last="false" seq-id="1" value="1"/>
+                                </ccn>
+                                <line-coverage>
+                                    <value changed-since-last="false" seq-id="1" value="0.0"/>
+                                </line-coverage>
+                                <source-statements-covered>
+                                    <value changed-since-last="false" seq-id="1" value="0"/>
+                                </source-statements-covered>
+                            </statistics>
+                        </method>
+                        <method name="setTrustStorePassword(String)">
+                            <statistics>
+                                <ncss>
+                                    <value changed-since-last="false" seq-id="1" value="2"/>
+                                </ncss>
+                                <ccn>
+                                    <value changed-since-last="false" seq-id="1" value="1"/>
+                                </ccn>
+                                <line-coverage>
+                                    <value changed-since-last="false" seq-id="1" value="0.0"/>
+                                </line-coverage>
+                                <source-statements-covered>
+                                    <value changed-since-last="false" seq-id="1" value="0"/>
+                                </source-statements-covered>
+                            </statistics>
+                        </method>
+                        <method name="setKeystore(String)">
+                            <statistics>
+                                <ncss>
+                                    <value changed-since-last="false" seq-id="1" value="2"/>
+                                </ncss>
+                                <ccn>
+                                    <value changed-since-last="false" seq-id="1" value="1"/>
+                                </ccn>
+                                <line-coverage>
+                                    <value changed-since-last="false" seq-id="1" value="0.0"/>
+                                </line-coverage>
+                                <source-statements-covered>
+                                    <value changed-since-last="false" seq-id="1" value="0"/>
+                                </source-statements-covered>
+                            </statistics>
+                        </method>
+                        <method name="setTrustPassword(String)">
+                            <statistics>
+                                <ncss>
+                                    <value changed-since-last="false" seq-id="1" value="2"/>
+                                </ncss>
+                                <ccn>
+                                    <value changed-since-last="false" seq-id="1" value="1"/>
+                                </ccn>
+                                <line-coverage>
+                                    <value changed-since-last="false" seq-id="1" value="0.0"/>
+                                </line-coverage>
+                                <source-statements-covered>
+                                    <value changed-since-last="false" seq-id="1" value="0"/>
+                                </source-statements-covered>
+                            </statistics>
+                        </method>
+                        <method name="setKeystoreType(String)">
+                            <statistics>
+                                <ncss>
+                                    <value changed-since-last="false" seq-id="1" value="2"/>
+                                </ncss>
+                                <ccn>
+                                    <value changed-since-last="false" seq-id="1" value="1"/>
+                                </ccn>
+                                <line-coverage>
+                                    <value changed-since-last="false" seq-id="1" value="0.0"/>
+                                </line-coverage>
+                                <source-statements-covered>
+                                    <value changed-since-last="false" seq-id="1" value="0"/>
+                                </source-statements-covered>
+                            </statistics>
+                        </method>
+                        <method name="setSslTrustManagerFactoryAlgorithm(String)">
+                            <statistics>
+                                <ncss>
+                                    <value changed-since-last="false" seq-id="1" value="2"/>
+                                </ncss>
+                                <ccn>
+                                    <value changed-since-last="false" seq-id="1" value="1"/>
+                                </ccn>
+                                <line-coverage>
+                                    <value changed-since-last="false" seq-id="1" value="0.0"/>
+                                </line-coverage>
+                                <source-statements-covered>
+                                    <value changed-since-last="false" seq-id="1" value="0"/>
+                                </source-statements-covered>
+                            </statistics>
+                        </method>
+                        <method name="setTruststore(String)">
+                            <statistics>
+                                <ncss>
+                                    <value changed-since-last="false" seq-id="1" value="2"/>
+                                </ncss>
+                                <ccn>
+                                    <value changed-since-last="false" seq-id="1" value="1"/>
+                                </ccn>
+                                <line-coverage>
+                                    <value changed-since-last="false" seq-id="1" value="0.0"/>
+                                </line-coverage>
+                                <source-statements-covered>
+                                    <value changed-since-last="false" seq-id="1" value="0"/>
+                                </source-statements-covered>
+                            </statistics>
+                        </method>
+                        <method name="setTruststoreType(String)">
+                            <statistics>
+                                <ncss>
+                                    <value changed-since-last="false" seq-id="1" value="2"/>
+                                </ncss>
+                                <ccn>
+                                    <value changed-since-last="false" seq-id="1" value="1"/>
+                                </ccn>
+                                <line-coverage>
+                                    <value changed-since-last="false" seq-id="1" value="0.0"/>
+                                </line-coverage>
+                                <source-statements-covered>
+                                    <value changed-since-last="false" seq-id="1" value="0"/>
+                                </source-statements-covered>
+                            </statistics>
+                        </method>
+                        <method name="setWantClientAuth(boolean)">
+                            <statistics>
+                                <ncss>
+                                    <value changed-since-last="false" seq-id="1" value="2"/>
+                                </ncss>
+                                <ccn>
+                                    <value changed-since-last="false" seq-id="1" value="1"/>
+                                </ccn>
+                                <line-coverage>
+                                    <value changed-since-last="false" seq-id="1" value="0.0"/>
+                                </line-coverage>
+                                <source-statements-covered>
+                                    <value changed-since-last="false" seq-id="1" value="0"/>
+                                </source-statements-covered>
+                            </statistics>
+                        </method>
+                        <method name="setHandshakeTimeout(int)">
+                            <statistics>
+                                <ncss>
+                                    <value changed-since-last="false" seq-id="1" value="2"/>
+                                </ncss>
+                                <ccn>
+                                    <value changed-since-last="false" seq-id="1" value="1"/>
+                                </ccn>
+                                <line-coverage>
+                                    <value changed-since-last="false" seq-id="1" value="0.0"/>
+                                </line-coverage>
+                                <source-statements-covered>
+                                    <value changed-since-last="false" seq-id="1" value="0"/>
+                                </source-statements-covered>
+                            </statistics>
+                        </method>
+                        <method name="setSSLConfigurator(SSLConfigurator)">
+                            <statistics>
+                                <ncss>
+                                    <value changed-since-last="false" seq-id="1" value="2"/>
+                                </ncss>
+                                <ccn>
+                                    <value changed-since-last="false" seq-id="1" value="1"/>
+                                </ccn>
+                                <line-coverage>
+                                    <value changed-since-last="false" seq-id="1" value="0.0"/>
+                                </line-coverage>
+                                <source-statements-covered>
+                                    <value changed-since-last="false" seq-id="1" value="0"/>
+                                </source-statements-covered>
+                            </statistics>
+                        </method>
+                    </methods>
+                    <class-availability>
+                        <report changed-since-last="false" seq-id="1"/>
+                    </class-availability>
+                </class>
+            </classes>
+            <package-availability>
+                <report seq-id="1"/>
+            </package-availability>
+        </package>
+    </packages>
+    <defined-metrics>
+        <system>
+            <metric abbreviation="TQ" name="Total Quality" type="aggregate">
+                <value changed-since-last="false" seq-id="1" value="0.5617307692307691"/>
+                <metric abbreviation="TS" name="Test Suite" type="aggregate">
+                    <value changed-since-last="false" seq-id="1" value="0"/>
+                    <metric abbreviation="TCU" name="Unit Test Coverage" type="value">
+                        <value changed-since-last="false" seq-id="1" value="0"/>
+                    </metric>
+                </metric>
+                <metric abbreviation="ARCH" name="Architecture" type="aggregate">
+                    <value changed-since-last="false" seq-id="1" value="1"/>
+                    <metric abbreviation="MOD" name="Modularisation" type="value">
+                        <value changed-since-last="false" seq-id="1" value="1"/>
+                    </metric>
+                    <metric abbreviation="COH" name="Cohesion" type="value">
+                        <value changed-since-last="false" seq-id="1" value="1"/>
+                    </metric>
+                </metric>
+                <metric abbreviation="CODE" name="Code Quality" type="aggregate">
+                    <value changed-since-last="false" seq-id="1" value="0.7057692307692307"/>
+                    <metric abbreviation="DOC" name="Documentation" type="value">
+                        <value changed-since-last="false" seq-id="1" value="0.038461538461538464"/>
+                    </metric>
+                    <metric abbreviation="DRY" name="DRYness" type="value">
+                        <value changed-since-last="false" seq-id="1" value="1"/>
+                    </metric>
+                    <metric abbreviation="FRE" name="Freshness" type="value">
+                        <value changed-since-last="false" seq-id="1" value="1"/>
+                    </metric>
+                    <metric abbreviation="STY" name="Stylishness" type="value">
+                        <value changed-since-last="false" seq-id="1" value="0"/>
+                    </metric>
+                </metric>
+            </metric>
+        </system>
+        <subsystems>
+            <subsystem name="The system">
+                <metric abbreviation="TQ" name="Total Quality" type="aggregate">
+                    <value changed-since-last="false" seq-id="1" value="0.5617307692307691"/>
+                    <metric abbreviation="TS" name="Test Suite" type="aggregate">
+                        <value changed-since-last="false" seq-id="1" value="0"/>
+                        <metric abbreviation="TCU" name="Unit Test Coverage" type="value">
+                            <value changed-since-last="false" seq-id="1" value="0"/>
+                        </metric>
+                    </metric>
+                    <metric abbreviation="ARCH" name="Architecture" type="aggregate">
+                        <value changed-since-last="false" seq-id="1" value="1"/>
+                        <metric abbreviation="MOD" name="Modularisation" type="value">
+                            <value changed-since-last="false" seq-id="1" value="1"/>
+                        </metric>
+                        <metric abbreviation="COH" name="Cohesion" type="value">
+                            <value changed-since-last="false" seq-id="1" value="1"/>
+                        </metric>
+                    </metric>
+                    <metric abbreviation="CODE" name="Code Quality" type="aggregate">
+                        <value changed-since-last="false" seq-id="1" value="0.7057692307692307"/>
+                        <metric abbreviation="DOC" name="Documentation" type="value">
+                            <value changed-since-last="false" seq-id="1" value="0.038461538461538464"/>
+                        </metric>
+                        <metric abbreviation="DRY" name="DRYness" type="value">
+                            <value changed-since-last="false" seq-id="1" value="1"/>
+                        </metric>
+                        <metric abbreviation="FRE" name="Freshness" type="value">
+                            <value changed-since-last="false" seq-id="1" value="1"/>
+                        </metric>
+                        <metric abbreviation="STY" name="Stylishness" type="value">
+                            <value changed-since-last="false" seq-id="1" value="0"/>
+                        </metric>
+                    </metric>
+                </metric>
+            </subsystem>
+        </subsystems>
+    </defined-metrics>
+    <subsystems>
+        <subsystem name="The system"/>
+    </subsystems>
+</radar-report>

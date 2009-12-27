@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Globus-Security" failures="10" tests="12" time="42.547" errors="0">
+  <properties/>
+  <testcase name="validateRejectLimitedCheck" time="29.119" classname="org.globus.security.provider.TestProxyPathValidator">
+    <failure type="java.security.cert.CertPathValidatorException" message="Certificate C=TestCA1,CN=EEC1,CN=limited proxy expired">
+      <![CDATA[java.security.cert.CertPathValidatorException: Certificate C=TestCA1,CN=EEC1,CN=limited proxy expired
+	at org.globus.security.provider.DateValidityChecker.isValid(DateValidityChecker.java:27)
+	at org.globus.security.provider.X509ProxyCertPathValidator.checkCertificate(X509ProxyCertPathValidator.java:712)
+	at org.globus.security.provider.X509ProxyCertPathValidator.validate(X509ProxyCertPathValidator.java:217)
+	at org.globus.security.provider.X509ProxyCertPathValidator.engineValidate(X509ProxyCertPathValidator.java:136)
+	at org.globus.security.provider.TestProxyPathValidator$MockProxyCertPathValidator.engineValidate(TestProxyPathValidator.java:1089)
+	at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:349)
+	at org.globus.security.provider.TestProxyPathValidator.validateRejectLimitedCheck(TestProxyPathValidator.java:514)
+Caused by: java.security.cert.CertificateExpiredException: certificate expired on 20090929033105GMT+00:00
+	at org.bouncycastle.jce.provider.X509CertificateObject.checkValidity(Unknown Source)
+	at org.bouncycastle.jce.provider.X509CertificateObject.checkValidity(Unknown Source)
+	at org.globus.security.provider.DateValidityChecker.isValid(DateValidityChecker.java:25)
+	... 28 more
+... Removed 22 stack frames]]>
+    </failure>
+  </testcase>
+  <testcase name="validateGsi3PathGood" time="2.845" classname="org.globus.security.provider.TestProxyPathValidator">
+    <failure type="java.security.cert.CertPathValidatorException" message="Certificate C=TestCA1,CN=EEC1,CN=1137184420 expired">
+      <![CDATA[java.security.cert.CertPathValidatorException: Certificate C=TestCA1,CN=EEC1,CN=1137184420 expired
+	at org.globus.security.provider.DateValidityChecker.isValid(DateValidityChecker.java:27)
+	at org.globus.security.provider.X509ProxyCertPathValidator.checkCertificate(X509ProxyCertPathValidator.java:712)
+	at org.globus.security.provider.X509ProxyCertPathValidator.validate(X509ProxyCertPathValidator.java:217)
+	at org.globus.security.provider.X509ProxyCertPathValidator.engineValidate(X509ProxyCertPathValidator.java:136)
+	at org.globus.security.provider.TestProxyPathValidator$MockProxyCertPathValidator.engineValidate(TestProxyPathValidator.java:1089)
+	at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:349)
+	at org.globus.security.provider.TestProxyPathValidator.validateGsi3PathGood(TestProxyPathValidator.java:581)
+Caused by: java.security.cert.CertificateExpiredException: certificate expired on 20090929033107GMT+00:00
+	at org.bouncycastle.jce.provider.X509CertificateObject.checkValidity(Unknown Source)
+	at org.bouncycastle.jce.provider.X509CertificateObject.checkValidity(Unknown Source)
+	at org.globus.security.provider.DateValidityChecker.isValid(DateValidityChecker.java:25)
+	... 28 more
+... Removed 22 stack frames]]>
+    </failure>
+  </testcase>
+  <testcase name="validateGsi2PathGood" time="1.597" classname="org.globus.security.provider.TestProxyPathValidator">
+    <failure type="java.lang.NullPointerException">
+      <![CDATA[java.lang.NullPointerException
+	at org.globus.security.provider.TestProxyPathValidator$TestPolicyStore.getSigningPolicy(TestProxyPathValidator.java:1112)
+	at org.globus.security.provider.SigningPolicyChecker.isValid(SigningPolicyChecker.java:51)
+	at org.globus.security.provider.X509ProxyCertPathValidator.checkCertificate(X509ProxyCertPathValidator.java:712)
+	at org.globus.security.provider.X509ProxyCertPathValidator.validate(X509ProxyCertPathValidator.java:217)
+	at org.globus.security.provider.X509ProxyCertPathValidator.engineValidate(X509ProxyCertPathValidator.java:136)
+	at org.globus.security.provider.TestProxyPathValidator$MockProxyCertPathValidator.engineValidate(TestProxyPathValidator.java:1089)
+	at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:349)
+	at org.globus.security.provider.TestProxyPathValidator.validateGsi2PathGood(TestProxyPathValidator.java:458)
+... Removed 22 stack frames]]>
+    </failure>
+  </testcase>
+  <testcase name="testCrlsChecks" time="2.805" classname="org.globus.security.provider.TestProxyPathValidator">
+    <failure type="java.security.cert.CertPathValidatorException" message="Certificate O=test CA1,OU=simple ca,CN=user1 expired">
+      <![CDATA[java.security.cert.CertPathValidatorException: Certificate O=test CA1,OU=simple ca,CN=user1 expired
+	at org.globus.security.provider.DateValidityChecker.isValid(DateValidityChecker.java:27)
+	at org.globus.security.provider.X509ProxyCertPathValidator.checkCertificate(X509ProxyCertPathValidator.java:712)
+	at org.globus.security.provider.X509ProxyCertPathValidator.validate(X509ProxyCertPathValidator.java:217)
+	at org.globus.security.provider.X509ProxyCertPathValidator.engineValidate(X509ProxyCertPathValidator.java:136)
+	at org.globus.security.provider.TestProxyPathValidator$MockProxyCertPathValidator.engineValidate(TestProxyPathValidator.java:1089)
+	at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:349)
+	at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:331)
+	at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:316)
+	at org.globus.security.provider.TestProxyPathValidator.testCrlsChecks(TestProxyPathValidator.java:972)
+Caused by: java.security.cert.CertificateExpiredException: certificate expired on 20090215235910GMT+00:00
+	at org.bouncycastle.jce.provider.X509CertificateObject.checkValidity(Unknown Source)
+	at org.bouncycastle.jce.provider.X509CertificateObject.checkValidity(Unknown Source)
+	at org.globus.security.provider.DateValidityChecker.isValid(DateValidityChecker.java:25)
+	... 30 more
+... Removed 22 stack frames]]>
+    </failure>
+  </testcase>
+  <testcase name="validatePathWithRestrictedProxy" time="1.34" classname="org.globus.security.provider.TestProxyPathValidator">
+    <failure type="java.lang.AssertionError">
+      <![CDATA[java.lang.AssertionError
+	at org.globus.security.provider.TestProxyPathValidator.validateError(TestProxyPathValidator.java:390)
+	at org.globus.security.provider.TestProxyPathValidator.validatePathWithRestrictedProxy(TestProxyPathValidator.java:671)
+... Removed 22 stack frames]]>
+    </failure>
+  </testcase>
+  <testcase name="validatePathCAPathConstraint" time="4.115" classname="org.globus.security.provider.TestProxyPathValidator">
+    <failure type="java.security.cert.CertPathValidatorException" message="Certificate DC=gov,DC=fnal,O=Fermilab,OU=People,CN=Vijay . Sekhri,UID=sekhri expired">
+      <![CDATA[java.security.cert.CertPathValidatorException: Certificate DC=gov,DC=fnal,O=Fermilab,OU=People,CN=Vijay . Sekhri,UID=sekhri expired
+	at org.globus.security.provider.DateValidityChecker.isValid(DateValidityChecker.java:27)
+	at org.globus.security.provider.X509ProxyCertPathValidator.checkCertificate(X509ProxyCertPathValidator.java:712)
+	at org.globus.security.provider.X509ProxyCertPathValidator.validate(X509ProxyCertPathValidator.java:217)
+	at org.globus.security.provider.X509ProxyCertPathValidator.engineValidate(X509ProxyCertPathValidator.java:136)
+	at org.globus.security.provider.TestProxyPathValidator$MockProxyCertPathValidator.engineValidate(TestProxyPathValidator.java:1089)
+	at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:349)
+	at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:331)
+	at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:316)
+	at org.globus.security.provider.TestProxyPathValidator.validatePathCAPathConstraint(TestProxyPathValidator.java:834)
+Caused by: java.security.cert.CertificateExpiredException: certificate expired on 20030424200032GMT+00:00
+	at org.bouncycastle.jce.provider.X509CertificateObject.checkValidity(Unknown Source)
+	at org.bouncycastle.jce.provider.X509CertificateObject.checkValidity(Unknown Source)
+	at org.globus.security.provider.DateValidityChecker.isValid(DateValidityChecker.java:25)
+	... 30 more
+... Removed 22 stack frames]]>
+    </failure>
+  </testcase>
+  <testcase name="validatePathProxyPathConstraint" time="0.019" classname="org.globus.security.provider.TestProxyPathValidator">
+    <failure type="java.security.cert.CertPathValidatorException" message="Certificate C=TestCA1,CN=EEC1,CN=1352712353 expired">
+      <![CDATA[java.security.cert.CertPathValidatorException: Certificate C=TestCA1,CN=EEC1,CN=1352712353 expired
+	at org.globus.security.provider.DateValidityChecker.isValid(DateValidityChecker.java:27)
+	at org.globus.security.provider.X509ProxyCertPathValidator.checkCertificate(X509ProxyCertPathValidator.java:712)
+	at org.globus.security.provider.X509ProxyCertPathValidator.validate(X509ProxyCertPathValidator.java:217)
+	at org.globus.security.provider.X509ProxyCertPathValidator.engineValidate(X509ProxyCertPathValidator.java:136)
+	at org.globus.security.provider.TestProxyPathValidator$MockProxyCertPathValidator.engineValidate(TestProxyPathValidator.java:1089)
+	at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:349)
+	at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:331)
+	at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:316)
+	at org.globus.security.provider.TestProxyPathValidator.validatePathProxyPathConstraint(TestProxyPathValidator.java:791)
+Caused by: java.security.cert.CertificateExpiredException: certificate expired on 20090929033111GMT+00:00
+	at org.bouncycastle.jce.provider.X509CertificateObject.checkValidity(Unknown Source)
+	at org.bouncycastle.jce.provider.X509CertificateObject.checkValidity(Unknown Source)
+	at org.globus.security.provider.DateValidityChecker.isValid(DateValidityChecker.java:25)
+	... 30 more
+... Removed 22 stack frames]]>
+    </failure>
+  </testcase>
+  <testcase name="testNoBasicConstraintsExtension" time="0.0020" classname="org.globus.security.provider.TestProxyPathValidator">
+    <failure type="java.lang.NullPointerException">
+      <![CDATA[java.lang.NullPointerException
+	at org.globus.security.provider.TestProxyPathValidator$TestPolicyStore.getSigningPolicy(TestProxyPathValidator.java:1112)
+	at org.globus.security.provider.SigningPolicyChecker.isValid(SigningPolicyChecker.java:51)
+	at org.globus.security.provider.X509ProxyCertPathValidator.checkCertificate(X509ProxyCertPathValidator.java:712)
+	at org.globus.security.provider.X509ProxyCertPathValidator.validate(X509ProxyCertPathValidator.java:217)
+	at org.globus.security.provider.X509ProxyCertPathValidator.engineValidate(X509ProxyCertPathValidator.java:136)
+	at org.globus.security.provider.TestProxyPathValidator$MockProxyCertPathValidator.engineValidate(TestProxyPathValidator.java:1089)
+	at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:349)
+	at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:331)
+	at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:316)
+	at org.globus.security.provider.TestProxyPathValidator.testNoBasicConstraintsExtension(TestProxyPathValidator.java:950)
+... Removed 22 stack frames]]>
+    </failure>
+  </testcase>
+  <testcase name="testKeyUsage" time="0.021" classname="org.globus.security.provider.TestProxyPathValidator">
+    <failure type="java.security.cert.CertPathValidatorException" message="Certificate O=doesciencegrid.org,OU=People,CN=Vijaya Lakshmi Natarajan 17908,CN=proxy expired">
+      <![CDATA[java.security.cert.CertPathValidatorException: Certificate O=doesciencegrid.org,OU=People,CN=Vijaya Lakshmi Natarajan 17908,CN=proxy expired
+	at org.globus.security.provider.DateValidityChecker.isValid(DateValidityChecker.java:27)
+	at org.globus.security.provider.X509ProxyCertPathValidator.checkCertificate(X509ProxyCertPathValidator.java:712)
+	at org.globus.security.provider.X509ProxyCertPathValidator.validate(X509ProxyCertPathValidator.java:217)
+	at org.globus.security.provider.X509ProxyCertPathValidator.engineValidate(X509ProxyCertPathValidator.java:136)
+	at org.globus.security.provider.TestProxyPathValidator$MockProxyCertPathValidator.engineValidate(TestProxyPathValidator.java:1089)
+	at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:349)
+	at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:331)
+	at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:316)
+	at org.globus.security.provider.TestProxyPathValidator.testKeyUsage(TestProxyPathValidator.java:921)
+Caused by: java.security.cert.CertificateExpiredException: certificate expired on 20030118101622GMT+00:00
+	at org.bouncycastle.jce.provider.X509CertificateObject.checkValidity(Unknown Source)
+	at org.bouncycastle.jce.provider.X509CertificateObject.checkValidity(Unknown Source)
+	at org.globus.security.provider.DateValidityChecker.isValid(DateValidityChecker.java:25)
+	... 30 more
+... Removed 22 stack frames]]>
+    </failure>
+  </testcase>
+  <testcase name="validatePathMixedProxy" time="0.013" classname="org.globus.security.provider.TestProxyPathValidator">
+    <failure type="java.lang.AssertionError">
+      <![CDATA[java.lang.AssertionError
+	at org.globus.security.provider.TestProxyPathValidator.validateError(TestProxyPathValidator.java:390)
+	at org.globus.security.provider.TestProxyPathValidator.validatePathMixedProxy(TestProxyPathValidator.java:762)
+... Removed 22 stack frames]]>
+    </failure>
+  </testcase>
+  <testcase name="validatePathBad" time="0.0050" classname="org.globus.security.provider.TestProxyPathValidator"/>
+  <testcase name="testSigningPolicy" time="0.018" classname="org.globus.security.provider.TestProxyPathValidator"/>
+</testsuite>

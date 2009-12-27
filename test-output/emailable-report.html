@@ -1,0 +1,253 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>TestNG:  Unit Test</title>
+<style type="text/css">
+table caption,table.info_table,table.param,table.passed,table.failed {margin-bottom:10px;border:1px solid #000099;border-collapse:collapse;empty-cells:show;}
+table.info_table td,table.info_table th,table.param td,table.param th,table.passed td,table.passed th,table.failed td,table.failed th {
+border:1px solid #000099;padding:.25em .5em .25em .5em
+}
+table.param th {vertical-align:bottom}
+td.numi,th.numi,td.numi_attn {
+text-align:right
+}
+tr.total td {font-weight:bold}
+table caption {
+text-align:center;font-weight:bold;
+}
+table.passed tr.stripe td,table tr.passedodd td {background-color: #00AA00;}
+table.passed td,table tr.passedeven td {background-color: #33FF33;}
+table.passed tr.stripe td,table tr.skippedodd td {background-color: #cccccc;}
+table.passed td,table tr.skippedodd td {background-color: #dddddd;}
+table.failed tr.stripe td,table tr.failedodd td,table.param td.numi_attn {background-color: #FF3333;}
+table.failed td,table tr.failedeven td,table.param tr.stripe td.numi_attn {background-color: #DD0000;}
+tr.stripe td,tr.stripe th {background-color: #E6EBF9;}
+p.totop {font-size:85%;text-align:center;border-bottom:2px black solid}
+div.shootout {padding:2em;border:3px #4854A8 solid}
+</style>
+</head>
+<body>
+<table cellspacing=0 cellpadding=0 class="param">
+<tr><th>Test</th><th class="numi">Methods<br/>Passed</th><th class="numi">Scenarios<br/>Passed</th><th class="numi"># skipped</th><th class="numi"># failed</th><th class="numi">Total<br/>Time</th><th class="numi">Included<br/>Groups</th><th class="numi">Excluded<br/>Groups</th></tr>
+<tr><td style="text-align:left;padding-right:2em">Globus-Security</td><td class="numi">2</td><td class="numi">2</td><td class="numi">0</td><td class="numi_attn">10</td><td class="numi">42.5 seconds</td><td class="numi"></td><td class="numi"></td></tr>
+</table>
+<a id="summary"></a>
+<table cellspacing=0 cellpadding=0 class="passed">
+<tr><th>Class</th><th>Method</th><th># of<br/>Scenarios</th><th>Time<br/>(Msecs)</th></tr>
+<tr><th colspan="4">Globus-Security &#8212; failed</th></tr>
+<tr class="failedodd"><td rowspan="10">org.globus.security.provider.TestProxyPathValidator<td><a href="#m1"><b>testCrlsChecks</b> </a></td><td class="numi">1</td><td class="numi">2805</td></tr><tr class="failedodd"><td><a href="#m2"><b>testKeyUsage</b> </a></td><td class="numi">1</td><td class="numi">21</td></tr><tr class="failedodd"><td><a href="#m3"><b>testNoBasicConstraintsExtension</b> </a></td><td class="numi">1</td><td class="numi">2</td></tr><tr class="failedodd"><td><a href="#m4"><b>validateGsi2PathGood</b> </a></td><td class="numi">1</td><td class="numi">1597</td></tr><tr class="failedodd"><td><a href="#m5"><b>validateGsi3PathGood</b> </a></td><td class="numi">1</td><td class="numi">2845</td></tr><tr class="failedodd"><td><a href="#m6"><b>validatePathCAPathConstraint</b> </a></td><td class="numi">1</td><td class="numi">4115</td></tr><tr class="failedodd"><td><a href="#m7"><b>validatePathMixedProxy</b> </a></td><td class="numi">1</td><td class="numi">13</td></tr><tr class="failedodd"><td><a href="#m8"><b>validatePathProxyPathConstraint</b> </a></td><td class="numi">1</td><td class="numi">19</td></tr><tr class="failedodd"><td><a href="#m9"><b>validatePathWithRestrictedProxy</b> </a></td><td class="numi">1</td><td class="numi">1340</td></tr><tr class="failedodd"><td><a href="#m10"><b>validateRejectLimitedCheck</b> </a></td><td class="numi">1</td><td class="numi">29119</td></tr>
+<tr><th colspan="4">Globus-Security &#8212; passed</th></tr>
+<tr class="passedodd"><td rowspan="2">org.globus.security.provider.TestProxyPathValidator<td><a href="#m11"><b>testSigningPolicy</b> </a></td><td class="numi">1</td><td class="numi">18</td></tr><tr class="passedodd"><td><a href="#m12"><b>validatePathBad</b> </a></td><td class="numi">1</td><td class="numi">5</td></tr>
+</table>
+<h1>Globus-Security</h1>
+<a id="m1"></a><h2>org.globus.security.provider.TestProxyPathValidator:testCrlsChecks</h2>
+<div style="padding-left:3em">
+<p>Certificate O=test CA1,OU=simple ca,CN=user1 expired</p>
+org.globus.security.provider.DateValidityChecker.isValid(DateValidityChecker.java:27)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.checkCertificate(X509ProxyCertPathValidator.java:712)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.validate(X509ProxyCertPathValidator.java:217)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.engineValidate(X509ProxyCertPathValidator.java:136)
+<br/>at org.globus.security.provider.TestProxyPathValidator$MockProxyCertPathValidator.engineValidate(TestProxyPathValidator.java:1089)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:349)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:331)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:316)
+<br/>at org.globus.security.provider.TestProxyPathValidator.testCrlsChecks(TestProxyPathValidator.java:972)
+<br/>23 lines not shown
+<p>Caused by certificate expired on 20090215235910GMT+00:00</p>
+org.bouncycastle.jce.provider.X509CertificateObject.checkValidity(Unknown Source)
+<br/>at org.bouncycastle.jce.provider.X509CertificateObject.checkValidity(Unknown Source)
+<br/>at org.globus.security.provider.DateValidityChecker.isValid(DateValidityChecker.java:25)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.checkCertificate(X509ProxyCertPathValidator.java:712)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.validate(X509ProxyCertPathValidator.java:217)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.engineValidate(X509ProxyCertPathValidator.java:136)
+<br/>at org.globus.security.provider.TestProxyPathValidator$MockProxyCertPathValidator.engineValidate(TestProxyPathValidator.java:1089)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:349)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:331)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:316)
+<br/>at org.globus.security.provider.TestProxyPathValidator.testCrlsChecks(TestProxyPathValidator.java:972)
+<br/>23 lines not shown
+</div>
+<p class="totop"><a href="#summary">back to summary</a></p>
+<a id="m2"></a><h2>org.globus.security.provider.TestProxyPathValidator:testKeyUsage</h2>
+<div style="padding-left:3em">
+<p>Certificate O=doesciencegrid.org,OU=People,CN=Vijaya Lakshmi Natarajan 17908,CN=proxy expired</p>
+org.globus.security.provider.DateValidityChecker.isValid(DateValidityChecker.java:27)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.checkCertificate(X509ProxyCertPathValidator.java:712)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.validate(X509ProxyCertPathValidator.java:217)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.engineValidate(X509ProxyCertPathValidator.java:136)
+<br/>at org.globus.security.provider.TestProxyPathValidator$MockProxyCertPathValidator.engineValidate(TestProxyPathValidator.java:1089)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:349)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:331)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:316)
+<br/>at org.globus.security.provider.TestProxyPathValidator.testKeyUsage(TestProxyPathValidator.java:921)
+<br/>23 lines not shown
+<p>Caused by certificate expired on 20030118101622GMT+00:00</p>
+org.bouncycastle.jce.provider.X509CertificateObject.checkValidity(Unknown Source)
+<br/>at org.bouncycastle.jce.provider.X509CertificateObject.checkValidity(Unknown Source)
+<br/>at org.globus.security.provider.DateValidityChecker.isValid(DateValidityChecker.java:25)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.checkCertificate(X509ProxyCertPathValidator.java:712)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.validate(X509ProxyCertPathValidator.java:217)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.engineValidate(X509ProxyCertPathValidator.java:136)
+<br/>at org.globus.security.provider.TestProxyPathValidator$MockProxyCertPathValidator.engineValidate(TestProxyPathValidator.java:1089)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:349)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:331)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:316)
+<br/>at org.globus.security.provider.TestProxyPathValidator.testKeyUsage(TestProxyPathValidator.java:921)
+<br/>23 lines not shown
+</div>
+<p class="totop"><a href="#summary">back to summary</a></p>
+<a id="m3"></a><h2>org.globus.security.provider.TestProxyPathValidator:testNoBasicConstraintsExtension</h2>
+<div style="padding-left:3em">
+<p>null</p>
+org.globus.security.provider.TestProxyPathValidator$TestPolicyStore.getSigningPolicy(TestProxyPathValidator.java:1112)
+<br/>at org.globus.security.provider.SigningPolicyChecker.isValid(SigningPolicyChecker.java:51)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.checkCertificate(X509ProxyCertPathValidator.java:712)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.validate(X509ProxyCertPathValidator.java:217)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.engineValidate(X509ProxyCertPathValidator.java:136)
+<br/>at org.globus.security.provider.TestProxyPathValidator$MockProxyCertPathValidator.engineValidate(TestProxyPathValidator.java:1089)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:349)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:331)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:316)
+<br/>at org.globus.security.provider.TestProxyPathValidator.testNoBasicConstraintsExtension(TestProxyPathValidator.java:950)
+<br/>23 lines not shown
+</div>
+<p class="totop"><a href="#summary">back to summary</a></p>
+<a id="m4"></a><h2>org.globus.security.provider.TestProxyPathValidator:validateGsi2PathGood</h2>
+<div style="padding-left:3em">
+<p>null</p>
+org.globus.security.provider.TestProxyPathValidator$TestPolicyStore.getSigningPolicy(TestProxyPathValidator.java:1112)
+<br/>at org.globus.security.provider.SigningPolicyChecker.isValid(SigningPolicyChecker.java:51)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.checkCertificate(X509ProxyCertPathValidator.java:712)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.validate(X509ProxyCertPathValidator.java:217)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.engineValidate(X509ProxyCertPathValidator.java:136)
+<br/>at org.globus.security.provider.TestProxyPathValidator$MockProxyCertPathValidator.engineValidate(TestProxyPathValidator.java:1089)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:349)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validateGsi2PathGood(TestProxyPathValidator.java:458)
+<br/>23 lines not shown
+</div>
+<p class="totop"><a href="#summary">back to summary</a></p>
+<a id="m5"></a><h2>org.globus.security.provider.TestProxyPathValidator:validateGsi3PathGood</h2>
+<div style="padding-left:3em">
+<p>Certificate C=TestCA1,CN=EEC1,CN=1137184420 expired</p>
+org.globus.security.provider.DateValidityChecker.isValid(DateValidityChecker.java:27)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.checkCertificate(X509ProxyCertPathValidator.java:712)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.validate(X509ProxyCertPathValidator.java:217)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.engineValidate(X509ProxyCertPathValidator.java:136)
+<br/>at org.globus.security.provider.TestProxyPathValidator$MockProxyCertPathValidator.engineValidate(TestProxyPathValidator.java:1089)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:349)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validateGsi3PathGood(TestProxyPathValidator.java:581)
+<br/>23 lines not shown
+<p>Caused by certificate expired on 20090929033107GMT+00:00</p>
+org.bouncycastle.jce.provider.X509CertificateObject.checkValidity(Unknown Source)
+<br/>at org.bouncycastle.jce.provider.X509CertificateObject.checkValidity(Unknown Source)
+<br/>at org.globus.security.provider.DateValidityChecker.isValid(DateValidityChecker.java:25)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.checkCertificate(X509ProxyCertPathValidator.java:712)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.validate(X509ProxyCertPathValidator.java:217)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.engineValidate(X509ProxyCertPathValidator.java:136)
+<br/>at org.globus.security.provider.TestProxyPathValidator$MockProxyCertPathValidator.engineValidate(TestProxyPathValidator.java:1089)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:349)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validateGsi3PathGood(TestProxyPathValidator.java:581)
+<br/>23 lines not shown
+</div>
+<p class="totop"><a href="#summary">back to summary</a></p>
+<a id="m6"></a><h2>org.globus.security.provider.TestProxyPathValidator:validatePathCAPathConstraint</h2>
+<div style="padding-left:3em">
+<p>Certificate DC=gov,DC=fnal,O=Fermilab,OU=People,CN=Vijay . Sekhri,UID=sekhri expired</p>
+org.globus.security.provider.DateValidityChecker.isValid(DateValidityChecker.java:27)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.checkCertificate(X509ProxyCertPathValidator.java:712)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.validate(X509ProxyCertPathValidator.java:217)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.engineValidate(X509ProxyCertPathValidator.java:136)
+<br/>at org.globus.security.provider.TestProxyPathValidator$MockProxyCertPathValidator.engineValidate(TestProxyPathValidator.java:1089)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:349)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:331)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:316)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validatePathCAPathConstraint(TestProxyPathValidator.java:834)
+<br/>23 lines not shown
+<p>Caused by certificate expired on 20030424200032GMT+00:00</p>
+org.bouncycastle.jce.provider.X509CertificateObject.checkValidity(Unknown Source)
+<br/>at org.bouncycastle.jce.provider.X509CertificateObject.checkValidity(Unknown Source)
+<br/>at org.globus.security.provider.DateValidityChecker.isValid(DateValidityChecker.java:25)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.checkCertificate(X509ProxyCertPathValidator.java:712)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.validate(X509ProxyCertPathValidator.java:217)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.engineValidate(X509ProxyCertPathValidator.java:136)
+<br/>at org.globus.security.provider.TestProxyPathValidator$MockProxyCertPathValidator.engineValidate(TestProxyPathValidator.java:1089)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:349)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:331)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:316)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validatePathCAPathConstraint(TestProxyPathValidator.java:834)
+<br/>23 lines not shown
+</div>
+<p class="totop"><a href="#summary">back to summary</a></p>
+<a id="m7"></a><h2>org.globus.security.provider.TestProxyPathValidator:validatePathMixedProxy</h2>
+<div style="padding-left:3em">
+<p>null</p>
+org.globus.security.provider.TestProxyPathValidator.validateError(TestProxyPathValidator.java:390)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validatePathMixedProxy(TestProxyPathValidator.java:762)
+<br/>23 lines not shown
+</div>
+<p class="totop"><a href="#summary">back to summary</a></p>
+<a id="m8"></a><h2>org.globus.security.provider.TestProxyPathValidator:validatePathProxyPathConstraint</h2>
+<div style="padding-left:3em">
+<p>Certificate C=TestCA1,CN=EEC1,CN=1352712353 expired</p>
+org.globus.security.provider.DateValidityChecker.isValid(DateValidityChecker.java:27)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.checkCertificate(X509ProxyCertPathValidator.java:712)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.validate(X509ProxyCertPathValidator.java:217)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.engineValidate(X509ProxyCertPathValidator.java:136)
+<br/>at org.globus.security.provider.TestProxyPathValidator$MockProxyCertPathValidator.engineValidate(TestProxyPathValidator.java:1089)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:349)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:331)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:316)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validatePathProxyPathConstraint(TestProxyPathValidator.java:791)
+<br/>23 lines not shown
+<p>Caused by certificate expired on 20090929033111GMT+00:00</p>
+org.bouncycastle.jce.provider.X509CertificateObject.checkValidity(Unknown Source)
+<br/>at org.bouncycastle.jce.provider.X509CertificateObject.checkValidity(Unknown Source)
+<br/>at org.globus.security.provider.DateValidityChecker.isValid(DateValidityChecker.java:25)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.checkCertificate(X509ProxyCertPathValidator.java:712)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.validate(X509ProxyCertPathValidator.java:217)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.engineValidate(X509ProxyCertPathValidator.java:136)
+<br/>at org.globus.security.provider.TestProxyPathValidator$MockProxyCertPathValidator.engineValidate(TestProxyPathValidator.java:1089)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:349)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:331)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:316)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validatePathProxyPathConstraint(TestProxyPathValidator.java:791)
+<br/>23 lines not shown
+</div>
+<p class="totop"><a href="#summary">back to summary</a></p>
+<a id="m9"></a><h2>org.globus.security.provider.TestProxyPathValidator:validatePathWithRestrictedProxy</h2>
+<div style="padding-left:3em">
+<p>null</p>
+org.globus.security.provider.TestProxyPathValidator.validateError(TestProxyPathValidator.java:390)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validatePathWithRestrictedProxy(TestProxyPathValidator.java:671)
+<br/>23 lines not shown
+</div>
+<p class="totop"><a href="#summary">back to summary</a></p>
+<a id="m10"></a><h2>org.globus.security.provider.TestProxyPathValidator:validateRejectLimitedCheck</h2>
+<div style="padding-left:3em">
+<p>Certificate C=TestCA1,CN=EEC1,CN=limited proxy expired</p>
+org.globus.security.provider.DateValidityChecker.isValid(DateValidityChecker.java:27)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.checkCertificate(X509ProxyCertPathValidator.java:712)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.validate(X509ProxyCertPathValidator.java:217)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.engineValidate(X509ProxyCertPathValidator.java:136)
+<br/>at org.globus.security.provider.TestProxyPathValidator$MockProxyCertPathValidator.engineValidate(TestProxyPathValidator.java:1089)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:349)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validateRejectLimitedCheck(TestProxyPathValidator.java:514)
+<br/>23 lines not shown
+<p>Caused by certificate expired on 20090929033105GMT+00:00</p>
+org.bouncycastle.jce.provider.X509CertificateObject.checkValidity(Unknown Source)
+<br/>at org.bouncycastle.jce.provider.X509CertificateObject.checkValidity(Unknown Source)
+<br/>at org.globus.security.provider.DateValidityChecker.isValid(DateValidityChecker.java:25)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.checkCertificate(X509ProxyCertPathValidator.java:712)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.validate(X509ProxyCertPathValidator.java:217)
+<br/>at org.globus.security.provider.X509ProxyCertPathValidator.engineValidate(X509ProxyCertPathValidator.java:136)
+<br/>at org.globus.security.provider.TestProxyPathValidator$MockProxyCertPathValidator.engineValidate(TestProxyPathValidator.java:1089)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validateChain(TestProxyPathValidator.java:349)
+<br/>at org.globus.security.provider.TestProxyPathValidator.validateRejectLimitedCheck(TestProxyPathValidator.java:514)
+<br/>23 lines not shown
+</div>
+<p class="totop"><a href="#summary">back to summary</a></p>
+<a id="m11"></a><h2>org.globus.security.provider.TestProxyPathValidator:testSigningPolicy</h2>
+<p class="totop"><a href="#summary">back to summary</a></p>
+<a id="m12"></a><h2>org.globus.security.provider.TestProxyPathValidator:validatePathBad</h2>
+<p class="totop"><a href="#summary">back to summary</a></p>
+</body></html>
