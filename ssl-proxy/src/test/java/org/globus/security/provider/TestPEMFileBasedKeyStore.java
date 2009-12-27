@@ -180,7 +180,6 @@ public class TestPEMFileBasedKeyStore {
 
     }
 
-    @Test
     public void testProxyCerts() throws Exception {
 
         KeyStore store = KeyStore.getInstance("PEMFilebasedKeyStore", "Globus");
@@ -188,7 +187,7 @@ public class TestPEMFileBasedKeyStore {
         // Parameters in properties file
         Properties properties = new Properties();
         properties.setProperty(FileBasedKeyStore.PROXY_FILENAME,
-                this.proxyFile1.getAbsoluteFilename());
+                this.proxyFile1.getTempFilename());
         InputStream ins = null;
         try {
             ins = getProperties(properties);
@@ -202,14 +201,19 @@ public class TestPEMFileBasedKeyStore {
         assert (aliases.hasMoreElements());
 
         // proxy file 1
-        Key key = store.getKey(this.proxyFile1.getAbsoluteFilename(), null);
+        Key key = store.getKey(this.proxyFile1.getTempFilename(), null);
         assert (key != null);
         assert (key instanceof PrivateKey);
 
-        Certificate[] certificates = store.getCertificateChain(this.proxyFile1.getAbsoluteFilename());
+        Certificate[] certificates = store.getCertificateChain(this.proxyFile1.getTempFilename());
         assert (certificates != null);
         assert (certificates instanceof X509Certificate[]);
+<<<<<<< HEAD
         //     assert (this.proxyCertificates.get(this.proxyFile1.getAbsoluteFilename()).equals(certificates[0]));
+=======
+
+        assert (this.proxyCertificates.get(this.proxyFile1.getTempFilename()).equals(certificates[0]));
+>>>>>>> dbf3d06... Fix up proxy test
 
         properties.setProperty(FileBasedKeyStore.PROXY_FILENAME,
                 this.proxyFile2.getAbsoluteFilename());
@@ -226,6 +230,7 @@ public class TestPEMFileBasedKeyStore {
         assert (key != null);
         assert (key instanceof PrivateKey);
 
+<<<<<<< HEAD
         certificates = store.getCertificateChain(this.proxyFile2.getAbsoluteFilename());
         assert (certificates != null);
         assert (certificates instanceof X509Certificate[]);
@@ -235,6 +240,19 @@ public class TestPEMFileBasedKeyStore {
         // test delete
         store.deleteEntry(this.proxyFile1.getAbsoluteFilename());
         assert (store.getCertificateChain(this.proxyFile1.getAbsoluteFilename()) == null);
+=======
+        certificates = store.getCertificateChain(this.proxyFile1.getTempFilename());
+        assert (certificates != null);
+        assert (certificates instanceof X509Certificate[]);
+
+        assert (this.proxyCertificates.get(this.proxyFile2.getTempFilename()).equals(certificates[0]));
+
+
+        // test delete
+        store.deleteEntry(this.proxyFile1.getTempFilename());
+
+        assert (store.getCertificateChain(this.proxyFile1.getTempFilename()) != null);
+>>>>>>> dbf3d06... Fix up proxy test
         assert (!this.proxyFile1.getTempFile().exists());
     }
 
