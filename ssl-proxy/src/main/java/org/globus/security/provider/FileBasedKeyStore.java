@@ -161,6 +161,7 @@ public class FileBasedKeyStore extends KeyStoreSpi {
                 if (object instanceof FileBasedTrustAnchor) {
                     FileBasedTrustAnchor desc = (FileBasedTrustAnchor) object;
 <<<<<<< HEAD
+<<<<<<< HEAD
                     writeCertificate(desc.getTrustAnchor().getTrustedCert(), file);
                 } else if (object instanceof FileBasedCredential) {
                     FileBasedCredential credential = (FileBasedCredential) object;
@@ -180,6 +181,23 @@ public class FileBasedKeyStore extends KeyStoreSpi {
                     }
                     credential.writeToFile(file);
 >>>>>>> a64ce28... filebasedobject rework take1
+=======
+                    if (file == null) {
+                        // FIXME:
+                        //String filename = this.trustedCertFilenameMap.get(desc.getTrustAnchor().getTrustedCert());
+                        //file = new File(this.defaultDirectory, filename + ".0");
+                    }
+                    writeCertificate(desc.getTrustAnchor().getTrustedCert(), file);
+                } else if (object instanceof FileBasedProxyCredential) {
+                    FileBasedProxyCredential proxy = (FileBasedProxyCredential) object;
+                    File file = proxy.getFile();
+                    X509Credential credential = proxy.getCredential();
+                    if (file == null) {
+                        // String filename = this.certKeyFilenameMap.get(credential);
+                        //file = new File(this.defaultDirectory, filename + ".pem");
+                    }
+                    credential.writeToFile(file);
+>>>>>>> 9675559... Write to file improved. Tests work now.
                 }
             } catch (FileStoreException e) {
                 throw new CertificateException(e);

@@ -43,7 +43,6 @@ import org.slf4j.LoggerFactory;
  * @author ranantha@mcs.anl.gov
  *         <p/>
  *         FIXME: ability to accept anonymous connections?
- *         FIXME: client side authorization
  */
 public class PKITrustManager implements X509TrustManager {
 
@@ -123,7 +122,6 @@ public class PKITrustManager implements X509TrustManager {
     }
 
     // FIXME: THis is super naive, fix it.
-
     private CertPath getCertPath(X509Certificate[] certs)
             throws CertificateException {
 

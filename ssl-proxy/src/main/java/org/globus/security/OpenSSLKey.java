@@ -534,7 +534,7 @@ public abstract class OpenSSLKey {
                     "-----END RSA PRIVATE KEY-----");
         } catch (IOException e) {
             // FIXME !!
-            throw new RuntimeException("Unexpected error");
+            throw new RuntimeException("Unexpcted error");
         }
 
         return new String(out.toByteArray());

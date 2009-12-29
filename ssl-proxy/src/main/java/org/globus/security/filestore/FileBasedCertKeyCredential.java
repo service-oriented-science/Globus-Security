@@ -18,8 +18,6 @@ package org.globus.security.filestore;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.security.cert.CertificateEncodingException;
 
 import org.globus.security.CredentialException;
 import org.globus.security.X509Credential;
@@ -64,6 +62,7 @@ public class FileBasedCertKeyCredential extends MultipleFileBasedObject<X509Cred
         X509Credential credential = getObject();
         return credential;
     }
+<<<<<<< HEAD
 
     public void storeCredential() throws FileStoreException {
 
@@ -77,4 +76,6 @@ public class FileBasedCertKeyCredential extends MultipleFileBasedObject<X509Cred
     }
 =======
 >>>>>>> a64ce28... filebasedobject rework take1
+=======
+>>>>>>> 9675559... Write to file improved. Tests work now.
 }

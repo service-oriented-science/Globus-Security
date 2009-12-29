@@ -26,17 +26,12 @@ public abstract class MultipleFileBasedObject<T> extends FileBasedObject<T> {
 
     private long certLastModified = -1;
     private long keyLastModified = -1;
-
-    protected File certFile = null;
-    protected File keyFile = null;
+    private File certFile = null;
+    private File keyFile = null;
 
 
     protected void init(File certFile_, File keyFile_) throws FileStoreException {
-
-        if ((certFile_ == null) || (keyFile_ == null)) {
-            throw new IllegalArgumentException();
-        }
-
+        // FIXME: null checks
         this.certFile = certFile_;
         this.keyFile = keyFile_;
         this.object = createObject(this.certFile, this.keyFile);
@@ -79,7 +74,6 @@ public abstract class MultipleFileBasedObject<T> extends FileBasedObject<T> {
     }
 
     // for creation of object from a file
-
     protected abstract T createObject(File certFile, File keyFile)
             throws FileStoreException;
 

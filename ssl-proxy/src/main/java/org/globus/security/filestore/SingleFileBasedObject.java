@@ -31,8 +31,7 @@ public abstract class SingleFileBasedObject<T> extends FileBasedObject<T> {
             LoggerFactory.getLogger(SingleFileBasedObject.class.getName());
 
     private long lastModified = -1;
-
-    protected File file = null;
+    private File file = null;
 
     protected void init(File file_) throws FileStoreException {
         validateFilename(file_);
@@ -67,12 +66,10 @@ public abstract class SingleFileBasedObject<T> extends FileBasedObject<T> {
     }
 
     // for creation of object from a file
-
     protected abstract T createObject(File filename)
             throws FileStoreException;
 
     // for filename validation
-
     protected abstract void validateFilename(File filename)
             throws FileStoreException;
 }

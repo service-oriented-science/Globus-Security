@@ -27,6 +27,4 @@ public interface FileBasedCredential {
 
     public X509Credential getCredential() throws FileStoreException;
 
-    public void storeCredential() throws FileStoreException;
-
 }
