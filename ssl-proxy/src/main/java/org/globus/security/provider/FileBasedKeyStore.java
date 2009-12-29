@@ -163,6 +163,7 @@ public class FileBasedKeyStore extends KeyStoreSpi {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                     writeCertificate(desc.getTrustAnchor().getTrustedCert(), file);
                 } else if (object instanceof FileBasedCredential) {
                     FileBasedCredential credential = (FileBasedCredential) object;
@@ -197,6 +198,14 @@ public class FileBasedKeyStore extends KeyStoreSpi {
                     }
                     writeCertificate(desc.getTrustAnchor().getTrustedCert(), file);
 >>>>>>> 9675559... Write to file improved. Tests work now.
+=======
+                    if (file == null) {
+                        // FIXME:
+                        //String filename = this.trustedCertFilenameMap.get(desc.getTrustAnchor().getTrustedCert());
+                        //file = new File(this.defaultDirectory, filename + ".0");
+                    }
+                    writeCertificate(desc.getTrustAnchor().getTrustedCert(), file);
+>>>>>>> 9675559... Write to file improved. Tests work now.
                 } else if (object instanceof FileBasedProxyCredential) {
                     FileBasedProxyCredential proxy = (FileBasedProxyCredential) object;
                     File file = proxy.getFile();
@@ -207,6 +216,9 @@ public class FileBasedKeyStore extends KeyStoreSpi {
                     }
                     credential.writeToFile(file);
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> 9675559... Write to file improved. Tests work now.
+=======
 >>>>>>> 9675559... Write to file improved. Tests work now.
 =======
 >>>>>>> 9675559... Write to file improved. Tests work now.

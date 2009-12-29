@@ -64,6 +64,7 @@ public class FileBasedCertKeyCredential extends MultipleFileBasedObject<X509Cred
     }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 
     public void storeCredential() throws FileStoreException {
 
@@ -77,6 +78,8 @@ public class FileBasedCertKeyCredential extends MultipleFileBasedObject<X509Cred
     }
 =======
 >>>>>>> a64ce28... filebasedobject rework take1
+=======
+>>>>>>> 9675559... Write to file improved. Tests work now.
 =======
 >>>>>>> 9675559... Write to file improved. Tests work now.
 =======
