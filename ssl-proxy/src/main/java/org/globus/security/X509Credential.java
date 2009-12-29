@@ -274,6 +274,7 @@ public class X509Credential {
 <<<<<<< HEAD
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         Date notBefore = this.certChain[0].getNotBefore();
         for (int i = 1; i < this.certChain.length; i++) {
             Date date = this.certChain[i].getNotBefore();
@@ -286,6 +287,10 @@ public class X509Credential {
         // FILL ME
         return new Date();
 >>>>>>> 1cd74b7... Rework X509Credential class to support clear or encrypted private key, and cert/file from separate streams.
+=======
+        // FIXME
+        return null;
+>>>>>>> 9675559... Write to file improved. Tests work now.
 =======
         // FIXME
         return null;

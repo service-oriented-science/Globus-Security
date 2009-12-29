@@ -212,9 +212,12 @@ public class TestPEMFileBasedKeyStore {
         //     assert (this.proxyCertificates.get(this.proxyFile1.getAbsoluteFilename()).equals(certificates[0]));
 =======
 
+<<<<<<< HEAD
         assert (this.proxyCertificates.get(this.proxyFile1.getTempFilename()).equals(certificates[0]));
 >>>>>>> dbf3d06... Fix up proxy test
 
+=======
+>>>>>>> 9675559... Write to file improved. Tests work now.
         // proxy file 2
         key = store.getKey(this.proxyFile2.getTempFilename(), null);
         assert (key != null);
@@ -222,7 +225,11 @@ public class TestPEMFileBasedKeyStore {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         certificates = store.getCertificateChain(this.proxyFile2.getAbsoluteFilename());
+=======
+        certificates = store.getCertificateChain(this.proxyFile1.getAbsoluteFilename());
+>>>>>>> 9675559... Write to file improved. Tests work now.
 =======
         certificates = store.getCertificateChain(this.proxyFile1.getAbsoluteFilename());
 >>>>>>> 9675559... Write to file improved. Tests work now.
