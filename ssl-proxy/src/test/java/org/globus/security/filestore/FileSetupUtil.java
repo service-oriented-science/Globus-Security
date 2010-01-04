@@ -18,6 +18,8 @@ package org.globus.security.filestore;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * FILL ME
@@ -78,6 +80,16 @@ public class FileSetupUtil {
 
     public String getTempFilename() {
         return this.tempFile.getName();
+    }
+
+    public URL getURL(){
+        URL url = null;
+        try {
+            url = this.tempFile.toURL();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();  //This really shouldn't happen, so let's print in the random chance it does
+        }
+        return url;
     }
 
     public void deleteFile() {

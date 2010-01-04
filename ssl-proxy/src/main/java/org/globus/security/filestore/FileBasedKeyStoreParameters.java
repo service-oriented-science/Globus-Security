@@ -9,7 +9,7 @@ import java.security.KeyStore;
 public class FileBasedKeyStoreParameters
         implements KeyStore.LoadStoreParameter {
 
-    private String[] certDirs;
+    private String certDirs;
     private String defaultCertDir;
     private String userCertFilename;
     private String userKeyFilename;
@@ -19,14 +19,14 @@ public class FileBasedKeyStoreParameters
     public FileBasedKeyStoreParameters() {
     }
 
-    public FileBasedKeyStoreParameters(String[] certDirs,
+    public FileBasedKeyStoreParameters(String certDirs,
                                        String defaultCertDir) {
         this.certDirs = certDirs;
         this.defaultCertDir = defaultCertDir;
 
     }
 
-    public FileBasedKeyStoreParameters(String[] certDirs_,
+    public FileBasedKeyStoreParameters(String certDirs_,
                                        String defaultCertDir_,
                                        String userCertFilename_,
                                        String userKeyFilename_,
@@ -37,14 +37,14 @@ public class FileBasedKeyStoreParameters
         this.protectionParameter = protectionParameter_;
     }
 
-    public FileBasedKeyStoreParameters(String[] certDirs_,
+    public FileBasedKeyStoreParameters(String certDirs_,
                                        String defaultCertDir_,
                                        String proxyFilename_) {
         this(certDirs_, defaultCertDir_);
         this.proxyFilename = proxyFilename_;
     }
 
-    public FileBasedKeyStoreParameters(String[] certDirs_,
+    public FileBasedKeyStoreParameters(String certDirs_,
                                        String defaultCertDir_,
                                        String userCertFilename_,
                                        String userKeyFilename_,
@@ -59,11 +59,11 @@ public class FileBasedKeyStoreParameters
         return this.protectionParameter;
     }
 
-    public String[] getCertDirs() {
+    public String getCertDirs() {
         return certDirs;
     }
 
-    public void setCertDirs(String[] certDirs) {
+    public void setCertDirs(String certDirs) {
         this.certDirs = certDirs;
     }
 

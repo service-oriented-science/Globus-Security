@@ -27,16 +27,12 @@ import java.util.Properties;
 import org.globus.security.CredentialException;
 import org.globus.security.X509Credential;
 import org.globus.security.filestore.FileBasedKeyStoreParameters;
-import org.globus.security.filestore.FileBasedProxyCredential;
-import org.globus.security.filestore.FileBasedStore;
-import org.globus.security.filestore.FileBasedTrustAnchor;
-import org.globus.security.filestore.FileStoreException;
-import org.globus.security.filestore.SingleFileBasedObject;
 
+import org.globus.security.resources.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.FileSystemResource;
 
-import static org.globus.security.filestore.FileBasedStore.LoadFileType;
 import static org.globus.security.util.CertificateIOUtil.writeCertificate;
 
 
@@ -48,7 +44,7 @@ import static org.globus.security.util.CertificateIOUtil.writeCertificate;
 public class FileBasedKeyStore extends KeyStoreSpi {
 
     private static Logger logger =
-            LoggerFactory.getLogger(FileBasedCertStore.class.getName());
+            LoggerFactory.getLogger(FileBasedKeyStore.class.getName());
 
     // Default trusted certificates directory
     public static final String DEFAULT_DIRECTORY_KEY = "default_directory";
@@ -63,8 +59,8 @@ public class FileBasedKeyStore extends KeyStoreSpi {
     public static final String PROXY_FILENAME = "proxyFilename";
 
     // Map from alias to the object (either key or certificate)
-    private Map<String, SingleFileBasedObject> aliasObjectMap =
-            new Hashtable<String, SingleFileBasedObject>();
+    private Map<String, ResourceSecurityWrapper> aliasObjectMap =
+            new Hashtable<String, ResourceSecurityWrapper>();
     // Map from trusted certificate to filename
     private Map<Certificate, String> certFilenameMap =
             new HashMap<Certificate, String>();
@@ -74,29 +70,37 @@ public class FileBasedKeyStore extends KeyStoreSpi {
 
     // default directory for trusted certificates
     private File defaultDirectory;
-    private FileBasedStore caDelegate =
-            FileBasedStore.getFileBasedStore(LoadFileType.CA_FILE);
-    private FileBasedStore proxyDelegate =
-            FileBasedStore.getFileBasedStore(LoadFileType.PROXY_FILE);
+    private ResourceSecurityWrapperStore<ResourceTrustAnchor, TrustAnchor> caDelegate =
+            new ResourceCACertStore();
+    private ResourceSecurityWrapperStore<ResourceProxyCredential, X509Credential> proxyDelegate =
+            new ResourceProxyCredentialStore();
 
 
-    private FileBasedProxyCredential getKeyEntry(String alias) {
+    public void setCACertStore(ResourceSecurityWrapperStore<ResourceTrustAnchor, TrustAnchor> caDelegate) {
+        this.caDelegate = caDelegate;
+    }
 
-        SingleFileBasedObject object = this.aliasObjectMap.get(alias);
+    public void setProxyDelegate(ResourceSecurityWrapperStore<ResourceProxyCredential, X509Credential> proxyDelegate) {
+        this.proxyDelegate = proxyDelegate;
+    }
+
+    private ResourceProxyCredential getKeyEntry(String alias) {
+
+        ResourceSecurityWrapper object = this.aliasObjectMap.get(alias);
         if ((object != null) &&
-                (object instanceof FileBasedProxyCredential)) {
-            return (FileBasedProxyCredential) object;
+                (object instanceof ResourceProxyCredential)) {
+            return (ResourceProxyCredential) object;
         }
         return null;
     }
 
 
-    private FileBasedTrustAnchor getCertificateEntry(String alias) {
+    private ResourceTrustAnchor getCertificateEntry(String alias) {
 
-        SingleFileBasedObject object = this.aliasObjectMap.get(alias);
+        ResourceSecurityWrapper object = this.aliasObjectMap.get(alias);
         if ((object != null) &&
-                (object instanceof FileBasedTrustAnchor)) {
-            return (FileBasedTrustAnchor) object;
+                (object instanceof ResourceTrustAnchor)) {
+            return (ResourceTrustAnchor) object;
         }
         return null;
     }
@@ -105,7 +109,7 @@ public class FileBasedKeyStore extends KeyStoreSpi {
     public Key engineGetKey(String s, char[] chars)
             throws NoSuchAlgorithmException, UnrecoverableKeyException {
 
-        FileBasedProxyCredential credential = getKeyEntry(s);
+        ResourceProxyCredential credential = getKeyEntry(s);
         Key key = null;
         if (credential != null) {
             try {
@@ -114,7 +118,7 @@ public class FileBasedKeyStore extends KeyStoreSpi {
                     password = new String(chars);
                 }
                 key = credential.getCredential().getPrivateKey(password);
-            } catch (FileStoreException e) {
+            } catch (ResourceStoreException e) {
                 throw new UnrecoverableKeyException(e.getMessage());
             } catch (CredentialException e) {
                 throw new UnrecoverableKeyException(e.getMessage());
@@ -133,18 +137,18 @@ public class FileBasedKeyStore extends KeyStoreSpi {
             IOException,
             NoSuchAlgorithmException,
             CertificateException {
-        for (SingleFileBasedObject object : this.aliasObjectMap.values()) {
+        for (ResourceSecurityWrapper object : this.aliasObjectMap.values()) {
             File file = object.getFile();
             try {
-                if (object instanceof FileBasedTrustAnchor) {
-                    FileBasedTrustAnchor desc = (FileBasedTrustAnchor) object;
+                if (object instanceof ResourceTrustAnchor) {
+                    ResourceTrustAnchor desc = (ResourceTrustAnchor) object;
                     if (file == null) {
                         String filename = this.certFilenameMap.get(desc.getTrustAnchor().getTrustedCert());
                         file = new File(this.defaultDirectory, filename + ".0");
                     }
                     writeCertificate(desc.getTrustAnchor().getTrustedCert(), file);
-                } else if (object instanceof FileBasedProxyCredential) {
-                    FileBasedProxyCredential proxy = (FileBasedProxyCredential) object;
+                } else if (object instanceof ResourceProxyCredential) {
+                    ResourceProxyCredential proxy = (ResourceProxyCredential) object;
                     X509Credential credential = proxy.getCredential();
                     if (file == null) {
                         String filename = this.proxyFilenameMap.get(credential);
@@ -152,7 +156,7 @@ public class FileBasedKeyStore extends KeyStoreSpi {
                     }
                     credential.writeToFile(file);
                 }
-            } catch (FileStoreException e) {
+            } catch (ResourceStoreException e) {
                 throw new CertificateException(e);
             }
         }
@@ -161,17 +165,17 @@ public class FileBasedKeyStore extends KeyStoreSpi {
     @Override
     public Date engineGetCreationDate(String s) {
         try {
-            FileBasedTrustAnchor trustAnchor = getCertificateEntry(s);
+            ResourceTrustAnchor trustAnchor = getCertificateEntry(s);
             if (trustAnchor != null) {
                 return trustAnchor.getTrustAnchor().
                         getTrustedCert().getNotBefore();
             } else {
-                FileBasedProxyCredential credential = getKeyEntry(s);
+                ResourceProxyCredential credential = getKeyEntry(s);
                 if (credential != null) {
                     return credential.getCredential().getNotBefore();
                 }
             }
-        } catch (FileStoreException e) {
+        } catch (ResourceStoreException e) {
             return null;
         }
         return null;
@@ -184,12 +188,12 @@ public class FileBasedKeyStore extends KeyStoreSpi {
 
     @Override
     public Certificate[] engineGetCertificateChain(String s) {
-        FileBasedProxyCredential credential = getKeyEntry(s);
+        ResourceProxyCredential credential = getKeyEntry(s);
         X509Certificate[] chain = null;
         if (credential != null) {
             try {
                 chain = credential.getCredential().getCertificateChain();
-            } catch (FileStoreException e) {
+            } catch (ResourceStoreException e) {
                 logger.warn(e.getMessage());
                 chain = null;
             }
@@ -199,11 +203,11 @@ public class FileBasedKeyStore extends KeyStoreSpi {
 
     @Override
     public Certificate engineGetCertificate(String s) {
-        FileBasedTrustAnchor trustAnchor = getCertificateEntry(s);
+        ResourceTrustAnchor trustAnchor = getCertificateEntry(s);
         if (trustAnchor != null) {
             try {
                 return trustAnchor.getTrustAnchor().getTrustedCert();
-            } catch (FileStoreException e) {
+            } catch (ResourceStoreException e) {
                 return null;
             }
         }
@@ -217,23 +221,13 @@ public class FileBasedKeyStore extends KeyStoreSpi {
             throw new IllegalArgumentException(
                     "Unable to process parameters: " + loadStoreParameter);
         }
-        FileBasedKeyStoreParameters params =
-                (FileBasedKeyStoreParameters) loadStoreParameter;
-        try {
-            loadDirectories(params.getCertDirs());
-            loadDirectories(new String[]{params.getDefaultCertDir()});
-            // load proxy certificate, if configured
-            loadProxyCertificate(params.getProxyFilename());
-
-            // load usercert/key, if configured
-            loadCertificateKey(params.getUserCertFilename(),
-                    params.getUserKeyFilename());
-
-        } catch (FileStoreException e) {
-            throw new CertificateException(e);
-        } catch (CredentialException e) {
-            throw new CertificateException(e);
-        }
+        FileBasedKeyStoreParameters params = (FileBasedKeyStoreParameters) loadStoreParameter;
+        String defaultDirectoryString = params.getDefaultCertDir();
+        String directoryListString = params.getCertDirs();
+        String certFilename = params.getUserCertFilename();
+        String keyFilename = params.getUserKeyFilename();
+        String proxyFilename = params.getProxyFilename();
+        initialize(defaultDirectoryString, directoryListString, proxyFilename, certFilename, keyFilename);
     }
 
     @Override
@@ -242,54 +236,15 @@ public class FileBasedKeyStore extends KeyStoreSpi {
         try {
             Properties properties = new Properties();
             properties.load(inputStream);
-            if (properties == null) {
+            if (properties.size() == 0) {
                 throw new CertificateException("Properties file for configuration was null");
             }
-            String defaultDirectoryString =
-                    properties.getProperty(DEFAULT_DIRECTORY_KEY);
-            if (defaultDirectoryString != null) {
-                defaultDirectory = new File(defaultDirectoryString);
-                if (!defaultDirectory.exists()) {
-                    boolean directoryMade = defaultDirectory.mkdirs();
-                    if (!directoryMade) {
-                        throw new IOException(
-                                "Unable to create default certificate directory");
-                    }
-                }
-                try {
-                    loadDirectories(new String[]{defaultDirectoryString});
-                } catch (FileStoreException e) {
-                    throw new CertificateException(e);
-                }
-            }
-            String directoryListString =
-                    properties.getProperty(DIRECTORY_LIST_KEY);
-            if (directoryListString != null) {
-                try {
-                    String[] directoryList = directoryListString.split(",");
-                    loadDirectories(directoryList);
-                } catch (FileStoreException e) {
-                    throw new CertificateException(e);
-                }
-            }
-            try {
-                String proxyFilename =
-                        properties.getProperty(PROXY_FILENAME);
-                if (proxyFilename != null) {
-                    loadProxyCertificate(proxyFilename);
-                }
-                String certFilename = properties.getProperty(CERTIFICATE_FILENAME);
-                String keyFilename = properties.getProperty(KEY_FILENAME);
-                if ((certFilename != null) &&
-                        (keyFilename != null)) {
-                    loadCertificateKey(certFilename, keyFilename);
-                }
-            } catch (FileStoreException e) {
-                throw new CertificateException(e);
-            } catch (CredentialException e) {
-                e.printStackTrace();
-                throw new CertificateException(e);
-            }
+            String defaultDirectoryString = properties.getProperty(DEFAULT_DIRECTORY_KEY);
+            String directoryListString = properties.getProperty(DIRECTORY_LIST_KEY);
+            String proxyFilename = properties.getProperty(PROXY_FILENAME);
+            String certFilename = properties.getProperty(CERTIFICATE_FILENAME);
+            String keyFilename = properties.getProperty(KEY_FILENAME);
+            initialize(defaultDirectoryString, directoryListString, proxyFilename, certFilename, keyFilename);
         } finally {
             try {
                 inputStream.close();
@@ -297,19 +252,58 @@ public class FileBasedKeyStore extends KeyStoreSpi {
                 logger.info("Error closing inputStream", e);
             }
         }
-
     }
 
-    private void loadProxyCertificate(String proxyFilename) throws FileStoreException {
+    private void initialize(String defaultDirectoryString, String directoryListString, String proxyFilename, String certFilename, String keyFilename) throws IOException, CertificateException {
+        if (defaultDirectoryString != null) {
+            defaultDirectory = new File(defaultDirectoryString.substring(0, defaultDirectoryString.lastIndexOf(File.pathSeparator)));
+            if (!defaultDirectory.exists()) {
+                boolean directoryMade = defaultDirectory.mkdirs();
+                if (!directoryMade) {
+                    throw new IOException(
+                            "Unable to create default certificate directory");
+                }
+            }
+            try {
+                loadDirectories(defaultDirectoryString);
+            } catch (ResourceStoreException e) {
+                throw new CertificateException(e);
+            }
+        }
+        if (directoryListString != null) {
+            try {
+                String[] directoryList = directoryListString.split(",");
+                loadDirectories(directoryListString);
+            } catch (ResourceStoreException e) {
+                throw new CertificateException(e);
+            }
+        }
+        try {
+            if (proxyFilename != null) {
+                loadProxyCertificate(proxyFilename);
+            }
+            if ((certFilename != null) &&
+                    (keyFilename != null)) {
+                loadCertificateKey(certFilename, keyFilename);
+            }
+        } catch (ResourceStoreException e) {
+            throw new CertificateException(e);
+        } catch (CredentialException e) {
+            e.printStackTrace();
+            throw new CertificateException(e);
+        }
+    }
+
+    private void loadProxyCertificate(String proxyFilename) throws ResourceStoreException {
 
         if (proxyFilename == null) {
             return;
         }
 
-        proxyDelegate.loadWrappers(new String[]{proxyFilename});
-        Map<String, FileBasedProxyCredential> wrapperMap =
+        proxyDelegate.loadWrappers(proxyFilename);
+        Map<String, ResourceProxyCredential> wrapperMap =
                 proxyDelegate.getWrapperMap();
-        for (FileBasedProxyCredential credential : wrapperMap.values()) {
+        for (ResourceProxyCredential credential : wrapperMap.values()) {
             this.aliasObjectMap.put(proxyFilename, credential);
         }
     }
@@ -326,12 +320,12 @@ public class FileBasedKeyStore extends KeyStoreSpi {
     }
 
 
-    private void loadDirectories(String[] directoryList)
-            throws FileStoreException {
+    private void loadDirectories(String directoryList)
+            throws ResourceStoreException {
 
         caDelegate.loadWrappers(directoryList);
-        Map<String, FileBasedTrustAnchor> wrapperMap = caDelegate.getWrapperMap();
-        for (FileBasedTrustAnchor trustAnchor : wrapperMap
+        Map<String, ResourceTrustAnchor> wrapperMap = caDelegate.getWrapperMap();
+        for (ResourceTrustAnchor trustAnchor : wrapperMap
                 .values()) {
             String alias = trustAnchor.getFile().getName();
             certFilenameMap
@@ -344,15 +338,15 @@ public class FileBasedKeyStore extends KeyStoreSpi {
     @Override
     public void engineDeleteEntry(String s) throws KeyStoreException {
 
-        SingleFileBasedObject object = this.aliasObjectMap.remove(s);
+        ResourceSecurityWrapper object = this.aliasObjectMap.remove(s);
         if (object != null) {
-            if (object instanceof FileBasedTrustAnchor) {
+            if (object instanceof ResourceTrustAnchor) {
 
-                FileBasedTrustAnchor descriptor = (FileBasedTrustAnchor) object;
+                ResourceTrustAnchor descriptor = (ResourceTrustAnchor) object;
                 Certificate cert;
                 try {
                     cert = descriptor.getTrustAnchor().getTrustedCert();
-                } catch (FileStoreException e) {
+                } catch (ResourceStoreException e) {
                     throw new KeyStoreException(e);
                 }
                 this.certFilenameMap.remove(cert);
@@ -361,13 +355,13 @@ public class FileBasedKeyStore extends KeyStoreSpi {
                     // FIXME: warn? throw error?
                     logger.info("Unable to delete certificate");
                 }
-            } else if (object instanceof FileBasedProxyCredential) {
+            } else if (object instanceof ResourceProxyCredential) {
 
-                FileBasedProxyCredential proxy = (FileBasedProxyCredential) object;
+                ResourceProxyCredential proxy = (ResourceProxyCredential) object;
                 X509Credential credential;
                 try {
                     credential = proxy.getCredential();
-                } catch (FileStoreException e) {
+                } catch (ResourceStoreException e) {
                     throw new KeyStoreException(e);
                 }
                 this.proxyFilenameMap.remove(credential);
@@ -400,7 +394,7 @@ public class FileBasedKeyStore extends KeyStoreSpi {
         X509Credential credential = new X509Credential((PrivateKey) key, (X509Certificate[]) certificates);
 
         File file = null;
-        FileBasedProxyCredential proxyCredential = getKeyEntry(s);
+        ResourceProxyCredential proxyCredential = getKeyEntry(s);
         if (proxyCredential != null) {
             file = proxyCredential.getFile();
         } else {
@@ -409,10 +403,10 @@ public class FileBasedKeyStore extends KeyStoreSpi {
         }
         try {
             credential.writeToFile(file);
-            FileBasedProxyCredential fileCred = new FileBasedProxyCredential(file.getName(), credential);
+            ResourceProxyCredential fileCred = new ResourceProxyCredential(new FileSystemResource(file), credential);
             this.aliasObjectMap.put(s, fileCred);
             this.proxyFilenameMap.put(credential, s);
-        } catch (FileStoreException e) {
+        } catch (ResourceStoreException e) {
             throw new KeyStoreException("Error storing credential", e);
         } catch (IOException e) {
             throw new KeyStoreException("Error storing credential", e);
@@ -451,7 +445,7 @@ public class FileBasedKeyStore extends KeyStoreSpi {
             throw new KeyStoreException("Certificate must be instance of X509Certificate");
         }
         File file;
-        FileBasedTrustAnchor trustAnchor = getCertificateEntry(alias);
+        ResourceTrustAnchor trustAnchor = getCertificateEntry(alias);
         if (trustAnchor != null) {
             file = trustAnchor.getFile();
         } else {
@@ -460,11 +454,11 @@ public class FileBasedKeyStore extends KeyStoreSpi {
         X509Certificate x509Cert = (X509Certificate) certificate;
         try {
             writeCertificate(x509Cert, file);
-            FileBasedTrustAnchor anchor = new FileBasedTrustAnchor(file.getName(), new TrustAnchor(
+            ResourceTrustAnchor anchor = new ResourceTrustAnchor(new FileSystemResource(file), new TrustAnchor(
                     x509Cert, null));
             this.aliasObjectMap.put(alias, anchor);
             this.certFilenameMap.put(x509Cert, alias);
-        } catch (FileStoreException e) {
+        } catch (ResourceStoreException e) {
             throw new KeyStoreException(e);
         } catch (IOException e) {
             throw new KeyStoreException(e);
