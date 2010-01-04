@@ -31,10 +31,7 @@ import java.security.cert.CertStoreParameters;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509CRL;
 import java.security.cert.X509Certificate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
 import javax.security.auth.x500.X500Principal;
 
@@ -1023,11 +1020,13 @@ public class TestProxyPathValidator {
     }
 
     // for testing only to disable validity checking
+
     public class MockProxyCertPathValidator extends X509ProxyCertPathValidator {
 
         boolean checkCertificateDateValidity;
         boolean checkCRLDateValidity;
         boolean checkSigningPolicy;
+        private CertificateChecker dateChecker = new DateValidityChecker();
 
         public MockProxyCertPathValidator(boolean checkCertificateDateValidity_,
                                           boolean checkCRLDateValidity_,
@@ -1038,49 +1037,19 @@ public class TestProxyPathValidator {
             this.checkSigningPolicy = checkSigningPolicy_;
         }
 
-        /**
-         * Method that checks the time validity. Uses the standard
-         * Certificate.checkValidity method.
-         *
-         * @throws CertPathValidatorException If certificate has expired or is
-         *                                    not yet valid.
-         */
         @Override
-        protected void checkCertificateDateValidity(X509Certificate cert)
-                throws CertPathValidatorException {
+        protected List<CertificateChecker> getCertificateCheckers() {
+            List<CertificateChecker> checkers = new ArrayList<CertificateChecker>();
             if (checkCertificateDateValidity) {
-                super.checkCertificateDateValidity(cert);
+                checkers.add(dateChecker);
             }
-        }
-
-        /**
-         * Method to check the CRL validaity for current time.
-         *
-         * @param crl
-         * @throws java.security.cert.CertPathValidatorException
-         *
-         */
-        @Override
-        protected void checkCRLDateValidity(X509CRL crl)
-                throws CertPathValidatorException {
-            if (this.checkCRLDateValidity) {
-                super.checkCRLDateValidity(crl);
-            }
-        }
-
-        /**
-         * Validate DN against the signing policy
-         *
-         * @param certificate
-         * @throws java.security.cert.CertPathValidatorException
-         *
-         */
-        @Override
-        protected void checkSigningPolicy(X509Certificate certificate)
-                throws CertPathValidatorException {
+            checkers.add(new UnsupportedCriticalExtensionChecker());
+            checkers.add(new IdentityChecker(this));
+            checkers.add(new CRLChecker(this.certStore, this.keyStore, this.checkCertificateDateValidity));
             if (this.checkSigningPolicy) {
-                super.checkSigningPolicy(certificate);
+                checkers.add(new SigningPolicyChecker(this.policyStore));
             }
+            return checkers;
         }
 
         @Override

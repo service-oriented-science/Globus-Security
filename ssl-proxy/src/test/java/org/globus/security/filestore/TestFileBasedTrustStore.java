@@ -16,6 +16,7 @@
 package org.globus.security.filestore;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.security.Security;
 import java.security.cert.CRL;
 import java.security.cert.CertStore;
@@ -25,7 +26,6 @@ import java.security.cert.X509CRL;
 import java.security.cert.X509CertSelector;
 import java.security.cert.X509Certificate;
 import java.util.Collection;
-import java.util.Iterator;
 
 import javax.security.auth.x500.X500Principal;
 
@@ -34,6 +34,9 @@ import org.globus.security.SigningPolicyStore;
 import org.globus.security.SigningPolicyStoreParameters;
 import org.globus.security.provider.GlobusProvider;
 
+import org.globus.security.resources.ResourceCertStoreParameters;
+import org.globus.security.resources.ResourceSigningPolicyStore;
+import org.globus.security.resources.ResourceSigningPolicyStoreParameters;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -50,8 +53,9 @@ public class TestFileBasedTrustStore {
 
     DirSetupUtil dir;
     CertStoreParameters parameters;
+    CertStoreParameters directoryParameters;
     CertStore certStore;
-    SigningPolicyStore policyStore;
+    CertStoreParameters crlParameters;
     SigningPolicyStoreParameters policyParameters;
     Collection<? extends Certificate> trustAnchors;
 
@@ -71,14 +75,11 @@ public class TestFileBasedTrustStore {
         });
         this.dir.createTempDirectory();
         this.dir.copy();
-        parameters = new FileCertStoreParameters(
-                new String[]{this.dir.getTempDirectoryName()});
-        policyParameters =
-                new FileSigningPolicyStoreParameters(new String[]{
-                        this.dir.getTempDirectoryName()});
-
+        parameters = new ResourceCertStoreParameters("classpath:/testTrustStore/*.0,classpath:/testTrustStore/*.9");
+        crlParameters = new ResourceCertStoreParameters("classpath:/testTrustStore/*.r*");
+        policyParameters = new ResourceSigningPolicyStoreParameters("classpath:/testTrustStore/*.signing_policy");
+        directoryParameters = new ResourceCertStoreParameters(new String[]{dir.getTempDirectory().getAbsolutePath()});
         Security.addProvider(new GlobusProvider());
-
     }
 
 
@@ -89,7 +90,7 @@ public class TestFileBasedTrustStore {
         File tempDir = this.dir.getTempDirectory();
         // number of CA files
         String[] caFiles =
-                tempDir.list(FileBasedTrustAnchor.getTrustAnchorFilter());
+                tempDir.list(new TrustAnchorFilter());
 
 
         // Get comparison parameters
@@ -110,12 +111,9 @@ public class TestFileBasedTrustStore {
 
         assertTrue(trustAnchors.size() == caFiles.length);
 
-        Iterator<? extends Certificate> iterator = trustAnchors.iterator();
+        for (Certificate trustAnchor : trustAnchors) {
 
-        while (iterator.hasNext()) {
-
-            Object cert = iterator.next();
-            assert (cert instanceof X509Certificate);
+            assert (trustAnchor instanceof X509Certificate);
 
         }
 
@@ -124,17 +122,65 @@ public class TestFileBasedTrustStore {
     }
 
     @Test
+    public void testEngineGetCertificatesDirectory() throws Exception{
+        File tempDir = this.dir.getTempDirectory();
+        // number of CA files
+        String[] caFiles =
+                tempDir.list(new TrustAnchorFilter());
+        this.certStore = CertStore.getInstance("PEMFilebasedCertStore", directoryParameters);
+
+        assert certStore != null;
+
+
+        this.trustAnchors =
+                certStore.getCertificates(new X509CertSelector());
+
+        assert trustAnchors != null;
+
+        assertFalse(trustAnchors.isEmpty());
+
+        assert caFiles != null;
+
+        assertTrue(trustAnchors.size() == caFiles.length);
+
+        for (Certificate trustAnchor : trustAnchors) {
+
+            assert (trustAnchor instanceof X509Certificate);
+
+        }
+
+    }
+
+    public static class CrlFilter implements FilenameFilter {
+
+        public boolean accept(File dir, String file) {
+
+            if (file == null) {
+                throw new IllegalArgumentException();
+            }
+
+            int length = file.length();
+            return length > 3 &&
+                    file.charAt(length - 3) == '.' &&
+                    file.charAt(length - 2) == 'r' &&
+                    file.charAt(length - 1) >= '0' &&
+                    file.charAt(length - 1) <= '9';
+
+        }
+    }
+
+    @Test
     public void testEngineGetCRLs() throws Exception {
 
         File tempDir = this.dir.getTempDirectory();
         // number of CRL files
         String[] crlFiles =
-                tempDir.list(FileBasedCRL.getCrlFilter());
+                tempDir.list(new CrlFilter());
 
 
         // Get comparison parameters
         this.certStore = CertStore.getInstance("PEMFilebasedCertStore",
-                parameters);
+                crlParameters);
 
         assert certStore != null;
 
@@ -161,13 +207,8 @@ public class TestFileBasedTrustStore {
     @Test(dependsOnMethods = {"testEngineGetCertificates"})
     public void testGetSigningPolicies() throws Exception {
 
-        File tempDir = this.dir.getTempDirectory();
-        // number of policy files
-        String[] policyFiles =
-                tempDir.list(FileBasedSigningPolicy.getSigningPolicyFilter());
-
         SigningPolicyStore store =
-                new FileBasedSigningPolicyStore(this.policyParameters);
+                new ResourceSigningPolicyStore(this.policyParameters);
 
         SigningPolicy policy = store.getSigningPolicy(null);
 
@@ -177,11 +218,9 @@ public class TestFileBasedTrustStore {
 
         assert (policy == null);
 
-        Iterator iterator = this.trustAnchors.iterator();
+        for (Certificate trustAnchor : this.trustAnchors) {
 
-        while (iterator.hasNext()) {
-
-            X509Certificate certificate = (X509Certificate) iterator.next();
+            X509Certificate certificate = (X509Certificate) trustAnchor;
 
             X500Principal principal = certificate.getIssuerX500Principal();
 
@@ -197,7 +236,6 @@ public class TestFileBasedTrustStore {
 
     @AfterTest
     public void tearDown() throws Exception {
-
         this.dir.delete();
     }
 }
