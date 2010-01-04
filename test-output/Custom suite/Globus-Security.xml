@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Globus-Security" failures="0" tests="1" time="0.779" errors="0">
+  <properties/>
+  <testcase name="testParameterLoad" time="0.137" classname="org.globus.security.provider.TestPEMFileBasedKeyStore"/>
+</testsuite>
