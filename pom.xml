@@ -91,9 +91,6 @@
         <module>ssl-proxy</module>
         <module>jetty</module>
         <!--<module>crux-wss4j</module>-->
-        <module>poms</module>
-        <module>provision</module>
-        <module>jetty-plugin</module>
     </modules>
 
     <dependencies>
