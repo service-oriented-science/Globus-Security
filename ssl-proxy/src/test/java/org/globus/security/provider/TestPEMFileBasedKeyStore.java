@@ -176,12 +176,36 @@ public class TestPEMFileBasedKeyStore {
 
     @Test
     public void testParameterLoad() throws Exception {
+        FileBasedKeyStore keystore = loadFromParameters();
+        testLoadedStore(keystore);
+    }
+
+    private FileBasedKeyStore loadFromParameters() throws Exception {
         FileBasedKeyStoreParameters params = new FileBasedKeyStoreParameters();
         params.setDefaultCertDir("file:" + this.defaultTrustedDirectory.getTempDirectoryName() + "/*.0");
         params.setCertDirs("file:" + this.trustedDirectory.getTempDirectoryName() + "/*.0");
         FileBasedKeyStore keystore = new FileBasedKeyStore();
         keystore.engineLoad(params);
-        testLoadedStore(keystore);
+        return keystore;
+    }
+
+    @Test
+    public void testOutputStore() throws Exception {
+        FileBasedKeyStore existingKeyStore = loadFromParameters();
+        //Create new KeyStore to test
+        FileBasedKeyStoreParameters params = new FileBasedKeyStoreParameters();
+        params.setDefaultCertDir("file:" + System.getProperty("java.io.tmpdir") + File.separator + "pemOutputStore");
+        FileBasedKeyStore newKeyStore = new FileBasedKeyStore();
+        newKeyStore.engineLoad(params);
+        Enumeration<String> enumeration = existingKeyStore.engineAliases();
+        Certificate cert = null;
+        if(enumeration.hasMoreElements()){
+            cert = existingKeyStore.engineGetCertificate(enumeration.nextElement());
+        }
+        String alias = "file:" + System.getProperty("java.io.tmpdir") + File.separator + "pemOutputStore" + File.separator + "blah.0";
+        newKeyStore.engineSetCertificateEntry(alias,cert);
+        newKeyStore.engineStore(null, null);
+
     }
 
     private void testLoadedStore(FileBasedKeyStore store) throws KeyStoreException {
@@ -242,8 +266,8 @@ public class TestPEMFileBasedKeyStore {
         String proxyId1 = new FileSystemResource(this.proxyFile1.getTempFile()).getURL().toExternalForm();
         assertTrue(store.engineIsKeyEntry(proxyId1));
         Key key = store.engineGetKey(proxyId1, null);
-        assertNotNull (key != null);
-        assertTrue (key instanceof PrivateKey);
+        assertNotNull(key != null);
+        assertTrue(key instanceof PrivateKey);
 
         Certificate[] certificates = store.engineGetCertificateChain(this.proxyFile1.getURL().toExternalForm());
         assertNotNull(certificates != null);
@@ -251,18 +275,26 @@ public class TestPEMFileBasedKeyStore {
         key = null;
         //     assert (this.proxyCertificates.get(this.proxyFile1.getAbsoluteFilename()).equals(certificates[0]));
 
+        properties.setProperty(FileBasedKeyStore.PROXY_FILENAME,
+                "file:" + this.proxyFile2.getAbsoluteFilename());
+        ins = null;
+        try {
+            ins = getProperties(properties);
+            store.engineLoad(ins, null);
+        } finally {
+            if (ins != null)
+                ins.close();
+        }
         // proxy file 2
-//        String proxyId2 = new FileSystemResource(this.proxyFile2.getTempFile()).getURL().toExternalForm();
-//        store.engineSetKeyEntry(proxyId2, this.proxyCertificates.get(proxyFile2).getPrivateKey(), null,
-//                proxyCertificates.get(proxyFile2).getCertificateChain());
-//        store.engineGetKey(proxyId2, null);
-//        assertTrue(store.engineIsKeyEntry(proxyId2));
-//        assertNotNull(key);
-//        assertTrue(key instanceof PrivateKey);
-//
-//        certificates = store.engineGetCertificateChain(proxyId1);
-//        assertNotNull(certificates != null);
-//        assertTrue(certificates instanceof X509Certificate[]);
+        String proxyId2 = new FileSystemResource(this.proxyFile2.getTempFile()).getURL().toExternalForm();
+        key = store.engineGetKey(proxyId2, null);
+        assertTrue(store.engineIsKeyEntry(proxyId2));
+        assertNotNull(key);
+        assertTrue(key instanceof PrivateKey);
+
+        certificates = store.engineGetCertificateChain(proxyId1);
+        assertNotNull(certificates != null);
+        assertTrue(certificates instanceof X509Certificate[]);
 
 //        assert (this.proxyCertificates.get(this.proxyFile2.getTempFilename()).equals(certificates[0]));
 
