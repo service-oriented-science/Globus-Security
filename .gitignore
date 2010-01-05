@@ -1,2 +1,6 @@
 target
 *.iml
+*.rej
+*.patch
+*.diff
+*.orig
