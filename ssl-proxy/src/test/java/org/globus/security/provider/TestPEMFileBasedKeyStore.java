@@ -206,6 +206,7 @@ public class TestPEMFileBasedKeyStore {
         newKeyStore.engineSetCertificateEntry(alias,cert);
         newKeyStore.engineStore(null, null);
 
+//        testLoadedStore(keystore);
     }
 
     private void testLoadedStore(FileBasedKeyStore store) throws KeyStoreException {
