@@ -1,0 +1,7 @@
+target
+*.iml
+*.rej
+*.patch
+*.diff
+*.orig
+test-output
