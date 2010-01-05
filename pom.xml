@@ -315,7 +315,7 @@
                                 <id>main</id>
                                 <phase>verify</phase>
                                 <configuration>
-                                    <targetPercentage>50%</targetPercentage>
+                                    <targetPercentage>60%</targetPercentage>
                                 </configuration>
                                 <goals>
                                     <goal>instrument</goal>
