@@ -205,8 +205,6 @@ public class TestPEMFileBasedKeyStore {
         String alias = "file:" + System.getProperty("java.io.tmpdir") + File.separator + "pemOutputStore" + File.separator + "blah.0";
         newKeyStore.engineSetCertificateEntry(alias,cert);
         newKeyStore.engineStore(null, null);
-
-//        testLoadedStore(keystore);
     }
 
     private void testLoadedStore(FileBasedKeyStore store) throws KeyStoreException {
