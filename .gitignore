@@ -4,3 +4,4 @@ target
 *.patch
 *.diff
 *.orig
+test-output
