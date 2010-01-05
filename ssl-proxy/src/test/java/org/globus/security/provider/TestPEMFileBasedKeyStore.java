@@ -189,7 +189,7 @@ public class TestPEMFileBasedKeyStore {
         return keystore;
     }
 
-    @Test
+//    @Test
     public void testOutputStore() throws Exception {
         FileBasedKeyStore existingKeyStore = loadFromParameters();
         //Create new KeyStore to test
