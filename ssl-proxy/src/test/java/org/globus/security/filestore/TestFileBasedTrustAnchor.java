@@ -22,6 +22,8 @@ import java.security.cert.X509Certificate;
 
 import static org.testng.AssertJUnit.assertFalse;
 import static org.testng.AssertJUnit.assertTrue;
+
+import org.globus.security.resources.ResourceTrustAnchor;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -48,14 +50,14 @@ public class TestFileBasedTrustAnchor {
 
         this.testCert1.copyFileToTemp();
 
-        String tempFileName = this.testCert1.getAbsoluteFilename();
+        String tempFileURL = this.testCert1.getURL().toExternalForm();
 
-        FileBasedTrustAnchor fileAnchor =
-                new FileBasedTrustAnchor(new File(tempFileName));
+        ResourceTrustAnchor fileAnchor =
+                new ResourceTrustAnchor("classpath:/certificateUtilTest/1c3f2ca8.0");
 
-        assert (fileAnchor != null);
+//        assert (fileAnchor != null);
 
-        TrustAnchor anchor = fileAnchor.getTrustAnchor();
+        TrustAnchor anchor = fileAnchor.getSecurityObject();
 
         assert (anchor != null);
 
@@ -64,15 +66,17 @@ public class TestFileBasedTrustAnchor {
 
         assertFalse(fileAnchor.hasChanged());
 
-        anchor = fileAnchor.getTrustAnchor();
+        anchor = fileAnchor.getSecurityObject();
 
         assert (anchor != null);
 
         assertFalse(fileAnchor.hasChanged());
 
+        fileAnchor = new ResourceTrustAnchor(tempFileURL);
+
         this.testCert1.modifyFile();
 
-        anchor = fileAnchor.getTrustAnchor();
+        anchor = fileAnchor.getSecurityObject();
 
         assert (anchor != null);
 
@@ -80,10 +84,11 @@ public class TestFileBasedTrustAnchor {
 
     }
 
+
     @Test
     public void testGetTrustAnchorFilter() {
 
-        FilenameFilter filter = FileBasedTrustAnchor.getTrustAnchorFilter();
+        FilenameFilter filter = new TrustAnchorFilter();
 
         // Null checks
         boolean worked = false;

@@ -15,6 +15,8 @@
  */
 package org.globus.security.provider;
 
+import org.globus.security.resources.ResourceCertStore;
+
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.security.Provider;
@@ -34,7 +36,7 @@ public class GlobusProvider extends Provider {
         AccessController.doPrivileged(new PrivilegedAction<Object>() {
             public Object run() {
                 put("CertStore.PEMFilebasedCertStore",
-                        FileBasedCertStore.class.getName());
+                        ResourceCertStore.class.getName());
                 put("CertPathValidator.X509ProxyPath",
                         X509ProxyCertPathValidator.class.getName());
                 put("KeyStore.PEMFilebasedKeyStore",

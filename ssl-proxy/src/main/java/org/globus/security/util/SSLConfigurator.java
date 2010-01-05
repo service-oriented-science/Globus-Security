@@ -26,9 +26,6 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 
 import org.globus.security.SigningPolicyStoreParameters;
-import org.globus.security.X509ProxyCertPathParameters;
-import org.globus.security.filestore.FileBasedSigningPolicyStore;
-import org.globus.security.provider.PKITrustManager;
 import org.globus.security.provider.X509ProxyCertPathValidator;
 
 /**
@@ -112,11 +109,12 @@ public class SSLConfigurator {
 
     // FIXME: limited proxy policy and configurable policy handlers...
     private TrustManager[] loadTrustManagers(KeyStore trustStore, CertStore certStore) throws InvalidAlgorithmParameterException {
-        FileBasedSigningPolicyStore spStore = new FileBasedSigningPolicyStore(signingPolicyStoreParameters);
+//        FileBasedSigningPolicyStore spStore = new FileBasedSigningPolicyStore(signingPolicyStoreParameters);
         X509ProxyCertPathValidator validator = new X509ProxyCertPathValidator();
-        X509ProxyCertPathParameters parameters = new X509ProxyCertPathParameters(trustStore, certStore, spStore, false);
-        TrustManager tm = new PKITrustManager(validator, parameters);
-        return new TrustManager[]{tm};
+//        X509ProxyCertPathParameters parameters = new X509ProxyCertPathParameters(trustStore, certStore, spStore, false);
+//        TrustManager tm = new PKITrustManager(validator, parameters);
+//        return new TrustManager[]{tm};
+        return null;
     }
 
     private KeyManager[] loadKeyManagers() throws IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException, UnrecoverableKeyException {

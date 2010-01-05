@@ -21,8 +21,11 @@ import java.util.Collection;
 
 import org.globus.security.SigningPolicy;
 
-import static org.testng.AssertJUnit.assertFalse;
-import static org.testng.AssertJUnit.assertTrue;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
+
+import org.globus.security.resources.ResourceSigningPolicy;
+import org.springframework.core.io.FileSystemResource;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -52,12 +55,8 @@ public class TestFileBasedSigningPolicy {
 
         this.testPolicy1.copyFileToTemp();
 
-        String tempFileName = this.testPolicy1.getAbsoluteFilename();
-
-        FileBasedSigningPolicy filePolicy =
-                new FileBasedSigningPolicy(new File(tempFileName));
-
-        assert (filePolicy != null);
+        ResourceSigningPolicy filePolicy =
+                new ResourceSigningPolicy(new FileSystemResource(testPolicy1.getAbsoluteFilename()));
 
         Collection<SigningPolicy> policies = filePolicy.getSigningPolicies();
 
@@ -86,7 +85,7 @@ public class TestFileBasedSigningPolicy {
     @Test
     public void testPolicyFilter() {
 
-        FilenameFilter filter = FileBasedSigningPolicy.getSigningPolicyFilter();
+        FilenameFilter filter = new SigningPolicyFilter();
 
         // Null checks
         boolean worked = false;
