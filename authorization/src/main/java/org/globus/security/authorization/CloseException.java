@@ -13,26 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.globus.security.provider;
-
-import java.security.Provider;
+package org.globus.security.authorization;
 
 /**
- * FILL ME
- *
- * @author ranantha@mcs.anl.gov
+ * This exception is thrown when errors occur on invoking close method
+ * on interceptors.
  */
-public class MockGlobusProvider extends Provider {
+public class CloseException extends InitializeException {
 
-    public MockGlobusProvider() {
+    public CloseException(String message) {
+        super(message);
+    }
 
-        super("GlobusTest", 1.0, "Globus Security Providers");
-
-        put("CertStore.MockCertStore",
-                "org.globus.security.provider.MockCertStore");
-        put("KeyStore.MockKeyStore",
-                "org.globus.security.provider.MockKeyStore");
-
+    public CloseException(String message, Exception cause) {
+        super(message, cause);
     }
 }
-
