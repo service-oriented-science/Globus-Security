@@ -16,11 +16,7 @@ import java.net.URL;
  * Time: 12:35:50 PM
  * To change this template use File | Settings | File Templates.
  */
-<<<<<<< Updated upstream
-public abstract class AbstractResourceSecurityWrapper<T> {
-=======
 public abstract class AbstractResourceSecurityWrapper<T> implements SecurityObjectWrapper<T>, Storable {
->>>>>>> Stashed changes
     Logger logger = LoggerFactory.getLogger(getClass());
     private boolean changed;
     private T securityObject;
