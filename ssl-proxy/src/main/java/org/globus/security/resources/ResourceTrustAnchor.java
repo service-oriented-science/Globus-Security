@@ -1,17 +1,12 @@
 package org.globus.security.resources;
 
-import org.globus.security.filestore.FileStoreException;
+import org.globus.security.util.CertificateIOUtil;
 import org.globus.security.util.CertificateLoadUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.security.cert.CertificateEncodingException;
 import java.security.cert.TrustAnchor;
 import java.security.cert.X509Certificate;
 
@@ -22,7 +17,7 @@ import java.security.cert.X509Certificate;
  * Time: 11:37:52 AM
  * To change this template use File | Settings | File Templates.
  */
-public class ResourceTrustAnchor extends ResourceSecurityWrapper<TrustAnchor> {
+public class ResourceTrustAnchor extends AbstractResourceSecurityWrapper<TrustAnchor> {
 
 
     public ResourceTrustAnchor(String fileName) throws ResourceStoreException {
@@ -59,4 +54,13 @@ public class ResourceTrustAnchor extends ResourceSecurityWrapper<TrustAnchor> {
         return new TrustAnchor(certificate, null);
     }
 
+    public void store() throws ResourceStoreException {
+        try {
+            CertificateIOUtil.writeCertificate(this.getTrustAnchor().getTrustedCert(), resource.getFile());
+        } catch (CertificateEncodingException e) {
+            throw new ResourceStoreException(e);
+        } catch (IOException e) {
+            throw new ResourceStoreException(e);
+        }
+    }
 }

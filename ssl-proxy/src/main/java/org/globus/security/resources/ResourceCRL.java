@@ -1,14 +1,12 @@
 package org.globus.security.resources;
 
-import org.globus.security.filestore.FileStoreException;
+import org.globus.security.util.CertificateIOUtil;
 import org.globus.security.util.CertificateLoadUtil;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.security.cert.TrustAnchor;
 import java.security.cert.X509CRL;
-import java.security.cert.X509Certificate;
 
 /**
  * Created by IntelliJ IDEA.
@@ -17,7 +15,7 @@ import java.security.cert.X509Certificate;
  * Time: 12:41:39 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ResourceCRL extends ResourceSecurityWrapper<X509CRL> {
+public class ResourceCRL extends AbstractResourceSecurityWrapper<X509CRL> {
 
     public ResourceCRL(String fileName) throws ResourceStoreException {
         init(resolver.getResource(fileName));
@@ -44,5 +42,9 @@ public class ResourceCRL extends ResourceSecurityWrapper<X509CRL> {
         } catch (GeneralSecurityException e) {
             throw new ResourceStoreException(e);
         }
+    }
+
+    public void store() throws ResourceStoreException {
+        //TODO: does this need an implementation
     }
 }

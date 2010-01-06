@@ -15,7 +15,6 @@
  */
 package org.globus.security;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.EOFException;
@@ -40,6 +39,7 @@ import org.globus.security.util.CertificateLoadUtil;
 import org.bouncycastle.util.encoders.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
 
 /**
  * FILL ME
@@ -48,6 +48,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author ranantha@mcs.anl.gov
  */
+@SuppressWarnings("unused")
 public class X509Credential {
 
     public final static int BUFFER_SIZE = Integer.MAX_VALUE;
@@ -74,19 +75,10 @@ public class X509Credential {
         this.opensslKey = new BouncyCastleOpenSSLKey(key_);
     }
 
-    public X509Credential(InputStream stream) throws CredentialException {
-        init(stream, stream);
-
-    }
 
     public X509Credential(InputStream certInputStream, InputStream keyInputStream)
             throws CredentialException {
-        init(certInputStream, keyInputStream);
-
-    }
-
-    private void init(InputStream certInputStream, InputStream keyInputStream) throws CredentialException {
-        if(certInputStream.markSupported()){
+        if (certInputStream.markSupported()) {
             certInputStream.mark(BUFFER_SIZE);
         }
         loadKey(keyInputStream);
@@ -120,6 +112,10 @@ public class X509Credential {
 
     }
 
+    public boolean isEncryptedKey() {
+        return this.opensslKey.isEncrypted();
+    }
+
     protected void loadCertificate(InputStream input)
             throws CredentialException {
 
@@ -129,12 +125,12 @@ public class X509Credential {
         }
 
         X509Certificate cert;
-        Vector chain = new Vector();
+        Vector<X509Certificate> chain = new Vector<X509Certificate>();
 
         String line;
         BufferedReader reader = null;
         try {
-            if(input.markSupported()){
+            if (input.markSupported()) {
                 input.reset();
             }
             reader = new BufferedReader(new InputStreamReader(input));
@@ -158,6 +154,8 @@ public class X509Credential {
                 try {
                     reader.close();
                 } catch (IOException e) {
+                    logger.debug("error closing reader", e);
+                    //This is ok
                 }
             }
         }
@@ -189,6 +187,9 @@ public class X509Credential {
 
     private void validateCredential() throws CredentialException {
 
+        if (this.certChain == null) {
+            throw new CredentialException("No certificates found");
+        }
         int size = this.certChain.length;
 
         if (size < 0) {
@@ -204,7 +205,7 @@ public class X509Credential {
      * Reads Base64 encoded data from the stream and returns its decoded value. The reading continues until the "END"
      * string is found in the data. Otherwise, returns null.
      */
-    private static final byte[] getDecodedPEMObject(BufferedReader reader)
+    private static byte[] getDecodedPEMObject(BufferedReader reader)
             throws IOException {
         String line;
         StringBuffer buf = new StringBuffer();
@@ -255,27 +256,28 @@ public class X509Credential {
             saveKey(keyOutputStream);
             saveCertificateChain(certOutputStream);
         } finally {
-            if (keyOutputStream != null) {
-                try {
-                    keyOutputStream.close();
-                } catch (IOException e) {
-                    logger.warn("Could not close stream on save of key to file. " + keyFile.getPath());
-                }
+            try {
+                keyOutputStream.close();
+            } catch (IOException e) {
+                logger.warn("Could not close stream on save of key to file. " + keyFile.getPath());
             }
-            if (certOutputStream != null) {
-                try {
-                    certOutputStream.close();
-                } catch (IOException e) {
-                    logger.warn("Could not close stream on save certificate chain to file. " + certFile.getPath());
-                }
+            try {
+                certOutputStream.close();
+            } catch (IOException e) {
+                logger.warn("Could not close stream on save certificate chain to file. " + certFile.getPath());
             }
         }
     }
 
     public Date getNotBefore() {
-
-        // FIXME
-        return null;
+        Date notBefore = this.certChain[0].getNotBefore();
+        for (int i = 1; i < this.certChain.length; i++) {
+            Date date = this.certChain[i].getNotBefore();
+            if (date.before(notBefore)) {
+                notBefore = date;
+            }
+        }
+        return notBefore;
     }
 
 }

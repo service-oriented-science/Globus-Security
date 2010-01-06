@@ -9,15 +9,14 @@ import org.springframework.core.io.Resource;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.cert.CertificateEncodingException;
 
 /**
- * Created by IntelliJ IDEA.
- * User: turtlebender
- * Date: Dec 29, 2009
- * Time: 12:47:17 PM
- * To change this template use File | Settings | File Templates.
+ * FIXME: document me
+ *
+ * @author Tom Howe
  */
-public class ResourceProxyCredential extends ResourceSecurityWrapper<X509Credential> {
+public class ResourceProxyCredential extends AbstractResourceSecurityWrapper<X509Credential> {
 
     Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -25,7 +24,7 @@ public class ResourceProxyCredential extends ResourceSecurityWrapper<X509Credent
         init(locationPattern);
     }
 
-    public ResourceProxyCredential(Resource resource) throws ResourceStoreException{
+    public ResourceProxyCredential(Resource resource) throws ResourceStoreException {
         init(resource);
     }
 
@@ -43,24 +42,43 @@ public class ResourceProxyCredential extends ResourceSecurityWrapper<X509Credent
 
     protected X509Credential create(Resource resource) throws ResourceStoreException {
 
-        InputStream input = null;
+        InputStream keyInputStream = null;
+        InputStream certInputStream = null;
         try {
-            input = new BufferedInputStream(resource.getInputStream());
-            return new X509Credential(input);
+            keyInputStream = new BufferedInputStream(resource.getInputStream());
+            certInputStream = new BufferedInputStream(resource.getInputStream());
+            return new X509Credential(keyInputStream, certInputStream);
         } catch (IOException e) {
             throw new ResourceStoreException(e);
         } catch (CredentialException e) {
             throw new ResourceStoreException(e);
         } finally {
 
-            if (input != null) {
+            if (keyInputStream != null) {
                 try {
-                    input.close();
-
+                    keyInputStream.close();
                 } catch (Exception e) {
                     logger.warn("Unable to close stream.");
                 }
             }
+            if (certInputStream != null) {
+                try {
+                    certInputStream.close();
+                } catch (Exception e) {
+                    logger.warn("Unable to close stream.");
+                }
+            }
+        }
+    }
+
+    public void store() throws ResourceStoreException {
+        try {
+            X509Credential credential = getCredential();
+            credential.writeToFile(resource.getFile());
+        } catch (IOException ioe) {
+            throw new ResourceStoreException(ioe);
+        } catch (CertificateEncodingException e) {
+            throw new ResourceStoreException(e);
         }
     }
 }

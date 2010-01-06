@@ -1,6 +1,5 @@
 package org.globus.security.resources;
 
-import org.globus.security.filestore.FileStoreException;
 import org.slf4j.Logger;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -19,7 +18,7 @@ import java.util.*;
  * Time: 12:29:45 PM
  * To change this template use File | Settings | File Templates.
  */
-public abstract class ResourceSecurityWrapperStore<T extends ResourceSecurityWrapper<V>, V> {
+public abstract class ResourceSecurityWrapperStore<T extends AbstractResourceSecurityWrapper<V>, V> {
     private Collection<V> rootObjects;
     private PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
     private Map<String, T> wrapperMap = new HashMap<String, T>();

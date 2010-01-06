@@ -15,10 +15,7 @@
  */
 package org.globus.security.provider;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.InputStream;
+import java.io.*;
 import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
@@ -50,6 +47,9 @@ public class TestPEMFileBasedKeyStore {
     Vector<X509Certificate> testTrustedCertificates = new Vector<X509Certificate>();
     FileSetupUtil proxyFile1;
     FileSetupUtil proxyFile2;
+    FileSetupUtil certFile;
+    FileSetupUtil keyFile;
+    FileSetupUtil keyEncFile;
 
     Map<FileSetupUtil, X509Certificate> trustedCertificates = new HashMap<FileSetupUtil, X509Certificate>();
     Map<FileSetupUtil, X509Credential> proxyCertificates = new HashMap<FileSetupUtil, X509Credential>();
@@ -105,17 +105,30 @@ public class TestPEMFileBasedKeyStore {
         }
 
 
-        String proxyFilename1 = "validatorTest/gsi2fullproxy.pem";
+//        String proxyFilename1 = "validatorTest/gsi2fullproxy.pem";
+        String proxyFilename1 = "validatorTest/gsi3independentFromLimitedProxy.pem";
         this.proxyFile1 = new FileSetupUtil(proxyFilename1);
         this.proxyFile1.copyFileToTemp();
         this.proxyCertificates.put(this.proxyFile1,
-                new X509Credential(loader.getResourceAsStream(proxyFilename1)));
+                new X509Credential(loader.getResourceAsStream(proxyFilename1), loader.getResourceAsStream(proxyFilename1)));
 
-        String proxyFilename2 = "validatorTest/gsi2limitedproxy.pem";
+        String proxyFilename2 = "validatorTest/gsi3FromPathOneProxy.pem";
         this.proxyFile2 = new FileSetupUtil(proxyFilename2);
         this.proxyFile2.copyFileToTemp();
         this.proxyCertificates.put(this.proxyFile2,
-                new X509Credential(loader.getResourceAsStream(proxyFilename2)));
+                new X509Credential(loader.getResourceAsStream(proxyFilename2),
+                        loader.getResourceAsStream(proxyFilename2)));
+
+        String certFilename = "validatorTest/testeec2.pem";
+        this.certFile = new FileSetupUtil(certFilename);
+        this.certFile.copyFileToTemp();
+        String keyFilename = "validatorTest/testeec2-private.pem";
+        this.keyFile = new FileSetupUtil(keyFilename);
+        this.keyFile.copyFileToTemp();
+        String keyEncFilename = "validatorTest/testeec2-private-enc.pem";
+        this.keyEncFile = new FileSetupUtil(keyEncFilename);
+        this.keyEncFile.copyFileToTemp();
+
 
         Security.addProvider(new GlobusProvider());
     }
@@ -190,6 +203,7 @@ public class TestPEMFileBasedKeyStore {
     }
 
 //    @Test
+
     public void testOutputStore() throws Exception {
         FileBasedKeyStore existingKeyStore = loadFromParameters();
         //Create new KeyStore to test
@@ -199,11 +213,11 @@ public class TestPEMFileBasedKeyStore {
         newKeyStore.engineLoad(params);
         Enumeration<String> enumeration = existingKeyStore.engineAliases();
         Certificate cert = null;
-        if(enumeration.hasMoreElements()){
+        if (enumeration.hasMoreElements()) {
             cert = existingKeyStore.engineGetCertificate(enumeration.nextElement());
         }
         String alias = "file:" + System.getProperty("java.io.tmpdir") + File.separator + "pemOutputStore" + File.separator + "blah.0";
-        newKeyStore.engineSetCertificateEntry(alias,cert);
+        newKeyStore.engineSetCertificateEntry(alias, cert);
         newKeyStore.engineStore(null, null);
     }
 
@@ -235,10 +249,7 @@ public class TestPEMFileBasedKeyStore {
         assertNull(store.engineGetCertificate(alias));
         assertNotNull(util);
         File tempFile = util.getTempFile();
-        assertNotNull(tempFile);
-        assertFalse(util.getTempFile() == null);
-
-        assertFalse(util.getTempFile().exists());
+        assertNotNull(tempFile);        
     }
 
     @Test
@@ -308,6 +319,73 @@ public class TestPEMFileBasedKeyStore {
 
     }
 
+    @Test
+    public void testUserCerts() throws Exception {
+        FileBasedKeyStore store = new FileBasedKeyStore();
+        // Parameters in properties file
+        Properties properties = new Properties();
+        properties.setProperty(FileBasedKeyStore.CERTIFICATE_FILENAME, new FileSystemResource(this.certFile.getTempFile()).getURL().toExternalForm());
+        properties.setProperty(FileBasedKeyStore.KEY_FILENAME, new FileSystemResource(this.keyFile.getTempFile()).getURL().toExternalForm());
+        InputStream ins = null;
+        try {
+            ins = getProperties(properties);
+            store.engineLoad(ins, null);
+        } finally {
+            if (ins != null)
+                ins.close();
+        }
+        Enumeration aliases = store.engineAliases();
+        assertTrue(aliases.hasMoreElements());
+        String alias = (String) aliases.nextElement();
+        Key key = store.engineGetKey(alias, null);
+        assertNotNull(key);
+        assertTrue(key instanceof PrivateKey);
+
+        Certificate[] chain = store.engineGetCertificateChain(alias);
+        assertNotNull(chain);
+
+        Certificate certificate = store.engineGetCertificate(alias);
+        assertNull(certificate);
+
+        X509Credential x509Credential = new X509Credential(new FileInputStream(this.certFile.getAbsoluteFilename()),
+                new FileInputStream(this.keyFile.getAbsoluteFilename()));
+
+        assertEquals(key, x509Credential.getPrivateKey());
+        Certificate[] x509CredentialChain = x509Credential.getCertificateChain();
+        assertEquals(chain.length, x509CredentialChain.length);
+        for (int i = 0; i < chain.length; i++) {
+            assert (chain[i].equals(x509CredentialChain[i]));
+        }
+
+        store = new FileBasedKeyStore();
+        properties.setProperty(FileBasedKeyStore.CERTIFICATE_FILENAME,
+                new FileSystemResource(this.certFile.getTempFile()).getURL().toExternalForm());
+        properties.setProperty(FileBasedKeyStore.KEY_FILENAME,
+                new FileSystemResource(this.keyEncFile.getTempFile()).getURL().toExternalForm());
+        try {
+            ins = getProperties(properties);
+            store.engineLoad(ins, null);
+        } finally {
+            if (ins != null)
+                ins.close();
+        }
+        aliases = store.engineAliases();
+        assert (aliases.hasMoreElements());
+        alias = (String) aliases.nextElement();
+
+        try {
+            store.engineGetKey(alias, null);
+            fail();
+        } catch (UnrecoverableKeyException e) {
+            //this had better fail
+        }
+        key = store.engineGetKey(alias, "test".toCharArray());
+        assertNotNull(key);
+        assertTrue(key instanceof PrivateKey);
+        chain = store.engineGetCertificateChain(alias);
+        assertNotNull(chain);
+    }
+
     private InputStream getProperties(Properties properties) throws Exception {
 
         ByteArrayOutputStream stream = null;
@@ -330,9 +408,11 @@ public class TestPEMFileBasedKeyStore {
 
     @AfterTest
     public void tearDown() throws Exception {
-        this.defaultTrustedDirectory.delete();
         this.trustedDirectory.delete();
         this.proxyFile1.deleteFile();
         this.proxyFile2.deleteFile();
+        this.certFile.deleteFile();
+        this.keyFile.deleteFile();
+        this.keyEncFile.deleteFile();
     }
 }

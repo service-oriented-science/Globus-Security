@@ -1,6 +1,5 @@
 package org.globus.security.resources;
 
-import org.globus.security.filestore.FileStoreException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -9,7 +8,6 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.security.cert.TrustAnchor;
 
 /**
  * Created by IntelliJ IDEA.
@@ -18,7 +16,11 @@ import java.security.cert.TrustAnchor;
  * Time: 12:35:50 PM
  * To change this template use File | Settings | File Templates.
  */
-public abstract class ResourceSecurityWrapper<T> {
+<<<<<<< Updated upstream
+public abstract class AbstractResourceSecurityWrapper<T> {
+=======
+public abstract class AbstractResourceSecurityWrapper<T> implements SecurityObjectWrapper<T>, Storable {
+>>>>>>> Stashed changes
     Logger logger = LoggerFactory.getLogger(getClass());
     private boolean changed;
     private T securityObject;

@@ -20,17 +20,30 @@ import java.security.InvalidAlgorithmParameterException;
 import javax.security.auth.x500.X500Principal;
 
 /**
- * FILL ME
+ * FILL ME.
  *
  * @author ranantha@mcs.anl.gov // FIXME: Maybe a provider  access to this?
  */
 public abstract class SigningPolicyStore {
 
-    public SigningPolicyStore(SigningPolicyStoreParameters parameters)
+    /**
+     * FixMe: Add documentation
+     *
+     * @param parameters FixMe document me.
+     * @throws InvalidAlgorithmParameterException FixMe document me.
+     */
+    public SigningPolicyStore(final SigningPolicyStoreParameters parameters)
             throws InvalidAlgorithmParameterException {
 
     }
 
+    /**
+     * FixMe: Document me
+     *
+     * @param caPrincipal Document Me.
+     * @return Document Me.
+     * @throws SigningPolicyStoreException Document Me.
+     */
     public abstract SigningPolicy getSigningPolicy(X500Principal caPrincipal)
             throws SigningPolicyStoreException;
 }
