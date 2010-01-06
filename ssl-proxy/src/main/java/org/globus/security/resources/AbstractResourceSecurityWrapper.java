@@ -22,9 +22,10 @@ public abstract class AbstractResourceSecurityWrapper<T> implements SecurityObje
     private T securityObject;
     private long lastModified = -1;
     protected Resource resource = null;
+    private String alias;
     protected PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
 
-    protected void init(String locationPattern) throws ResourceStoreException{
+    protected void init(String locationPattern) throws ResourceStoreException {
         init(resolver.getResource(locationPattern));
     }
 
@@ -33,13 +34,18 @@ public abstract class AbstractResourceSecurityWrapper<T> implements SecurityObje
         this.securityObject = create(this.resource);
         logger.debug("Loading resource: {}", this.resource.toString());
         try {
+            this.alias = this.resource.getURL().toExternalForm();
             this.lastModified = this.resource.lastModified();
         } catch (IOException e) {
             throw new ResourceStoreException(e);
         }
     }
 
-    protected void init(String locationPattern, T securityObject) throws ResourceStoreException{
+    public String getAlias() {
+        return alias;
+    }
+
+    protected void init(String locationPattern, T securityObject) throws ResourceStoreException {
         init(resolver.getResource(locationPattern), securityObject);
     }
 
@@ -56,7 +62,7 @@ public abstract class AbstractResourceSecurityWrapper<T> implements SecurityObje
         return resource;
     }
 
-    public URL getResourceURL(){
+    public URL getResourceURL() {
         try {
             return resource.getURL();
         } catch (IOException e) {
@@ -65,7 +71,7 @@ public abstract class AbstractResourceSecurityWrapper<T> implements SecurityObje
         }
     }
 
-    public File getFile(){
+    public File getFile() {
         try {
             return resource.getFile();
         } catch (IOException e) {
@@ -96,7 +102,7 @@ public abstract class AbstractResourceSecurityWrapper<T> implements SecurityObje
         return this.securityObject;
     }
 
-    public boolean hasChanged(){
+    public boolean hasChanged() {
         return this.changed;
     }
 }

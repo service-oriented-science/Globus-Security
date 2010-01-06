@@ -16,7 +16,7 @@ import java.security.cert.CertificateEncodingException;
  *
  * @author Tom Howe
  */
-public class ResourceProxyCredential extends AbstractResourceSecurityWrapper<X509Credential> {
+public class ResourceProxyCredential extends AbstractResourceSecurityWrapper<X509Credential> implements CredentialWrapper{
 
     Logger logger = LoggerFactory.getLogger(getClass());
 

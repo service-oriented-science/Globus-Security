@@ -383,27 +383,48 @@ public class FileBasedKeyStore extends KeyStoreSpi {
         if (!(certificates instanceof X509Certificate[])) {
             throw new KeyStoreException("Certificate chain of X509Certificate expected");
         }
+        CredentialWrapper wrapper;
         X509Credential credential = new X509Credential((PrivateKey) key, (X509Certificate[]) certificates);
-
-        File file;
-        CredentialWrapper proxyCredential = getKeyEntry(s);
-        if (proxyCredential != null) {
-            file = proxyCredential.getFile();
+        Resource certResource;
+        Resource keyResource;
+        if (credential.isEncryptedKey()) {
+            CredentialWrapper credentialWrapper = getKeyEntry(s);
+            if(credentialWrapper != null && credentialWrapper instanceof CertKeyCredential){
+                CertKeyCredential certKeyCred = (CertKeyCredential) credentialWrapper;
+                certResource = certKeyCred.getCertificateFile();
+                keyResource = certKeyCred.getKeyFile();
+            } else {
+                certResource = new FileSystemResource(new File(defaultDirectory, s + ".0"));
+                keyResource = new FileSystemResource(new File(defaultDirectory, s + "-key.pem"));
+            }
+            try {
+                wrapper = new CertKeyCredential(certResource, keyResource, credential);
+            } catch (ResourceStoreException e) {
+                throw new KeyStoreException(e);
+            }
         } else {
-            // FIXME: should alias be file name? or generate?
-            file = new File(defaultDirectory, s + "-key.pem");
+            CredentialWrapper proxyCredential = getKeyEntry(s);
+            File file;
+            if (proxyCredential != null && proxyCredential instanceof AbstractResourceSecurityWrapper) {
+                AbstractResourceSecurityWrapper proxyWrapper = (AbstractResourceSecurityWrapper) proxyCredential;
+                file = proxyWrapper.getFile();
+            } else {
+                // FIXME: should alias be file name? or generate?
+                file = new File(defaultDirectory, s + "-key.pem");
+            }
+            try {
+                wrapper = new ResourceProxyCredential(new FileSystemResource(file), credential);
+            } catch (ResourceStoreException e) {
+                throw new KeyStoreException(e);
+            }
         }
-        try {            
-            credential.writeToFile(file);
-            ResourceProxyCredential fileCred = new ResourceProxyCredential(new FileSystemResource(file), credential);
-            this.aliasObjectMap.put(s, fileCred);
+        try {
+            wrapper.store();
+            this.aliasObjectMap.put(wrapper.getAlias(), wrapper);
         } catch (ResourceStoreException e) {
             throw new KeyStoreException("Error storing credential", e);
-        } catch (IOException e) {
-            throw new KeyStoreException("Error storing credential", e);
-        } catch (CertificateEncodingException e) {
-            throw new KeyStoreException("Error storing credential", e);
         }
+
     }
 
     @Override
