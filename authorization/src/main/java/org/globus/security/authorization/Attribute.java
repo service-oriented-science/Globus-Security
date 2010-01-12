@@ -19,7 +19,6 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.globus.security.authorization.util.I18nUtil;
@@ -33,67 +32,71 @@ import org.globus.security.authorization.util.I18nUtil;
 public class Attribute implements Serializable {
 
     private static I18nUtil i18n =
-            I18nUtil.getI18n("org.globus.security.authorization.errors",
-                    Attribute.class.getClassLoader());
+        I18nUtil.getI18n("org.globus.security.authorization.errors",
+            Attribute.class.getClassLoader());
 
     private Calendar validFrom;
     private Calendar validTill;
-    private AttributeIdentifier attributeId = null;
-    private Set valueSet = null;
-    private EntityAttributes issuer = null;
+    private AttributeIdentifier attributeId;
+    private Set<Object> valueSet;
+    private EntityAttributes issuer;
 
+    @SuppressWarnings("unused")
     private Attribute() {
+        //Should not use 
     }
 
-    public Attribute(AttributeIdentifier attributeId_,
-                     EntityAttributes issuer_,
-                     Calendar validFrom, Calendar validTill) {
-        this(attributeId_, issuer_, validFrom, validTill, null);
+    public Attribute(
+        AttributeIdentifier initAttributeId, EntityAttributes initIssuer, Calendar validFrom,
+        Calendar validTill) {
+        this(initAttributeId, initIssuer, validFrom, validTill, null);
     }
 
     /**
      * Constructor
      *
-     * @param attributeId_ AttributeIdentifier object. Cannot be null
-     * @param issuer_      Issuer of asertion. If this is null, the framework
-     *                     assumes that the container is the issuer. All PIPs must
-     *                     make sure that this value it filled, if contiane should not be
-     *                     assumed to be the owner.
-     * @param validFrom_   Time stamp from which attribute is valid. Cannot be null.
-     * @param validTill_   Time until which attribute is valid. Must beafter validFrom_
-     * @param values       Contents of this set are added as attribute values.
+     * @param initAttributeId AttributeIdentifier object. Cannot be null
+     * @param initIssuer      Issuer of asertion. If this is null, the framework
+     *                        assumes that the container is the issuer. All PIPs must
+     *                        make sure that this value it filled, if contiane should not be
+     *                        assumed to be the owner.
+     * @param initValidFrom   Time stamp from which attribute is valid. Cannot be null.
+     * @param initValidTo     Time until which attribute is valid. Must beafter initValidFrom
+     * @param values          Contents of this set are added as attribute values.
      */
-    public Attribute(AttributeIdentifier attributeId_,
-                     EntityAttributes issuer_,
-                     Calendar validFrom_, Calendar validTill_, Set values) {
+    public Attribute(
+        AttributeIdentifier initAttributeId, EntityAttributes initIssuer, Calendar initValidFrom,
+        Calendar initValidTo, Set<Object> values) {
 
-        if (attributeId_ == null) {
+        if (initAttributeId == null) {
             String err = i18n.getMessage("attrIdNotNull");
             throw new IllegalArgumentException(err);
         }
 
-        if (validFrom_ == null) {
+        if (initValidFrom == null) {
             String err = i18n.getMessage("validFromNotNull");
             throw new IllegalArgumentException(err);
         }
 
-        if ((validTill_ != null) && (validTill_.before(validFrom_))) {
+        if ((initValidTo != null) && (initValidTo.before(initValidFrom))) {
             String err = i18n.getMessage("badValidTill");
             throw new IllegalArgumentException(err);
         }
 
-        this.attributeId = attributeId_;
-        this.issuer = issuer_;
-        this.validFrom = validFrom_;
-        this.validTill = validTill_;
+        this.attributeId = initAttributeId;
+        this.issuer = initIssuer;
+        this.validFrom = initValidFrom;
+        this.validTill = initValidTo;
 
         if (values != null) {
-            this.valueSet = Collections.synchronizedSet(new HashSet(values));
+            this.valueSet = Collections.synchronizedSet(new HashSet<Object>(values));
         }
     }
 
     /**
      * Returns issuer of assertion.
+     *
+     * @return Fill Me
      */
     public EntityAttributes getIssuer() {
         return this.issuer;
@@ -102,18 +105,22 @@ public class Attribute implements Serializable {
 
     /**
      * Overwrites the existing collection of values, with this set.
+     *
+     * @param values Fill Me
      */
-    public void setAttributeValueSet(Set values) {
-        this.valueSet = Collections.synchronizedSet(new HashSet(values));
+    public void setAttributeValueSet(Set<Object> values) {
+        this.valueSet = Collections.synchronizedSet(new HashSet<Object>(values));
     }
 
     /**
      * Adds this object to the attribute value set.
+     *
+     * @param object Fill Me
      */
     public void addAttributeValue(Object object) {
         if (object != null) {
             if (this.valueSet == null) {
-                this.valueSet = Collections.synchronizedSet(new HashSet());
+                this.valueSet = Collections.synchronizedSet(new HashSet<Object>());
             }
             this.valueSet.add(object);
         }
@@ -121,13 +128,17 @@ public class Attribute implements Serializable {
 
     /**
      * Returns attribute value as a set.
+     *
+     * @return Fill Me
      */
-    public Set getAttributeValueSet() {
+    public Set<Object> getAttributeValueSet() {
         return this.valueSet;
     }
 
     /**
      * Returns AttributeIdentifier
+     *
+     * @return Fill Me
      */
     public AttributeIdentifier getAttributeIdentifier() {
         return this.attributeId;
@@ -135,6 +146,7 @@ public class Attribute implements Serializable {
 
     /*
      * Returns true of the attribute is an identity attribute.
+     *
      */
 
     public boolean isIdentityAttribute() {
@@ -143,11 +155,16 @@ public class Attribute implements Serializable {
 
     /**
      * Returns timestamp from when this attribute is valid
+     *
+     * @return Fill Me
      */
     public Calendar getValidFrom() {
         return this.validFrom;
     }
 
+    /**
+     * @return Fill Me
+     */
     public Calendar getValidTill() {
         return this.validTill;
     }
@@ -161,6 +178,7 @@ public class Attribute implements Serializable {
      * matches (refer <code>EntityAttributes.isSameEntity</code>) and atleast
      * one value matches. Time stamps are ignored.
      *
+     * @param obj Fill Me
      * @return Returns true if the attributes are
      */
     public boolean isSameAttribute(Attribute obj) {
@@ -194,14 +212,14 @@ public class Attribute implements Serializable {
 
     /**
      * Returns true if one of the attribute value matches the value set.
+     *
+     * @param obj Fill Me
+     * @return Fill Me
      */
     public boolean valueMatches(Attribute obj) {
 
         if (this.valueSet == null) {
-            if (obj.getAttributeValueSet() != null) {
-                return false;
-            }
-            return true;
+            return obj.getAttributeValueSet() == null;
         } else {
             if (obj.getAttributeValueSet() == null) {
                 return false;
@@ -209,15 +227,13 @@ public class Attribute implements Serializable {
 
             // if the current attributes does not have any values, check if
             // compared one also does not have values.
-            if ((this.valueSet.size() == 0) &&
-                    ((obj.getAttributeValueSet().size()) == 0)) {
+            if ((this.valueSet.size() == 0)
+                && ((obj.getAttributeValueSet().size()) == 0)) {
                 return true;
             }
 
             // Since even if one of the values matches, it is equal
-            Iterator iterator = obj.getAttributeValueSet().iterator();
-            while (iterator.hasNext()) {
-                Object obj1 = iterator.next();
+            for (Object obj1 : obj.getAttributeValueSet()) {
                 if (this.valueSet.contains(obj1)) {
                     return true;
                 }
@@ -229,19 +245,21 @@ public class Attribute implements Serializable {
     public String toString() {
 
         StringBuffer str = new StringBuffer(this.attributeId.toString());
-        str.append("\n Valid from: " + this.validFrom.getTime().toString());
+        str.append("\n Valid from: ");
+        str.append(this.validFrom.getTime().toString());
         str.append("\n Valid till: ");
         if (this.validTill != null) {
             str.append(this.validTill.getTime().toString());
         } else {
             str.append("infinity");
         }
-        str.append("\n Issuer: " + this.issuer);
+        str.append("\n Issuer: ");
+        str.append(this.issuer);
         if (this.valueSet != null) {
             str.append("\n Values:\n\t");
-            Iterator iterator = this.valueSet.iterator();
-            while (iterator.hasNext()) {
-                str.append(iterator.next() + "\n\t");
+            for (Object aValueSet : this.valueSet) {
+                str.append(aValueSet);
+                str.append("\n\t");
             }
         }
         return str.toString();
@@ -253,6 +271,8 @@ public class Attribute implements Serializable {
      * restrictive with time. If the new attribute has a valid
      * from after current one, overwrite. If new attribute has a valid
      * to before current one, overwrite.
+     *
+     * @param attribute Fill Me
      */
     public void merge(Attribute attribute) {
 
@@ -260,10 +280,10 @@ public class Attribute implements Serializable {
             return;
         }
 
-        // if attribute exist in map, but the valueSet being
+        // if attribute exist in map, but the localValueSet being
         // added is null,no point adding it
-        Set valueSet = attribute.getAttributeValueSet();
-        if (valueSet != null) {
+        Set localValueSet = attribute.getAttributeValueSet();
+        if (localValueSet != null) {
             // merge valid to and valid from
             Calendar newValidFrom = attribute.getValidFrom();
             if (newValidFrom.after(this.validFrom)) {
@@ -271,32 +291,27 @@ public class Attribute implements Serializable {
             }
 
             Calendar newValidTill = attribute.getValidTill();
-            if ((newValidTill != null) &&
-                    (newValidTill.before(this.validTill))) {
+            if ((newValidTill != null) && (newValidTill.before(this.validTill))) {
                 this.validTill = newValidTill;
             }
 
             //merge values
-            Iterator it = valueSet.iterator();
-            while (it.hasNext()) {
-                addAttributeValue(it.next());
+            for (Object aLocalValueSet : localValueSet) {
+                addAttributeValue(aLocalValueSet);
             }
         }
     }
 
     /**
      * Returns true if the attribute has same issuer.
+     *
+     * @param attribute Fill Me
+     * @return Fill Me
      */
+    @SuppressWarnings("unused")
     public boolean isSameIssuer(Attribute attribute) {
 
-        if (attribute == null) {
-            return false;
-        }
+        return attribute != null && !this.issuer.equals(attribute.getIssuer());
 
-        if (this.issuer.equals(attribute.getIssuer())) {
-            return false;
-        } else {
-            return true;
-        }
     }
 }

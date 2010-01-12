@@ -1,0 +1,12 @@
+<project name="My Site Title">
+
+    <skin>
+        <groupId>org.globus.crux.security</groupId>
+        <artifactId>globus-skin</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </skin>
+    <body>
+        <menu name="section1" href="section1.html"/>
+    </body>
+
+</project>

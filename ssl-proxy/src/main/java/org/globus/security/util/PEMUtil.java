@@ -19,30 +19,43 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 // FIXME: how much of this can be borrwed directly form BC?
-public class PEMUtil {
+
+/**
+ * Fill Me
+ */
+public final class PEMUtil {
+
+    public static final String LINE_SEP;
+    static final byte[] LINE_SEP_BYTES;
 
     static final int LINE_LENGTH = 64;
 
-    public static String lineSep;
-    public static byte[] lineSepBytes;
+    private static final char[] HEX = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+        'A', 'B', 'C', 'D', 'E', 'F'};
 
     static {
-        lineSep = System.getProperty("line.separator");
-        lineSepBytes = lineSep.getBytes();
+        LINE_SEP = System.getProperty("line.separator");
+        LINE_SEP_BYTES = LINE_SEP.getBytes();
     }
 
-    public static void writeBase64(OutputStream out,
-                                   String header,
-                                   byte[] base64Data,
-                                   String footer)
-            throws IOException {
+    private PEMUtil() {
+        //This should not be instantiated
+    }
+
+
+    public static void writeBase64(
+        OutputStream out,
+        String header,
+        byte[] base64Data,
+        String footer)
+        throws IOException {
 
         int length = LINE_LENGTH;
         int offset = 0;
 
         if (header != null) {
             out.write(header.getBytes());
-            out.write(lineSepBytes);
+            out.write(LINE_SEP_BYTES);
         }
 
         int size = base64Data.length;
@@ -51,13 +64,13 @@ public class PEMUtil {
                 length = size - offset;
             }
             out.write(base64Data, offset, length);
-            out.write(lineSepBytes);
+            out.write(LINE_SEP_BYTES);
             offset = offset + LINE_LENGTH;
         }
 
         if (footer != null) {
             out.write(footer.getBytes());
-            out.write(lineSepBytes);
+            out.write(LINE_SEP_BYTES);
         }
     }
 
@@ -67,20 +80,18 @@ public class PEMUtil {
      * @param b a byte array
      * @return String containing the hexadecimal representation
      */
-    public final static String toHex(byte[] b) {
+    public static String toHex(byte[] b) {
         char[] buf = new char[b.length * 2];
-        int i, j, k;
+        int j = 0;
+        int k;
 
-        i = j = 0;
-        for (; i < b.length; i++) {
-            k = b[i];
-            buf[j++] = hex[(k >>> 4) & 0x0F];
-            buf[j++] = hex[k & 0x0F];
+        for (byte aB : b) {
+            k = aB;
+            buf[j++] = HEX[(k >>> 4) & 0x0F];
+            buf[j++] = HEX[k & 0x0F];
         }
         return new String(buf);
     }
 
-    private static final char[] hex = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-            'A', 'B', 'C', 'D', 'E', 'F'};
 
 }

@@ -18,11 +18,13 @@ package org.globus.security.authorization.providers;
 import org.globus.security.authorization.AuthorizationException;
 import org.globus.security.authorization.Decision;
 import org.globus.security.authorization.EntityAttributes;
+import org.globus.security.authorization.PDPInterceptor;
 import org.globus.security.authorization.RequestEntities;
 import org.globus.security.authorization.util.I18nUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 /**
  * This combining algorithm returns the first deny decision returned
  * by the list of configuired PDPs.
@@ -41,16 +43,13 @@ import org.slf4j.LoggerFactory;
  */
 public class DenyOverrideAlg extends AbstractEngine {
 
-    private static I18nUtil i18n =
-            I18nUtil.getI18n("org.globus.security.authorization.errors",
-                    DenyOverrideAlg.class.getClassLoader());
+    private static I18nUtil i18n = I18nUtil.getI18n("org.globus.security.authorization.errors",
+        DenyOverrideAlg.class.getClassLoader());
 
-    private static Logger logger =
-            LoggerFactory.getLogger(DenyOverrideAlg.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(DenyOverrideAlg.class.getName());
 
-    public Decision engineAuthorize(RequestEntities reqAttr,
-                                    EntityAttributes resourceOwner)
-            throws AuthorizationException {
+    public Decision engineAuthorize(RequestEntities reqAttr, EntityAttributes resourceOwner)
+        throws AuthorizationException {
 
         collectAttributes(reqAttr);
 
@@ -61,10 +60,9 @@ public class DenyOverrideAlg extends AbstractEngine {
         }
 
         boolean permit = true;
-        for (int i = 0; i < this.pdps.length; i++) {
+        for (PDPInterceptor pdp : this.pdps) {
 
-            Decision decision = this.pdps[i]
-                    .canAccess(reqAttr, this.nonReqEntities);
+            Decision decision = pdp.canAccess(reqAttr, this.nonReqEntities);
 
             if (decision == null) {
                 permit = false;
@@ -78,11 +76,9 @@ public class DenyOverrideAlg extends AbstractEngine {
         }
 
         if (permit) {
-            return new Decision(reqAttr.getRequestor(), resourceOwner,
-                    Decision.PERMIT, null, null);
+            return new Decision(reqAttr.getRequestor(), resourceOwner, Decision.PERMIT, null, null);
         } else {
-            return new Decision(reqAttr.getRequestor(), resourceOwner,
-                    Decision.INDETERMINATE, null, null);
+            return new Decision(reqAttr.getRequestor(), resourceOwner, Decision.INDETERMINATE, null, null);
         }
     }
 }

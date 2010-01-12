@@ -21,6 +21,5 @@ package org.globus.security.authorization;
  */
 public interface BootstrapPIP extends PIPInterceptor {
 
-    public void collectRequestAttributes(RequestEntities requestAttr)
-            throws AttributeException;
+    void collectRequestAttributes(RequestEntities requestAttr) throws AttributeException;
 }

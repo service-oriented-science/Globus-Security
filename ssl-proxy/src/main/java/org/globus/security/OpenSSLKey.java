@@ -55,31 +55,31 @@ public abstract class OpenSSLKey {
     public static final String HEADER = "-----BEGIN RSA PRIVATE KEY-----";
 
     /* Key algorithm: RSA, DSA */
-    private String keyAlg = null;
+    private String keyAlg;
     /* Current state of this key class */
-    private boolean isEncrypted = false;
+    private boolean isEncrypted;
 
     // base64 encoded key value
-    private byte[] encodedKey = null;
-    private PrivateKey intKey = null;
-    private IvParameterSpec iv = null;
+    private byte[] encodedKey;
+    private PrivateKey intKey;
+    private IvParameterSpec iv;
 
     /*
      * String representation of the encryption algorithm:
      * DES-EDE3-CBC, AES-256-CBC, etc.
      */
-    private String encAlgStr = null;
+    private String encAlgStr;
 
     /*
      * Java string representation of the encryption algorithm:
      * DES, DESede, AES.
      */
-    private String encAlg = null;
+    private String encAlg;
     private int keyLength = -1;
     private int ivLength = -1;
 
     // ASN.1 encoded key value
-    private byte[] keyData = null;
+    private byte[] keyData;
 
     /**
      * Reads a OpenSSL private key from the specified input stream.
@@ -90,7 +90,7 @@ public abstract class OpenSSLKey {
      * @throws GeneralSecurityException if problems with the key
      */
     public OpenSSLKey(InputStream is)
-            throws IOException, GeneralSecurityException {
+        throws IOException, GeneralSecurityException {
         InputStreamReader isr = new InputStreamReader(is);
         readPEM(isr);
     }
@@ -104,13 +104,15 @@ public abstract class OpenSSLKey {
      * @throws GeneralSecurityException if problems with the key
      */
     public OpenSSLKey(String file)
-            throws IOException, GeneralSecurityException {
+        throws IOException, GeneralSecurityException {
         FileReader f = null;
         try {
             f = new FileReader(file);
             readPEM(f);
         } finally {
-            if (f != null) f.close();
+            if (f != null) {
+                f.close();
+            }
         }
     }
 
@@ -138,11 +140,12 @@ public abstract class OpenSSLKey {
      *                                  problems.
      */
     public OpenSSLKey(String algorithm, byte[] data)
-            throws GeneralSecurityException {
+        throws GeneralSecurityException {
         if (data == null) {
             throw new IllegalArgumentException("Data is null");
         }
-        this.keyData = data;
+        this.keyData = new byte[data.length];
+        System.arraycopy(data, 0, this.keyData, 0, data.length);
         this.isEncrypted = false;
         this.intKey = getKey(algorithm, data);
     }
@@ -152,7 +155,7 @@ public abstract class OpenSSLKey {
     }
 
     private void readPEM(Reader rd)
-            throws IOException, GeneralSecurityException {
+        throws IOException, GeneralSecurityException {
 
         BufferedReader in = new BufferedReader(rd);
 
@@ -176,9 +179,12 @@ public abstract class OpenSSLKey {
         }
 
         next = in.readLine();
-        if (next.startsWith("Proc-Type: 4,ENCRYPTED")) {
+        if (next != null && next.startsWith("Proc-Type: 4,ENCRYPTED")) {
             this.isEncrypted = true;
-            parseEncryptionInfo(in.readLine());
+            next = in.readLine();
+            if (next != null) {
+                parseEncryptionInfo(next);
+            }
             in.readLine();
         } else {
             this.isEncrypted = false;
@@ -186,7 +192,9 @@ public abstract class OpenSSLKey {
         }
 
         while ((next = in.readLine()) != null) {
-            if (next.startsWith("-----END")) break;
+            if (next.startsWith("-----END")) {
+                break;
+            }
             sb.append(next);
         }
 
@@ -219,7 +227,7 @@ public abstract class OpenSSLKey {
      * @throws InvalidKeyException      whenever an error occurs during decryption.
      */
     public void decrypt(String password)
-            throws GeneralSecurityException, InvalidKeyException {
+        throws GeneralSecurityException, InvalidKeyException {
         decrypt(password.getBytes());
     }
 
@@ -232,7 +240,7 @@ public abstract class OpenSSLKey {
      * @throws InvalidKeyException      whenever an error occurs during decryption.
      */
     public void decrypt(byte[] password)
-            throws GeneralSecurityException, InvalidKeyException {
+        throws GeneralSecurityException, InvalidKeyException {
         if (!isEncrypted()) {
             return;
         }
@@ -259,7 +267,7 @@ public abstract class OpenSSLKey {
      * @throws GeneralSecurityException whenever an error occurs during encryption.
      */
     public void encrypt(String password)
-            throws GeneralSecurityException {
+        throws GeneralSecurityException {
         encrypt(password.getBytes());
     }
 
@@ -271,7 +279,7 @@ public abstract class OpenSSLKey {
      * @throws GeneralSecurityException whenever an error occurs during encryption.
      */
     public void encrypt(byte[] password)
-            throws GeneralSecurityException {
+        throws GeneralSecurityException {
 
         if (isEncrypted()) {
             return;
@@ -304,7 +312,7 @@ public abstract class OpenSSLKey {
      * @throws GeneralSecurityException if algorithm is not supported
      */
     public void setEncryptionAlgorithm(String alg)
-            throws GeneralSecurityException {
+        throws GeneralSecurityException {
         setAlgorithmSettings(alg);
     }
 
@@ -327,7 +335,7 @@ public abstract class OpenSSLKey {
      * @throws IOException if I/O problems writing the key
      */
     public void writeTo(OutputStream output)
-            throws IOException {
+        throws IOException {
         output.write(toPEM().getBytes());
     }
 
@@ -340,7 +348,7 @@ public abstract class OpenSSLKey {
      * @throws IOException if I/O problems writing the key
      */
     public void writeTo(Writer w)
-            throws IOException {
+        throws IOException {
         w.write(toPEM());
     }
 
@@ -353,7 +361,7 @@ public abstract class OpenSSLKey {
      * @throws IOException if I/O problems writing the key
      */
     public void writeTo(String file)
-            throws IOException {
+        throws IOException {
         PrintWriter p = null;
         try {
             File f = FileUtil.createFile(file);
@@ -362,7 +370,9 @@ public abstract class OpenSSLKey {
             p = new PrintWriter(new FileOutputStream(f));
             p.write(toPEM());
         } finally {
-            if (p != null) p.close();
+            if (p != null) {
+                p.close();
+            }
         }
     }
 
@@ -376,20 +386,20 @@ public abstract class OpenSSLKey {
      * (in PKCS#1 format)
      */
     protected abstract PrivateKey getKey(String alg, byte[] data)
-            throws GeneralSecurityException;
+        throws GeneralSecurityException;
 
     protected String getProvider() {
         return null;
     }
 
     private Cipher getCipher()
-            throws GeneralSecurityException {
+        throws GeneralSecurityException {
         String provider = getProvider();
         if (provider == null) {
             return Cipher.getInstance(this.encAlg + "/CBC/PKCS5Padding");
         } else {
             return Cipher.getInstance(this.encAlg + "/CBC/PKCS5Padding",
-                    provider);
+                provider);
         }
     }
 
@@ -404,7 +414,7 @@ public abstract class OpenSSLKey {
     }
 
     private void parseEncryptionInfo(String line)
-            throws GeneralSecurityException {
+        throws GeneralSecurityException {
         // TODO: can make this better
         String keyInfo = line.substring(10);
         StringTokenizer tknz = new StringTokenizer(keyInfo, ",", false);
@@ -415,7 +425,7 @@ public abstract class OpenSSLKey {
     }
 
     private void setAlgorithmSettings(String alg)
-            throws GeneralSecurityException {
+        throws GeneralSecurityException {
         if (alg.equals("DES-EDE3-CBC")) {
             this.encAlg = "DESede";
             this.keyLength = 24;
@@ -438,13 +448,13 @@ public abstract class OpenSSLKey {
             this.ivLength = 8;
         } else {
             throw new GeneralSecurityException("unsupported Enc algorithm "
-                    + alg);
+                + alg);
         }
         this.encAlgStr = alg;
     }
 
     private void setIV(String s)
-            throws GeneralSecurityException {
+        throws GeneralSecurityException {
         int len = s.length() / 2;
         if (len != this.ivLength) {
             String err = "ivLength";
@@ -467,17 +477,17 @@ public abstract class OpenSSLKey {
         return new IvParameterSpec(b);
     }
 
-    private SecretKeySpec getSecretKey(byte[] pwd, byte[] iv)
-            throws GeneralSecurityException {
+    private SecretKeySpec getSecretKey(byte[] pwd, byte[] initializationVector)
+        throws GeneralSecurityException {
 
         byte[] key = new byte[this.keyLength];
         int offset = 0;
         int bytesNeeded = this.keyLength;
 
         MessageDigest md5 = MessageDigest.getInstance("MD5");
-        for (; ;) {
+        while (true) {
             md5.update(pwd);
-            md5.update(iv, 0, 8);
+            md5.update(initializationVector, 0, 8);
 
             byte[] b = md5.digest();
 
@@ -509,19 +519,18 @@ public abstract class OpenSSLKey {
      */
     private String toPEM() {
 
-        byte[] data = (this.keyData == null) ?
-                this.encodedKey : Base64.encode(this.keyData);
+        byte[] data = (this.keyData == null) ? this.encodedKey : Base64.encode(this.keyData);
 
         String header = HEADER;
 
         if (isEncrypted()) {
             StringBuffer buf = new StringBuffer(header);
-            buf.append(PEMUtil.lineSep);
+            buf.append(PEMUtil.LINE_SEP);
             buf.append("Proc-Type: 4,ENCRYPTED");
-            buf.append(PEMUtil.lineSep);
+            buf.append(PEMUtil.LINE_SEP);
             buf.append("DEK-Info: ").append(this.encAlgStr);
             buf.append(",").append(PEMUtil.toHex(iv.getIV()));
-            buf.append(PEMUtil.lineSep);
+            buf.append(PEMUtil.LINE_SEP);
             header = buf.toString();
         }
 
@@ -529,9 +538,9 @@ public abstract class OpenSSLKey {
 
         try {
             PEMUtil.writeBase64(out,
-                    header,
-                    data,
-                    "-----END RSA PRIVATE KEY-----");
+                header,
+                data,
+                "-----END RSA PRIVATE KEY-----");
         } catch (IOException e) {
             // FIXME !!
             throw new RuntimeException("Unexpcted error");

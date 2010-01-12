@@ -58,8 +58,9 @@ public class X509NameHelper {
      *              X509Name.CN}
      * @param value the value (e.g. "proxy")
      */
-    public void add(DERObjectIdentifier oid,
-                    String value) {
+    public void add(
+        DERObjectIdentifier oid,
+        String value) {
         ASN1EncodableVector v = new ASN1EncodableVector();
         v.add(oid);
         v.add(new DERPrintableString(value));

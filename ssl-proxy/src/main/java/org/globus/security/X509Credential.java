@@ -39,7 +39,6 @@ import org.globus.security.util.CertificateLoadUtil;
 import org.bouncycastle.util.encoders.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
 
 /**
  * FILL ME
@@ -51,33 +50,33 @@ import org.springframework.core.io.Resource;
 @SuppressWarnings("unused")
 public class X509Credential {
 
-    public final static int BUFFER_SIZE = Integer.MAX_VALUE;
+    public static final int BUFFER_SIZE = Integer.MAX_VALUE;
 
     private static Logger logger =
-            LoggerFactory.getLogger(X509Credential.class.getName());
+        LoggerFactory.getLogger(X509Credential.class.getName());
 
     private OpenSSLKey opensslKey;
     private X509Certificate[] certChain;
 
-    public X509Credential(PrivateKey key_, X509Certificate[] certChain_) {
+    public X509Credential(PrivateKey initKey, X509Certificate[] initCertChain) {
 
-        if (key_ == null) {
+        if (initKey == null) {
             throw new IllegalArgumentException("Key cannot be null");
         }
 
-        if ((certChain_ == null) ||
-                (certChain_.length < 1)) {
+        if ((initCertChain == null) || (initCertChain.length < 1)) {
             throw new IllegalArgumentException(
-                    "Atleast one public certificate required");
+                "Atleast one public certificate required");
         }
 
-        this.certChain = certChain_;
-        this.opensslKey = new BouncyCastleOpenSSLKey(key_);
+        this.certChain = new X509Certificate[initCertChain.length];
+        System.arraycopy(initCertChain, 0, this.certChain, 0, initCertChain.length);
+        this.opensslKey = new BouncyCastleOpenSSLKey(initKey);
     }
 
 
     public X509Credential(InputStream certInputStream, InputStream keyInputStream)
-            throws CredentialException {
+        throws CredentialException {
         if (certInputStream.markSupported()) {
             certInputStream.mark(BUFFER_SIZE);
         }
@@ -87,7 +86,9 @@ public class X509Credential {
     }
 
     public X509Certificate[] getCertificateChain() {
-        return this.certChain;
+        X509Certificate[] returnArray = new X509Certificate[this.certChain.length];
+        System.arraycopy(this.certChain, 0, returnArray, 0, this.certChain.length);
+        return returnArray;
     }
 
     public Key getPrivateKey() throws CredentialException {
@@ -117,11 +118,11 @@ public class X509Credential {
     }
 
     protected void loadCertificate(InputStream input)
-            throws CredentialException {
+        throws CredentialException {
 
         if (input == null) {
             throw new IllegalArgumentException(
-                    "Input stream to load X509Credential is null");
+                "Input stream to load X509Credential is null");
         }
 
         X509Certificate cert;
@@ -140,7 +141,7 @@ public class X509Credential {
                 if (line.indexOf("BEGIN CERTIFICATE") != -1) {
                     byte[] data = getDecodedPEMObject(reader);
                     cert = CertificateLoadUtil
-                            .loadCertificate(new ByteArrayInputStream(data));
+                        .loadCertificate(new ByteArrayInputStream(data));
                     chain.addElement(cert);
                 }
             }
@@ -206,7 +207,7 @@ public class X509Credential {
      * string is found in the data. Otherwise, returns null.
      */
     private static byte[] getDecodedPEMObject(BufferedReader reader)
-            throws IOException {
+        throws IOException {
         String line;
         StringBuffer buf = new StringBuffer();
         while ((line = reader.readLine()) != null) {
@@ -226,13 +227,15 @@ public class X509Credential {
     }
 
     public void saveCertificateChain(OutputStream out)
-            throws IOException, CertificateEncodingException {
+        throws IOException, CertificateEncodingException {
 
         CertificateIOUtil.writeCertificate(out, this.certChain[0]);
 
         for (int i = 1; i < this.certChain.length; i++) {
             // FIXME: should we skip the self-signed certificates?
-            if (this.certChain[i].getSubjectDN().equals(certChain[i].getIssuerDN())) continue;
+            if (this.certChain[i].getSubjectDN().equals(certChain[i].getIssuerDN())) {
+                continue;
+            }
             CertificateIOUtil.writeCertificate(out, this.certChain[i]);
         }
 
@@ -249,20 +252,25 @@ public class X509Credential {
     }
 
     public void writeToFile(File certFile, File keyFile) throws IOException, CertificateEncodingException {
-
-        FileOutputStream keyOutputStream = new FileOutputStream(keyFile);
-        FileOutputStream certOutputStream = new FileOutputStream(certFile);
+        FileOutputStream keyOutputStream = null;
+        FileOutputStream certOutputStream = null;
         try {
+            keyOutputStream = new FileOutputStream(keyFile);
+            certOutputStream = new FileOutputStream(certFile);
             saveKey(keyOutputStream);
             saveCertificateChain(certOutputStream);
         } finally {
             try {
-                keyOutputStream.close();
+                if (keyOutputStream != null) {
+                    keyOutputStream.close();
+                }
             } catch (IOException e) {
                 logger.warn("Could not close stream on save of key to file. " + keyFile.getPath());
             }
             try {
-                certOutputStream.close();
+                if (certOutputStream != null) {
+                    certOutputStream.close();
+                }
             } catch (IOException e) {
                 logger.warn("Could not close stream on save certificate chain to file. " + certFile.getPath());
             }

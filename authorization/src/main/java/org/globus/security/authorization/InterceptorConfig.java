@@ -24,9 +24,9 @@ public class InterceptorConfig {
     private String interceptorFQDN;
     private String scope;
 
-    public InterceptorConfig(String scope_, String fqdn_) {
-        this.interceptorFQDN = fqdn_;
-        this.scope = scope_;
+    public InterceptorConfig(String initScope, String initFQDN) {
+        this.interceptorFQDN = initFQDN;
+        this.scope = initScope;
     }
 
     public String getInterceptorFQDN() {

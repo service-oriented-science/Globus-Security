@@ -1,12 +1,12 @@
 package org.globus.security.resources;
 
-import org.globus.security.util.CertificateIOUtil;
-import org.globus.security.util.CertificateLoadUtil;
-import org.springframework.core.io.Resource;
-
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.cert.X509CRL;
+
+import org.globus.security.util.CertificateLoadUtil;
+
+import org.springframework.core.io.Resource;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,7 +29,7 @@ public class ResourceCRL extends AbstractResourceSecurityWrapper<X509CRL> {
         init(resolver.getResource(fileName), crl);
     }
 
-    public X509CRL getCrl() throws ResourceStoreException{
+    public X509CRL getCrl() throws ResourceStoreException {
         return getSecurityObject();
     }
 

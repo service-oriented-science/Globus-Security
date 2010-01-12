@@ -1,12 +1,12 @@
 package org.globus.security.provider;
 
-import org.globus.security.Constants;
-import org.globus.security.proxyExtension.ProxyCertInfo;
-import org.globus.security.util.ProxyCertificateUtil;
-
 import java.security.cert.CertPathValidatorException;
 import java.security.cert.X509Certificate;
 import java.util.Set;
+
+import org.globus.security.Constants;
+import org.globus.security.proxyExtension.ProxyCertInfo;
+import org.globus.security.util.ProxyCertificateUtil;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,22 +28,19 @@ public class UnsupportedCriticalExtensionChecker implements CertificateChecker {
 
     public void invoke(X509Certificate cert, Constants.CertificateType certType) throws CertPathValidatorException {
         Set<String> criticalExtensionOids =
-                cert.getCriticalExtensionOIDs();
+            cert.getCriticalExtensionOIDs();
         if (criticalExtensionOids == null) {
             return;
         }
         for (String criticalExtensionOid : criticalExtensionOids) {
-            if (criticalExtensionOid.equals(X509ProxyCertPathValidator.BASIC_CONSTRAINT_OID) ||
-                    criticalExtensionOid.equals(X509ProxyCertPathValidator.KEY_USAGE_OID) ||
-                    (criticalExtensionOid.equals(ProxyCertInfo.OID.toString()) &&
-                            ProxyCertificateUtil.isGsi4Proxy(certType)) ||
-                    (criticalExtensionOid.equals(ProxyCertInfo.OLD_OID.toString()) &&
-                            ProxyCertificateUtil.isGsi3Proxy(certType))) {
-            } else {
-                throw new CertPathValidatorException(
-                        "Critical extension with unsupported OID " + criticalExtensionOid);
+            if (!criticalExtensionOid.equals(X509ProxyCertPathValidator.BASIC_CONSTRAINT_OID)
+                && !criticalExtensionOid.equals(X509ProxyCertPathValidator.KEY_USAGE_OID)
+                && (!criticalExtensionOid.equals(ProxyCertInfo.OID.toString())
+                || !ProxyCertificateUtil.isGsi4Proxy(certType))
+                && (!criticalExtensionOid.equals(ProxyCertInfo.OLD_OID.toString())
+                || !ProxyCertificateUtil.isGsi3Proxy(certType))) {
+                throw new CertPathValidatorException("Critical extension with unsupported OID " + criticalExtensionOid);
             }
-
         }
     }
 }

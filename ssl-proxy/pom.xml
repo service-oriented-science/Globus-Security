@@ -17,6 +17,8 @@
     <properties>
         <bundle.symbolicName>org.globus.crux.security</bundle.symbolicName>
         <bundle.namespace>ssl-proxy</bundle.namespace>
+        <book.directory>src/book</book.directory>
+        <book.descriptor>src/book/book-descriptor.xml</book.descriptor>
     </properties>
 
     <build>

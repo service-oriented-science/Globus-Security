@@ -15,11 +15,11 @@
  */
 package org.globus.security.provider;
 
-import org.globus.security.resources.ResourceCertStore;
-
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.security.Provider;
+
+import org.globus.security.resources.ResourceCertStore;
 
 /**
  * FILL ME
@@ -28,7 +28,8 @@ import java.security.Provider;
  */
 public class GlobusProvider extends Provider {
 
-    public static String PROVIDER_NAME = "Globus";
+    public static final String PROVIDER_NAME = "Globus";
+    private static final long serialVersionUID = -6275241207604782362L;
 
     public GlobusProvider() {
 
@@ -36,11 +37,11 @@ public class GlobusProvider extends Provider {
         AccessController.doPrivileged(new PrivilegedAction<Object>() {
             public Object run() {
                 put("CertStore.PEMFilebasedCertStore",
-                        ResourceCertStore.class.getName());
+                    ResourceCertStore.class.getName());
                 put("CertPathValidator.X509ProxyPath",
-                        X509ProxyCertPathValidator.class.getName());
+                    X509ProxyCertPathValidator.class.getName());
                 put("KeyStore.PEMFilebasedKeyStore",
-                        FileBasedKeyStore.class.getName());
+                    FileBasedKeyStore.class.getName());
                 return null;
             }
         });

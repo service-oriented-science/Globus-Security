@@ -1,22 +1,24 @@
 package org.globus.security.resources;
 
-import org.globus.security.CredentialException;
-import org.globus.security.X509Credential;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
-
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.cert.CertificateEncodingException;
+
+import org.globus.security.CredentialException;
+import org.globus.security.X509Credential;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
 
 /**
  * FIXME: document me
  *
  * @author Tom Howe
  */
-public class ResourceProxyCredential extends AbstractResourceSecurityWrapper<X509Credential> implements CredentialWrapper{
+public class ResourceProxyCredential extends AbstractResourceSecurityWrapper<X509Credential>
+    implements CredentialWrapper {
 
     Logger logger = LoggerFactory.getLogger(getClass());
 

@@ -38,9 +38,9 @@ public class ProxyCertInfo implements DEREncodable {
      * ProxyCertInfo extension OID
      */
     public static final DERObjectIdentifier OID
-            = new DERObjectIdentifier("1.3.6.1.5.5.7.1.14");
+        = new DERObjectIdentifier("1.3.6.1.5.5.7.1.14");
     public static final DERObjectIdentifier OLD_OID
-            = new DERObjectIdentifier("1.3.6.1.4.1.3536.1.222");
+        = new DERObjectIdentifier("1.3.6.1.4.1.3536.1.222");
 
     private DERInteger pathLenConstraint;
     private ProxyPolicy proxyPolicy;
@@ -64,7 +64,7 @@ public class ProxyCertInfo implements DEREncodable {
         }
 
         ASN1Sequence policy =
-                (ASN1Sequence) seq.getObjectAt(seqPos);
+            (ASN1Sequence) seq.getObjectAt(seqPos);
 
         this.proxyPolicy = new ProxyPolicy(policy);
     }
@@ -75,8 +75,9 @@ public class ProxyCertInfo implements DEREncodable {
      * @param pathLenConstraint the path length constraint of the extension.
      * @param policy            the policy of the extension.
      */
-    public ProxyCertInfo(int pathLenConstraint,
-                         ProxyPolicy policy) {
+    public ProxyCertInfo(
+        int pathLenConstraint,
+        ProxyPolicy policy) {
         if (policy == null) {
             throw new IllegalArgumentException();
         }
@@ -108,7 +109,7 @@ public class ProxyCertInfo implements DEREncodable {
      */
     public static ProxyCertInfo getInstance(Object obj) {
 
-        String err = obj.getClass().getName();
+//        String err = obj.getClass().getName();
 
         if (obj instanceof ProxyCertInfo) {
             return (ProxyCertInfo) obj;
@@ -120,7 +121,7 @@ public class ProxyCertInfo implements DEREncodable {
                 derObj = CertificateUtil.toDERObject((byte[]) obj);
             } catch (IOException e) {
                 throw new IllegalArgumentException(
-                        e.getMessage());
+                    e.getMessage());
             }
             if (derObj instanceof ASN1Sequence) {
                 return new ProxyCertInfo((ASN1Sequence) derObj);

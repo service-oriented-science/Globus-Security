@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 public class PKITrustManagerFactory extends TrustManagerFactorySpi {
 
     private Collection<TrustManager> trustManagers =
-            new ArrayList<TrustManager>();
+        new ArrayList<TrustManager>();
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
@@ -31,9 +31,9 @@ public class PKITrustManagerFactory extends TrustManagerFactorySpi {
         logger.debug("Initializing engine with KeyStore only");
         try {
             this.engineInit(
-                    new CertPathTrustManagerParameters(
-                            new X509ProxyCertPathParameters(keyStore, null, null,
-                                    false)));
+                new CertPathTrustManagerParameters(
+                    new X509ProxyCertPathParameters(keyStore, null, null,
+                        false)));
         } catch (InvalidAlgorithmParameterException e) {
             throw new KeyStoreException(e);
         }
@@ -41,12 +41,12 @@ public class PKITrustManagerFactory extends TrustManagerFactorySpi {
 
     @Override
     protected void engineInit(ManagerFactoryParameters managerFactoryParameters)
-            throws InvalidAlgorithmParameterException {
+        throws InvalidAlgorithmParameterException {
         if (managerFactoryParameters instanceof X509ProxyCertPathParameters) {
             X509ProxyCertPathParameters ptmfp =
-                    (X509ProxyCertPathParameters) managerFactoryParameters;
+                (X509ProxyCertPathParameters) managerFactoryParameters;
             trustManagers.add(
-                    new PKITrustManager(new X509ProxyCertPathValidator(), ptmfp));
+                new PKITrustManager(new X509ProxyCertPathValidator(), ptmfp));
         }
 
     }
@@ -54,6 +54,6 @@ public class PKITrustManagerFactory extends TrustManagerFactorySpi {
     @Override
     protected TrustManager[] engineGetTrustManagers() {
         return trustManagers
-                .toArray(new TrustManager[trustManagers.size()]);
+            .toArray(new TrustManager[trustManagers.size()]);
     }
 }

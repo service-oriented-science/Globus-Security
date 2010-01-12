@@ -17,10 +17,12 @@ package org.globus.security.authorization;
 
 import java.io.Serializable;
 
+/**
+ * Fill Me
+ */
 public interface Interceptor extends Serializable {
 
-    public void initialize(String chainName, String prefix, ChainConfig config)
-            throws InitializeException;
+    void initialize(String chainName, String prefix, ChainConfig config) throws InitializeException;
 
-    public void close() throws CloseException;
+    void close() throws CloseException;
 }

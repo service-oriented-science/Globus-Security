@@ -33,8 +33,9 @@ public interface ProxyPolicyHandler {
      *                      certificate.
      * @throws CertPathValidatorException if policy validation fails.
      */
-    public void validate(ProxyCertInfo proxyCertInfo,
-                         CertPath certPath,
-                         int index)
-            throws CertPathValidatorException;
+    void validate(
+        ProxyCertInfo proxyCertInfo,
+        CertPath certPath,
+        int index)
+        throws CertPathValidatorException;
 }

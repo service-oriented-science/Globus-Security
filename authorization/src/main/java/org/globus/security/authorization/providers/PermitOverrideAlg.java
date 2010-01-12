@@ -30,6 +30,7 @@ import org.globus.security.authorization.util.I18nUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 /**
  * This is a combining algorithm that returns a permit if a single permit
  * decision chain can be constructed from the resource owner to the requestor.
@@ -37,29 +38,26 @@ import org.slf4j.LoggerFactory;
 public class PermitOverrideAlg extends AbstractEngine {
 
     private static I18nUtil i18n =
-            I18nUtil.getI18n("org.globus.security.authorization.errors",
-                    PermitOverrideAlg.class.getClassLoader());
+        I18nUtil.getI18n("org.globus.security.authorization.errors",
+            PermitOverrideAlg.class.getClassLoader());
 
     private static Logger logger =
-            LoggerFactory.getLogger(PermitOverrideAlg.class.getName());
+        LoggerFactory.getLogger(PermitOverrideAlg.class.getName());
 
     private boolean checkPDP0 = true;
     private EntityAttributes resourceOwner;
 
-    public void engineInitialize(String chainName,
-                                 AuthorizationConfig authzConfig,
-                                 ChainConfig chainConfig_)
-            throws InitializeException {
-
-        super.engineInitialize(chainName, authzConfig, chainConfig_);
+    public void engineInitialize(String chainName, AuthorizationConfig authzConfig, ChainConfig initChainConfig)
+        throws InitializeException {
+        super.engineInitialize(chainName, authzConfig, initChainConfig);
     }
 
-    public Decision engineAuthorize(RequestEntities reqAttr,
-                                    EntityAttributes resourceOwner_)
-            throws AuthorizationException {
+    @SuppressWarnings("ThrowableInstanceNeverThrown")
+    public Decision engineAuthorize(RequestEntities reqAttr, EntityAttributes resourceOwnerAttributes)
+        throws AuthorizationException {
 
         // set resource owner
-        this.resourceOwner = resourceOwner_;
+        this.resourceOwner = resourceOwnerAttributes;
 
         collectAttributes(reqAttr);
 
@@ -77,7 +75,7 @@ public class PermitOverrideAlg extends AbstractEngine {
         }
 
         DecisionChainContext dcc =
-                new DecisionChainContext(this.pdps.length);
+            new DecisionChainContext(this.pdps.length);
         dcc.setAuthorityAt(0, this.resourceOwner);
 
         this.checkPDP0 = true;
@@ -89,36 +87,34 @@ public class PermitOverrideAlg extends AbstractEngine {
                 Decision[] decision = chain.toArray();
                 for (int i = 0; i < decision.length; i++) {
                     logger.debug("Decision " + i + ": "
-                            + decision[i].toString());
+                        + decision[i].toString());
                 }
             }
             return new Decision(this.resourceOwner, requestor, Decision.PERMIT,
-                    null, null);
+                null, null);
         } else {
             logger.debug("Deny decision ");
             Vector deniedExceptions = dcc.getDeniedExceptions();
-            Exception exp = null;
-            if ((deniedExceptions != null) &&
-                    (deniedExceptions.size() > 0)) {
+            Exception exp;
+            if ((deniedExceptions != null) && (deniedExceptions.size() > 0)) {
                 String expStr = i18n.getMessage("denyExceptions");
-                for (int i = 0; i < deniedExceptions.size(); i++) {
-                    expStr = expStr + "\n" +
-                            ((Throwable) deniedExceptions.get(i)).getMessage();
+                StringBuilder builder = new StringBuilder(expStr);
+                for (Object deniedException : deniedExceptions) {
+                    builder.append("\n");
+                    builder.append(((Throwable) deniedException).getMessage());
+                    expStr = expStr + "\n" + ((Throwable) deniedException).getMessage();
                 }
                 exp = new Exception(expStr);
-                return new Decision(this.resourceOwner, requestor,
-                        Decision.DENY, null, null, exp);
+                return new Decision(this.resourceOwner, requestor, Decision.DENY, null, null, exp);
             } else {
-                return new Decision(this.resourceOwner, requestor, Decision.DENY,
-                        null, null);
+                return new Decision(this.resourceOwner, requestor, Decision.DENY, null, null);
             }
         }
     }
 
-    private DecisionChain findDecisionChain(RequestEntities reqAttr,
-                                            DecisionChainContext dcc,
-                                            boolean admin)
-            throws AuthorizationException {
+    @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
+    private DecisionChain findDecisionChain(RequestEntities reqAttr, DecisionChainContext dcc, boolean admin)
+        throws AuthorizationException {
 
         EntityAttributes subject = reqAttr.getRequestor();
 
@@ -126,7 +122,7 @@ public class PermitOverrideAlg extends AbstractEngine {
 
         dcc.appendToChain(subject);
         PDP pdp0 = this.pdps[0];
-        Decision decision = null;
+        Decision decision;
         if (admin) {
             decision = pdp0.canAdminister(reqAttr, this.nonReqEntities);
         } else {
@@ -164,8 +160,7 @@ public class PermitOverrideAlg extends AbstractEngine {
             EntityAttributes authority = dcc.getAuthorityAt(i);
             if (authority != null) {
                 // if not subject owner, then cannot make decision on oneself
-                if ((!subject.isSameEntity(this.resourceOwner)) &&
-                        (subject.isSameEntity(authority))) {
+                if ((!subject.isSameEntity(this.resourceOwner)) && (subject.isSameEntity(authority))) {
                     continue;
                 }
 
@@ -181,8 +176,7 @@ public class PermitOverrideAlg extends AbstractEngine {
             PDP pdpi = this.pdps[i];
             if (admin) {
                 logger.debug("PDP " + i + " admin?");
-                decision =
-                        pdpi.canAdminister(reqAttr, this.nonReqEntities);
+                decision = pdpi.canAdminister(reqAttr, this.nonReqEntities);
             } else {
                 logger.debug("PDP " + i + " access?");
                 decision = pdpi.canAccess(reqAttr, this.nonReqEntities);
@@ -192,15 +186,12 @@ public class PermitOverrideAlg extends AbstractEngine {
             // issuer
             EntityAttributes decisionIssuer = decision.getIssuer();
             EntityAttributes completeAttrIssuer =
-                    AttributeUtil.getMatchedEntity(this.nonReqEntities
-                            .getSubjectAttrsList(),
-                            decisionIssuer);
+                AttributeUtil.getMatchedEntity(this.nonReqEntities.getSubjectAttrsList(), decisionIssuer);
             if (completeAttrIssuer != null) {
                 decisionIssuer.mergeEntities(completeAttrIssuer);
             }
 
-            logger.debug("After merge of attributes, decsion issuser:  "
-                    + decisionIssuer);
+            logger.debug("After merge of attributes, decsion issuser:  " + decisionIssuer);
 
             // set authority for particular PDP
             dcc.setAuthorityAt(i, decisionIssuer);
@@ -215,13 +206,9 @@ public class PermitOverrideAlg extends AbstractEngine {
                     dcc.removeFromChain();
                     return chain;
                 } else {
-                    RequestEntities newReqAttr =
-                            new RequestEntities(dcc.getAuthorityAt(i),
-                                    reqAttr.getAction(),
-                                    reqAttr.getResource(),
-                                    reqAttr.getEnvironment());
-                    DecisionChain chain =
-                            findDecisionChain(newReqAttr, dcc, true);
+                    RequestEntities newReqAttr = new RequestEntities(dcc.getAuthorityAt(i), reqAttr.getAction(),
+                        reqAttr.getResource(), reqAttr.getEnvironment());
+                    DecisionChain chain = findDecisionChain(newReqAttr, dcc, true);
                     if (chain != null) {
                         // It got a chain.  So return it to the
                         // caller

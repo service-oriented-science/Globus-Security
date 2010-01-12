@@ -1,11 +1,11 @@
 package org.globus.security.provider;
 
-import org.globus.security.Constants;
-
 import java.security.cert.CertPathValidatorException;
 import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
+
+import org.globus.security.Constants;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,10 +29,10 @@ public class DateValidityChecker implements CertificateChecker {
             cert.checkValidity();
         } catch (CertificateExpiredException e) {
             throw new CertPathValidatorException(
-                    "Certificate " + cert.getSubjectDN() + " expired", e);
+                "Certificate " + cert.getSubjectDN() + " expired", e);
         } catch (CertificateNotYetValidException e) {
             throw new CertPathValidatorException(
-                    "Certificate " + cert.getSubjectDN() + " not yet valid.", e);
+                "Certificate " + cert.getSubjectDN() + " not yet valid.", e);
         }
     }
 }

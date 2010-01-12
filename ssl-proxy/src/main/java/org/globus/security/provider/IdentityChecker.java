@@ -1,10 +1,10 @@
 package org.globus.security.provider;
 
-import org.globus.security.Constants;
-import org.globus.security.util.ProxyCertificateUtil;
-
 import java.security.cert.CertPathValidatorException;
 import java.security.cert.X509Certificate;
+
+import org.globus.security.Constants;
+import org.globus.security.util.ProxyCertificateUtil;
 
 /**
  * Created by IntelliJ IDEA.
@@ -35,15 +35,15 @@ public class IdentityChecker implements CertificateChecker {
             if (ProxyCertificateUtil.isLimitedProxy(certType)) {
                 proxyCertValidator.setLimited(true);
 
-                if (proxyCertValidator.rejectLimitedProxy) {
+                if (proxyCertValidator.isRejectLimitedProxy()) {
                     throw new CertPathValidatorException(
-                            "Limited proxy not accepted");
+                        "Limited proxy not accepted");
                 }
             }
 
             // set the identity cert
             if (!ProxyCertificateUtil.isImpersonationProxy(certType)) {
-                proxyCertValidator.setIdentityCertificate(cert);
+                proxyCertValidator.setIdentityCert(cert);
             }
         }
     }

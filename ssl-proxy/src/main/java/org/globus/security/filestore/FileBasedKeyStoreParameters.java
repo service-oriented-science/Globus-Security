@@ -7,7 +7,7 @@ import java.security.KeyStore;
  * PM To change this template use File | Settings | File Templates.
  */
 public class FileBasedKeyStoreParameters
-        implements KeyStore.LoadStoreParameter {
+    implements KeyStore.LoadStoreParameter {
 
     private String certDirs;
     private String defaultCertDir;
@@ -19,40 +19,38 @@ public class FileBasedKeyStoreParameters
     public FileBasedKeyStoreParameters() {
     }
 
-    public FileBasedKeyStoreParameters(String certDirs,
-                                       String defaultCertDir) {
+    public FileBasedKeyStoreParameters(
+        String certDirs,
+        String defaultCertDir) {
         this.certDirs = certDirs;
         this.defaultCertDir = defaultCertDir;
 
     }
 
-    public FileBasedKeyStoreParameters(String certDirs_,
-                                       String defaultCertDir_,
-                                       String userCertFilename_,
-                                       String userKeyFilename_,
-                                       KeyStore.ProtectionParameter protectionParameter_) {
-        this(certDirs_, defaultCertDir_);
-        this.userCertFilename = userCertFilename_;
-        this.userKeyFilename = userKeyFilename_;
-        this.protectionParameter = protectionParameter_;
+    public FileBasedKeyStoreParameters(
+        String initCertDirs, String initDefaultCertDir, String initUserCertFileName,
+        String initUserKeyFileName, KeyStore.ProtectionParameter initProtectionParameter) {
+        this(initCertDirs, initDefaultCertDir);
+        this.userCertFilename = initUserCertFileName;
+        this.userKeyFilename = initUserKeyFileName;
+        this.protectionParameter = initProtectionParameter;
     }
 
-    public FileBasedKeyStoreParameters(String certDirs_,
-                                       String defaultCertDir_,
-                                       String proxyFilename_) {
-        this(certDirs_, defaultCertDir_);
-        this.proxyFilename = proxyFilename_;
+    public FileBasedKeyStoreParameters(String initCertDirs, String initDefaultCertDir, String initProxyFileName) {
+        this(initCertDirs, initDefaultCertDir);
+        this.proxyFilename = initProxyFileName;
     }
 
-    public FileBasedKeyStoreParameters(String certDirs_,
-                                       String defaultCertDir_,
-                                       String userCertFilename_,
-                                       String userKeyFilename_,
-                                       KeyStore.ProtectionParameter protectionParameter_,
-                                       String proxyFilename_) {
-        this(certDirs_, defaultCertDir_, userCertFilename_, userKeyFilename_,
-                protectionParameter_);
-        this.proxyFilename = proxyFilename_;
+    public FileBasedKeyStoreParameters(
+        String initCertDirs,
+        String initDefaultCertDir,
+        String initUserCertFileName,
+        String initUserKeyFileName,
+        KeyStore.ProtectionParameter initProtectionParameter,
+        String initProxyFileName) {
+        this(initCertDirs, initDefaultCertDir, initUserCertFileName, initUserKeyFileName,
+            initProtectionParameter);
+        this.proxyFilename = initProxyFileName;
     }
 
     public KeyStore.ProtectionParameter getProtectionParameter() {
@@ -84,6 +82,7 @@ public class FileBasedKeyStoreParameters
     }
 
     // Why is this a mutable class?
+
     public void setDefaultCertDir(String defaultCertDir) {
         this.defaultCertDir = defaultCertDir;
     }

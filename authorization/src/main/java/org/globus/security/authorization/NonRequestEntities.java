@@ -16,7 +16,6 @@
 package org.globus.security.authorization;
 
 import java.io.Serializable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -29,6 +28,7 @@ import org.globus.security.authorization.util.AttributeUtil;
  */
 public class NonRequestEntities implements Serializable {
 
+    private static final long serialVersionUID = 7191178873283695083L;
 
     private List subjectAttrCollection;
     private List actionAttrCollection;
@@ -42,17 +42,16 @@ public class NonRequestEntities implements Serializable {
     }
 
     /**
-     * @param subjectAttrCollection_  Collection of EntityAttributes for subject entities
-     * @param actionAttrCollection_   Collection of EntityAttributes for action entities
-     * @param resourceAttrCollection_ Collection of EntityAttributes for resource entities
+     * @param initSubjectAttrCollection  Collection of EntityAttributes for subject entities
+     * @param initActionAttrCollection   Collection of EntityAttributes for action entities
+     * @param initResourceAttrCollection Collection of EntityAttributes for resource entities
      */
-    public NonRequestEntities(List subjectAttrCollection_,
-                              List actionAttrCollection_,
-                              List resourceAttrCollection_) {
+    public NonRequestEntities(List initSubjectAttrCollection, List initActionAttrCollection,
+                              List initResourceAttrCollection) {
 
-        this.subjectAttrCollection = subjectAttrCollection_;
-        this.actionAttrCollection = actionAttrCollection_;
-        this.resourceAttrCollection = resourceAttrCollection_;
+        this.subjectAttrCollection = initSubjectAttrCollection;
+        this.actionAttrCollection = initActionAttrCollection;
+        this.resourceAttrCollection = initResourceAttrCollection;
     }
 
     public List getSubjectAttrsList() {
@@ -102,11 +101,10 @@ public class NonRequestEntities implements Serializable {
             return;
         }
 
-        Iterator mergeIterator = mergeList.iterator();
-        while (mergeIterator.hasNext()) {
-            EntityAttributes attr = (EntityAttributes) mergeIterator.next();
+        for (Object aMergeList : mergeList) {
+            EntityAttributes attr = (EntityAttributes) aMergeList;
             EntityAttributes storeAttr =
-                    AttributeUtil.getMatchedEntity(storeList, attr);
+                AttributeUtil.getMatchedEntity(storeList, attr);
             if (storeAttr != null) {
                 storeAttr.mergeEntities(attr);
             } else {

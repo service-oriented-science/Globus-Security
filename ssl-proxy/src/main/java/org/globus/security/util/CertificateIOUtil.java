@@ -14,28 +14,31 @@ import java.security.cert.X509Certificate;
 import javax.security.auth.x500.X500Principal;
 
 import org.apache.commons.codec.binary.Base64;
-
 import org.bouncycastle.asn1.DEROutputStream;
 import org.bouncycastle.asn1.x509.X509Name;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class CertificateIOUtil {
-
-    static Logger logger = LoggerFactory.getLogger(CertificateIOUtil.class.getName());
-    private static Base64 base64 = new Base64();
-
+/**
+ * Fill Me
+ */
+public final class CertificateIOUtil {
 
     // for PEM strings
     public static final int LINE_LENGTH = 64;
-    public static final String lineSep = "\n";
-    public static final String certHeader = "-----BEGIN CERTIFICATE-----";
-    public static final String certFooter = "-----END CERTIFICATE-----";
-    public static final String keyHeader = "-----BEGIN RSA PRIVATE KEY-----";
-    public static final String keyFooter = "-----END RSA PRIVATE KEY-----";
+    public static final String LINE_SEP = "\n";
+    public static final String CERT_HEADER = "-----BEGIN CERTIFICATE-----";
+    public static final String CERT_FOOTER = "-----END CERTIFICATE-----";
+    public static final String KEY_HEADER = "-----BEGIN RSA PRIVATE KEY-----";
+    public static final String KEY_FOOTER = "-----END RSA PRIVATE KEY-----";
 
+    private static Logger logger = LoggerFactory.getLogger(CertificateIOUtil.class.getName());
+    private static Base64 base64 = new Base64();
+    private static MessageDigest md5;
 
-    private static MessageDigest md5 = null;
+    private CertificateIOUtil() {
+        //This should not be instantiated
+    }
 
     private static void init() {
         if (md5 == null) {
@@ -77,21 +80,23 @@ public class CertificateIOUtil {
             return bout.toByteArray();
         } else {
             throw new ClassCastException("unsupported input class: "
-                    + subject.getClass().toString());
+                + subject.getClass().toString());
         }
     }
 
     private static String hash(byte[] data) {
         init();
-        if (md5 == null) return null;
+        if (md5 == null) {
+            return null;
+        }
 
         md5.reset();
         md5.update(data);
 
         byte[] md = md5.digest();
 
-        long ret = (fixByte(md[0]) | (fixByte(md[1]) << 8L) |
-                fixByte(md[2]) << 16L | fixByte(md[3]) << 24L) & 0xffffffffL;
+        long ret = (fixByte(md[0]) | (fixByte(md[1]) << 8L) | fixByte(md[2]) << 16L
+            | fixByte(md[3]) << 24L) & 0xffffffffL;
 
         return Long.toHexString(ret);
     }
@@ -100,12 +105,18 @@ public class CertificateIOUtil {
         return (b < 0) ? (long) (b + 256) : (long) b;
     }
 
-    public static void writeCertificate(X509Certificate cert, File path) throws CertificateEncodingException, IOException {
-        final String pubKeyPEM =
-                certToPEMString(base64.encodeToString(cert.getEncoded()));
-        final FileWriter pubFile = new FileWriter(path);
-        pubFile.write(pubKeyPEM);
-        pubFile.close();
+    public static void writeCertificate(X509Certificate cert, File path)
+        throws CertificateEncodingException, IOException {
+        String pubKeyPEM = certToPEMString(base64.encodeToString(cert.getEncoded()));
+        FileWriter pubFile = null;
+        try {
+            pubFile = new FileWriter(path);
+            pubFile.write(pubKeyPEM);
+        } finally {
+            if (pubFile != null) {
+                pubFile.close();
+            }
+        }
     }
 
     /**
@@ -121,13 +132,14 @@ public class CertificateIOUtil {
     /**
      * Writes certificate to the specified output stream in PEM format.
      */
-    public static void writeCertificate(OutputStream out,
-                                        X509Certificate cert)
-            throws IOException, CertificateEncodingException {
+    public static void writeCertificate(
+        OutputStream out,
+        X509Certificate cert)
+        throws IOException, CertificateEncodingException {
         PEMUtil.writeBase64(out,
-                "-----BEGIN CERTIFICATE-----",
-                base64.encode(cert.getEncoded()),
-                "-----END CERTIFICATE-----");
+            "-----BEGIN CERTIFICATE-----",
+            base64.encode(cert.getEncoded()),
+            "-----END CERTIFICATE-----");
     }
 
 
@@ -139,11 +151,11 @@ public class CertificateIOUtil {
         final StringBuffer buf = new StringBuffer(2048);
 
         if (isKey) {
-            buf.append(keyHeader);
+            buf.append(KEY_HEADER);
         } else {
-            buf.append(certHeader);
+            buf.append(CERT_HEADER);
         }
-        buf.append(lineSep);
+        buf.append(LINE_SEP);
 
         final int size = base64Data.length();
         while (offset < size) {
@@ -151,16 +163,16 @@ public class CertificateIOUtil {
                 length = size - offset;
             }
             buf.append(base64Data.substring(offset, offset + length));
-            buf.append(lineSep);
+            buf.append(LINE_SEP);
             offset = offset + LINE_LENGTH;
         }
 
         if (isKey) {
-            buf.append(keyFooter);
+            buf.append(KEY_FOOTER);
         } else {
-            buf.append(certFooter);
+            buf.append(CERT_FOOTER);
         }
-        buf.append(lineSep);
+        buf.append(LINE_SEP);
 
         return buf.toString();
     }

@@ -25,17 +25,21 @@ import org.apache.commons.io.FileUtils;
  *
  * @author ranantha@mcs.anl.gov
  */
-public class FileUtil {
+public final class FileUtil {
+
+    private FileUtil() {
+        //This should not be instantiated.
+    }
 
     public static File createFile(String filename)
-            throws SecurityException, IOException {
+        throws SecurityException, IOException {
 
         File f = new File(filename);
         if (!f.createNewFile()) {
             FileUtils.forceDelete(f);
             if (!f.createNewFile()) {
                 throw new SecurityException(
-                        "Failed to atomically create new file");
+                    "Failed to atomically create new file");
             }
         }
         return f;

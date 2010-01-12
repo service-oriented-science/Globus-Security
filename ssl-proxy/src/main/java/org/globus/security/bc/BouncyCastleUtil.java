@@ -28,7 +28,11 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 /**
  * A collection of various utility functions.
  */
-public class BouncyCastleUtil {
+public final class BouncyCastleUtil {
+
+    private BouncyCastleUtil() {
+
+    }
 
     static {
         Security.addProvider(new BouncyCastleProvider());
@@ -42,7 +46,7 @@ public class BouncyCastleUtil {
      * @throws IOException if conversion fails
      */
     public static byte[] toByteArray(DERObject obj)
-            throws IOException {
+        throws IOException {
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         DEROutputStream der = new DEROutputStream(bout);
         der.writeObject(obj);
@@ -57,7 +61,7 @@ public class BouncyCastleUtil {
      * @throws IOException if conversion fails
      */
     public static DERObject toDERObject(byte[] data)
-            throws IOException {
+        throws IOException {
         ByteArrayInputStream inStream = new ByteArrayInputStream(data);
         ASN1InputStream derInputStream = new ASN1InputStream(inStream);
         return derInputStream.readObject();

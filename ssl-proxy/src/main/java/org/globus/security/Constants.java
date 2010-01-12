@@ -22,20 +22,32 @@ import org.bouncycastle.asn1.DERObjectIdentifier;
  *
  * @author ranantha@mcs.anl.gov
  */
-public class Constants {
+public final class Constants {
 
+    /**
+     * Fill Me
+     */
+    public static final DERObjectIdentifier PROXY_OID
+        = new DERObjectIdentifier("1.3.6.1.5.5.7.1.14");
+
+    /**
+     * Fill Me
+     */
+    public static final DERObjectIdentifier PROXY_OLD_OID
+        = new DERObjectIdentifier("1.3.6.1.4.1.3536.1.222");
+    
+    private Constants() {
+        //This should not be instantiated.
+    }
+
+    /**
+     * Fill Me
+     */
     public enum CertificateType {
-
         CA, EEC, GSI_2_PROXY, GSI_2_LIMITED_PROXY, GSI_3_LIMITED_PROXY,
         GSI_3_RESTRICTED_PROXY, GSI_3_INDEPENDENT_PROXY,
         GSI_3_IMPERSONATION_PROXY,
         GSI_4_LIMITED_PROXY, GSI_4_RESTRICTED_PROXY, GSI_4_INDEPENDENT_PROXY,
         GSI_4_IMPERSONATION_PROXY
     }
-
-    public static final DERObjectIdentifier PROXY_OID
-            = new DERObjectIdentifier("1.3.6.1.5.5.7.1.14");
-    public static final DERObjectIdentifier PROXY_OLD_OID
-            = new DERObjectIdentifier("1.3.6.1.4.1.3536.1.222");
-
 }

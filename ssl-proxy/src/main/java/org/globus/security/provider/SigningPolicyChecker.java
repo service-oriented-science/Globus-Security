@@ -1,14 +1,15 @@
 package org.globus.security.provider;
 
+import java.security.cert.CertPathValidatorException;
+import java.security.cert.CertStoreException;
+import java.security.cert.X509Certificate;
+
+import javax.security.auth.x500.X500Principal;
+
 import org.globus.security.Constants;
 import org.globus.security.SigningPolicy;
 import org.globus.security.SigningPolicyStore;
 import org.globus.security.util.ProxyCertificateUtil;
-
-import javax.security.auth.x500.X500Principal;
-import java.security.cert.CertPathValidatorException;
-import java.security.cert.CertStoreException;
-import java.security.cert.X509Certificate;
 
 /**
  * Created by IntelliJ IDEA.
@@ -31,7 +32,7 @@ public class SigningPolicyChecker implements CertificateChecker {
      * @throws CertPathValidatorException
      */
     public void invoke(X509Certificate cert, Constants.CertificateType certType) throws CertPathValidatorException {
-        if(!requireSigningPolicyCheck(certType)){
+        if (!requireSigningPolicyCheck(certType)) {
             return;
         }
         X500Principal caPrincipal = cert.getIssuerX500Principal();
@@ -44,25 +45,29 @@ public class SigningPolicyChecker implements CertificateChecker {
 
         if (policy == null) {
             throw new CertPathValidatorException(
-                    "No signing policy for " + cert.getIssuerDN());
+                "No signing policy for " + cert.getIssuerDN());
         }
 
         boolean valid =
-                policy.isValidSubject(cert.getSubjectX500Principal());
+            policy.isValidSubject(cert.getSubjectX500Principal());
 
         if (!valid) {
             throw new CertPathValidatorException(
-                    "Certificate " + cert.getSubjectDN() +
-                            " violates signing policy for CA " + caPrincipal.getName());
+                "Certificate " + cert.getSubjectDN()
+                    + " violates signing policy for CA " + caPrincipal.getName());
         }
     }
+
     /**
      * if a certificate is not a CA or if it is not a proxy, return true.
+     *
+     * @param certType The type of Certificate being queried.
+     * @return True if the CertificateType requires a Signing Policy check.
      */
     private boolean requireSigningPolicyCheck(
-            Constants.CertificateType certType) {
+        Constants.CertificateType certType) {
 
-        return (!ProxyCertificateUtil.isProxy(certType) &&
-                (certType != Constants.CertificateType.CA));
+        return !ProxyCertificateUtil.isProxy(certType)
+            && certType != Constants.CertificateType.CA;
     }
 }

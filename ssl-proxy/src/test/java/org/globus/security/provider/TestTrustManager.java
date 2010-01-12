@@ -21,7 +21,6 @@ import java.security.cert.CertPathValidatorResult;
 import java.security.cert.CertStore;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.Map;
 
 import org.globus.security.X509ProxyCertPathParameters;
 import org.globus.security.X509ProxyCertPathValidatorResult;
@@ -54,7 +53,7 @@ public class TestTrustManager extends TestProxyPathValidator {
         CertStore certStore =
                 CertStore.getInstance("MockCertStore", parameters);
         TestPolicyStore policyStore =
-                new TestPolicyStore((Map) null);
+                new TestPolicyStore(null);
         X509ProxyCertPathParameters validatorParam =
                 new X509ProxyCertPathParameters(keyStore, certStore, policyStore,
                         false,

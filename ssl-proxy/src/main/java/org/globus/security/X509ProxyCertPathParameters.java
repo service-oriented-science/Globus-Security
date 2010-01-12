@@ -43,30 +43,27 @@ public class X509ProxyCertPathParameters implements CertPathParameters {
     boolean rejectLimitedProxy;
     Map<String, ProxyPolicyHandler> handlers;
 
-    public X509ProxyCertPathParameters(KeyStore keyStore_,
-                                       CertStore certStore_,
-                                       SigningPolicyStore policyStore_,
-                                       boolean rejectLimitedProxy_) {
-        this(keyStore_, certStore_, policyStore_, rejectLimitedProxy_, null);
+    public X509ProxyCertPathParameters(
+        KeyStore initKeyStore,
+        CertStore initCertStore,
+        SigningPolicyStore initPolicyStore,
+        boolean initRejectLimitedProxy) {
+        this(initKeyStore, initCertStore, initPolicyStore, initRejectLimitedProxy, null);
     }
 
 
-    public X509ProxyCertPathParameters(KeyStore keyStore_,
-                                       CertStore certStore_,
-                                       SigningPolicyStore policyStore_,
-                                       boolean rejectLimitedProxy_,
-                                       Map<String, ProxyPolicyHandler> handlers_) {
+    public X509ProxyCertPathParameters(KeyStore initKeyStore, CertStore initCertStore,
+                                       SigningPolicyStore initPolicyStore, boolean initRejectLimitedProxy,
+                                       Map<String, ProxyPolicyHandler> initHandlers) {
 
-        if ((keyStore_ == null) ||
-                (certStore_ == null) ||
-                (policyStore_ == null)) {
+        if ((initKeyStore == null) || (initCertStore == null) || (initPolicyStore == null)) {
             throw new IllegalArgumentException();
         }
-        this.keyStore = keyStore_;
-        this.certStore = certStore_;
-        this.policyStore = policyStore_;
-        this.rejectLimitedProxy = rejectLimitedProxy_;
-        this.handlers = handlers_;
+        this.keyStore = initKeyStore;
+        this.certStore = initCertStore;
+        this.policyStore = initPolicyStore;
+        this.rejectLimitedProxy = initRejectLimitedProxy;
+        this.handlers = initHandlers;
     }
 
     public KeyStore getKeyStore() {
@@ -98,7 +95,7 @@ public class X509ProxyCertPathParameters implements CertPathParameters {
     public Object clone() {
         try {
             X509ProxyCertPathParameters clone =
-                    (X509ProxyCertPathParameters) super.clone();
+                (X509ProxyCertPathParameters) super.clone();
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new InternalError(e.toString());

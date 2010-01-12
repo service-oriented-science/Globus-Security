@@ -21,12 +21,17 @@ public class ResourceCertStoreParameters implements CertStoreParameters {
         this.locationPattern = locationPattern;
     }
 
-    public ResourceCertStoreParameters(String... locations){
-        this.locations = locations;
+    public ResourceCertStoreParameters(String... initLocations) {
+        if (initLocations != null) {
+            this.locations = new String[initLocations.length];
+            System.arraycopy(initLocations, 0, this.locations, 0, initLocations.length);
+        }
     }
 
     public String[] getLocations() {
-        return locations;
+        String[] returnArray = new String[locations.length];
+        System.arraycopy(locations, 0, returnArray, 0, locations.length);
+        return returnArray;
     }
 
     public String getLocationPattern() {
@@ -66,7 +71,12 @@ public class ResourceCertStoreParameters implements CertStoreParameters {
      * @return a copy of this <code>CertStoreParameters</code>
      */
     public Object clone() {
-        return null;  //CHANGEME To change body of implemented methods use File | Settings | File Templates.
+        try {
+            return super.clone();
+        } catch (CloneNotSupportedException e) {
+            /* Cannot happen */
+            throw new InternalError(e.toString());
+        }
     }
 
 }

@@ -15,6 +15,7 @@
  */
 package org.globus.security;
 
+
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,31 +35,32 @@ public class SigningPolicy {
     private X500Principal caSubject;
     private Vector<Pattern> allowedDNs;
 
-    public SigningPolicy(X500Principal caSubjectDN, String[] allowedDNs_) {
+    public SigningPolicy(X500Principal caSubjectDN, String[] allowedDNs) {
 
-        if ((caSubjectDN == null) || (allowedDNs_ == null)) {
+        if ((caSubjectDN == null) || (allowedDNs == null)) {
             throw new IllegalArgumentException();
         }
 
         this.caSubject = caSubjectDN;
-        int numberOfDNs = allowedDNs_.length;
+        int numberOfDNs = allowedDNs.length;
         this.allowedDNs = new Vector<Pattern>(numberOfDNs);
-        for (int i = 0; i < allowedDNs_.length; i++) {
+        for (String anAllowedDNs : allowedDNs) {
             this.allowedDNs.add(SigningPolicyFileParser.
-                    getPattern(allowedDNs_[i]));
+                getPattern(anAllowedDNs));
 
         }
     }
 
-    public SigningPolicy(X500Principal caSubjectDN,
-                         Vector<Pattern> allowedDNs_) {
+    public SigningPolicy(
+        X500Principal caSubjectDN,
+        Vector<Pattern> allowedDNs) {
 
-        if ((caSubjectDN == null) || (allowedDNs_ == null)) {
+        if ((caSubjectDN == null) || (allowedDNs == null)) {
             throw new IllegalArgumentException();
         }
 
         this.caSubject = caSubjectDN;
-        this.allowedDNs = allowedDNs_;
+        this.allowedDNs = allowedDNs;
     }
 
     /**
@@ -86,8 +88,7 @@ public class SigningPolicy {
 
         // no policy
         // FIXME: probably should be false?
-        if ((this.allowedDNs == null) ||
-                (this.allowedDNs.size() < 1)) {
+        if ((this.allowedDNs == null) || (this.allowedDNs.size() < 1)) {
             return true;
         }
 

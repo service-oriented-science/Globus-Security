@@ -17,6 +17,9 @@ package org.globus.security;
 
 import java.security.cert.CertStoreException;
 
+/**
+ * This exception signifies an error processing a SigningPolicy in a SigningPolicyStore.
+ */
 public class SigningPolicyStoreException extends CertStoreException {
 
     public SigningPolicyStoreException(String msg) {

@@ -21,9 +21,14 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
+import static junit.framework.Assert.assertTrue;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
 import org.testng.annotations.Test;
 
 public class TestAttributeCollection {
@@ -167,17 +172,17 @@ public class TestAttributeCollection {
         assert (newAttrCol1.isSameEntity(idenAttrCol1));
 
         // check map size
-        HashMap map = newAttrCol1.getAttributeMap(iden);
-        assert (map.keySet().size() == 1);
+        Map<EntityAttributes, Attribute> map = newAttrCol1.getAttributeMap(iden);
+        assertEquals (map.keySet().size(), 1);
 
         // Try with null issuer
         newAttr = new Attribute(iden, null, before, after);
         newAttrCol1.add(newAttr);
 
         // should not be merged.
-        assert (newAttrCol1.getAttributeIdentifiers().size() == 1);
+        assertEquals (newAttrCol1.getAttributeIdentifiers().size(), 1);
         map = newAttrCol1.getAttributeMap(iden);
-        assert (map.keySet().size() == 2);
+        assertEquals (map.keySet().size(), 2);
 
         // Create another collection with null issuer and check isSameEntity
         AttributeIdentifier attrIden =
@@ -186,18 +191,18 @@ public class TestAttributeCollection {
         newAttrCol1.add(newAttr);
 
         // should not be merged
-        assert (newAttrCol1.getAttributeIdentifiers().size() == 2);
+        assertEquals (newAttrCol1.getAttributeIdentifiers().size(), 2);
         map = newAttrCol1.getAttributeMap(attrIden);
-        assert (map.keySet().size() == 1);
+        assertEquals (map.keySet().size(), 1);
 
         // check with null isssuer and same attribute identifier
         newAttr = new Attribute(attrIden, null, before, after);
         newAttrCol1.add(newAttr);
 
         // should be merged
-        assert (newAttrCol1.getAttributeIdentifiers().size() == 2);
+        assertEquals (newAttrCol1.getAttributeIdentifiers().size(), 2);
         map = newAttrCol1.getAttributeMap(attrIden);
-        assert (map.keySet().size() == 1);
+        assertEquals (map.keySet().size(), 1);
 
         // add some attriute value and attempt merge
         newAttr = new Attribute(attrIden, null, before, after);
@@ -205,10 +210,10 @@ public class TestAttributeCollection {
         hashSet.add("Foobar");
         newAttr.setAttributeValueSet(hashSet);
         newAttrCol1.add(newAttr);
-        assert (map.keySet().size() == 1);
+        assertEquals (map.keySet().size(), 1);
 
         // should be merged
-        assert (newAttrCol1.getAttributeIdentifiers().size() == 2);
+        assertEquals (newAttrCol1.getAttributeIdentifiers().size(), 2);
 
         // test with some hash set content merge
         newAttr = new Attribute(attrIden, null, before, after);
@@ -219,18 +224,18 @@ public class TestAttributeCollection {
 
         // retrieve relevant values and check merge occured
         map = newAttrCol1.getAttributeMap(attrIden);
-        assert (map.keySet().size() == 1);
+        assertEquals (map.keySet().size(), 1);
         Attribute retrievedNewAttr = (Attribute) map.get(null);
         Set values = retrievedNewAttr.getAttributeValueSet();
-        assert (values != null);
-        assert (values.contains("Foobar"));
-        assert (values.contains("Foobar12"));
+        assertTrue (values != null);
+        assertTrue (values.contains("Foobar"));
+        assertTrue (values.contains("Foobar12"));
 
 
         // check collection.
         Collection coll = idenAttrCol1.getAttributes(iden);
-        assert (coll != null);
-        assert (coll.size() == 2);
+        assertTrue (coll != null);
+        assertEquals (coll.size(), 2);
         Iterator it = coll.iterator();
         Vector val = new Vector();
         while (it.hasNext()) {
@@ -238,37 +243,37 @@ public class TestAttributeCollection {
             val.addAll(retAttr1.getAttributeValueSet());
         }
 
-        assert (val.contains("/DN/dummy subject/dn"));
-        assert (val.contains("value2"));
-        assert (val.contains("a"));
-        assert (val.contains("b"));
-        assert (val.contains("different"));
+        assertTrue (val.contains("/DN/dummy subject/dn"));
+        assertTrue (val.contains("value2"));
+        assertTrue (val.contains("a"));
+        assertTrue (val.contains("b"));
+        assertTrue (val.contains("different"));
 
         Attribute retAttr1 = idenAttrCol1.getAttribute(iden, issuer);
         Set val1 = retAttr1.getAttributeValueSet();
-        assert (val1.contains("/DN/dummy subject/dn"));
-        assert (val1.contains("value2"));
-        assert (val1.contains("a"));
-        assert (val1.contains("b"));
-        assert (!val1.contains("different"));
+        assertTrue (val1.contains("/DN/dummy subject/dn"));
+        assertTrue (val1.contains("value2"));
+        assertTrue (val1.contains("a"));
+        assertTrue (val1.contains("b"));
+        assertFalse (val1.contains("different"));
 
         Attribute retAttr2 = idenAttrCol1.getAttribute(iden, issuer1);
         val1 = retAttr2.getAttributeValueSet();
-        assert (!val1.contains("/DN/dummy subject/dn"));
-        assert (!val1.contains("value2"));
-        assert (!val1.contains("a"));
-        assert (!val1.contains("b"));
-        assert (val1.contains("different"));
+        assertFalse (val1.contains("/DN/dummy subject/dn"));
+        assertFalse (val1.contains("value2"));
+        assertFalse (val1.contains("a"));
+        assertFalse (val1.contains("b"));
+        assertTrue (val1.contains("different"));
 
         // try using HashMap
-        HashMap attrMap = idenAttrCol1.getAttributeMap(iden);
-        assert (attrMap != null);
-        Attribute retAttr = (Attribute) attrMap.get(issuer);
-        assert (retAttr != null);
-        assert (retAttr.isSameAttribute(retAttr1));
-        retAttr = (Attribute) attrMap.get(issuer1);
-        assert (retAttr != null);
-        assert (retAttr.isSameAttribute(retAttr2));
+        Map<EntityAttributes, Attribute> attrMap = idenAttrCol1.getAttributeMap(iden);
+        assertNotNull (attrMap);
+        Attribute retAttr = attrMap.get(issuer);
+        assertNotNull (retAttr);
+        assertTrue (retAttr.isSameAttribute(retAttr1));
+        retAttr = attrMap.get(issuer1);
+        assertNotNull (retAttr);
+        assertTrue (retAttr.isSameAttribute(retAttr2));
 
         // change value of identity attribute in attr collection 2
         HashSet vec3 = new HashSet();
@@ -278,7 +283,7 @@ public class TestAttributeCollection {
                 identity), issuer,
                 now, null, vec3);
 
-        assert (idenAttr3.isIdentityAttribute() == identity);
+        assertEquals (idenAttr3.isIdentityAttribute(), identity);
 
         AttributeCollection idenAttrCol3 = null;
         if (identity) {
@@ -288,7 +293,7 @@ public class TestAttributeCollection {
         }
         idenAttrCol3.add(idenAttr3);
 
-        assert (!idenAttrCol1.isSameEntity(idenAttrCol3));
+        assertFalse (idenAttrCol1.isSameEntity(idenAttrCol3));
 
         // multiple value, with one match
         HashSet vec4 = new HashSet();
@@ -299,7 +304,7 @@ public class TestAttributeCollection {
                         identity), issuer, before,
                         now, vec4);
 
-        assert (idenAttr4.isIdentityAttribute() == identity);
+        assertEquals (idenAttr4.isIdentityAttribute(), identity);
 
         AttributeCollection idenAttrCol4 = null;
         if (identity) {
@@ -309,6 +314,6 @@ public class TestAttributeCollection {
         }
         idenAttrCol4.add(idenAttr4);
 
-        assert (idenAttrCol2.isSameEntity(idenAttrCol4));
+        assertTrue (idenAttrCol2.isSameEntity(idenAttrCol4));
     }
 }

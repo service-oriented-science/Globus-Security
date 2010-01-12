@@ -24,22 +24,22 @@ import java.security.cert.X509Certificate;
  * @author ranantha@mcs.anl.gov
  */
 public class X509ProxyCertPathValidatorResult
-        implements CertPathValidatorResult {
+    implements CertPathValidatorResult {
 
     X509Certificate idenX509Certificate;
-    boolean limited = false;
+    boolean limited;
 
     public X509ProxyCertPathValidatorResult(
-            X509Certificate identityCertificate_) {
-        this(identityCertificate_, false);
+        X509Certificate initIdentityCertificate) {
+        this(initIdentityCertificate, false);
     }
 
     public X509ProxyCertPathValidatorResult(
-            X509Certificate identityCertificate_, boolean limited_) {
-        if (identityCertificate_ != null) {
-            this.idenX509Certificate = identityCertificate_;
+        X509Certificate initIdentityCertificate, boolean initLimited) {
+        if (initIdentityCertificate != null) {
+            this.idenX509Certificate = initIdentityCertificate;
         }
-        this.limited = limited_;
+        this.limited = initLimited;
     }
 
     public X509Certificate getIdentityCertificate() {
@@ -57,6 +57,11 @@ public class X509ProxyCertPathValidatorResult
      * @return a copy of this <code>CertPathValidatorResult</code>
      */
     public Object clone() {
-        return null;  //CHANGEME To change body of implemented methods use File | Settings | File Templates.
+        try {
+            return super.clone();
+        } catch (CloneNotSupportedException e) {
+            /* Cannot happen */
+            throw new InternalError(e.toString());
+        }
     }
 }

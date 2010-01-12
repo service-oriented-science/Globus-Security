@@ -1,38 +1,39 @@
 package org.globus.security.resources;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-
 /**
- * Created by IntelliJ IDEA.
- * User: turtlebender
- * Date: Dec 29, 2009
- * Time: 12:35:50 PM
- * To change this template use File | Settings | File Templates.
+ * // FIXME: add javadoc
+ *
+ * @param <T> Type of security object
  */
 public abstract class AbstractResourceSecurityWrapper<T> implements SecurityObjectWrapper<T>, Storable {
-    Logger logger = LoggerFactory.getLogger(getClass());
+
+    protected PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+    protected Resource resource;
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
     private boolean changed;
     private T securityObject;
     private long lastModified = -1;
-    protected Resource resource = null;
     private String alias;
-    protected PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
 
     protected void init(String locationPattern) throws ResourceStoreException {
         init(resolver.getResource(locationPattern));
     }
 
-    protected void init(Resource resource) throws ResourceStoreException {
-        this.resource = resource;
+    protected void init(Resource initialResource) throws ResourceStoreException {
+        this.resource = initialResource;
         this.securityObject = create(this.resource);
-        logger.debug("Loading resource: {}", this.resource.toString());
+        logger.debug("Loading initialResource: {}", this.resource.toString());
         try {
             this.alias = this.resource.getURL().toExternalForm();
             this.lastModified = this.resource.lastModified();
@@ -45,17 +46,17 @@ public abstract class AbstractResourceSecurityWrapper<T> implements SecurityObje
         return alias;
     }
 
-    protected void init(String locationPattern, T securityObject) throws ResourceStoreException {
-        init(resolver.getResource(locationPattern), securityObject);
+    protected void init(String locationPattern, T initialSecurityObject) throws ResourceStoreException {
+        init(resolver.getResource(locationPattern), initialSecurityObject);
     }
 
-    protected void init(Resource resource, T securityObject) throws ResourceStoreException {
-        if (securityObject == null) {
+    protected void init(Resource initialResource, T initialSecurityObject) throws ResourceStoreException {
+        if (initialSecurityObject == null) {
             // FIXME: better exception?
             throw new IllegalArgumentException("Object cannot be null");
         }
-        this.securityObject = securityObject;
-        this.resource = resource;
+        this.securityObject = initialSecurityObject;
+        this.resource = initialResource;
     }
 
     public Resource getResource() {
@@ -95,7 +96,7 @@ public abstract class AbstractResourceSecurityWrapper<T> implements SecurityObje
         }
     }
 
-    protected abstract T create(Resource resource) throws ResourceStoreException;
+    protected abstract T create(Resource targetResource) throws ResourceStoreException;
 
     public T getSecurityObject() throws ResourceStoreException {
         refresh();

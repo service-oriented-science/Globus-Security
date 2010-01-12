@@ -29,7 +29,11 @@ import java.util.Vector;
  *
  * @author ranantha@mcs.anl.gov
  */
-public class KeyStoreUtil {
+public final class KeyStoreUtil {
+
+    private KeyStoreUtil() {
+        //Should not be constructed
+    }
 
     /**
      * Returns the list of certificates in the KeyStore. Return object will not
@@ -41,8 +45,8 @@ public class KeyStoreUtil {
      * @throws KeyStoreException
      */
     public static Collection<? extends Certificate> getTrustedCertificates(
-            KeyStore keyStore, X509CertSelector selector)
-            throws KeyStoreException {
+        KeyStore keyStore, X509CertSelector selector)
+        throws KeyStoreException {
 
         Vector<X509Certificate> certificates = new Vector<X509Certificate>();
         Enumeration<String> aliases = keyStore.aliases();
@@ -52,10 +56,10 @@ public class KeyStoreUtil {
                 // If a specific impl of keystore requires refresh, this would be a
                 // good place to add it.
                 Certificate certificate =
-                        keyStore.getCertificate(alias);
+                    keyStore.getCertificate(alias);
                 if (certificate instanceof X509Certificate) {
                     X509Certificate x509Cert =
-                            (X509Certificate) certificate;
+                        (X509Certificate) certificate;
                     if (selector.match(certificate)) {
                         certificates.add(x509Cert);
                     }

@@ -29,7 +29,11 @@ import org.bouncycastle.asn1.x509.X509Extensions;
  *
  * @author ranantha@mcs.anl.gov
  */
-public class ProxyCertificateUtil {
+public final class ProxyCertificateUtil {
+
+    private ProxyCertificateUtil() {
+        //This should not be instantiated
+    }
 
     /**
      * Determines if a specified certificate type indicates a GSI-2, GSI-3 or
@@ -40,9 +44,7 @@ public class ProxyCertificateUtil {
      *         otherwise.
      */
     public static boolean isProxy(Constants.CertificateType certType) {
-        return (isGsi2Proxy(certType) ||
-                isGsi3Proxy(certType) ||
-                isGsi4Proxy(certType));
+        return isGsi2Proxy(certType) || isGsi3Proxy(certType) || isGsi4Proxy(certType);
     }
 
     /**
@@ -53,11 +55,10 @@ public class ProxyCertificateUtil {
      * @return true if certType is a GSI-4 proxy, false otherwise.
      */
     public static boolean isGsi4Proxy(Constants.CertificateType certType) {
-        return (
-                certType == Constants.CertificateType.GSI_4_IMPERSONATION_PROXY ||
-                        certType == Constants.CertificateType.GSI_4_INDEPENDENT_PROXY ||
-                        certType == Constants.CertificateType.GSI_4_RESTRICTED_PROXY ||
-                        certType == Constants.CertificateType.GSI_4_LIMITED_PROXY);
+        return certType == Constants.CertificateType.GSI_4_IMPERSONATION_PROXY
+            || certType == Constants.CertificateType.GSI_4_INDEPENDENT_PROXY
+            || certType == Constants.CertificateType.GSI_4_RESTRICTED_PROXY
+            || certType == Constants.CertificateType.GSI_4_LIMITED_PROXY;
     }
 
     /**
@@ -68,11 +69,10 @@ public class ProxyCertificateUtil {
      * @return true if certType is a GSI-3 proxy, false otherwise.
      */
     public static boolean isGsi3Proxy(Constants.CertificateType certType) {
-        return (
-                certType == Constants.CertificateType.GSI_3_IMPERSONATION_PROXY ||
-                        certType == Constants.CertificateType.GSI_3_INDEPENDENT_PROXY ||
-                        certType == Constants.CertificateType.GSI_3_RESTRICTED_PROXY ||
-                        certType == Constants.CertificateType.GSI_3_LIMITED_PROXY);
+        return certType == Constants.CertificateType.GSI_3_IMPERSONATION_PROXY
+            || certType == Constants.CertificateType.GSI_3_INDEPENDENT_PROXY
+            || certType == Constants.CertificateType.GSI_3_RESTRICTED_PROXY
+            || certType == Constants.CertificateType.GSI_3_LIMITED_PROXY;
     }
 
     /**
@@ -83,8 +83,8 @@ public class ProxyCertificateUtil {
      * @return true if certType is a GSI-2 proxy, false otherwise.
      */
     public static boolean isGsi2Proxy(Constants.CertificateType certType) {
-        return (certType == Constants.CertificateType.GSI_2_PROXY ||
-                certType == Constants.CertificateType.GSI_2_LIMITED_PROXY);
+        return certType == Constants.CertificateType.GSI_2_PROXY
+            || certType == Constants.CertificateType.GSI_2_LIMITED_PROXY;
     }
 
     /**
@@ -96,9 +96,9 @@ public class ProxyCertificateUtil {
      *         false otherwise.
      */
     public static boolean isLimitedProxy(Constants.CertificateType certType) {
-        return (certType == Constants.CertificateType.GSI_3_LIMITED_PROXY ||
-                certType == Constants.CertificateType.GSI_2_LIMITED_PROXY ||
-                certType == Constants.CertificateType.GSI_4_LIMITED_PROXY);
+        return certType == Constants.CertificateType.GSI_3_LIMITED_PROXY
+            || certType == Constants.CertificateType.GSI_2_LIMITED_PROXY
+            || certType == Constants.CertificateType.GSI_4_LIMITED_PROXY;
     }
 
     /**
@@ -110,9 +110,9 @@ public class ProxyCertificateUtil {
      *         otherwise.
      */
     public static boolean isIndependentProxy(
-            Constants.CertificateType certType) {
-        return (certType == Constants.CertificateType.GSI_3_INDEPENDENT_PROXY ||
-                certType == Constants.CertificateType.GSI_4_INDEPENDENT_PROXY);
+        Constants.CertificateType certType) {
+        return certType == Constants.CertificateType.GSI_3_INDEPENDENT_PROXY
+            || certType == Constants.CertificateType.GSI_4_INDEPENDENT_PROXY;
     }
 
     /**
@@ -124,34 +124,32 @@ public class ProxyCertificateUtil {
      *         proxy, false otherwise.
      */
     public static boolean isImpersonationProxy(
-            Constants.CertificateType certType) {
-        return (
-                certType == Constants.CertificateType.GSI_3_IMPERSONATION_PROXY ||
-                        certType == Constants.CertificateType.GSI_3_LIMITED_PROXY ||
-                        certType == Constants.CertificateType.GSI_4_IMPERSONATION_PROXY ||
-                        certType == Constants.CertificateType.GSI_4_LIMITED_PROXY ||
-                        certType == Constants.CertificateType.GSI_2_LIMITED_PROXY ||
-                        certType == Constants.CertificateType.GSI_2_PROXY);
+        Constants.CertificateType certType) {
+        return certType == Constants.CertificateType.GSI_3_IMPERSONATION_PROXY
+                || certType == Constants.CertificateType.GSI_3_LIMITED_PROXY
+                || certType == Constants.CertificateType.GSI_4_IMPERSONATION_PROXY
+                || certType == Constants.CertificateType.GSI_4_LIMITED_PROXY
+                || certType == Constants.CertificateType.GSI_2_LIMITED_PROXY
+                || certType == Constants.CertificateType.GSI_2_PROXY;
 
     }
 
     public static int getProxyPathConstraint(TBSCertificateStructure crt)
-            throws IOException {
+        throws IOException {
 
         ProxyCertInfo proxyCertExt = getProxyCertInfo(crt);
-        return (proxyCertExt != null) ? proxyCertExt.getPathLenConstraint() :
-                -1;
+        return (proxyCertExt != null) ? proxyCertExt.getPathLenConstraint() : -1;
     }
 
     public static ProxyCertInfo getProxyCertInfo(TBSCertificateStructure crt)
-            throws IOException {
+        throws IOException {
 
         X509Extensions extensions = crt.getExtensions();
         if (extensions == null) {
             return null;
         }
         X509Extension ext =
-                extensions.getExtension(ProxyCertInfo.OID);
+            extensions.getExtension(ProxyCertInfo.OID);
         if (ext == null) {
             ext = extensions.getExtension(ProxyCertInfo.OLD_OID);
         }

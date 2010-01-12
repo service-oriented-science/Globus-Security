@@ -23,7 +23,7 @@ import org.globus.security.SigningPolicyStoreParameters;
  * @author ranantha@mcs.anl.gov
  */
 public class ResourceSigningPolicyStoreParameters
-        implements SigningPolicyStoreParameters {
+    implements SigningPolicyStoreParameters {
 
     String locations;
 
@@ -67,6 +67,11 @@ public class ResourceSigningPolicyStoreParameters
      * @return a copy of this <code>CertStoreParameters</code>
      */
     public Object clone() {
-        return null;  //CHANGEME To change body of implemented methods use File | Settings | File Templates.
+        try {
+            return super.clone();
+        } catch (CloneNotSupportedException e) {
+            /* Cannot happen */
+            throw new InternalError(e.toString());
+        }
     }
 }

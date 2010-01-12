@@ -17,7 +17,7 @@ package org.globus.security.authorization.providers;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Map;
 
 import org.globus.security.authorization.AttributeException;
 import org.globus.security.authorization.AuthorizationConfig;
@@ -58,15 +58,14 @@ import org.slf4j.LoggerFactory;
  * attributes about the same entity. This method is NOT invoked by the abstract
  * engine, but needs to invoked by the actual implementation as appropriate.
  */
-abstract public class AbstractEngine
-        implements AuthorizationEngineSpi, Serializable {
+public abstract class AbstractEngine implements AuthorizationEngineSpi, Serializable {
 
-    private static Logger logger =
-            LoggerFactory.getLogger(AbstractEngine.class.getName());
+    protected static final int BOOTSTRAP_PIP = 0;
+    protected static final int PIP_INTERCEPTOR = 1;
+    protected static final int PDP_INTERCEPTOR = 2;
 
-    private static I18nUtil i18n =
-            I18nUtil.getI18n("org.globus.security.authorization.errors",
-                    AbstractEngine.class.getClassLoader());
+    private static I18nUtil i18n = I18nUtil.getI18n("org.globus.security.authorization.errors",
+        AbstractEngine.class.getClassLoader());
 
     protected PDPInterceptor[] pdps;
     protected PIPInterceptor[] pips;
@@ -76,9 +75,7 @@ abstract public class AbstractEngine
 
     protected ChainConfig chainConfig;
 
-    protected int BOOTSTRAP_PIP = 0;
-    protected int PIP_INTERCEPTOR = 1;
-    protected int PDP_INTERCEPTOR = 2;
+    private Logger logger = LoggerFactory.getLogger(AbstractEngine.class.getName());
 
     /**
      * Initializes the engine with configured PDPs and PIPs. It creates an
@@ -86,18 +83,16 @@ abstract public class AbstractEngine
      * them. Interceptors with same scope and FQDN are treated as same
      * and only one instance of such an interceptor is created.
      *
-     * @param chainName    A unique string which the authorization chain name
-     * @param authzConfig  An object of <code>AuthorizationConfig</code> containing the list
-     *                     of Bootstrap PIPs, PIPs and PDPs.
-     * @param chainConfig_ Configuration object with all configuration for th
+     * @param chainName       A unique string which the authorization chain name
+     * @param authzConfig     An object of <code>AuthorizationConfig</code> containing the list
+     *                        of Bootstrap PIPs, PIPs and PDPs.
+     * @param initChainConfig Configuration object with all configuration for th
      * @throws InitializeException
      */
-    public void engineInitialize(String chainName,
-                                 AuthorizationConfig authzConfig,
-                                 ChainConfig chainConfig_)
-            throws InitializeException {
+    public void engineInitialize(String chainName, AuthorizationConfig authzConfig, ChainConfig initChainConfig)
+        throws InitializeException {
 
-        this.chainConfig = chainConfig_;
+        this.chainConfig = initChainConfig;
 
         this.nonReqEntities = new NonRequestEntities();
 
@@ -112,10 +107,8 @@ abstract public class AbstractEngine
      * @return Decision object
      * @throws AuthorizationException
      */
-    abstract public Decision
-    engineAuthorize(RequestEntities reqAttribute,
-                    EntityAttributes resourceOwner)
-            throws AuthorizationException;
+    public abstract Decision engineAuthorize(RequestEntities reqAttribute, EntityAttributes resourceOwner)
+        throws AuthorizationException;
 
     /**
      * Invokes close on all interceptors.
@@ -123,14 +116,14 @@ abstract public class AbstractEngine
      * @throws CloseException
      */
     public void engineClose() throws CloseException {
-        for (int i = 0; i < bootstrapPips.length; i++) {
-            bootstrapPips[i].close();
+        for (BootstrapPIP bootstrapPip : bootstrapPips) {
+            bootstrapPip.close();
         }
-        for (int i = 0; i < pips.length; i++) {
-            pips[i].close();
+        for (PIPInterceptor pip : pips) {
+            pip.close();
         }
-        for (int i = 0; i < pdps.length; i++) {
-            pdps[i].close();
+        for (PDPInterceptor pdp : pdps) {
+            pdp.close();
         }
     }
 
@@ -138,10 +131,8 @@ abstract public class AbstractEngine
         return this.chainConfig;
     }
 
-    protected synchronized void
-    initializeInterceptors(String chainName,
-                           AuthorizationConfig authzConfig)
-            throws InitializeException {
+    protected synchronized void initializeInterceptors(String chainName, AuthorizationConfig authzConfig)
+        throws InitializeException {
 
         if (authzConfig == null) {
             String err = i18n.getMessage("noInterceptors");
@@ -155,7 +146,7 @@ abstract public class AbstractEngine
 
             this.bootstrapPips = new BootstrapPIP[interConfig.length];
             initializeInterceptors(interConfig, this.bootstrapPips, chainName,
-                    BOOTSTRAP_PIP);
+                BOOTSTRAP_PIP);
         }
 
         // PIPs
@@ -163,7 +154,7 @@ abstract public class AbstractEngine
         if (interConfig != null) {
             this.pips = new PIPInterceptor[interConfig.length];
             initializeInterceptors(interConfig, this.pips, chainName,
-                    PIP_INTERCEPTOR);
+                PIP_INTERCEPTOR);
         }
 
         // PDPs
@@ -171,64 +162,47 @@ abstract public class AbstractEngine
         if (interConfig != null) {
             this.pdps = new PDPInterceptor[interConfig.length];
             initializeInterceptors(interConfig, this.pdps, chainName,
-                    PDP_INTERCEPTOR);
+                PDP_INTERCEPTOR);
         }
     }
 
-    protected void initializeInterceptors(InterceptorConfig[] config,
-                                          Interceptor[] interceptors,
-                                          String chainName,
-                                          int type)
-            throws InitializeException {
+    protected void initializeInterceptors(
+        InterceptorConfig[] config, Interceptor[] interceptors, String chainName,
+        int type)
+        throws InitializeException {
 
         if ((config == null) || (interceptors == null)) {
             throw new IllegalArgumentException();
         }
 
-        HashMap interceptorMap = new HashMap();
+        Map<String, Interceptor> interceptorMap = new HashMap<String, Interceptor>();
 
         for (int i = 0; i < config.length; i++) {
             String key = config[i].getScope() + config[i].getInterceptorFQDN();
             try {
                 if (type == BOOTSTRAP_PIP) {
                     if (interceptorMap.containsKey(key)) {
-                        interceptors[i] =
-                                (BootstrapPIP) interceptorMap.get(key);
+                        interceptors[i] = interceptorMap.get(key);
                     } else {
-                        interceptors[i] = (BootstrapPIP)
-                                loadClass(config[i].
-                                        getInterceptorFQDN()).newInstance();
-                        interceptors[i].initialize(chainName,
-                                config[i].getScope(),
-                                this.chainConfig);
+                        interceptors[i] = (BootstrapPIP) loadClass(config[i].getInterceptorFQDN()).newInstance();
+                        interceptors[i].initialize(chainName, config[i].getScope(), this.chainConfig);
                         interceptorMap.put(key, interceptors[i]);
                     }
                 } else if (type == PIP_INTERCEPTOR) {
                     if (interceptorMap.containsKey(key)) {
-                        interceptors[i] =
-                                (PIPInterceptor) interceptorMap.get(key);
+                        interceptors[i] = interceptorMap.get(key);
                     } else {
-                        interceptors[i] = (PIPInterceptor)
-                                loadClass(config[i].getInterceptorFQDN())
-                                        .newInstance();
-                        interceptors[i].initialize(chainName,
-                                config[i].getScope(),
-                                this.chainConfig);
+                        interceptors[i] = (PIPInterceptor) loadClass(config[i].getInterceptorFQDN()).newInstance();
+                        interceptors[i].initialize(chainName, config[i].getScope(), this.chainConfig);
                         interceptorMap.put(key, interceptors[i]);
                     }
                 } else if (type == PDP_INTERCEPTOR) {
                     if (interceptorMap.containsKey(key)) {
-                        interceptors[i] =
-                                (PDPInterceptor) interceptorMap.get(key);
+                        interceptors[i] = interceptorMap.get(key);
                     } else {
-                        interceptors[i] = (PDPInterceptor)
-                                loadClass(config[i].getInterceptorFQDN())
-                                        .newInstance();
-                        interceptors[i].initialize(chainName,
-                                config[i].getScope(),
-                                this.chainConfig);
+                        interceptors[i] = (PDPInterceptor) loadClass(config[i].getInterceptorFQDN()).newInstance();
+                        interceptors[i].initialize(chainName, config[i].getScope(), this.chainConfig);
                         interceptorMap.put(key, interceptors[i]);
-
                     }
                 }
             } catch (Exception e) {
@@ -244,23 +218,20 @@ abstract public class AbstractEngine
      * the order they were invoked. The returned attributes are processed to
      * merge any attributes for the same entity
      *
-     * @param requestAttr
-     * @throws AttributeException
+     * @param requestAttr Fill Me
+     * @throws AttributeException Fill Me
      */
-    protected void collectAttributes(RequestEntities requestAttr)
-            throws AttributeException {
+    protected void collectAttributes(RequestEntities requestAttr) throws AttributeException {
 
         if (this.bootstrapPips != null) {
-            for (int i = 0; i < this.bootstrapPips.length; i++) {
-                this.bootstrapPips[i]
-                        .collectRequestAttributes(requestAttr);
+            for (BootstrapPIP bootstrapPip : this.bootstrapPips) {
+                bootstrapPip.collectRequestAttributes(requestAttr);
             }
         }
 
         if (this.pips != null) {
-            for (int i = 0; i < pips.length; i++) {
-                NonRequestEntities response =
-                        pips[i].collectAttributes(requestAttr);
+            for (PIPInterceptor pip : pips) {
+                NonRequestEntities response = pip.collectAttributes(requestAttr);
                 if (this.nonReqEntities == null) {
                     this.nonReqEntities = response;
                 } else {
@@ -271,10 +242,8 @@ abstract public class AbstractEngine
             if (logger.isDebugEnabled()) {
                 if (this.nonReqEntities != null) {
                     logger.debug("Subject attribute list after merge ");
-                    Iterator it = this.nonReqEntities.getSubjectAttrsList()
-                            .iterator();
-                    while (it.hasNext()) {
-                        logger.debug(((EntityAttributes) it.next()).toString());
+                    for (Object o : this.nonReqEntities.getSubjectAttrsList()) {
+                        logger.debug(o.toString());
                     }
                 } else {
                     logger.debug("Non request attributes are null");
@@ -292,8 +261,7 @@ abstract public class AbstractEngine
             return Class.forName(fqdn, true, loader);
         } catch (ClassNotFoundException e) {
             // try with context classloader if set & different
-            ClassLoader contextLoader =
-                    Thread.currentThread().getContextClassLoader();
+            ClassLoader contextLoader = Thread.currentThread().getContextClassLoader();
             if (contextLoader == null || contextLoader == loader) {
                 throw e;
             } else {

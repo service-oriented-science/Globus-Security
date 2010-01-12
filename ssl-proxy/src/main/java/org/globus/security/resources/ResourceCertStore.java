@@ -1,12 +1,23 @@
 package org.globus.security.resources;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.security.InvalidAlgorithmParameterException;
-import java.security.cert.*;
+import java.security.cert.CRL;
+import java.security.cert.CRLSelector;
+import java.security.cert.CertSelector;
+import java.security.cert.CertStoreException;
+import java.security.cert.CertStoreParameters;
+import java.security.cert.CertStoreSpi;
+import java.security.cert.Certificate;
+import java.security.cert.TrustAnchor;
+import java.security.cert.X509CRL;
+import java.security.cert.X509CRLSelector;
+import java.security.cert.X509CertSelector;
+import java.security.cert.X509Certificate;
 import java.util.Collection;
 import java.util.Vector;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by IntelliJ IDEA.
@@ -18,13 +29,13 @@ import java.util.Vector;
 public class ResourceCertStore extends CertStoreSpi {
 
     private static Logger logger =
-            LoggerFactory.getLogger(ResourceCertStore.class.getName());
+        LoggerFactory.getLogger(ResourceCertStore.class.getName());
 
     private ResourceCACertStore caDelegate = new ResourceCACertStore();
 
     private ResourceCRLCertStore crlDelegate = new ResourceCRLCertStore();
 
-    private ResourceCertStoreParameters storeParams = null;
+    private ResourceCertStoreParameters storeParams;
 
     /**
      * The sole constructor.
@@ -33,8 +44,7 @@ public class ResourceCertStore extends CertStoreSpi {
      * @throws java.security.InvalidAlgorithmParameterException
      *          if the initialization parameters are inappropriate for this <code>CertStoreSpi</code>
      */
-    public ResourceCertStore(CertStoreParameters params)
-            throws InvalidAlgorithmParameterException {
+    public ResourceCertStore(CertStoreParameters params) throws InvalidAlgorithmParameterException {
         super(params);
         if (params == null) {
             throw new InvalidAlgorithmParameterException();
@@ -67,13 +77,10 @@ public class ResourceCertStore extends CertStoreSpi {
      * @throws java.security.cert.CertStoreException
      *          if an exception occurs
      */
-    public Collection<? extends Certificate>
-    engineGetCertificates(CertSelector selector) throws CertStoreException {
+    public Collection<? extends Certificate> engineGetCertificates(CertSelector selector) throws CertStoreException {
         logger.debug("selecting Certificates");
-        if (selector != null) {
-            if (!(selector instanceof X509CertSelector)) {
-                throw new IllegalArgumentException();
-            }
+        if (selector != null && !(selector instanceof X509CertSelector)) {
+            throw new IllegalArgumentException();
         }
 
         try {
@@ -131,13 +138,10 @@ public class ResourceCertStore extends CertStoreSpi {
      * @throws java.security.cert.CertStoreException
      *          if an exception occurs
      */
-    public Collection<? extends CRL> engineGetCRLs(CRLSelector selector)
-            throws CertStoreException {
+    public Collection<? extends CRL> engineGetCRLs(CRLSelector selector) throws CertStoreException {
 
-        if (selector != null) {
-            if (!(selector instanceof X509CRLSelector)) {
-                throw new IllegalArgumentException();
-            }
+        if (selector != null && !(selector instanceof X509CRLSelector)) {
+            throw new IllegalArgumentException();
         }
 
         try {

@@ -29,7 +29,6 @@ import org.globus.security.SigningPolicyStore;
 import org.globus.security.SigningPolicyStoreException;
 import org.globus.security.SigningPolicyStoreParameters;
 
-import org.globus.security.filestore.FileStoreException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -44,19 +43,14 @@ public class ResourceSigningPolicyStore extends SigningPolicyStore {
     PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
 
 
-    Map<URI, ResourceSigningPolicy> signingPolicyFileMap =
-            new HashMap<URI, ResourceSigningPolicy>();
-    Map<X500Principal, SigningPolicy> policyMap =
-            new HashMap<X500Principal, SigningPolicy>();
+    Map<URI, ResourceSigningPolicy> signingPolicyFileMap = new HashMap<URI, ResourceSigningPolicy>();
+    Map<X500Principal, SigningPolicy> policyMap = new HashMap<X500Principal, SigningPolicy>();
 
     ResourceSigningPolicyStoreParameters parameters;
 
-    private static Logger logger =
-            LoggerFactory.getLogger(ResourceSigningPolicyStore.class.getName());
+    private Logger logger = LoggerFactory.getLogger(ResourceSigningPolicyStore.class.getName());
 
-    public ResourceSigningPolicyStore(SigningPolicyStoreParameters param)
-            throws InvalidAlgorithmParameterException {
-        super(param);
+    public ResourceSigningPolicyStore(SigningPolicyStoreParameters param) throws InvalidAlgorithmParameterException {
         if (param == null) {
             throw new IllegalArgumentException();
         }
@@ -69,8 +63,7 @@ public class ResourceSigningPolicyStore extends SigningPolicyStore {
         this.parameters = (ResourceSigningPolicyStoreParameters) param;
     }
 
-    public SigningPolicy getSigningPolicy(X500Principal caPrincipal)
-            throws SigningPolicyStoreException {
+    public SigningPolicy getSigningPolicy(X500Principal caPrincipal) throws SigningPolicyStoreException {
 
         if (caPrincipal == null) {
             return null;
@@ -90,9 +83,9 @@ public class ResourceSigningPolicyStore extends SigningPolicyStore {
             throw new SigningPolicyStoreException(e);
         }
         Map<X500Principal, SigningPolicy> newPolicyMap =
-                new HashMap<X500Principal, SigningPolicy>();
+            new HashMap<X500Principal, SigningPolicy>();
         Map<URI, ResourceSigningPolicy> newPolicyFileMap =
-                new HashMap<URI, ResourceSigningPolicy>();
+            new HashMap<URI, ResourceSigningPolicy>();
 
         for (Resource resource : resources) {
 
@@ -107,10 +100,9 @@ public class ResourceSigningPolicyStore extends SigningPolicyStore {
         this.signingPolicyFileMap = newPolicyFileMap;
     }
 
-    private void loadSigningPolicy(Resource policyResource,
-                                   Map<X500Principal, SigningPolicy> policyMap_,
-                                   Map<URI, ResourceSigningPolicy> policyFileMap_)
-            throws SigningPolicyStoreException {
+    private void loadSigningPolicy(
+        Resource policyResource, Map<X500Principal, SigningPolicy> policyMapToLoad,
+        Map<URI, ResourceSigningPolicy> currentPolicyFileMap) throws SigningPolicyStoreException {
 
         URI uri;
         if (!policyResource.isReadable()) {
@@ -132,10 +124,10 @@ public class ResourceSigningPolicyStore extends SigningPolicyStore {
         }
         Collection<SigningPolicy> policies = filePolicy.getSigningPolicies();
 
-        policyFileMap_.put(uri, filePolicy);
+        currentPolicyFileMap.put(uri, filePolicy);
         if (policies != null) {
             for (SigningPolicy policy : policies) {
-                policyMap_.put(policy.getCASubjectDN(), policy);
+                policyMapToLoad.put(policy.getCASubjectDN(), policy);
             }
         }
     }

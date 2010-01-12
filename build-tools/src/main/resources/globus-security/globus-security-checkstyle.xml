@@ -24,6 +24,11 @@ under the License.
 
 <module name="Checker">
     <module name="TreeWalker">
+
+
+        <module name="JavadocType">
+            <property name="scope" value="public"/>
+        </module>
         <!-- Naming Conventions -->
         <module name="ConstantName"/>
         <module name="LocalFinalVariableName"/>
@@ -85,7 +90,7 @@ under the License.
         <module name="OperatorWrap"/>
         <module name="ParenPad"/>
         <module name="TypecastParenPad"/>
-<!--        <module name="TabCharacter"/>-->
+        <!--        <module name="TabCharacter"/>-->
         <module name="WhitespaceAfter">
             <property name="tokens" value="COMMA, SEMI"/>
         </module>

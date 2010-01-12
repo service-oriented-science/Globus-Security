@@ -22,13 +22,26 @@ import java.lang.reflect.Array;
  *
  * @author ranantha@mcs.anl.gov
  */
-public class ArraysUtil {
+public final class ArraysUtil {
 
+    private ArraysUtil() {
+        //This should not be initialized.
+    }
+
+    /**
+     * Fill me
+     * 
+     * @param clazz
+     * @param array
+     * @param length
+     * @param <T>
+     * @return
+     */
     @SuppressWarnings("unchecked")
-    public  static <T> T[] copyArray(Class<T> clazz, T[] array, int length){
+    public static <T> T[] copyArray(Class<T> clazz, T[] array, int length) {
         Object[] copy = (Object[]) Array.newInstance(clazz, length);
         System.arraycopy(array, 0, copy, 0, length);
         return (T[]) copy;
     }
-        
+
 }

@@ -1,15 +1,20 @@
 package org.globus.security.resources;
 
-import org.slf4j.Logger;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URI;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 /**
  * Created by IntelliJ IDEA.
@@ -17,11 +22,15 @@ import java.util.*;
  * Date: Dec 29, 2009
  * Time: 12:29:45 PM
  * To change this template use File | Settings | File Templates.
+ *
+ * @param <T>
+ * @param <V>
  */
 public abstract class ResourceSecurityWrapperStore<T extends AbstractResourceSecurityWrapper<V>, V> {
     private Collection<V> rootObjects;
     private PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
     private Map<String, T> wrapperMap = new HashMap<String, T>();
+    private Logger logger = LoggerFactory.getLogger(ResourceSecurityWrapperStore.class.getName());
 
     public Map<String, T> getWrapperMap() {
         return this.wrapperMap;
@@ -43,7 +52,7 @@ public abstract class ResourceSecurityWrapperStore<T extends AbstractResourceSec
         Set<V> updatedList = new HashSet<V>();
         boolean changed = false;
         Map<String, T> newWrapperMap = new HashMap<String, T>();
-        if (locationPattern.indexOf(",") > 0) {
+        if (locationPattern.indexOf(",") >= 0) {
             String[] locationPatterns = locationPattern.split(",");
             boolean tmpChanged = false;
             for (String lp : locationPatterns) {
@@ -56,11 +65,8 @@ public abstract class ResourceSecurityWrapperStore<T extends AbstractResourceSec
             changed = loadResources(locationPattern, updatedList, newWrapperMap);
         }
         // in case certificates were removed
-        if (!changed) {
-            if (this.rootObjects != null &&
-                    this.wrapperMap.size() != newWrapperMap.size()) {
-                changed = true;
-            }
+        if (!changed && this.rootObjects != null && this.wrapperMap.size() != newWrapperMap.size()) {
+            changed = true;
         }
         if (changed) {
             this.rootObjects = updatedList;
@@ -68,7 +74,8 @@ public abstract class ResourceSecurityWrapperStore<T extends AbstractResourceSec
         this.wrapperMap = newWrapperMap;
     }
 
-    private boolean loadResources(String locationPattern, Set<V> updatedList, Map<String, T> newWrapperMap) throws ResourceStoreException {
+    private boolean loadResources(String locationPattern, Set<V> updatedList, Map<String, T> newWrapperMap)
+        throws ResourceStoreException {
         boolean changed = false;
         try {
             Resource[] resources = resolver.getResources(locationPattern);
@@ -87,7 +94,8 @@ public abstract class ResourceSecurityWrapperStore<T extends AbstractResourceSec
         return changed;
     }
 
-    private boolean load(Resource resource, Set<V> currentRoots, Map<String, T> newWrapperMap) throws ResourceStoreException {
+    private boolean load(Resource resource, Set<V> currentRoots, Map<String, T> newWrapperMap)
+        throws ResourceStoreException {
         if (!resource.isReadable()) {
             throw new ResourceStoreException("Cannot read file");
         }
@@ -99,6 +107,7 @@ public abstract class ResourceSecurityWrapperStore<T extends AbstractResourceSec
             }
         } catch (IOException e) {
             //This is ok, it just means the resource is not a filesystemresources
+            logger.debug("Not a filesystem resource", e);
         }
         try {
             String resourceUri = resource.getURL().toExternalForm();
@@ -139,7 +148,7 @@ public abstract class ResourceSecurityWrapperStore<T extends AbstractResourceSec
             }
             return roots;
         } catch (IOException
-                e) {
+            e) {
             throw new ResourceStoreException(e);
         }
     }

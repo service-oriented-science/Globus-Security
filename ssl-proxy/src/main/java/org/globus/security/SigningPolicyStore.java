@@ -15,8 +15,6 @@
  */
 package org.globus.security;
 
-import java.security.InvalidAlgorithmParameterException;
-
 import javax.security.auth.x500.X500Principal;
 
 /**
@@ -26,16 +24,17 @@ import javax.security.auth.x500.X500Principal;
  */
 public abstract class SigningPolicyStore {
 
-    /**
-     * FixMe: Add documentation
-     *
-     * @param parameters FixMe document me.
-     * @throws InvalidAlgorithmParameterException FixMe document me.
-     */
-    public SigningPolicyStore(final SigningPolicyStoreParameters parameters)
-            throws InvalidAlgorithmParameterException {
-
-    }
+//    /**
+//     * FixMe: Add documentation
+//     *
+//     * @param parameters FixMe document me.
+//     * @throws InvalidAlgorithmParameterException
+//     *          FixMe document me.
+//     */
+//    public SigningPolicyStore(final SigningPolicyStoreParameters parameters)
+//        throws InvalidAlgorithmParameterException {
+//
+//    }
 
     /**
      * FixMe: Document me
@@ -45,5 +44,5 @@ public abstract class SigningPolicyStore {
      * @throws SigningPolicyStoreException Document Me.
      */
     public abstract SigningPolicy getSigningPolicy(X500Principal caPrincipal)
-            throws SigningPolicyStoreException;
+        throws SigningPolicyStoreException;
 }

@@ -26,7 +26,6 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 
 import org.globus.security.SigningPolicyStoreParameters;
-import org.globus.security.provider.X509ProxyCertPathValidator;
 
 /**
  * Created by IntelliJ IDEA.
@@ -39,7 +38,7 @@ import org.globus.security.provider.X509ProxyCertPathValidator;
 public class SSLConfigurator {
 
     public static final String DEFAULT_KEYSTORE = System.getProperty("user.home") + File.separator
-            + ".keystore";
+        + ".keystore";
     private CertStoreParameters certStoreParameters;
     private String provider;
     private String protocol = "TLS";
@@ -50,12 +49,12 @@ public class SSLConfigurator {
     private String keyPassword;
     private String keyStorePassword;
     private String sslKeyManagerFactoryAlgorithm =
-            Security.getProperty("ssl.KeyManagerFactory.algorithm") == null ? "SunX509" : Security.getProperty(
-                    "ssl.KeyManagerFactory.algorithm"); // cert algorithm;
-    private String sslTrustManagerFactoryAlgorithm =
-            Security.getProperty("ssl.TrustManagerFactory.algorithm") == null
-                    ? "PKITrustManager"
-                    : Security.getProperty("ssl.TrustManagerFactory.algorithm");
+        Security.getProperty("ssl.KeyManagerFactory.algorithm") == null ? "SunX509" : Security.getProperty(
+            "ssl.KeyManagerFactory.algorithm"); // cert algorithm;
+//    private String sslTrustManagerFactoryAlgorithm =
+//            Security.getProperty("ssl.TrustManagerFactory.algorithm") == null
+//                    ? "PKITrustManager"
+//                    : Security.getProperty("ssl.TrustManagerFactory.algorithm");
     private String trustStoreType = "PEMFilebasedKeyStore";
     private KeyStore.LoadStoreParameter trustStoreParameters;
     private String trustStorePath;
@@ -97,47 +96,52 @@ public class SSLConfigurator {
 
     private SSLContext loadSSLContext() throws NoSuchAlgorithmException, NoSuchProviderException {
         return provider == null
-                ? SSLContext.getInstance(protocol)
-                : SSLContext.getInstance(protocol, provider);
+            ? SSLContext.getInstance(protocol)
+            : SSLContext.getInstance(protocol, provider);
     }
 
     private SecureRandom loadSecureRandom() throws NoSuchAlgorithmException {
         return secureRandomAlgorithm == null
-                ? null
-                : SecureRandom.getInstance(secureRandomAlgorithm);
+            ? null
+            : SecureRandom.getInstance(secureRandomAlgorithm);
     }
 
     // FIXME: limited proxy policy and configurable policy handlers...
-    private TrustManager[] loadTrustManagers(KeyStore trustStore, CertStore certStore) throws InvalidAlgorithmParameterException {
+
+    private TrustManager[] loadTrustManagers(KeyStore trustStore, CertStore certStore)
+        throws InvalidAlgorithmParameterException {
 //        FileBasedSigningPolicyStore spStore = new FileBasedSigningPolicyStore(signingPolicyStoreParameters);
-        X509ProxyCertPathValidator validator = new X509ProxyCertPathValidator();
-//        X509ProxyCertPathParameters parameters = new X509ProxyCertPathParameters(trustStore, certStore, spStore, false);
+//        X509ProxyCertPathValidator validator = new X509ProxyCertPathValidator();
+//        X509ProxyCertPathParameters parameters =
+// new X509ProxyCertPathParameters(trustStore, certStore, spStore, false);
 //        TrustManager tm = new PKITrustManager(validator, parameters);
 //        return new TrustManager[]{tm};
-        return null;
+        return new TrustManager[0];
     }
 
-    private KeyManager[] loadKeyManagers() throws IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException, UnrecoverableKeyException {
+    private KeyManager[] loadKeyManagers()
+        throws IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException,
+        UnrecoverableKeyException {
         InputStream keystoreInputStream = null;
 
         if (keyStore != null) {
             keystoreInputStream = getResource(keyStore);
         }
 
-
-        KeyStore keyStore = KeyStore.getInstance(keyStoreType);
-        keyStore.load(keystoreInputStream, keyPassword == null ? null : keyPassword.toCharArray());
+        KeyStore keyStoreToLoad = KeyStore.getInstance(keyStoreType);
+        keyStoreToLoad.load(keystoreInputStream, keyPassword == null ? null : keyPassword.toCharArray());
 
 
         KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(sslKeyManagerFactoryAlgorithm);
-        keyManagerFactory.init(keyStore,
-                keyStorePassword == null
-                        ? null
-                        : keyStorePassword.toCharArray());
+        keyManagerFactory.init(keyStoreToLoad,
+            keyStorePassword == null
+                ? null
+                : keyStorePassword.toCharArray());
         return keyManagerFactory.getKeyManagers();
     }
 
-    private KeyStore loadTrustStore() throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
+    private KeyStore loadTrustStore()
+        throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
         KeyStore trustStore = KeyStore.getInstance(trustStoreType);
         if (trustStoreParameters == null) {
             if (this.trustStorePath == null || this.trustStorePassword == null) {
@@ -145,10 +149,10 @@ public class SSLConfigurator {
                 this.trustStorePassword = this.keyStorePassword;
             }
             InputStream trustStoreInputStream =
-                    getResource(trustStorePath);
+                getResource(trustStorePath);
             char[] pw = trustStorePassword == null
-                    ? null
-                    : trustStorePassword.toCharArray();
+                ? null
+                : trustStorePassword.toCharArray();
             trustStore.load(trustStoreInputStream, pw);
             return trustStore;
         }
@@ -166,7 +170,7 @@ public class SSLConfigurator {
             if (file.exists()) {
                 is = new FileInputStream(file);
             } else {
-                is = getClass().getResource(source).openStream();
+                is = getClass().getClassLoader().getResource(source).openStream();
             }
         }
         return is;
@@ -284,7 +288,7 @@ public class SSLConfigurator {
         this.trustStorePassword = trustStorePassword;
     }
 
-    public void setSslTrustManagerFactoryAlgorithm(String sslTrustManagerFactoryAlgorithm) {
-        this.sslTrustManagerFactoryAlgorithm = sslTrustManagerFactoryAlgorithm;
-    }
+//    public void setSslTrustManagerFactoryAlgorithm(String sslTrustManagerFactoryAlgorithm) {
+//        this.sslTrustManagerFactoryAlgorithm = sslTrustManagerFactoryAlgorithm;
+//    }
 }

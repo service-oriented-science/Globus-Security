@@ -47,12 +47,12 @@ public class BouncyCastleOpenSSLKey extends OpenSSLKey {
     }
 
     public BouncyCastleOpenSSLKey(InputStream is)
-            throws IOException, GeneralSecurityException {
+        throws IOException, GeneralSecurityException {
         super(is);
     }
 
     public BouncyCastleOpenSSLKey(String file)
-            throws IOException, GeneralSecurityException {
+        throws IOException, GeneralSecurityException {
         super(file);
     }
 
@@ -61,20 +61,20 @@ public class BouncyCastleOpenSSLKey extends OpenSSLKey {
     }
 
     public BouncyCastleOpenSSLKey(String algorithm, byte[] data)
-            throws GeneralSecurityException {
+        throws GeneralSecurityException {
         super(algorithm, data);
     }
 
     protected PrivateKey getKey(String alg, byte[] data)
-            throws GeneralSecurityException {
+        throws GeneralSecurityException {
         if (alg.equals("RSA")) {
             try {
                 ByteArrayInputStream bis = new ByteArrayInputStream(data);
                 ASN1InputStream derin = new ASN1InputStream(bis);
                 DERObject keyInfo = derin.readObject();
 
-                DERObjectIdentifier rsa_oid = PKCSObjectIdentifiers.rsaEncryption;
-                AlgorithmIdentifier rsa = new AlgorithmIdentifier(rsa_oid);
+                DERObjectIdentifier rsaOid = PKCSObjectIdentifiers.rsaEncryption;
+                AlgorithmIdentifier rsa = new AlgorithmIdentifier(rsaOid);
                 PrivateKeyInfo pkeyinfo = new PrivateKeyInfo(rsa, keyInfo);
                 DERObject derkey = pkeyinfo.getDERObject();
 
@@ -98,9 +98,7 @@ public class BouncyCastleOpenSSLKey extends OpenSSLKey {
 
     protected byte[] getEncoded(PrivateKey key) {
         String format = key.getFormat();
-        if (format != null &&
-                (format.equalsIgnoreCase("PKCS#8") ||
-                        format.equalsIgnoreCase("PKCS8"))) {
+        if (format != null && (format.equalsIgnoreCase("PKCS#8") || format.equalsIgnoreCase("PKCS8"))) {
             try {
                 DERObject keyInfo = BouncyCastleUtil.toDERObject(key.getEncoded());
                 PrivateKeyInfo pkey = new PrivateKeyInfo((ASN1Sequence) keyInfo);
@@ -109,31 +107,30 @@ public class BouncyCastleOpenSSLKey extends OpenSSLKey {
             } catch (IOException e) {
                 // that should never happen
                 e.printStackTrace();
-                return null;
+                return new byte[]{};
             }
-        } else if (format != null &&
-                format.equalsIgnoreCase("PKCS#1") &&
-                key instanceof RSAPrivateCrtKey) { // this condition will rarely be true
+        } else if (format != null && format.equalsIgnoreCase("PKCS#1") && key instanceof RSAPrivateCrtKey) {
+            // this condition will rarely be true
             RSAPrivateCrtKey pKey = (RSAPrivateCrtKey) key;
             RSAPrivateKeyStructure st =
-                    new RSAPrivateKeyStructure(pKey.getModulus(),
-                            pKey.getPublicExponent(),
-                            pKey.getPrivateExponent(),
-                            pKey.getPrimeP(),
-                            pKey.getPrimeQ(),
-                            pKey.getPrimeExponentP(),
-                            pKey.getPrimeExponentQ(),
-                            pKey.getCrtCoefficient());
+                new RSAPrivateKeyStructure(pKey.getModulus(),
+                    pKey.getPublicExponent(),
+                    pKey.getPrivateExponent(),
+                    pKey.getPrimeP(),
+                    pKey.getPrimeQ(),
+                    pKey.getPrimeExponentP(),
+                    pKey.getPrimeExponentQ(),
+                    pKey.getCrtCoefficient());
             DERObject ob = st.getDERObject();
 
             try {
                 return BouncyCastleUtil.toByteArray(ob);
             } catch (IOException e) {
                 // that should never happen
-                return null;
+                return new byte[0];
             }
         } else {
-            return null;
+            return new byte[0];
         }
     }
 

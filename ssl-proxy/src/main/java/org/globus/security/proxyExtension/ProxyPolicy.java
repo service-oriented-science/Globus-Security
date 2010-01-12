@@ -34,20 +34,17 @@ public class ProxyPolicy implements DEREncodable {
     /**
      * Impersonation proxy OID
      */
-    public static final DERObjectIdentifier IMPERSONATION
-            = new DERObjectIdentifier("1.3.6.1.5.5.7.21.1");
+    public static final DERObjectIdentifier IMPERSONATION = new DERObjectIdentifier("1.3.6.1.5.5.7.21.1");
 
     /**
      * Independent proxy OID
      */
-    public static final DERObjectIdentifier INDEPENDENT
-            = new DERObjectIdentifier("1.3.6.1.5.5.7.21.2");
+    public static final DERObjectIdentifier INDEPENDENT = new DERObjectIdentifier("1.3.6.1.5.5.7.21.2");
 
     /**
      * Limited proxy OID
      */
-    public static final DERObjectIdentifier LIMITED
-            = new DERObjectIdentifier("1.3.6.1.4.1.3536.1.1.1.9");
+    public static final DERObjectIdentifier LIMITED = new DERObjectIdentifier("1.3.6.1.4.1.3536.1.1.1.9");
 
     private DERObjectIdentifier policyLanguage;
     private DEROctetString policy;
@@ -80,8 +77,9 @@ public class ProxyPolicy implements DEREncodable {
      * @param policyLanguage the language policy Oid.
      * @param policy         the policy.
      */
-    public ProxyPolicy(DERObjectIdentifier policyLanguage,
-                       byte[] policy) {
+    public ProxyPolicy(
+        DERObjectIdentifier policyLanguage,
+        byte[] policy) {
         if (policyLanguage == null) {
             throw new IllegalArgumentException();
         }
@@ -98,8 +96,9 @@ public class ProxyPolicy implements DEREncodable {
      * @param policyLanguageOid the language policy Oid.
      * @param policy            the policy.
      */
-    public ProxyPolicy(String policyLanguageOid,
-                       byte[] policy) {
+    public ProxyPolicy(
+        String policyLanguageOid,
+        byte[] policy) {
         if (policyLanguageOid == null) {
             throw new IllegalArgumentException();
         }
@@ -116,8 +115,9 @@ public class ProxyPolicy implements DEREncodable {
      * @param policyLanguage the language policy Oid.
      * @param policy         the policy.
      */
-    public ProxyPolicy(DERObjectIdentifier policyLanguage,
-                       String policy) {
+    public ProxyPolicy(
+        DERObjectIdentifier policyLanguage,
+        String policy) {
         this(policyLanguage, (policy != null) ? policy.getBytes() : null);
     }
 
@@ -150,9 +150,8 @@ public class ProxyPolicy implements DEREncodable {
     }
 
     protected void checkConstraints() {
-        if ((this.policyLanguage.equals(IMPERSONATION) ||
-                this.policyLanguage.equals(INDEPENDENT)) &&
-                this.policy != null) {
+        if ((this.policyLanguage.equals(IMPERSONATION)
+            || this.policyLanguage.equals(INDEPENDENT)) && this.policy != null) {
             throw new IllegalArgumentException();
         }
     }
@@ -163,7 +162,7 @@ public class ProxyPolicy implements DEREncodable {
      * @return the policy in bytes. Might be null.
      */
     public byte[] getPolicy() {
-        return (this.policy != null) ? this.policy.getOctets() : null;
+        return (this.policy != null) ? this.policy.getOctets() : new byte[0];
     }
 
     /**
@@ -172,9 +171,7 @@ public class ProxyPolicy implements DEREncodable {
      * @return the policy as String. Might be null.
      */
     public String getPolicyAsString() {
-        return (this.policy != null) ?
-                new String(this.policy.getOctets()) :
-                null;
+        return (this.policy != null) ? new String(this.policy.getOctets()) : null;
     }
 
     /**

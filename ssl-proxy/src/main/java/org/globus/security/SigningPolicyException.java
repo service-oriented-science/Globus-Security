@@ -18,6 +18,9 @@ package org.globus.security;
 import java.security.GeneralSecurityException;
 
 
+/**
+ * This exception signals an error with the Signing Policy.
+ */
 public class SigningPolicyException extends GeneralSecurityException {
 
     public SigningPolicyException(String msg) {
