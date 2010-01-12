@@ -27,7 +27,5 @@ public interface PIP {
      * be returned as NonRequestEntities. Attributes about same entities,
      * should be merged as a single EntityAttribute object.
      */
-    public NonRequestEntities
-    collectAttributes(RequestEntities requestAttr)
-            throws AttributeException;
+    NonRequestEntities collectAttributes(RequestEntities requestAttr) throws AttributeException;
 }

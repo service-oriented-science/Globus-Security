@@ -39,9 +39,9 @@ import java.util.ResourceBundle;
  */
 public class I18nUtil {
 
-    private static Map mapping = new HashMap();
+    private static Map<String, I18nUtil> mapping = new HashMap<String, I18nUtil>();
 
-    private ResourceBundle messages = null;
+    private ResourceBundle messages;
 
     protected I18nUtil(ResourceBundle messages) {
         this.messages = messages;
@@ -52,13 +52,16 @@ public class I18nUtil {
      *
      * @param resource resource name. See {@link
      *                 ResourceBundle#getBundle(String) ResourceBundle.getBundle()}
+     *
+     * @return Fill Me
+     *
      */
     public static synchronized I18nUtil getI18n(String resource) {
-        I18nUtil instance = (I18nUtil) mapping.get(resource);
+        I18nUtil instance = mapping.get(resource);
         if (instance == null) {
             instance = new I18nUtil(ResourceBundle.getBundle(resource,
-                    Locale.getDefault(),
-                    getClassLoader()));
+                Locale.getDefault(),
+                getClassLoader()));
             mapping.put(resource, instance);
         }
         return instance;
@@ -73,16 +76,16 @@ public class I18nUtil {
      *                 the resource. This parameter is only used
      *                 initially to load the actual resource. Once the resource
      *                 is loaded, this argument is ignored.
+     * @return Fill Me
      */
-    public static synchronized I18nUtil getI18n(String resource,
-                                                ClassLoader loader) {
-        I18nUtil instance = (I18nUtil) mapping.get(resource);
+    public static synchronized I18nUtil getI18n(String resource, ClassLoader loader) {
+        I18nUtil instance = mapping.get(resource);
         if (instance == null) {
             //  if (loader == null) {
             //    loader = getClassLoader();
             //}
             instance = new I18nUtil(ResourceBundle.
-                    getBundle(resource, Locale.getDefault(), loader));
+                getBundle(resource, Locale.getDefault(), loader));
             mapping.put(resource, instance);
         }
         return instance;
@@ -95,25 +98,41 @@ public class I18nUtil {
 
     /**
      * Gets a message from resource bundle.
+     *
+     * @param key Fill Me
+     * @return Fill Me
+     *
+     * @throws MissingResourceException Fill Me
      */
-    public String getMessage(String key)
-            throws MissingResourceException {
+    public String getMessage(String key) throws MissingResourceException {
         return messages.getString(key);
     }
 
     /**
      * Gets a formatted message from resource bundle
+     *
+     * @param key Fill Me
+     * @param arg Fill Me
+     *
+     * @return Fill Me
+     *
+     * @throws MissingResourceException Fill Me
      */
-    public String getMessage(String key, Object arg)
-            throws MissingResourceException {
+    public String getMessage(String key, Object arg) throws MissingResourceException {
         return getMessage(key, new Object[]{arg});
     }
 
     /**
      * Gets a formatted message from resource bundle
+     *
+     * @param key Fill Me
+     * @param vars Fill Me
+     *
+     * @return Fill Me
+     *
+     * @throws MissingResourceException Fill Me
      */
-    public String getMessage(String key, Object[] vars)
-            throws MissingResourceException {
+    public String getMessage(String key, Object[] vars) throws MissingResourceException {
         return MessageFormat.format(messages.getString(key), vars);
     }
 

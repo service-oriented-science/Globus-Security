@@ -30,11 +30,10 @@ public interface AuthorizationEngineSpi extends Serializable {
      * @param chainName   Name for authorization chain
      * @param authzConfig Configuration of interceptors in authorization chain
      * @param chainConfig Parameters for interceptors to use.
+     * @throws InitializeException Fill Me
      */
-    public void engineInitialize(String chainName,
-                                 AuthorizationConfig authzConfig,
-                                 ChainConfig chainConfig)
-            throws InitializeException;
+    void engineInitialize(String chainName, AuthorizationConfig authzConfig, ChainConfig chainConfig)
+        throws InitializeException;
 
     /**
      * Evalauates the authorization chain to determine of the subject
@@ -44,19 +43,24 @@ public interface AuthorizationEngineSpi extends Serializable {
      * @param reqAttribute  Object initialized with information about the request
      *                      context.
      * @param resourceOwner Resource owner entity.
+     * @return Fill Me
+     * @throws AuthorizationException Fill Me
      */
-    public Decision engineAuthorize(RequestEntities reqAttribute,
-                                    EntityAttributes resourceOwner)
-            throws AuthorizationException;
+    Decision engineAuthorize(RequestEntities reqAttribute, EntityAttributes resourceOwner)
+        throws AuthorizationException;
 
     /**
      * The engine should invoke close on all interceptors
+     *
+     * @throws CloseException Fill Me
      */
-    public void engineClose() throws CloseException;
+    void engineClose() throws CloseException;
 
 
     /**
      * Returns the parameters used by interceprors.
+     *
+     * @return Fill Me
      */
-    public ChainConfig getChainConfig();
+    ChainConfig getChainConfig();
 }

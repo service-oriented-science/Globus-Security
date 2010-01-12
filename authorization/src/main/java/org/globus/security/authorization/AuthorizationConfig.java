@@ -25,35 +25,59 @@ public class AuthorizationConfig {
     private InterceptorConfig[] pips;
     private InterceptorConfig[] pdps;
 
-    public AuthorizationConfig(InterceptorConfig[] bootstrap_,
-                               InterceptorConfig[] pips_,
-                               InterceptorConfig[] pdps_) {
-        this.bootstrapPips = bootstrap_;
-        this.pips = pips_;
-        this.pdps = pdps_;
+    public AuthorizationConfig(InterceptorConfig[] initBootstrap,
+                               InterceptorConfig[] initPips,
+                               InterceptorConfig[] initPdps) {
+        setBootstrapPips(initBootstrap);
+        setPips(initPips);
+        setPdps(initPdps);
     }
 
     public void setBootstrapPips(InterceptorConfig[] inter) {
-        this.bootstrapPips = inter;
+        if (inter != null) {
+            this.bootstrapPips = new InterceptorConfig[inter.length];
+            System.arraycopy(inter, 0, this.bootstrapPips, 0, inter.length);
+        }
     }
 
     public void setPips(InterceptorConfig[] inter) {
-        this.pips = inter;
+        if (inter != null) {
+            this.pips = new InterceptorConfig[inter.length];
+            System.arraycopy(inter, 0, this.pips, 0, inter.length);
+        }
     }
 
     public void setPdps(InterceptorConfig[] inter) {
-        this.pdps = inter;
+        if (inter != null) {
+            this.pdps = new InterceptorConfig[inter.length];
+            System.arraycopy(inter, 0, this.pdps, 0, inter.length);
+        }
     }
 
     public InterceptorConfig[] getBootstrapPips() {
-        return this.bootstrapPips;
+        InterceptorConfig[] toReturn = null;
+        if (this.bootstrapPips != null) {
+            toReturn = new InterceptorConfig[this.bootstrapPips.length];
+            System.arraycopy(this.bootstrapPips, 0, toReturn, 0, this.bootstrapPips.length);
+        }
+        return toReturn;
     }
 
     public InterceptorConfig[] getPips() {
-        return this.pips;
+        InterceptorConfig[] toReturn = null;
+        if (this.pips != null) {
+            toReturn = new InterceptorConfig[this.pips.length];
+            System.arraycopy(this.pips, 0, toReturn, 0, this.pips.length);
+        }
+        return toReturn;
     }
 
     public InterceptorConfig[] getPdps() {
-        return this.pdps;
+        InterceptorConfig[] toReturn = null;
+        if (this.pdps != null) {
+            toReturn = new InterceptorConfig[this.pdps.length];
+            System.arraycopy(this.pdps, 0, toReturn, 0, this.pdps.length);
+        }
+        return toReturn;
     }
 }

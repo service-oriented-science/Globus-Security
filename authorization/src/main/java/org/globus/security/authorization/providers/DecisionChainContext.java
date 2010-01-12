@@ -27,25 +27,25 @@ import org.globus.security.authorization.EntityAttributes;
  */
 public class DecisionChainContext {
 
-    private Stack chain;
-    private Vector deniedList;
+    private Stack<EntityAttributes> chain;
+    private Vector<EntityAttributes> deniedList;
     private EntityAttributes[] authorities;
-    private Vector deniedExceptions;
+    private Vector<Throwable> deniedExceptions;
 
     public DecisionChainContext() {
         this(1);
     }
 
     public DecisionChainContext(int i) {
-        chain = new Stack();
-        deniedList = new Vector();
+        chain = new Stack<EntityAttributes>();
+        deniedList = new Vector<EntityAttributes>();
         authorities = new EntityAttributes[i];
     }
 
     /**
      * Tests if the specified authority is in the decision chain.
      *
-     * @param authority
+     * @param authority Fill Me
      * @return true if the specified authority is in the decision chain.
      */
     public boolean isInChain(EntityAttributes authority) {
@@ -55,7 +55,7 @@ public class DecisionChainContext {
     /**
      * Appends the specified authority to the decision chain.
      *
-     * @param authority
+     * @param authority Fill Me
      */
     public void appendToChain(EntityAttributes authority) {
         chain.push(authority);
@@ -73,6 +73,7 @@ public class DecisionChainContext {
      *
      * @return the iterator for the decision chain.
      */
+    @SuppressWarnings("unused")
     public Iterator getChainAsIterator() {
         return chain.iterator();
     }
@@ -80,7 +81,7 @@ public class DecisionChainContext {
     /**
      * Tests if the specified authority is in the denied list.
      *
-     * @param authority
+     * @param authority Fill Me
      * @return true if the specified authority is in the denied list.
      */
     public boolean isDenied(EntityAttributes authority) {
@@ -102,14 +103,14 @@ public class DecisionChainContext {
     public void addDeniedException(Throwable exception) {
 
         if (this.deniedExceptions == null) {
-            this.deniedExceptions = new Vector();
+            this.deniedExceptions = new Vector<Throwable>();
         }
         if (exception != null) {
             this.deniedExceptions.add(exception);
         }
     }
 
-    public Vector getDeniedExceptions() {
+    public Vector<Throwable> getDeniedExceptions() {
         return this.deniedExceptions;
     }
 }

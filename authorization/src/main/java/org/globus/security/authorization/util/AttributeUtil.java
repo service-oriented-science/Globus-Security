@@ -15,25 +15,34 @@
  */
 package org.globus.security.authorization.util;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.globus.security.authorization.EntityAttributes;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-public class AttributeUtil {
+/**
+ * Fill Me
+ */
+public final class AttributeUtil {
 
-    public static EntityAttributes
-    getMatchedEntity(List attributeList, EntityAttributes entityAttr) {
+    private AttributeUtil() {
+        //this should not be initialized.
+    }
+
+    /**
+     * Fill Me
+     *
+     * @param attributeList Fill Me
+     * @param entityAttr Fill Me
+     * @return Fill Me
+     */
+    public static EntityAttributes getMatchedEntity(List attributeList, EntityAttributes entityAttr) {
 
         if ((attributeList == null) || (entityAttr == null)) {
             return null;
         }
 
-        Iterator attrIterator = attributeList.iterator();
-        while (attrIterator.hasNext()) {
-            EntityAttributes retAttr = (EntityAttributes) attrIterator.next();
+        for (Object anAttributeList : attributeList) {
+            EntityAttributes retAttr = (EntityAttributes) anAttributeList;
             if (retAttr.isSameEntity(entityAttr)) {
                 return retAttr;
             }

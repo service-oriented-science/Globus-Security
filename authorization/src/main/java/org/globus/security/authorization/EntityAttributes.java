@@ -24,23 +24,22 @@ import org.globus.security.authorization.util.I18nUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 /**
  * Represents an entity, consisting of a collection of identity
  * attributes, non-identity attributes and attributes in native format.
  */
 public class EntityAttributes implements Serializable {
 
-    private static I18nUtil i18n =
-            I18nUtil.getI18n("org.globus.security.authorization.errors",
-                    EntityAttributes.class.getClassLoader());
+    private static I18nUtil i18n = I18nUtil.getI18n("org.globus.security.authorization.errors",
+        EntityAttributes.class.getClassLoader());
 
-    private static Logger logger =
-            LoggerFactory.getLogger(EntityAttributes.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(EntityAttributes.class.getName());
 
     // collection of attributes that are not identity attributes
     private AttributeCollection attrCollection;
     // Attributes in native format
-    private HashSet nativeAttrCollection;
+    private Set nativeAttrCollection;
     // collection of attributes that are identity attributes
     private IdentityAttributeCollection identityAttrCollection;
 
@@ -49,8 +48,9 @@ public class EntityAttributes implements Serializable {
      * @param attr       Attribute collection
      * @param nativeAttr Set of attribute in native format
      */
-    public EntityAttributes(IdentityAttributeCollection idenAttr,
-                            AttributeCollection attr, Set nativeAttr) {
+    public EntityAttributes(
+        IdentityAttributeCollection idenAttr,
+        AttributeCollection attr, Set nativeAttr) {
 
         if ((idenAttr == null) || (idenAttr.size() <= 0)) {
             String err = i18n.getMessage("idenAttrReq");
@@ -67,8 +67,9 @@ public class EntityAttributes implements Serializable {
         }
     }
 
-    public EntityAttributes(IdentityAttributeCollection idenAttr,
-                            AttributeCollection attr) {
+    public EntityAttributes(
+        IdentityAttributeCollection idenAttr,
+        AttributeCollection attr) {
         this(idenAttr, attr, null);
     }
 
@@ -104,9 +105,8 @@ public class EntityAttributes implements Serializable {
         if (this.nativeAttrCollection == null) {
             this.nativeAttrCollection = new HashSet(set);
         } else {
-            Iterator iterator = set.iterator();
-            while (iterator.hasNext()) {
-                this.nativeAttrCollection.add(iterator.next());
+            for (Object aSet : set) {
+                this.nativeAttrCollection.add(aSet);
             }
         }
     }
@@ -170,7 +170,7 @@ public class EntityAttributes implements Serializable {
         }
 
         IdentityAttributeCollection idenCollToCheck =
-                entityAttr.getIdentityAttributes();
+            entityAttr.getIdentityAttributes();
         return this.identityAttrCollection.isSameEntity(idenCollToCheck);
     }
 
@@ -191,7 +191,7 @@ public class EntityAttributes implements Serializable {
         }
 
         IdentityAttributeCollection idenColl =
-                entityAttr.getIdentityAttributes();
+            entityAttr.getIdentityAttributes();
         this.identityAttrCollection.addAll(idenColl);
 
         AttributeCollection attrColl = entityAttr.getAttributes();

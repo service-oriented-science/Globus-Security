@@ -33,6 +33,7 @@ public class AttributeIdentifier implements Serializable {
     private URI dataType;
     private boolean identityAttibute;
 
+    @SuppressWarnings("unused")
     private AttributeIdentifier() {
     }
 
@@ -40,37 +41,39 @@ public class AttributeIdentifier implements Serializable {
      * Constructs a non-identity atttibute
      *
      * @param id        Attribute ID URI
-     * @param dataType_ Datatype of Attribute
+     * @param initDataType Datatype of Attribute
      */
-    public AttributeIdentifier(URI id, URI dataType_) {
-        this(id, dataType_, false);
+    public AttributeIdentifier(URI id, URI initDataType) {
+        this(id, initDataType, false);
     }
 
     /**
      * @param id        Attribute ID URI
-     * @param dataType_ Datatype of Attribute
+     * @param initDataType Datatype of Attribute
      * @param identity  If set to true, an identity attribute it created. If
      *                  not, a non-identity attribute is created.
      */
-    public AttributeIdentifier(URI id, URI dataType_, boolean identity) {
+    public AttributeIdentifier(URI id, URI initDataType, boolean identity) {
         if (id == null) {
             String err = i18n.getMessage("attrIdNotNull");
             throw new IllegalArgumentException(err);
         }
 
-        if (dataType_ == null) {
+        if (initDataType == null) {
             String err = i18n.getMessage("dataTypeNotNull");
             throw new IllegalArgumentException(err);
         }
 
         this.attributeId = id;
-        this.dataType = dataType_;
+        this.dataType = initDataType;
         this.identityAttibute = identity;
 
     }
 
     /**
      * Returns attribute Id
+     *
+     * @return Fill Me
      */
     public URI getAttributeId() {
         return this.attributeId;
@@ -78,6 +81,8 @@ public class AttributeIdentifier implements Serializable {
 
     /**
      * Returns data type
+     *
+     * @return Fill Me
      */
     public URI getDataType() {
         return this.dataType;
@@ -85,6 +90,8 @@ public class AttributeIdentifier implements Serializable {
 
     /**
      * Returns if the attribute is an identity attribute
+     *
+     * @return Fill Me
      */
     public boolean isIdentityAttribute() {
         return this.identityAttibute;
@@ -105,19 +112,9 @@ public class AttributeIdentifier implements Serializable {
 
         AttributeIdentifier obj = (AttributeIdentifier) object;
 
-        if (!this.attributeId.equals(obj.getAttributeId())) {
-            return false;
-        }
+        return this.attributeId.equals(obj.getAttributeId()) && this.dataType.equals(obj.getDataType())
+            && this.identityAttibute == obj.isIdentityAttribute();
 
-        if (!this.dataType.equals(obj.getDataType())) {
-            return false;
-        }
-
-        if (this.identityAttibute != obj.isIdentityAttribute()) {
-            return false;
-        }
-
-        return true;
     }
 
     public int hashCode() {
@@ -129,6 +126,6 @@ public class AttributeIdentifier implements Serializable {
 
         return " Attribute Id: " + this.attributeId + "\n Datatype: "
                 + this.dataType + "\n Identity: "
-                + Boolean.valueOf(this.identityAttibute);
+                + this.identityAttibute;
     }
 }

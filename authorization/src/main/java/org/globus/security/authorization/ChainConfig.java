@@ -24,7 +24,7 @@ import java.io.Serializable;
  */
 public interface ChainConfig extends Serializable {
 
-    public Object getProperty(String prefix, String property);
+    Object getProperty(String prefix, String property);
 
-    public void setProperty(String prefix, String property, Object value);
+    void setProperty(String prefix, String property, Object value);
 }

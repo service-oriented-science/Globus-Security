@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
@@ -38,13 +39,13 @@ import org.slf4j.LoggerFactory;
  */
 public class AttributeCollection implements Serializable {
 
-    private static Logger logger =
-            LoggerFactory.getLogger(AttributeCollection.class.getName());
+    private static final long serialVersionUID = -6203348642130350208L;
 
-    private Map map;
+    private Logger logger = LoggerFactory.getLogger(AttributeCollection.class.getName());
+    private Map<AttributeIdentifier,Map<EntityAttributes, Attribute>> map;
 
     public AttributeCollection() {
-        this.map = Collections.synchronizedMap(new HashMap());
+        this.map = Collections.synchronizedMap(new HashMap<AttributeIdentifier,Map<EntityAttributes, Attribute>>());
     }
 
     /**
@@ -62,14 +63,14 @@ public class AttributeCollection implements Serializable {
         logger.trace("Adding attribute " + iden.toString());
 
         // check if this attribute already exists
-        HashMap storedMap = (HashMap) this.map.get(iden);
+        Map<EntityAttributes, Attribute> storedMap = this.map.get(iden);
 
         // if map is null, no attributes with this identity exists.
         // Alternatively it might be a map value of null, but then overwrite is
         // okay, since merge is meaningless.
         if (storedMap == null) {
             logger.trace("No attribute present " + iden.getAttributeId());
-            HashMap attrMap = new HashMap();
+            Map<EntityAttributes, Attribute> attrMap = new HashMap<EntityAttributes, Attribute>();
             attrMap.put(attribute.getIssuer(), attribute);
             this.map.put(iden, attrMap);
         } else {
@@ -80,7 +81,7 @@ public class AttributeCollection implements Serializable {
             // treated as issued by same entity and hence can be merged
             if (newAttrIssuer == null) {
                 // check if hashmap has null as key
-                Attribute attr = (Attribute) storedMap.get(null);
+                Attribute attr = storedMap.get(null);
                 if (attr != null) {
                     logger.trace("null issuer, merge");
                     attr.merge(attribute);
@@ -89,15 +90,12 @@ public class AttributeCollection implements Serializable {
                     storedMap.put(newAttrIssuer, attribute);
                 }
             } else {
-                Iterator issuerKeySet = storedMap.keySet().iterator();
-                while (issuerKeySet.hasNext()) {
-                    EntityAttributes storedIssuer =
-                            (EntityAttributes) issuerKeySet.next();
+                for (EntityAttributes entityAttributes : storedMap.keySet()) {
                     logger.trace("check if issuer is same entity");
-                    if (newAttrIssuer.isSameEntity(storedIssuer)) {
+                    if (newAttrIssuer.isSameEntity(entityAttributes)) {
                         // merge
                         Attribute attr =
-                                (Attribute) storedMap.get(storedIssuer);
+                            (Attribute) storedMap.get(entityAttributes);
                         attr.merge(attribute);
                         return;
                     }
@@ -119,9 +117,8 @@ public class AttributeCollection implements Serializable {
             return;
         }
 
-        Iterator entrySetIterator = attrCollection.getAttributes().iterator();
-        while (entrySetIterator.hasNext()) {
-            add((Attribute) entrySetIterator.next());
+        for (Object o : attrCollection.getAttributes()) {
+            add((Attribute) o);
         }
     }
 
@@ -129,12 +126,10 @@ public class AttributeCollection implements Serializable {
      * Returns a collection of all attributes in the collection.
      */
     public Collection getAttributes() {
-        Collection coll = this.map.values();
-        Vector vector = new Vector();
-        Iterator it = coll.iterator();
-        while (it.hasNext()) {
-            HashMap attrMap = (HashMap) it.next();
-            vector.addAll(attrMap.values());
+        Collection<Map.Entry<AttributeIdentifier, Map<EntityAttributes, Attribute>>> coll = this.map.entrySet();
+        List<Attribute> vector = new Vector<Attribute>();
+        for (Map.Entry<AttributeIdentifier, Map<EntityAttributes, Attribute>> attrEntry : coll) {
+            vector.addAll(attrEntry.getValue().values());
         }
         return vector;
     }
@@ -151,7 +146,7 @@ public class AttributeCollection implements Serializable {
      * attributes may not have same issuer.
      */
     public Collection getAttributes(AttributeIdentifier identifier) {
-        HashMap attrMap = getAttributeMap(identifier);
+        Map<EntityAttributes, Attribute> attrMap = getAttributeMap(identifier);
         if (attrMap != null) {
             return attrMap.values();
         } else {
@@ -164,11 +159,11 @@ public class AttributeCollection implements Serializable {
      */
     public Attribute getAttribute(AttributeIdentifier identifier,
                                   EntityAttributes issuer) {
-        HashMap attrMap = getAttributeMap(identifier);
+        Map<EntityAttributes, Attribute> attrMap = getAttributeMap(identifier);
         if (attrMap == null) {
             return null;
         } else {
-            return (Attribute) attrMap.get(issuer);
+            return attrMap.get(issuer);
         }
     }
 
@@ -176,8 +171,8 @@ public class AttributeCollection implements Serializable {
      * Returns the HashMap keyed on issuer of attribute, with
      * attribute as value, for the given AttributeIdentifier.
      */
-    public HashMap getAttributeMap(AttributeIdentifier identifier) {
-        return (HashMap) this.map.get(identifier);
+    public Map<EntityAttributes, Attribute> getAttributeMap(AttributeIdentifier identifier) {
+        return this.map.get(identifier);
     }
 
     /**
@@ -216,13 +211,12 @@ public class AttributeCollection implements Serializable {
         }
 
         // get list of identitfiers
-        Iterator attrIdenToCheck = attrIdenSet.iterator();
 
-        while (attrIdenToCheck.hasNext()) {
+        for (Object anAttrIdenSet : attrIdenSet) {
 
             // get each idetifier
             AttributeIdentifier idenToCheck =
-                    (AttributeIdentifier) attrIdenToCheck.next();
+                (AttributeIdentifier) anAttrIdenSet;
 
             // check if idenifier is in this collection. Since attribute
             // identifier defines equals and hashcode, this can be checked.
@@ -230,9 +224,9 @@ public class AttributeCollection implements Serializable {
                 continue;
             }
 
-            HashMap attrMap = collection.getAttributeMap(idenToCheck);
+            Map<EntityAttributes, Attribute> attrMap = collection.getAttributeMap(idenToCheck);
             if (attrMap == null) {
-                HashMap thisAttrMap = this.getAttributeMap(idenToCheck);
+                Map<EntityAttributes, Attribute> thisAttrMap = this.getAttributeMap(idenToCheck);
                 if (thisAttrMap == null) {
                     return true;
                 }
@@ -241,24 +235,18 @@ public class AttributeCollection implements Serializable {
             }
 
 
-            HashMap thisAttrMap = this.getAttributeMap(idenToCheck);
+            Map<EntityAttributes, Attribute> thisAttrMap = this.getAttributeMap(idenToCheck);
 
             // for each isssuer, get attribute and see if it matches
-            Iterator attrIssuers = attrMap.keySet().iterator();
 
-            while (attrIssuers.hasNext()) {
-
-                EntityAttributes issuerToCompare =
-                        (EntityAttributes) attrIssuers.next();
+            for (EntityAttributes entityAttributes : attrMap.keySet()) {
 
                 // if it is null, check if it is in the other collection
-                if (issuerToCompare == null) {
+                if (entityAttributes == null) {
                     if (thisAttrMap.containsKey(null)) {
                         // check if attribute value matches
-                        Attribute thisAttr =
-                                (Attribute) thisAttrMap.get(null);
-                        Attribute colAttr =
-                                (Attribute) attrMap.get(issuerToCompare);
+                        Attribute thisAttr = thisAttrMap.get(null);
+                        Attribute colAttr = attrMap.get(entityAttributes);
                         if (colAttr == null) {
                             if (thisAttr == null) {
                                 return true;
@@ -274,16 +262,11 @@ public class AttributeCollection implements Serializable {
                     continue;
                 }
 
-                Iterator thisIssuers = thisAttrMap.keySet().iterator();
-                while (thisIssuers.hasNext()) {
-                    EntityAttributes thisIssuerToCompare =
-                            (EntityAttributes) thisIssuers.next();
-                    if (issuerToCompare.isSameEntity(thisIssuerToCompare)) {
+                for (EntityAttributes entityAttributes1 : thisAttrMap.keySet()) {
+                    if (entityAttributes.isSameEntity(entityAttributes1)) {
                         // check if atleast one value is present
-                        Attribute thisAttr = (Attribute) thisAttrMap
-                                .get(thisIssuerToCompare);
-                        Attribute colAttr =
-                                (Attribute) attrMap.get(issuerToCompare);
+                        Attribute thisAttr = thisAttrMap.get(entityAttributes1);
+                        Attribute colAttr = attrMap.get(entityAttributes);
                         if (thisAttr == null) {
                             if (colAttr == null) {
                                 return true;
@@ -306,12 +289,12 @@ public class AttributeCollection implements Serializable {
 
     public String toString() {
 
-        StringBuffer str = new StringBuffer(getDescription() + "\n");
+        StringBuilder str = new StringBuilder(getDescription() + "\n");
         Collection attributes = getAttributes();
         if (attributes != null) {
-            Iterator iterator = attributes.iterator();
-            while (iterator.hasNext()) {
-                str.append(((Attribute) iterator.next()).toString() + "\n");
+            for (Object attribute : attributes) {
+                str.append(attribute.toString());
+                str.append("\n");
             }
         }
         return str.toString();

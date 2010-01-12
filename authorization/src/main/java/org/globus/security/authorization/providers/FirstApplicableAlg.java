@@ -18,6 +18,7 @@ package org.globus.security.authorization.providers;
 import org.globus.security.authorization.AuthorizationException;
 import org.globus.security.authorization.Decision;
 import org.globus.security.authorization.EntityAttributes;
+import org.globus.security.authorization.PDPInterceptor;
 import org.globus.security.authorization.RequestEntities;
 import org.globus.security.authorization.util.I18nUtil;
 
@@ -44,9 +45,8 @@ public class FirstApplicableAlg extends AbstractEngine {
     private static Logger logger =
             LoggerFactory.getLogger(FirstApplicableAlg.class.getName());
 
-    public Decision engineAuthorize(RequestEntities reqAttr,
-                                    EntityAttributes resourceOwner)
-            throws AuthorizationException {
+    public Decision engineAuthorize(RequestEntities reqAttr, EntityAttributes resourceOwner)
+        throws AuthorizationException {
 
         collectAttributes(reqAttr);
 
@@ -56,9 +56,8 @@ public class FirstApplicableAlg extends AbstractEngine {
             throw new AuthorizationException(err);
         }
 
-        for (int i = 0; i < this.pdps.length; i++) {
-            Decision decision = this.pdps[i]
-                    .canAccess(reqAttr, this.nonReqEntities);
+        for (PDPInterceptor pdp : this.pdps) {
+            Decision decision = pdp.canAccess(reqAttr, this.nonReqEntities);
 
             if (decision == null) {
                 continue;

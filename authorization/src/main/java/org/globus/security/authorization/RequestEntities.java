@@ -23,49 +23,51 @@ import java.io.Serializable;
  */
 public class RequestEntities implements Serializable {
 
+    private static final long serialVersionUID = 7030614667853315588L;
+
     // Attributes of requesting subject
-    private EntityAttributes requestor = null;
+    private EntityAttributes requestor;
     // Attributes of requesting action
-    private EntityAttributes action = null;
+    private EntityAttributes action;
     // Attributes of requesting resource
-    private EntityAttributes resource = null;
+    private EntityAttributes resource;
     // Attributes of environment
-    private EntityAttributes environment = null;
+    private EntityAttributes environment;
 
     public RequestEntities() {
     }
 
     /**
-     * @param requestor_   EntityAttribute for requesting subject
-     * @param action_      EntityAttribute for requesting action
-     * @param resource_    EntityAttribute for requesting resource
-     * @param environment_ EntityAttribute for requesting environment
+     * @param initRequestor   EntityAttribute for requesting subject
+     * @param initAction      EntityAttribute for requesting action
+     * @param initResource    EntityAttribute for requesting resource
+     * @param initEnvironment EntityAttribute for requesting environment
      */
-    public RequestEntities(EntityAttributes requestor_,
-                           EntityAttributes action_,
-                           EntityAttributes resource_,
-                           EntityAttributes environment_) {
+    public RequestEntities(EntityAttributes initRequestor,
+                           EntityAttributes initAction,
+                           EntityAttributes initResource,
+                           EntityAttributes initEnvironment) {
 
-        this.requestor = requestor_;
-        this.action = action_;
-        this.resource = resource_;
-        this.environment = environment_;
+        this.requestor = initRequestor;
+        this.action = initAction;
+        this.resource = initResource;
+        this.environment = initEnvironment;
     }
 
-    public void setRequestor(EntityAttributes requestor_) {
-        this.requestor = requestor_;
+    public void setRequestor(EntityAttributes requestor) {
+        this.requestor = requestor;
     }
 
-    public void setAction(EntityAttributes action_) {
-        this.action = action_;
+    public void setAction(EntityAttributes action) {
+        this.action = action;
     }
 
-    public void setResource(EntityAttributes resource_) {
-        this.resource = resource_;
+    public void setResource(EntityAttributes resource) {
+        this.resource = resource;
     }
 
-    public void setEnvironment(EntityAttributes environment_) {
-        this.environment = environment_;
+    public void setEnvironment(EntityAttributes environment) {
+        this.environment = environment;
     }
 
     public EntityAttributes getRequestor() {

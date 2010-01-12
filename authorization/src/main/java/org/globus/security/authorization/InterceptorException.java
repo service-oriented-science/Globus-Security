@@ -16,6 +16,10 @@
 package org.globus.security.authorization;
 
 // FIXME is Exception chainable ?
+
+/**
+ * Fill Me
+ */
 public class InterceptorException extends Exception {
 
     public InterceptorException(String message) {
