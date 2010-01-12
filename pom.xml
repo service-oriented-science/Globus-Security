@@ -27,13 +27,11 @@
     </scm>
 
     <modules>
-        <module>build-tools</module>
         <module>ssl-proxy</module>
         <module>jetty</module>
         <!--<module>crux-wss4j</module>-->
         <module>authorization</module>
         <module>tomcat</module>
-        <module>globus-skin</module>
     </modules>    
 
     <dependencyManagement>
