@@ -73,6 +73,12 @@
             <version>2.2.5</version>
         </dependency>
         <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>3.0.0.RELEASE</version>
+        </dependency>
+
+        <dependency>
             <groupId>${groupId}</groupId>
             <artifactId>ssl-proxy</artifactId>
             <version>${version}</version>
