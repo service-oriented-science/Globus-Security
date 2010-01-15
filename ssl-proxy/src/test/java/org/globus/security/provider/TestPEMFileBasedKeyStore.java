@@ -333,7 +333,7 @@ public class TestPEMFileBasedKeyStore {
         store.engineDeleteEntry(proxyId1);
 
         certificates = store.engineGetCertificateChain(proxyId1);
-        assertNull(certificates);
+        assertEquals(0, certificates.length);
         assertFalse(this.proxyFile1.getTempFile().exists());
         assertFalse(store.engineIsKeyEntry(proxyId1));
 
