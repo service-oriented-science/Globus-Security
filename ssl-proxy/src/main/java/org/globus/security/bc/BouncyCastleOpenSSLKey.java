@@ -39,6 +39,9 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 /**
  * BouncyCastle-based implementation of OpenSSLKey.
+ *
+ * @version ${version}
+ * @since 1.0
  */
 public class BouncyCastleOpenSSLKey extends OpenSSLKey {
 
@@ -46,27 +49,55 @@ public class BouncyCastleOpenSSLKey extends OpenSSLKey {
         Security.addProvider(new BouncyCastleProvider());
     }
 
-    public BouncyCastleOpenSSLKey(InputStream is)
-        throws IOException, GeneralSecurityException {
+    /**
+     * Reads a OpenSSL private key from the specified input stream.
+     * The private key must be PEM encoded and can be encrypted.
+     *
+     * @param is input stream with OpenSSL key in PEM format.
+     * @throws IOException              if I/O problems.
+     * @throws GeneralSecurityException if problems with the key
+     */
+    public BouncyCastleOpenSSLKey(InputStream is) throws IOException, GeneralSecurityException {
         super(is);
     }
 
-    public BouncyCastleOpenSSLKey(String file)
-        throws IOException, GeneralSecurityException {
+    /**
+     * Reads a OpenSSL private key from the specified file.
+     * The private key must be PEM encoded and can be encrypted.
+     *
+     * @param file file containing the OpenSSL key in PEM format.
+     * @throws IOException              if I/O problems.
+     * @throws GeneralSecurityException if problems with the key
+     */
+    public BouncyCastleOpenSSLKey(String file) throws IOException, GeneralSecurityException {
         super(file);
     }
 
+    /**
+     * Converts a RSAPrivateCrtKey into OpenSSL key.
+     *
+     * @param key private key - must be a RSAPrivateCrtKey
+     */
     public BouncyCastleOpenSSLKey(PrivateKey key) {
         super(key);
     }
 
-    public BouncyCastleOpenSSLKey(String algorithm, byte[] data)
-        throws GeneralSecurityException {
+    /**
+     * Initializes the OpenSSL key from raw byte array.
+     *
+     * @param algorithm the algorithm of the key. Currently
+     *                  only RSA algorithm is supported.
+     * @param data      the DER encoded key data. If RSA
+     *                  algorithm, the key must be in
+     *                  PKCS#1 format.
+     * @throws GeneralSecurityException if any security
+     *                                  problems.
+     */
+    public BouncyCastleOpenSSLKey(String algorithm, byte[] data) throws GeneralSecurityException {
         super(algorithm, data);
     }
 
-    protected PrivateKey getKey(String alg, byte[] data)
-        throws GeneralSecurityException {
+    protected PrivateKey getKey(String alg, byte[] data) throws GeneralSecurityException {
         if (alg.equals("RSA")) {
             try {
                 ByteArrayInputStream bis = new ByteArrayInputStream(data);

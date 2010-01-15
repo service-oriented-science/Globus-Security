@@ -25,17 +25,23 @@ import org.globus.security.Constants;
 import org.globus.security.util.KeyStoreUtil;
 
 /**
- * Created by IntelliJ IDEA.
- * User: turtlebender
- * Date: Dec 30, 2009
- * Time: 12:24:13 PM
- * To change this template use File | Settings | File Templates.
+ * This checks to see if the certificate is in a CRL.
+ *
+ * @version ${version}
+ * @since 1.0
  */
 public class CRLChecker implements CertificateChecker {
     private CertStore certStore;
     private KeyStore keyStore;
     private boolean checkDateValidity;
 
+    /**
+     * Creates a CRLChecker where the CRL's are in the supplied stores.
+     *
+     * @param certStore         The store containing the CRL's
+     * @param keyStore          The store used to get trusted certs.
+     * @param checkDateValidity Should we check if the CRL date is valid.
+     */
     public CRLChecker(CertStore certStore, KeyStore keyStore, boolean checkDateValidity) {
         this.certStore = certStore;
         this.keyStore = keyStore;
@@ -128,12 +134,13 @@ public class CRLChecker implements CertificateChecker {
         }
     }
 
-    /**
-     * Method to check the CRL validaity for current time.
+    /*
+     * Method to check the CRL validity for current time.
      *
      * @param crl
      * @throws CertPathValidatorException
      */
+
     protected void checkCRLDateValidity(X509CRL crl)
         throws CertPathValidatorException {
 

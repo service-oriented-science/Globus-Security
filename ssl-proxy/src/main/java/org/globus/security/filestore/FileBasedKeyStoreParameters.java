@@ -1,10 +1,15 @@
 package org.globus.security.filestore;
 
 import java.security.KeyStore;
+import java.security.KeyStore.ProtectionParameter;
 
 /**
- * Created by IntelliJ IDEA. User: turtlebender Date: Oct 14, 2009 Time: 3:54:08
- * PM To change this template use File | Settings | File Templates.
+ * This parameter class provides all of the options for creating a FileBasedKeyStore.
+ * <p/>
+ * It is immutable.
+ *
+ * @version ${vesion}
+ * @since 1.0
  */
 public class FileBasedKeyStoreParameters
     implements KeyStore.LoadStoreParameter {
@@ -16,53 +21,82 @@ public class FileBasedKeyStoreParameters
     private KeyStore.ProtectionParameter protectionParameter;
     private String proxyFilename;
 
-    public FileBasedKeyStoreParameters() {
+    /**
+     * This is the simplest constructor which only accepts a directory where all of the security material is stored.
+     * New security material written to this KeyStore will be stored in this directory as well.
+     *
+     * @param initDefaultCertDir The directory for storage of security material
+     */
+    public FileBasedKeyStoreParameters(String initDefaultCertDir) {
+        this.defaultCertDir = initDefaultCertDir;
     }
 
-    public FileBasedKeyStoreParameters(
-        String certDirs,
-        String defaultCertDir) {
-        this.certDirs = certDirs;
-        this.defaultCertDir = defaultCertDir;
-
+    /**
+     * This is a slightly more complicated constructor which allows the user to specify one or more directory where the
+     * certificates are currently stored.  The user can also specify a default directory where new security material
+     * can be stored.
+     *
+     * @param initCertDirs       Directories where security material exists.
+     * @param initDefaultCertDir A default directory for the storage of security material
+     */
+    public FileBasedKeyStoreParameters(String initCertDirs, String initDefaultCertDir) {
+        this.certDirs = initCertDirs;
+        this.defaultCertDir = initDefaultCertDir;
     }
 
-    public FileBasedKeyStoreParameters(
-        String initCertDirs, String initDefaultCertDir, String initUserCertFileName,
-        String initUserKeyFileName, KeyStore.ProtectionParameter initProtectionParameter) {
+    /**
+     * A Constructor supporting the initial storage directories for the certificates, the default storage directory,
+     * the filename of the user's certificate file, the file name of the user's key file and a ProtectionParameter.
+     *
+     * @param initCertDirs            Directories where security material exists.
+     * @param initDefaultCertDir      A default directory for the storage of security material.
+     * @param initUserCertFileName    The file name for the user's certificate.
+     * @param initUserKeyFileName     The file name for the user's key.
+     * @param initProtectionParameter A protection parameter for this keystore.
+     */
+    public FileBasedKeyStoreParameters(String initCertDirs, String initDefaultCertDir, String initUserCertFileName,
+                                       String initUserKeyFileName, ProtectionParameter initProtectionParameter) {
         this(initCertDirs, initDefaultCertDir);
         this.userCertFilename = initUserCertFileName;
         this.userKeyFilename = initUserKeyFileName;
         this.protectionParameter = initProtectionParameter;
     }
 
+    /**
+     * This constructor is for users who have a proxy certificate in addition to other security materials.
+     *
+     * @param initCertDirs       Directories where security material exists.
+     * @param initDefaultCertDir A default directory for the storage of security material.
+     * @param initProxyFileName  The file name for the user's proxy certificate.
+     */
     public FileBasedKeyStoreParameters(String initCertDirs, String initDefaultCertDir, String initProxyFileName) {
         this(initCertDirs, initDefaultCertDir);
         this.proxyFilename = initProxyFileName;
     }
 
-    public FileBasedKeyStoreParameters(
-        String initCertDirs,
-        String initDefaultCertDir,
-        String initUserCertFileName,
-        String initUserKeyFileName,
-        KeyStore.ProtectionParameter initProtectionParameter,
-        String initProxyFileName) {
-        this(initCertDirs, initDefaultCertDir, initUserCertFileName, initUserKeyFileName,
-            initProtectionParameter);
+    /**
+     * This is the full constructor for users with proxy certificates.
+     *
+     * @param initCertDirs            Directories where security material exists.
+     * @param initDefaultCertDir      A default directory for the storage of security material.
+     * @param initUserCertFileName    The file name for the user's certificate.
+     * @param initUserKeyFileName     The file name for the user's key.
+     * @param initProtectionParameter A protection parameter for this keystore.
+     * @param initProxyFileName       The file name for the user's proxy certificate.
+     */
+    public FileBasedKeyStoreParameters(String initCertDirs, String initDefaultCertDir, String initUserCertFileName,
+                                       String initUserKeyFileName, ProtectionParameter initProtectionParameter,
+                                       String initProxyFileName) {
+        this(initCertDirs, initDefaultCertDir, initUserCertFileName, initUserKeyFileName, initProtectionParameter);
         this.proxyFilename = initProxyFileName;
     }
 
-    public KeyStore.ProtectionParameter getProtectionParameter() {
+    public ProtectionParameter getProtectionParameter() {
         return this.protectionParameter;
     }
 
     public String getCertDirs() {
         return certDirs;
-    }
-
-    public void setCertDirs(String certDirs) {
-        this.certDirs = certDirs;
     }
 
     public String getDefaultCertDir() {
@@ -79,11 +113,5 @@ public class FileBasedKeyStoreParameters
 
     public String getProxyFilename() {
         return this.proxyFilename;
-    }
-
-    // Why is this a mutable class?
-
-    public void setDefaultCertDir(String defaultCertDir) {
-        this.defaultCertDir = defaultCertDir;
     }
 }

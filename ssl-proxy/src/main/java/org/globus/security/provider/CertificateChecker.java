@@ -6,12 +6,18 @@ import java.security.cert.X509Certificate;
 import org.globus.security.Constants;
 
 /**
- * Created by IntelliJ IDEA.
- * User: turtlebender
- * Date: Dec 30, 2009
- * Time: 12:01:07 PM
- * To change this template use File | Settings | File Templates.
+ * Implementations of this interface will provide some validation logic of certificates.
+ *
+ * @version ${version}
+ * @since 1.0
  */
 public interface CertificateChecker {
+    /**
+     * Validate the certificate.
+     *
+     * @param cert     The certificate to validate.
+     * @param certType The type of certificate to validate.
+     * @throws CertPathValidatorException If validation fails.
+     */
     void invoke(X509Certificate cert, Constants.CertificateType certType) throws CertPathValidatorException;
 }

@@ -27,6 +27,9 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 /**
  * A collection of various utility functions.
+ *
+ * @version ${version}
+ * @since 1.0
  */
 public final class BouncyCastleUtil {
 

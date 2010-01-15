@@ -51,6 +51,9 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
  * This class provides a KeyStore implementation that supports trusted certificates stored in PEM format and proxy
  * certificates stored in PEM format. It reads trusted certificates from multiple directories and a proxy certificate
  * from a file.
+ *
+ * @version ${version}
+ * @since 1.0
  */
 public class FileBasedKeyStore extends KeyStoreSpi {
 
@@ -113,6 +116,15 @@ public class FileBasedKeyStore extends KeyStoreSpi {
         return null;
     }
 
+    /**
+     * Get the key referenced by the specified alias.
+     *
+     * @param s     The key's alias.
+     * @param chars The key's password.
+     * @return The key reference by the alias or null.
+     * @throws NoSuchAlgorithmException  If the key is encoded with an invalid algorithm.
+     * @throws UnrecoverableKeyException If the key can not be retrieved.
+     */
     @Override
     public Key engineGetKey(String s, char[] chars)
         throws NoSuchAlgorithmException, UnrecoverableKeyException {
@@ -135,11 +147,28 @@ public class FileBasedKeyStore extends KeyStoreSpi {
         return key;
     }
 
+    /**
+     * Does the supplied alias refer to a key in this key store.
+     *
+     * @param s The alias.
+     * @return True if the alias refers to a key.
+     */
     @Override
     public boolean engineIsKeyEntry(String s) {
         return getKeyEntry(s) != null;
     }
 
+    /**
+     * Persist the security material in this keystore. If the object has a path associated with it, the object will be
+     * persisted to that path.  Otherwise it will be stored in the default certificate directory.  As a result, the
+     * parameters of this method are ignored.
+     *
+     * @param outputStream This parameter is ignored.
+     * @param chars        This parameter is ignored.
+     * @throws IOException
+     * @throws NoSuchAlgorithmException
+     * @throws CertificateException
+     */
     @Override
     public void engineStore(OutputStream outputStream, char[] chars) throws
         IOException,
@@ -156,13 +185,19 @@ public class FileBasedKeyStore extends KeyStoreSpi {
         }
     }
 
+
+    /**
+     * Get the creation date for the object referenced by the alias.
+     *
+     * @param s The alias of the security object.
+     * @return The creation date of the security object.
+     */
     @Override
     public Date engineGetCreationDate(String s) {
         try {
             ResourceTrustAnchor trustAnchor = getCertificateEntry(s);
             if (trustAnchor != null) {
-                return trustAnchor.getTrustAnchor().
-                    getTrustedCert().getNotBefore();
+                return trustAnchor.getTrustAnchor().getTrustedCert().getNotBefore();
             } else {
                 CredentialWrapper credential = getKeyEntry(s);
                 if (credential != null) {
@@ -175,15 +210,27 @@ public class FileBasedKeyStore extends KeyStoreSpi {
         return null;
     }
 
+    /**
+     * Get the alias associated with the supplied certificate.
+     *
+     * @param certificate The certificate to query
+     * @return The certificate's alias or null if the certificate is not present in this keystore.
+     */
     @Override
     public String engineGetCertificateAlias(Certificate certificate) {
         return this.certFilenameMap.get(certificate);
     }
 
+    /**
+     * Get the certificateChain for the key referenced by the alias.
+     *
+     * @param s The key alias.
+     * @return The key's certificate chain or a 0 length array if the key is not in the keystore.
+     */
     @Override
     public Certificate[] engineGetCertificateChain(String s) {
         CredentialWrapper credential = getKeyEntry(s);
-        X509Certificate[] chain = null;
+        X509Certificate[] chain = new X509Certificate[0];
         if (credential != null) {
             try {
                 chain = credential.getCredential().getCertificateChain();
@@ -195,6 +242,12 @@ public class FileBasedKeyStore extends KeyStoreSpi {
         return chain;
     }
 
+    /**
+     * Get the certificate referenced by the supplied alias.
+     *
+     * @param s The alias.
+     * @return The Certificate or null if the alias does not exist in the keyStore.
+     */
     @Override
     public Certificate engineGetCertificate(String s) {
         ResourceTrustAnchor trustAnchor = getCertificateEntry(s);
@@ -208,6 +261,16 @@ public class FileBasedKeyStore extends KeyStoreSpi {
         return null;
     }
 
+
+    /**
+     * Load the keystore based on parameters in the LoadStoreParameter.  The parameter object must be an
+     * instance of FileBasedKeyStoreParameters.
+     *
+     * @param loadStoreParameter The parameters to load.
+     * @throws IOException
+     * @throws NoSuchAlgorithmException
+     * @throws CertificateException
+     */
     @Override
     public void engineLoad(KeyStore.LoadStoreParameter loadStoreParameter)
         throws IOException, NoSuchAlgorithmException, CertificateException {
@@ -224,6 +287,17 @@ public class FileBasedKeyStore extends KeyStoreSpi {
         initialize(defaultDirectoryString, directoryListString, proxyFilename, certFilename, keyFilename);
     }
 
+    /**
+     * Load the keystore from the supplied input stream.  Unlike many other implementations of keystore (most notably
+     * the default JKS implementation), the input stream does not hold the keystore objects.  Instead, it must be a
+     * properties file defining the locations of the keystore objects.  The password is not used.
+     *
+     * @param inputStream An input stream to the properties file.
+     * @param chars       The password is not used.
+     * @throws IOException
+     * @throws NoSuchAlgorithmException
+     * @throws CertificateException
+     */
     @Override
     public void engineLoad(InputStream inputStream, char[] chars)
         throws IOException, NoSuchAlgorithmException, CertificateException {
@@ -339,6 +413,12 @@ public class FileBasedKeyStore extends KeyStoreSpi {
         }
     }
 
+    /**
+     * Delete a security object from this keystore.
+     *
+     * @param s The alias of the object to delete.
+     * @throws KeyStoreException
+     */
     @Override
     public void engineDeleteEntry(String s) throws KeyStoreException {
 
@@ -376,12 +456,26 @@ public class FileBasedKeyStore extends KeyStoreSpi {
         }
     }
 
+    /**
+     * Get an enumertion of all of the aliases in this keystore.
+     *
+     * @return An enumeration of the aliases in this keystore.
+     */
     @Override
     public Enumeration<String> engineAliases() {
 
         return Collections.enumeration(this.aliasObjectMap.keySet());
     }
 
+    /**
+     * Add a new private key to the keystore.
+     *
+     * @param s            The alias for the object.
+     * @param key          The private key.
+     * @param chars        The password.
+     * @param certificates The key's certificate chain.
+     * @throws KeyStoreException
+     */
     @Override
     public void engineSetKeyEntry(String s, Key key, char[] chars, Certificate[] certificates)
         throws KeyStoreException {
@@ -437,6 +531,14 @@ public class FileBasedKeyStore extends KeyStoreSpi {
 
     }
 
+    /**
+     * currently unsupported.
+     *
+     * @param s            The key's alias
+     * @param bytes        The encoded private key.
+     * @param certificates The key's certificate chain.
+     * @throws KeyStoreException
+     */
     @Override
     public void engineSetKeyEntry(String s, byte[] bytes, Certificate[] certificates)
         throws KeyStoreException {
@@ -444,21 +546,45 @@ public class FileBasedKeyStore extends KeyStoreSpi {
         // FIXME
     }
 
+    /**
+     * Does the specified alias exist in this keystore?
+     *
+     * @param s The alias.
+     * @return True if the alias refers to a security object in the keystore.
+     */
     @Override
     public boolean engineContainsAlias(String s) {
         return this.aliasObjectMap.containsKey(s);
     }
 
+    /**
+     * Get the number of security objects stored in this keystore.
+     *
+     * @return The number of security objects.
+     */
     @Override
     public int engineSize() {
         return this.aliasObjectMap.size();
     }
 
+    /**
+     * Does the supplied alias refer to a certificate in this keystore?
+     *
+     * @param s The alias.
+     * @return True if this store contains a certificate with the specified alias.
+     */
     @Override
     public boolean engineIsCertificateEntry(String s) {
         return getCertificateEntry(s) != null;
     }
 
+    /**
+     * Add a certificate to the keystore.
+     *
+     * @param alias       The certificate alias.
+     * @param certificate The certificate to store.
+     * @throws KeyStoreException
+     */
     @Override
     public void engineSetCertificateEntry(String alias, Certificate certificate)
         throws KeyStoreException {
