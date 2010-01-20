@@ -5,3 +5,4 @@ target
 *.diff
 *.orig
 test-output
+.idea
