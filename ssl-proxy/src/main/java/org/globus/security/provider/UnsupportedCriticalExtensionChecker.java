@@ -1,44 +1,57 @@
-package org.globus.security.provider;
+/*
+ * Copyright 1999-2010 University of Chicago
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS,WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied.
+ *
+ * See the License for the specific language governing permissions and limitations under the License.
+ */
 
-import java.security.cert.CertPathValidatorException;
-import java.security.cert.X509Certificate;
-import java.util.Set;
+package org.globus.security.provider;
 
 import org.globus.security.Constants;
 import org.globus.security.proxyExtension.ProxyCertInfo;
 import org.globus.security.util.ProxyCertificateUtil;
 
+import java.security.cert.CertPathValidatorException;
+import java.security.cert.X509Certificate;
+import java.util.Set;
+
 /**
- * Created by IntelliJ IDEA.
- * User: turtlebender
- * Date: Dec 30, 2009
- * Time: 12:08:28 PM
- * To change this template use File | Settings | File Templates.
+ * Checks if the certificate includes unsupported critical extensions.
+ *
+ * @version ${version}
+ * @since 1.0
  */
 public class UnsupportedCriticalExtensionChecker implements CertificateChecker {
     /**
      * Method that checks if there are unsupported critical extension. Supported
      * ones are only BasicConstrains, KeyUsage, Proxy Certificate (old and new)
      *
-     * @throws CertPathValidatorException If any critical extension that is not
-     *                                    supported is in the certificate.
-     *                                    Anything other than those listed above
-     *                                    will trigger the exception.
+     * @param cert     The certificate to validate.
+     * @param certType The type of certificate to validate.
+     * @throws CertPathValidatorException If any critical extension that is not supported is in the certificate.
+     *                                    Anything other than those listed above will trigger the exception.
      */
-
     public void invoke(X509Certificate cert, Constants.CertificateType certType) throws CertPathValidatorException {
         Set<String> criticalExtensionOids =
-            cert.getCriticalExtensionOIDs();
+                cert.getCriticalExtensionOIDs();
         if (criticalExtensionOids == null) {
             return;
         }
         for (String criticalExtensionOid : criticalExtensionOids) {
             if (!criticalExtensionOid.equals(X509ProxyCertPathValidator.BASIC_CONSTRAINT_OID)
-                && !criticalExtensionOid.equals(X509ProxyCertPathValidator.KEY_USAGE_OID)
-                && (!criticalExtensionOid.equals(ProxyCertInfo.OID.toString())
-                || !ProxyCertificateUtil.isGsi4Proxy(certType))
-                && (!criticalExtensionOid.equals(ProxyCertInfo.OLD_OID.toString())
-                || !ProxyCertificateUtil.isGsi3Proxy(certType))) {
+                    && !criticalExtensionOid.equals(X509ProxyCertPathValidator.KEY_USAGE_OID)
+                    && (!criticalExtensionOid.equals(ProxyCertInfo.OID.toString())
+                    || !ProxyCertificateUtil.isGsi4Proxy(certType))
+                    && (!criticalExtensionOid.equals(ProxyCertInfo.OLD_OID.toString())
+                    || !ProxyCertificateUtil.isGsi3Proxy(certType))) {
                 throw new CertPathValidatorException("Critical extension with unsupported OID " + criticalExtensionOid);
             }
         }

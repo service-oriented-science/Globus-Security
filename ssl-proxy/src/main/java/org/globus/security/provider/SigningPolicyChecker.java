@@ -1,22 +1,32 @@
+/*
+ * Copyright 1999-2010 University of Chicago
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS,WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied.
+ *
+ * See the License for the specific language governing permissions and limitations under the License.
+ */
+
 package org.globus.security.provider;
-
-import java.security.cert.CertPathValidatorException;
-import java.security.cert.CertStoreException;
-import java.security.cert.X509Certificate;
-
-import javax.security.auth.x500.X500Principal;
 
 import org.globus.security.Constants;
 import org.globus.security.SigningPolicy;
 import org.globus.security.SigningPolicyStore;
 import org.globus.security.util.ProxyCertificateUtil;
 
+import javax.security.auth.x500.X500Principal;
+import java.security.cert.CertPathValidatorException;
+import java.security.cert.CertStoreException;
+import java.security.cert.X509Certificate;
+
 /**
- * Created by IntelliJ IDEA.
- * User: turtlebender
- * Date: Dec 30, 2009
- * Time: 12:41:56 PM
- * To change this template use File | Settings | File Templates.
+ * This checks to make sure the Distinguished Name in the certificate is valid according to the signing policy.
  */
 public class SigningPolicyChecker implements CertificateChecker {
     private SigningPolicyStore policyStore;
@@ -28,8 +38,9 @@ public class SigningPolicyChecker implements CertificateChecker {
     /**
      * Validate DN against the signing policy
      *
-     * @param cert
-     * @throws CertPathValidatorException
+     * @param cert     The certificate to check.
+     * @param certType The type of certificate to check.
+     * @throws CertPathValidatorException if the certificate is invalid according to the signing policy.
      */
     public void invoke(X509Certificate cert, Constants.CertificateType certType) throws CertPathValidatorException {
         if (!requireSigningPolicyCheck(certType)) {
@@ -44,16 +55,13 @@ public class SigningPolicyChecker implements CertificateChecker {
         }
 
         if (policy == null) {
-            throw new CertPathValidatorException(
-                "No signing policy for " + cert.getIssuerDN());
+            throw new CertPathValidatorException("No signing policy for " + cert.getIssuerDN());
         }
 
-        boolean valid =
-            policy.isValidSubject(cert.getSubjectX500Principal());
+        boolean valid = policy.isValidSubject(cert.getSubjectX500Principal());
 
         if (!valid) {
-            throw new CertPathValidatorException(
-                "Certificate " + cert.getSubjectDN()
+            throw new CertPathValidatorException("Certificate " + cert.getSubjectDN()
                     + " violates signing policy for CA " + caPrincipal.getName());
         }
     }
@@ -64,10 +72,8 @@ public class SigningPolicyChecker implements CertificateChecker {
      * @param certType The type of Certificate being queried.
      * @return True if the CertificateType requires a Signing Policy check.
      */
-    private boolean requireSigningPolicyCheck(
-        Constants.CertificateType certType) {
+    private boolean requireSigningPolicyCheck(Constants.CertificateType certType) {
 
-        return !ProxyCertificateUtil.isProxy(certType)
-            && certType != Constants.CertificateType.CA;
+        return !ProxyCertificateUtil.isProxy(certType) && certType != Constants.CertificateType.CA;
     }
 }
