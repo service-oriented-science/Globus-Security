@@ -1,32 +1,25 @@
 /*
- * Copyright 1999-2006 University of Chicago
+ * Copyright 1999-2010 University of Chicago
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License.  You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS,WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied.
+ *
+ * See the License for the specific language governing permissions and limitations under the License.
  */
 package org.globus.security.authorization;
 
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Vector;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
+import java.util.*;
+
 /**
  * Stores a collection of attributes as Map. It maps
  * AttributeIdentifier->"Map of attributes". Each "Map  of attributes" is
@@ -41,11 +34,11 @@ public class AttributeCollection implements Serializable {
 
     private static final long serialVersionUID = -6203348642130350208L;
 
-    private Logger logger = LoggerFactory.getLogger(AttributeCollection.class.getName());
-    private Map<AttributeIdentifier,Map<EntityAttributes, Attribute>> map;
+    private transient Logger logger = LoggerFactory.getLogger(AttributeCollection.class.getName());
+    private Map<AttributeIdentifier, Map<EntityAttributes, Attribute>> map;
 
     public AttributeCollection() {
-        this.map = Collections.synchronizedMap(new HashMap<AttributeIdentifier,Map<EntityAttributes, Attribute>>());
+        this.map = Collections.synchronizedMap(new HashMap<AttributeIdentifier, Map<EntityAttributes, Attribute>>());
     }
 
     /**
@@ -94,8 +87,7 @@ public class AttributeCollection implements Serializable {
                     logger.trace("check if issuer is same entity");
                     if (newAttrIssuer.isSameEntity(entityAttributes)) {
                         // merge
-                        Attribute attr =
-                            (Attribute) storedMap.get(entityAttributes);
+                        Attribute attr = storedMap.get(entityAttributes);
                         attr.merge(attribute);
                         return;
                     }
@@ -216,7 +208,7 @@ public class AttributeCollection implements Serializable {
 
             // get each idetifier
             AttributeIdentifier idenToCheck =
-                (AttributeIdentifier) anAttrIdenSet;
+                    (AttributeIdentifier) anAttrIdenSet;
 
             // check if idenifier is in this collection. Since attribute
             // identifier defines equals and hashcode, this can be checked.
@@ -245,6 +237,7 @@ public class AttributeCollection implements Serializable {
                 if (entityAttributes == null) {
                     if (thisAttrMap.containsKey(null)) {
                         // check if attribute value matches
+                        //FIXME:  This is not right
                         Attribute thisAttr = thisAttrMap.get(null);
                         Attribute colAttr = attrMap.get(entityAttributes);
                         if (colAttr == null) {

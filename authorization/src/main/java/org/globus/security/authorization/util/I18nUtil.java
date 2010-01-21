@@ -1,26 +1,21 @@
 /*
- * Copyright 1999-2006 University of Chicago
+ * Copyright 1999-2010 University of Chicago
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License.  You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS,WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied.
+ *
+ * See the License for the specific language governing permissions and limitations under the License.
  */
 package org.globus.security.authorization.util;
 
 import java.text.MessageFormat;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * * Copied as is from CoG JGlobus code
@@ -52,16 +47,14 @@ public class I18nUtil {
      *
      * @param resource resource name. See {@link
      *                 ResourceBundle#getBundle(String) ResourceBundle.getBundle()}
-     *
      * @return Fill Me
-     *
      */
     public static synchronized I18nUtil getI18n(String resource) {
         I18nUtil instance = mapping.get(resource);
         if (instance == null) {
             instance = new I18nUtil(ResourceBundle.getBundle(resource,
-                Locale.getDefault(),
-                getClassLoader()));
+                    Locale.getDefault(),
+                    getClassLoader()));
             mapping.put(resource, instance);
         }
         return instance;
@@ -85,7 +78,7 @@ public class I18nUtil {
             //    loader = getClassLoader();
             //}
             instance = new I18nUtil(ResourceBundle.
-                getBundle(resource, Locale.getDefault(), loader));
+                    getBundle(resource, Locale.getDefault(), loader));
             mapping.put(resource, instance);
         }
         return instance;
@@ -101,10 +94,9 @@ public class I18nUtil {
      *
      * @param key Fill Me
      * @return Fill Me
-     *
      * @throws MissingResourceException Fill Me
      */
-    public String getMessage(String key) throws MissingResourceException {
+    public String getMessage(String key) {
         return messages.getString(key);
     }
 
@@ -113,26 +105,22 @@ public class I18nUtil {
      *
      * @param key Fill Me
      * @param arg Fill Me
-     *
      * @return Fill Me
-     *
      * @throws MissingResourceException Fill Me
      */
-    public String getMessage(String key, Object arg) throws MissingResourceException {
+    public String getMessage(String key, Object arg) {
         return getMessage(key, new Object[]{arg});
     }
 
     /**
      * Gets a formatted message from resource bundle
      *
-     * @param key Fill Me
+     * @param key  Fill Me
      * @param vars Fill Me
-     *
      * @return Fill Me
-     *
      * @throws MissingResourceException Fill Me
      */
-    public String getMessage(String key, Object[] vars) throws MissingResourceException {
+    public String getMessage(String key, Object[] vars) {
         return MessageFormat.format(messages.getString(key), vars);
     }
 
