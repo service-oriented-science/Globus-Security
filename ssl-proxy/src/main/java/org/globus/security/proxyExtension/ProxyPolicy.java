@@ -1,33 +1,24 @@
 /*
- * Copyright 1999-2006 University of Chicago
+ * Copyright 1999-2010 University of Chicago
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License.  You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS,WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied.
+ *
+ * See the License for the specific language governing permissions and limitations under the License.
  */
 package org.globus.security.proxyExtension;
 
-import org.bouncycastle.asn1.ASN1EncodableVector;
-import org.bouncycastle.asn1.ASN1Sequence;
-import org.bouncycastle.asn1.DEREncodable;
-import org.bouncycastle.asn1.DERObject;
-import org.bouncycastle.asn1.DERObjectIdentifier;
-import org.bouncycastle.asn1.DEROctetString;
-import org.bouncycastle.asn1.DERSequence;
-import org.bouncycastle.asn1.DERTaggedObject;
+import org.bouncycastle.asn1.*;
 
 /**
  * Represents the policy part of the ProxyCertInfo extension. <BR> <PRE>
- * ProxyPolicy ::= SEQUENCE { policyLanguage    OBJECT IDENTIFIER, policy OCTET
- * STRING OPTIONAL } </PRE>
+ * ProxyPolicy ::= SEQUENCE { policyLanguage    OBJECT IDENTIFIER, policy OCTET STRING OPTIONAL } </PRE>
  */
 public class ProxyPolicy implements DEREncodable {
 
@@ -50,8 +41,7 @@ public class ProxyPolicy implements DEREncodable {
     private DEROctetString policy;
 
     /**
-     * Creates a new instance of the ProxyPolicy object from given ASN1Sequence
-     * object.
+     * Creates a new instance of the ProxyPolicy object from given ASN1Sequence object.
      *
      * @param seq ASN1Sequence object to create the instance from.
      */
@@ -78,8 +68,8 @@ public class ProxyPolicy implements DEREncodable {
      * @param policy         the policy.
      */
     public ProxyPolicy(
-        DERObjectIdentifier policyLanguage,
-        byte[] policy) {
+            DERObjectIdentifier policyLanguage,
+            byte[] policy) {
         if (policyLanguage == null) {
             throw new IllegalArgumentException();
         }
@@ -97,8 +87,8 @@ public class ProxyPolicy implements DEREncodable {
      * @param policy            the policy.
      */
     public ProxyPolicy(
-        String policyLanguageOid,
-        byte[] policy) {
+            String policyLanguageOid,
+            byte[] policy) {
         if (policyLanguageOid == null) {
             throw new IllegalArgumentException();
         }
@@ -116,8 +106,8 @@ public class ProxyPolicy implements DEREncodable {
      * @param policy         the policy.
      */
     public ProxyPolicy(
-        DERObjectIdentifier policyLanguage,
-        String policy) {
+            DERObjectIdentifier policyLanguage,
+            String policy) {
         this(policyLanguage, (policy != null) ? policy.getBytes() : null);
     }
 
@@ -151,7 +141,8 @@ public class ProxyPolicy implements DEREncodable {
 
     protected void checkConstraints() {
         if ((this.policyLanguage.equals(IMPERSONATION)
-            || this.policyLanguage.equals(INDEPENDENT)) && this.policy != null) {
+                || this.policyLanguage.equals(INDEPENDENT))
+                && this.policy != null) {
             throw new IllegalArgumentException();
         }
     }
@@ -170,6 +161,7 @@ public class ProxyPolicy implements DEREncodable {
      *
      * @return the policy as String. Might be null.
      */
+    @SuppressWarnings("PMD.StringInstantiation")
     public String getPolicyAsString() {
         return (this.policy != null) ? new String(this.policy.getOctets()) : null;
     }
@@ -193,5 +185,4 @@ public class ProxyPolicy implements DEREncodable {
         }
         return buf.toString();
     }
-
 }

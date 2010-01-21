@@ -16,7 +16,6 @@
 package org.globus.security.provider;
 
 import org.globus.security.Constants;
-import org.globus.security.proxyExtension.ProxyCertInfo;
 import org.globus.security.util.ProxyCertificateUtil;
 
 import java.security.cert.CertPathValidatorException;
@@ -46,14 +45,32 @@ public class UnsupportedCriticalExtensionChecker implements CertificateChecker {
             return;
         }
         for (String criticalExtensionOid : criticalExtensionOids) {
-            if (!criticalExtensionOid.equals(X509ProxyCertPathValidator.BASIC_CONSTRAINT_OID)
-                    && !criticalExtensionOid.equals(X509ProxyCertPathValidator.KEY_USAGE_OID)
-                    && (!criticalExtensionOid.equals(ProxyCertInfo.OID.toString())
-                    || !ProxyCertificateUtil.isGsi4Proxy(certType))
-                    && (!criticalExtensionOid.equals(ProxyCertInfo.OLD_OID.toString())
-                    || !ProxyCertificateUtil.isGsi3Proxy(certType))) {
-                throw new CertPathValidatorException("Critical extension with unsupported OID " + criticalExtensionOid);
-            }
+            isUnsupported(certType, criticalExtensionOid);
         }
+    }
+
+    private void isUnsupported(Constants.CertificateType certType, String criticalExtensionOid)
+            throws CertPathValidatorException {
+        boolean unsupportedCritExtention = criticalExtensionOid.equals(X509ProxyCertPathValidator.BASIC_CONSTRAINT_OID);
+        unsupportedCritExtention = unsupportedCritExtention || criticalExtensionOid.equals(X509ProxyCertPathValidator.KEY_USAGE_OID);
+        unsupportedCritExtention = unsupportedCritExtention
+                || (criticalExtensionOid.equals(Constants.PROXY_OID.toString())
+                && ProxyCertificateUtil.isGsi4Proxy(certType));
+        unsupportedCritExtention = unsupportedCritExtention
+                || (criticalExtensionOid.equals(Constants.PROXY_OLD_OID.toString())
+                && ProxyCertificateUtil.isGsi3Proxy(certType));
+
+        if (unsupportedCritExtention) {
+            return;
+        }
+//        if (criticalExtensionOid.equals(X509ProxyCertPathValidator.BASIC_CONSTRAINT_OID)
+//                || criticalExtensionOid.equals(X509ProxyCertPathValidator.KEY_USAGE_OID)
+//                || (criticalExtensionOid.equals(Constants.PROXY_OID.toString())
+//                && ProxyCertificateUtil.isGsi4Proxy(certType))
+//                || (criticalExtensionOid.equals(Constants.PROXY_OLD_OID.toString())
+//                && ProxyCertificateUtil.isGsi3Proxy(certType))) {
+//            return;
+//        }
+        throw new CertPathValidatorException("Critical extension with unsupported OID " + criticalExtensionOid);
     }
 }

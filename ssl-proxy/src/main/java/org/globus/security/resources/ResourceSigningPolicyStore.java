@@ -1,20 +1,29 @@
 /*
- * Copyright 1999-2006 University of Chicago
+ * Copyright 1999-2010 University of Chicago
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License.  You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS,WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied.
+ *
+ * See the License for the specific language governing permissions and limitations under the License.
  */
 package org.globus.security.resources;
 
+import org.globus.security.SigningPolicy;
+import org.globus.security.SigningPolicyStore;
+import org.globus.security.SigningPolicyStoreException;
+import org.globus.security.SigningPolicyStoreParameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+
+import javax.security.auth.x500.X500Principal;
 import java.io.IOException;
 import java.net.URI;
 import java.security.InvalidAlgorithmParameterException;
@@ -22,31 +31,19 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.security.auth.x500.X500Principal;
-
-import org.globus.security.SigningPolicy;
-import org.globus.security.SigningPolicyStore;
-import org.globus.security.SigningPolicyStoreException;
-import org.globus.security.SigningPolicyStoreParameters;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-
 /**
  * FILL ME
  *
  * @author ranantha@mcs.anl.gov
  */
-public class ResourceSigningPolicyStore extends SigningPolicyStore {
-    PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+public class ResourceSigningPolicyStore implements SigningPolicyStore {
+    private PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
 
 
-    Map<URI, ResourceSigningPolicy> signingPolicyFileMap = new HashMap<URI, ResourceSigningPolicy>();
-    Map<X500Principal, SigningPolicy> policyMap = new HashMap<X500Principal, SigningPolicy>();
+    private Map<URI, ResourceSigningPolicy> signingPolicyFileMap = new HashMap<URI, ResourceSigningPolicy>();
+    private Map<X500Principal, SigningPolicy> policyMap = new HashMap<X500Principal, SigningPolicy>();
 
-    ResourceSigningPolicyStoreParameters parameters;
+    private ResourceSigningPolicyStoreParameters parameters;
 
     private Logger logger = LoggerFactory.getLogger(ResourceSigningPolicyStore.class.getName());
 
@@ -83,9 +80,9 @@ public class ResourceSigningPolicyStore extends SigningPolicyStore {
             throw new SigningPolicyStoreException(e);
         }
         Map<X500Principal, SigningPolicy> newPolicyMap =
-            new HashMap<X500Principal, SigningPolicy>();
+                new HashMap<X500Principal, SigningPolicy>();
         Map<URI, ResourceSigningPolicy> newPolicyFileMap =
-            new HashMap<URI, ResourceSigningPolicy>();
+                new HashMap<URI, ResourceSigningPolicy>();
 
         for (Resource resource : resources) {
 
@@ -101,8 +98,8 @@ public class ResourceSigningPolicyStore extends SigningPolicyStore {
     }
 
     private void loadSigningPolicy(
-        Resource policyResource, Map<X500Principal, SigningPolicy> policyMapToLoad,
-        Map<URI, ResourceSigningPolicy> currentPolicyFileMap) throws SigningPolicyStoreException {
+            Resource policyResource, Map<X500Principal, SigningPolicy> policyMapToLoad,
+            Map<URI, ResourceSigningPolicy> currentPolicyFileMap) throws SigningPolicyStoreException {
 
         URI uri;
         if (!policyResource.isReadable()) {

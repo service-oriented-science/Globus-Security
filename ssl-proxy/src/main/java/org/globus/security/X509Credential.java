@@ -1,29 +1,27 @@
 /*
- * Copyright 1999-2006 University of Chicago
+ * Copyright 1999-2010 University of Chicago
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License.  You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS,WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied.
+ *
+ * See the License for the specific language governing permissions and limitations under the License.
  */
 package org.globus.security;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.EOFException;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import org.bouncycastle.util.encoders.Base64;
+import org.globus.security.bc.BouncyCastleOpenSSLKey;
+import org.globus.security.util.CertificateIOUtil;
+import org.globus.security.util.CertificateLoadUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
 import java.security.GeneralSecurityException;
 import java.security.Key;
 import java.security.PrivateKey;
@@ -31,14 +29,6 @@ import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 import java.util.Date;
 import java.util.Vector;
-
-import org.globus.security.bc.BouncyCastleOpenSSLKey;
-import org.globus.security.util.CertificateIOUtil;
-import org.globus.security.util.CertificateLoadUtil;
-
-import org.bouncycastle.util.encoders.Base64;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * FILL ME
@@ -53,7 +43,7 @@ public class X509Credential {
     public static final int BUFFER_SIZE = Integer.MAX_VALUE;
 
     private static Logger logger =
-        LoggerFactory.getLogger(X509Credential.class.getName());
+            LoggerFactory.getLogger(X509Credential.class.getName());
 
     private OpenSSLKey opensslKey;
     private X509Certificate[] certChain;
@@ -66,7 +56,7 @@ public class X509Credential {
 
         if ((initCertChain == null) || (initCertChain.length < 1)) {
             throw new IllegalArgumentException(
-                "Atleast one public certificate required");
+                    "Atleast one public certificate required");
         }
 
         this.certChain = new X509Certificate[initCertChain.length];
@@ -76,7 +66,7 @@ public class X509Credential {
 
 
     public X509Credential(InputStream certInputStream, InputStream keyInputStream)
-        throws CredentialException {
+            throws CredentialException {
         if (certInputStream.markSupported()) {
             certInputStream.mark(BUFFER_SIZE);
         }
@@ -118,11 +108,11 @@ public class X509Credential {
     }
 
     protected void loadCertificate(InputStream input)
-        throws CredentialException {
+            throws CredentialException {
 
         if (input == null) {
             throw new IllegalArgumentException(
-                "Input stream to load X509Credential is null");
+                    "Input stream to load X509Credential is null");
         }
 
         X509Certificate cert;
@@ -141,7 +131,7 @@ public class X509Credential {
                 if (line.indexOf("BEGIN CERTIFICATE") != -1) {
                     byte[] data = getDecodedPEMObject(reader);
                     cert = CertificateLoadUtil
-                        .loadCertificate(new ByteArrayInputStream(data));
+                            .loadCertificate(new ByteArrayInputStream(data));
                     chain.addElement(cert);
                 }
             }
@@ -207,7 +197,7 @@ public class X509Credential {
      * string is found in the data. Otherwise, returns null.
      */
     private static byte[] getDecodedPEMObject(BufferedReader reader)
-        throws IOException {
+            throws IOException {
         String line;
         StringBuffer buf = new StringBuffer();
         while ((line = reader.readLine()) != null) {
@@ -227,7 +217,7 @@ public class X509Credential {
     }
 
     public void saveCertificateChain(OutputStream out)
-        throws IOException, CertificateEncodingException {
+            throws IOException, CertificateEncodingException {
 
         CertificateIOUtil.writeCertificate(out, this.certChain[0]);
 

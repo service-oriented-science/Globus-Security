@@ -1,17 +1,16 @@
 /*
- * Copyright 1999-2006 University of Chicago
+ * Copyright 1999-2010 University of Chicago
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License.  You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS,WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied.
+ *
+ * See the License for the specific language governing permissions and limitations under the License.
  */
 package org.globus.security;
 
@@ -23,19 +22,18 @@ import java.security.cert.X509Certificate;
  *
  * @author ranantha@mcs.anl.gov
  */
-public class X509ProxyCertPathValidatorResult
-    implements CertPathValidatorResult {
+public class X509ProxyCertPathValidatorResult implements CertPathValidatorResult {
 
-    X509Certificate idenX509Certificate;
-    boolean limited;
+    private X509Certificate idenX509Certificate;
+    private boolean limited;
 
     public X509ProxyCertPathValidatorResult(
-        X509Certificate initIdentityCertificate) {
+            X509Certificate initIdentityCertificate) {
         this(initIdentityCertificate, false);
     }
 
     public X509ProxyCertPathValidatorResult(
-        X509Certificate initIdentityCertificate, boolean initLimited) {
+            X509Certificate initIdentityCertificate, boolean initLimited) {
         if (initIdentityCertificate != null) {
             this.idenX509Certificate = initIdentityCertificate;
         }
@@ -61,7 +59,7 @@ public class X509ProxyCertPathValidatorResult
             return super.clone();
         } catch (CloneNotSupportedException e) {
             /* Cannot happen */
-            throw new InternalError(e.toString());
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 }

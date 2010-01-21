@@ -1,26 +1,25 @@
 /*
- * Copyright 1999-2006 University of Chicago
+ * Copyright 1999-2010 University of Chicago
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License.  You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS,WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied.
+ *
+ * See the License for the specific language governing permissions and limitations under the License.
  */
 package org.globus.security.filestore;
+
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.apache.commons.io.FileUtils;
 
 /**
  * FILL ME
@@ -29,13 +28,13 @@ import org.apache.commons.io.FileUtils;
  */
 public class DirSetupUtil {
 
-    Map<String, FileSetupUtil> map = new HashMap<String, FileSetupUtil>();
-    String[] fileNames;
-    File tempDir;
+    private Map<String, FileSetupUtil> map = new HashMap<String, FileSetupUtil>();
+    private String[] fileNames;
+    private File tempDir;
 
-    public DirSetupUtil(String[] fileNames_) {
+    public DirSetupUtil(String[] inputFileNames) {
 
-        this.fileNames = fileNames_;
+        this.fileNames = inputFileNames;
     }
 
     public void createTempDirectory() throws IOException {
@@ -59,14 +58,15 @@ public class DirSetupUtil {
 
     public void copy() throws Exception {
 
-        for (int i = 0; i < this.fileNames.length; i++) {
-            FileSetupUtil util = new FileSetupUtil(fileNames[i]);
+        for (String fileName : this.fileNames) {
+            FileSetupUtil util = new FileSetupUtil(fileName);
             util.copyFileToTemp(this.tempDir);
-            this.map.put(fileNames[i], util);
+            this.map.put(fileName, util);
         }
     }
 
     // Original file name.
+
     public FileSetupUtil getFileSetupUtil(String filename) {
 
         return this.map.get(filename);

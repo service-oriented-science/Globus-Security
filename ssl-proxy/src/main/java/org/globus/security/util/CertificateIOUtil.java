@@ -1,23 +1,33 @@
+/*
+ * Copyright 1999-2010 University of Chicago
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS,WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied.
+ *
+ * See the License for the specific language governing permissions and limitations under the License.
+ */
+
 package org.globus.security.util;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.Principal;
-import java.security.cert.CertificateEncodingException;
-import java.security.cert.X509Certificate;
-
-import javax.security.auth.x500.X500Principal;
 
 import org.apache.commons.codec.binary.Base64;
 import org.bouncycastle.asn1.DEROutputStream;
 import org.bouncycastle.asn1.x509.X509Name;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.security.auth.x500.X500Principal;
+import java.io.*;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.Principal;
+import java.security.cert.CertificateEncodingException;
+import java.security.cert.X509Certificate;
 
 /**
  * Fill Me
@@ -80,7 +90,7 @@ public final class CertificateIOUtil {
             return bout.toByteArray();
         } else {
             throw new ClassCastException("unsupported input class: "
-                + subject.getClass().toString());
+                    + subject.getClass().toString());
         }
     }
 
@@ -95,8 +105,10 @@ public final class CertificateIOUtil {
 
         byte[] md = md5.digest();
 
-        long ret = (fixByte(md[0]) | (fixByte(md[1]) << 8L) | fixByte(md[2]) << 16L
-            | fixByte(md[3]) << 24L) & 0xffffffffL;
+        long ret = (fixByte(md[0]) | (fixByte(md[1]) << 8L));
+        ret = ret | fixByte(md[2]) << 16L;
+        ret = ret | fixByte(md[3]) << 24L;
+        ret = ret & 0xffffffffL;
 
         return Long.toHexString(ret);
     }
@@ -106,7 +118,7 @@ public final class CertificateIOUtil {
     }
 
     public static void writeCertificate(X509Certificate cert, File path)
-        throws CertificateEncodingException, IOException {
+            throws CertificateEncodingException, IOException {
         String pubKeyPEM = certToPEMString(base64.encodeToString(cert.getEncoded()));
         FileWriter pubFile = null;
         try {
@@ -133,13 +145,13 @@ public final class CertificateIOUtil {
      * Writes certificate to the specified output stream in PEM format.
      */
     public static void writeCertificate(
-        OutputStream out,
-        X509Certificate cert)
-        throws IOException, CertificateEncodingException {
+            OutputStream out,
+            X509Certificate cert)
+            throws IOException, CertificateEncodingException {
         PEMUtil.writeBase64(out,
-            "-----BEGIN CERTIFICATE-----",
-            base64.encode(cert.getEncoded()),
-            "-----END CERTIFICATE-----");
+                "-----BEGIN CERTIFICATE-----",
+                base64.encode(cert.getEncoded()),
+                "-----END CERTIFICATE-----");
     }
 
 

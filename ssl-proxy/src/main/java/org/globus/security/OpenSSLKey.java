@@ -1,53 +1,34 @@
 /*
- * Copyright 1999-2006 University of Chicago
+ * Copyright 1999-2010 University of Chicago
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License.  You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS,WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied.
+ *
+ * See the License for the specific language governing permissions and limitations under the License.
  */
 package org.globus.security;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.io.Reader;
-import java.io.Writer;
-import java.security.GeneralSecurityException;
-import java.security.InvalidKeyException;
-import java.security.Key;
-import java.security.MessageDigest;
-import java.security.PrivateKey;
-import java.security.SecureRandom;
-import java.util.StringTokenizer;
+import org.bouncycastle.util.encoders.Base64;
+import org.globus.security.util.FileUtil;
+import org.globus.security.util.PEMUtil;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-
-import org.globus.security.util.FileUtil;
-import org.globus.security.util.PEMUtil;
-
-import org.bouncycastle.util.encoders.Base64;
+import java.io.*;
+import java.security.*;
+import java.util.StringTokenizer;
 
 /**
- * Represents a OpenSSL-style PEM-formatted private key. It supports encryption
- * and decryption of the key. Currently, only RSA keys are supported,
- * and only TripleDES encryption is supported.
+ * Represents a OpenSSL-style PEM-formatted private key. It supports encryption and decryption of the key. Currently,
+ * only RSA keys are supported, and only TripleDES encryption is supported.
+ * <p/>
  * This is based on work done by Ming Yung at DSTC.
  *
  * @version ${version}
@@ -133,13 +114,9 @@ public abstract class OpenSSLKey {
     /**
      * Initializes the OpenSSL key from raw byte array.
      *
-     * @param algorithm the algorithm of the key. Currently
-     *                  only RSA algorithm is supported.
-     * @param data      the DER encoded key data. If RSA
-     *                  algorithm, the key must be in
-     *                  PKCS#1 format.
-     * @throws GeneralSecurityException if any security
-     *                                  problems.
+     * @param algorithm the algorithm of the key. Currently only RSA algorithm is supported.
+     * @param data      the DER encoded key data. If RSA algorithm, the key must be in PKCS#1 format.
+     * @throws GeneralSecurityException if any security problems.
      */
     public OpenSSLKey(String algorithm, byte[] data) throws GeneralSecurityException {
         if (data == null) {
@@ -242,9 +219,8 @@ public abstract class OpenSSLKey {
      *
      * @param password password to decrypt the key with.
      * @throws GeneralSecurityException whenever an error occurs during decryption.
-     * @throws InvalidKeyException      whenever an error occurs during decryption.
      */
-    public void decrypt(String password) throws GeneralSecurityException, InvalidKeyException {
+    public void decrypt(String password) throws GeneralSecurityException {
         decrypt(password.getBytes());
     }
 
@@ -254,9 +230,8 @@ public abstract class OpenSSLKey {
      *
      * @param password password to decrypt the key with.
      * @throws GeneralSecurityException whenever an error occurs during decryption.
-     * @throws InvalidKeyException      whenever an error occurs during decryption.
      */
-    public void decrypt(byte[] password) throws GeneralSecurityException, InvalidKeyException {
+    public void decrypt(byte[] password) throws GeneralSecurityException {
         if (!isEncrypted()) {
             return;
         }
@@ -392,8 +367,7 @@ public abstract class OpenSSLKey {
     protected abstract byte[] getEncoded(PrivateKey key);
 
     /*
-     * Returns PrivateKey object initialized from give byte array
-     * (in PKCS#1 format)
+     * Returns PrivateKey object initialized from give byte array (in PKCS#1 format)
      */
 
     protected abstract PrivateKey getKey(String alg, byte[] data) throws GeneralSecurityException;
@@ -408,7 +382,7 @@ public abstract class OpenSSLKey {
             return Cipher.getInstance(this.encAlg + "/CBC/PKCS5Padding");
         } else {
             return Cipher.getInstance(this.encAlg + "/CBC/PKCS5Padding",
-                provider);
+                    provider);
         }
     }
 
@@ -435,24 +409,24 @@ public abstract class OpenSSLKey {
     private void setAlgorithmSettings(String alg) throws GeneralSecurityException {
         if (alg.equals("DES-EDE3-CBC")) {
             this.encAlg = "DESede";
-            this.keyLength = 24;
-            this.ivLength = 8;
+            this.keyLength = OpenSSLKeyConstants.DES_EDE3_CBC_KEY_LENGTH;
+            this.ivLength = OpenSSLKeyConstants.DES_EDE3_CBC_IV_LENGTH;
         } else if (alg.equals("AES-128-CBC")) {
             this.encAlg = "AES";
-            this.keyLength = 16;
-            this.ivLength = 16;
+            this.keyLength = OpenSSLKeyConstants.AES_128_CBC_KEY_LENGTH;
+            this.ivLength = OpenSSLKeyConstants.AES_128_CBC_IV_LENGTH;
         } else if (alg.equals("AES-192-CBC")) {
             this.encAlg = "AES";
-            this.keyLength = 24;
-            this.ivLength = 16;
+            this.keyLength = OpenSSLKeyConstants.AES_192_CBC_KEY_LENGTH;
+            this.ivLength = OpenSSLKeyConstants.AES_192_CBC_IV_LENGTH;
         } else if (alg.equals("AES-256-CBC")) {
             this.encAlg = "AES";
-            this.keyLength = 32;
-            this.ivLength = 16;
+            this.keyLength = OpenSSLKeyConstants.AES_256_CBC_KEY_LENGTH;
+            this.ivLength = OpenSSLKeyConstants.AES_256_CBC_IV_LENGTH;
         } else if (alg.equals("DES-CBC")) {
             this.encAlg = "DES";
-            this.keyLength = 8;
-            this.ivLength = 8;
+            this.keyLength = OpenSSLKeyConstants.DES_CBC_KEY_LENGTH;
+            this.ivLength = OpenSSLKeyConstants.DES_CBC_IV_LENGTH;
         } else {
             throw new GeneralSecurityException("unsupported Enc algorithm " + alg);
         }
@@ -543,12 +517,12 @@ public abstract class OpenSSLKey {
 
         try {
             PEMUtil.writeBase64(out,
-                header,
-                data,
-                "-----END RSA PRIVATE KEY-----");
+                    header,
+                    data,
+                    "-----END RSA PRIVATE KEY-----");
         } catch (IOException e) {
             // FIXME !!
-            throw new RuntimeException("Unexpcted error");
+            throw new RuntimeException("Unexpected error", e);
         }
 
         return new String(out.toByteArray());

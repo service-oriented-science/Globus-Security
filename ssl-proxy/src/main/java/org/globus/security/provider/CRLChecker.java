@@ -1,28 +1,29 @@
+/*
+ * Copyright 1999-2010 University of Chicago
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS,WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied.
+ *
+ * See the License for the specific language governing permissions and limitations under the License.
+ */
+
 package org.globus.security.provider;
-
-import java.security.InvalidKeyException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.SignatureException;
-import java.security.cert.CRL;
-import java.security.cert.CRLException;
-import java.security.cert.CertPathValidatorException;
-import java.security.cert.CertStore;
-import java.security.cert.CertStoreException;
-import java.security.cert.Certificate;
-import java.security.cert.X509CRL;
-import java.security.cert.X509CRLSelector;
-import java.security.cert.X509CertSelector;
-import java.security.cert.X509Certificate;
-import java.util.Collection;
-import java.util.Date;
-
-import javax.security.auth.x500.X500Principal;
 
 import org.globus.security.Constants;
 import org.globus.security.util.KeyStoreUtil;
+
+import javax.security.auth.x500.X500Principal;
+import java.security.*;
+import java.security.cert.*;
+import java.security.cert.Certificate;
+import java.util.Collection;
+import java.util.Date;
 
 /**
  * This checks to see if the certificate is in a CRL.
@@ -68,7 +69,7 @@ public class CRLChecker implements CertificateChecker {
             crls = this.certStore.getCRLs(crlSelector);
         } catch (CertStoreException e) {
             throw new CertPathValidatorException(
-                "Error accessing CRL from certificate store", e);
+                    "Error accessing CRL from certificate store", e);
         }
 
         if (crls.size() < 1) {
@@ -81,11 +82,11 @@ public class CRLChecker implements CertificateChecker {
         Collection<? extends Certificate> caCerts;
         try {
             caCerts = KeyStoreUtil
-                .getTrustedCertificates(this.keyStore, certSelector);
+                    .getTrustedCertificates(this.keyStore, certSelector);
         } catch (KeyStoreException e) {
             throw new CertPathValidatorException(
-                "Error accessing CA certificate from certificate store for CRL validation",
-                e);
+                    "Error accessing CA certificate from certificate store for CRL validation",
+                    e);
         }
 
         if (caCerts.size() < 1) {
@@ -107,30 +108,34 @@ public class CRLChecker implements CertificateChecker {
             }
 
             // validate CRL
-            try {
-                crl.verify(caCert.getPublicKey());
-            } catch (CRLException e) {
-                throw new CertPathValidatorException(
-                    "Error validating CRL from CA " + crl.getIssuerDN(), e);
-            } catch (NoSuchAlgorithmException e) {
-                throw new CertPathValidatorException(
-                    "Error validating CRL from CA " + crl.getIssuerDN(), e);
-            } catch (InvalidKeyException e) {
-                throw new CertPathValidatorException(
-                    "Error validating CRL from CA " + crl.getIssuerDN(), e);
-            } catch (NoSuchProviderException e) {
-                throw new CertPathValidatorException(
-                    "Error validating CRL from CA " + crl.getIssuerDN(), e);
-            } catch (SignatureException e) {
-                throw new CertPathValidatorException(
-                    "Error validating CRL from CA " + crl.getIssuerDN(), e);
-            }
+            verifyCRL(caCert, crl);
 
             if (crl.isRevoked(cert)) {
                 throw new CertPathValidatorException(
-                    "Certificate " + cert.getSubjectDN() + " has been revoked");
+                        "Certificate " + cert.getSubjectDN() + " has been revoked");
 
             }
+        }
+    }
+
+    private void verifyCRL(Certificate caCert, X509CRL crl) throws CertPathValidatorException {
+        try {
+            crl.verify(caCert.getPublicKey());
+        } catch (CRLException e) {
+            throw new CertPathValidatorException(
+                    "Error validating CRL from CA " + crl.getIssuerDN(), e);
+        } catch (NoSuchAlgorithmException e) {
+            throw new CertPathValidatorException(
+                    "Error validating CRL from CA " + crl.getIssuerDN(), e);
+        } catch (InvalidKeyException e) {
+            throw new CertPathValidatorException(
+                    "Error validating CRL from CA " + crl.getIssuerDN(), e);
+        } catch (NoSuchProviderException e) {
+            throw new CertPathValidatorException(
+                    "Error validating CRL from CA " + crl.getIssuerDN(), e);
+        } catch (SignatureException e) {
+            throw new CertPathValidatorException(
+                    "Error validating CRL from CA " + crl.getIssuerDN(), e);
         }
     }
 
@@ -142,11 +147,11 @@ public class CRLChecker implements CertificateChecker {
      */
 
     protected void checkCRLDateValidity(X509CRL crl)
-        throws CertPathValidatorException {
+            throws CertPathValidatorException {
 
         Date now = new Date();
         boolean valid = crl.getThisUpdate().before(now) && ((crl.getNextUpdate() != null)
-            && (crl.getNextUpdate().after(now)));
+                && (crl.getNextUpdate().after(now)));
         if (!valid) {
             throw new CertPathValidatorException("CRL issued by " + crl.getIssuerDN() + " has expired");
         }

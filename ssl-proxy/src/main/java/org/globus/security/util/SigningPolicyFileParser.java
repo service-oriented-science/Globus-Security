@@ -1,38 +1,31 @@
 /*
- * Copyright 1999-2006 University of Chicago
+ * Copyright 1999-2010 University of Chicago
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License.  You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS,WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied.
+ *
+ * See the License for the specific language governing permissions and limitations under the License.
  */
 package org.globus.security.util;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
+import org.globus.security.SigningPolicy;
+import org.globus.security.SigningPolicyException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.security.auth.x500.X500Principal;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.regex.Pattern;
-
-import javax.security.auth.x500.X500Principal;
-
-import org.globus.security.SigningPolicy;
-import org.globus.security.SigningPolicyException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Signing policy BCNF grammar as implemented here: (based on C implementation)
@@ -91,13 +84,12 @@ public class SigningPolicyFileParser {
 
     public static final String SINGLE_PATTERN = "[\\p{Print}\\p{Blank}]";
     public static final String WILDCARD_PATTERN = SINGLE_PATTERN + "*";
+    private static final int MIN_TOKENS_PER_LINE = 3;
 
-    static final String[] ALLOWED_LINE_START =
-        new String[]{ACCESS_ID_PREFIX, POS_RIGHTS, NEG_RIGHTS,
-            CONDITION_PREFIX};
+    static final String[] ALLOWED_LINE_START = new String[]{ACCESS_ID_PREFIX, POS_RIGHTS, NEG_RIGHTS, CONDITION_PREFIX};
 
     private Logger logger =
-        LoggerFactory.getLogger(SigningPolicyFileParser.class.getName());
+            LoggerFactory.getLogger(SigningPolicyFileParser.class.getName());
 
     /**
      * Parses the file to extract signing policy defined for CA with the
@@ -109,10 +101,11 @@ public class SigningPolicyFileParser {
      * @return SigningPolicy object that contains the information. If no policy
      *         is found, SigningPolicy object with only the CA DN is returned.
      * @throws org.globus.security.SigningPolicyException
-     *          Any errors with parsing the signing policy file.
+     *                               Any errors with parsing the signing policy file.
+     * @throws FileNotFoundException If the signing policy file does not exist.
      */
     public Map<X500Principal, SigningPolicy> parse(String fileName)
-        throws FileNotFoundException, SigningPolicyException {
+            throws FileNotFoundException, SigningPolicyException {
 
         if ((fileName == null) || (fileName.trim().equals(""))) {
             throw new IllegalArgumentException();
@@ -146,11 +139,12 @@ public class SigningPolicyFileParser {
      *
      * @param reader Reader to any input stream to get the signing policy
      *               information.
+     * @return signing policy map defined by the signing policy file
      * @throws org.globus.security.SigningPolicyException
      *          Any errors with parsing the signing policy.
      */
     public Map<X500Principal, SigningPolicy> parse(Reader reader)
-        throws SigningPolicyException {
+            throws SigningPolicyException {
 
         Map<X500Principal, SigningPolicy> policies = new HashMap<X500Principal, SigningPolicy>();
 
@@ -174,79 +168,13 @@ public class SigningPolicyFileParser {
 
                     logger.trace("Check if it is CA and get the DN " + line);
 
-                    if (line.startsWith(ACCESS_ID_CA)) {
-                        caDN = getCA(line.substring(ACCESS_ID_CA.length(),
-                            line.length()));
-                        logger.trace("CA DN is " + caDN);
-                    }
+                    caDN = getCaDN(line, caDN);
 
                     boolean usefulEntry = true;
 
                     Boolean posNegRights = null;
                     // check for neg or pos rights with restrictions
-                    while ((line = bufferedReader.readLine()) != null) {
-
-                        if (!isValidLine(line)) {
-                            continue;
-                        }
-
-                        line = line.trim();
-
-                        logger.trace("Line is " + line);
-
-                        if (line.startsWith(POS_RIGHTS)) {
-                            if (Boolean.FALSE.equals(posNegRights)) {
-                                String err = "invlaidPosRights";
-                                //  i18n.getMessage("invalidPosRights", line);
-                                throw new SigningPolicyException(err);
-                            }
-                            posNegRights = Boolean.TRUE;
-                            if (usefulEntry) {
-                                logger.trace("Parse pos_rights here");
-                                int startIndex = POS_RIGHTS.length();
-                                int endIndex = line.length();
-                                // if it is not CASignRight, then
-                                // usefulentry will be false. Otherwise
-                                // other restrictions will be useful.
-                                usefulEntry = isCASignRight(line.substring(startIndex, endIndex));
-                            }
-                        } else if (line.startsWith(NEG_RIGHTS)) {
-
-                            if (Boolean.TRUE.equals(posNegRights)) {
-                                String err = "invalidNegRights";
-                                //  i18n.getMessage("invalidNegRights", line);
-                                throw new SigningPolicyException(err);
-                            }
-                            posNegRights = Boolean.FALSE;
-                            logger.trace("Ignore neg_rights");
-
-                        } else if (line.startsWith(CONDITION_PREFIX)) {
-
-                            if (!Boolean.TRUE.equals(posNegRights)) {
-                                String err = "invalidRestrictions";
-                                //   i18n.getMessage("invalidRestrictions", line);
-                                throw new SigningPolicyException(err);
-                            }
-
-                            if (usefulEntry && line.startsWith(CONDITION_SUBJECT)) {
-                                logger.trace("Read in subject condition.");
-                                int startIndex =
-                                    CONDITION_SUBJECT.length();
-                                int endIndex = line.length();
-                                Vector<Pattern> allowedDNs = getAllowedDNs(line.substring(startIndex, endIndex));
-                                X500Principal caPrincipal
-                                    = CertificateUtil.toPrincipal(caDN);
-                                SigningPolicy policy = new SigningPolicy(caPrincipal, allowedDNs);
-                                policies.put(caPrincipal, policy);
-                                break;
-                            }
-                        } else {
-                            String err = "invalidLIne";
-                            // no valid start with
-                            // String err = i18n.getMessage("invalidLine", line);
-                            throw new SigningPolicyException(err + line);
-                        }
-                    }
+                    checkRights(policies, bufferedReader, caDN, usefulEntry, posNegRights);
                 }
                 // entry needs to start with that.
                 //String err = i18n.getMessage("invalidAccessId", line);
@@ -257,46 +185,149 @@ public class SigningPolicyFileParser {
         } catch (IOException exp) {
             throw new SigningPolicyException("", exp);
         } finally {
-            if (bufferedReader != null) {
-                try {
-                    bufferedReader.close();
-                } catch (Exception exp) {
-                    //Nothing we can do
-                    logger.debug("Unable to close bufferedReader", exp);
-                }
-            }
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (Exception e) {
-                    //Nothing we can do
-                    logger.debug("Unable to close reader", e);
-                }
-            }
+            cleanupReaders(reader, bufferedReader);
         }
         return policies;
     }
 
-    private boolean isValidLine(String line)
-        throws SigningPolicyException {
+    private void checkRights(Map<X500Principal, SigningPolicy> policies, BufferedReader bufferedReader, String caDN,
+                             boolean usefulEntry, Boolean posNegRights) throws IOException, SigningPolicyException {
+        boolean tmpUsefulEntry = usefulEntry;
+        Boolean tmpPosNegRights = posNegRights;
+        String line = bufferedReader.readLine();
+        while (line != null) {
 
-        line = line.trim();
+            if (!isValidLine(line)) {
+                line = bufferedReader.readLine();
+                continue;
+            }
+
+            line = line.trim();
+
+            logger.trace("Line is " + line);
+
+            if (line.startsWith(POS_RIGHTS)) {
+                validatePositiveRights(tmpPosNegRights);
+                if (tmpUsefulEntry) {
+                    tmpUsefulEntry = isUsefulEntry(line);
+                }
+                tmpPosNegRights = Boolean.TRUE;
+            } else if (line.startsWith(NEG_RIGHTS)) {
+                tmpPosNegRights = handleNegativeRights(tmpPosNegRights);
+
+            } else if (line.startsWith(CONDITION_PREFIX)) {
+                if (handleConditionalLine(policies, line, caDN, tmpUsefulEntry, tmpPosNegRights)) {
+                    break;
+                }
+            } else {
+                String err = "invalidLine";
+                // no valid start with
+                // String err = i18n.getMessage("invalidLine", line);
+                throw new SigningPolicyException(err + line);
+            }
+            line = bufferedReader.readLine();
+        }
+    }
+
+    private boolean handleConditionalLine(Map<X500Principal, SigningPolicy> policies, String line, String caDN, boolean usefulEntry, Boolean posNegRights) throws SigningPolicyException {
+        if (!Boolean.TRUE.equals(posNegRights)) {
+            String err = "invalidRestrictions";
+            //   i18n.getMessage("invalidRestrictions", line);
+            throw new SigningPolicyException(err);
+        }
+
+        if (usefulEntry && line.startsWith(CONDITION_SUBJECT)) {
+            logger.trace("Read in subject condition.");
+            int startIndex = CONDITION_SUBJECT.length();
+            int endIndex = line.length();
+            Vector<Pattern> allowedDNs = getAllowedDNs(line.substring(startIndex, endIndex));
+            X500Principal caPrincipal = CertificateUtil.toPrincipal(caDN);
+            SigningPolicy policy = new SigningPolicy(caPrincipal, allowedDNs);
+            policies.put(caPrincipal, policy);
+            return true;
+        }
+        return false;
+    }
+
+    private String getCaDN(String line, String caDN) throws SigningPolicyException {
+        String outCaDN = caDN;
+        if (line.startsWith(ACCESS_ID_CA)) {
+            outCaDN = getCA(line.substring(ACCESS_ID_CA.length(),
+                    line.length()));
+            logger.trace("CA DN is " + caDN);
+        }
+        return outCaDN;
+    }
+
+    private void validatePositiveRights(Boolean posNegRights) throws SigningPolicyException {
+        if (Boolean.FALSE.equals(posNegRights)) {
+            String err = "invalidPosRights";
+            //  i18n.getMessage("invalidPosRights", line);
+            throw new SigningPolicyException(err);
+        }
+    }
+
+    private boolean isUsefulEntry(String line) throws SigningPolicyException {
+        boolean usefulEntry;
+        logger.trace("Parse pos_rights here");
+        int startIndex = POS_RIGHTS.length();
+        int endIndex = line.length();
+        // if it is not CASignRight, then
+        // usefulentry will be false. Otherwise
+        // other restrictions will be useful.
+        usefulEntry = isCASignRight(line.substring(startIndex, endIndex));
+        return usefulEntry;
+    }
+
+    private Boolean handleNegativeRights(Boolean posNegRights) throws SigningPolicyException {
+        if (Boolean.TRUE.equals(posNegRights)) {
+            String err = "invalidNegRights";
+            //  i18n.getMessage("invalidNegRights", line);
+            throw new SigningPolicyException(err);
+        }
+        logger.trace("Ignore neg_rights");
+        return Boolean.FALSE;
+    }
+
+    private void cleanupReaders(Reader reader, BufferedReader bufferedReader) {
+        if (bufferedReader != null) {
+            try {
+                bufferedReader.close();
+            } catch (Exception exp) {
+                //Nothing we can do
+                logger.debug("Unable to close bufferedReader", exp);
+            }
+        }
+        if (reader != null) {
+            try {
+                reader.close();
+            } catch (Exception e) {
+                //Nothing we can do
+                logger.debug("Unable to close reader", e);
+            }
+        }
+    }
+
+    private boolean isValidLine(String line)
+            throws SigningPolicyException {
+
+        String trimmedLine = line.trim();
 
         // if line is empty or comment character, skip it.
-        if (line.equals("") || line.startsWith("#")) {
+        if (trimmedLine.equals("") || trimmedLine.startsWith("#")) {
             return false;
         }
 
         // Validate that there are atleast three tokens on the line
-        StringTokenizer tokenizer = new StringTokenizer(line);
-        if (tokenizer.countTokens() < 3) {
+        StringTokenizer tokenizer = new StringTokenizer(trimmedLine);
+        if (tokenizer.countTokens() < MIN_TOKENS_PER_LINE) {
             // String err = i18n.getMessage("invalidTokens", line);
             String err = "invalidTokens";
             throw new SigningPolicyException(err);
         }
 
-        for (int i = 0; i < ALLOWED_LINE_START.length; i++) {
-            if (line.startsWith(ALLOWED_LINE_START[i])) {
+        for (String allowedLineStart : ALLOWED_LINE_START) {
+            if (trimmedLine.startsWith(allowedLineStart)) {
                 return true;
             }
         }
@@ -305,11 +336,11 @@ public class SigningPolicyFileParser {
     }
 
     private Vector<Pattern> getAllowedDNs(String line)
-        throws SigningPolicyException {
+            throws SigningPolicyException {
 
-        line = line.trim();
+        String trimmedLine = line.trim();
 
-        int index = findIndex(line);
+        int index = findIndex(trimmedLine);
 
         if (index == -1) {
             String err = "invalid tokens";
@@ -317,11 +348,11 @@ public class SigningPolicyFileParser {
             throw new SigningPolicyException(err);
         }
 
-        String defAuth = line.substring(0, index);
+        String defAuth = trimmedLine.substring(0, index);
 
         if (DEF_AUTH_GLOBUS.equals(defAuth)) {
 
-            String value = line.substring(index + 1, line.length());
+            String value = trimmedLine.substring(index + 1, trimmedLine.length());
             value = value.trim();
 
             int startIndex = 0;
@@ -376,11 +407,11 @@ public class SigningPolicyFileParser {
     }
 
     private boolean isCASignRight(String line)
-        throws SigningPolicyException {
+            throws SigningPolicyException {
 
-        line = line.trim();
+        String trimmedLine = line.trim();
 
-        int index = findIndex(line);
+        int index = findIndex(trimmedLine);
 
         if (index == -1) {
             String err = "invalid tokens";
@@ -388,12 +419,12 @@ public class SigningPolicyFileParser {
             throw new SigningPolicyException(err);
         }
 
-        String defAuth = line.substring(0, index);
+        String defAuth = trimmedLine.substring(0, index);
         if (DEF_AUTH_GLOBUS.equals(defAuth)) {
-            line = line.substring(index + 1, line.length());
-            line = line.trim();
+            trimmedLine = trimmedLine.substring(index + 1, trimmedLine.length());
+            trimmedLine = trimmedLine.trim();
             // check if it is CA:Sign
-            String value = line.substring(0, line.length());
+            String value = trimmedLine.substring(0, trimmedLine.length());
             if (VALUE_CA_SIGN.equals(value)) {
                 return true;
             }
@@ -403,7 +434,7 @@ public class SigningPolicyFileParser {
     }
 
     private String getCA(String inputLine)
-        throws SigningPolicyException {
+            throws SigningPolicyException {
 
         String line = inputLine.trim();
 
@@ -478,28 +509,28 @@ public class SigningPolicyFileParser {
             startIndex = star + 1;
         }
 
-        patternStr = buffer.toString();
+        String tmpPatternStr = buffer.toString();
 
         startIndex = 0;
-        endIndex = patternStr.length();
+        endIndex = tmpPatternStr.length();
         buffer = new StringBuffer("");
         while (startIndex < endIndex) {
-            int qMark = patternStr.indexOf(SINGLE_CHAR, startIndex);
+            int qMark = tmpPatternStr.indexOf(SINGLE_CHAR, startIndex);
             if (qMark == -1) {
                 qMark = endIndex;
-                String preStr = patternStr.substring(startIndex, qMark);
+                String preStr = tmpPatternStr.substring(startIndex, qMark);
                 buffer = buffer.append(preStr);
             } else {
-                String preStr = patternStr.substring(startIndex, qMark);
+                String preStr = tmpPatternStr.substring(startIndex, qMark);
                 buffer = buffer.append(preStr).append(SINGLE_PATTERN);
             }
             startIndex = qMark + 1;
         }
-        patternStr = buffer.toString();
+        tmpPatternStr = buffer.toString();
 
-        LoggerFactory.getLogger(SigningPolicyFileParser.class).debug("String with replaced pattern is " + patternStr);
+        LoggerFactory.getLogger(SigningPolicyFileParser.class).debug("String with replaced pattern is " + tmpPatternStr);
 
-        return Pattern.compile(patternStr, Pattern.CASE_INSENSITIVE);
+        return Pattern.compile(tmpPatternStr, Pattern.CASE_INSENSITIVE);
     }
 
     // find first space or tab as separator.
@@ -512,9 +543,9 @@ public class SigningPolicyFileParser {
             return index;
         }
 
-        line = line.trim();
-        int spaceIndex = line.indexOf(" ");
-        int tabIndex = line.indexOf("\t");
+        String trimmedLine = line.trim();
+        int spaceIndex = trimmedLine.indexOf(" ");
+        int tabIndex = trimmedLine.indexOf("\t");
 
         if (spaceIndex != -1) {
             if (tabIndex != -1) {

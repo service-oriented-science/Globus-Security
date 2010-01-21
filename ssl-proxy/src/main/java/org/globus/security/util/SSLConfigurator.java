@@ -1,31 +1,33 @@
+/*
+ * Copyright 1999-2010 University of Chicago
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS,WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied.
+ *
+ * See the License for the specific language governing permissions and limitations under the License.
+ */
+
 package org.globus.security.util;
 
+import org.globus.security.SigningPolicyStoreParameters;
+
+import javax.net.ssl.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.SecureRandom;
-import java.security.Security;
-import java.security.UnrecoverableKeyException;
+import java.security.*;
 import java.security.cert.CertStore;
 import java.security.cert.CertStoreParameters;
 import java.security.cert.CertificateException;
-
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLServerSocketFactory;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-
-import org.globus.security.SigningPolicyStoreParameters;
 
 /**
  * Created by IntelliJ IDEA.
@@ -38,7 +40,7 @@ import org.globus.security.SigningPolicyStoreParameters;
 public class SSLConfigurator {
 
     public static final String DEFAULT_KEYSTORE = System.getProperty("user.home") + File.separator
-        + ".keystore";
+            + ".keystore";
     private CertStoreParameters certStoreParameters;
     private String provider;
     private String protocol = "TLS";
@@ -49,8 +51,8 @@ public class SSLConfigurator {
     private String keyPassword;
     private String keyStorePassword;
     private String sslKeyManagerFactoryAlgorithm =
-        Security.getProperty("ssl.KeyManagerFactory.algorithm") == null ? "SunX509" : Security.getProperty(
-            "ssl.KeyManagerFactory.algorithm"); // cert algorithm;
+            Security.getProperty("ssl.KeyManagerFactory.algorithm") == null ? "SunX509" : Security.getProperty(
+                    "ssl.KeyManagerFactory.algorithm"); // cert algorithm;
 //    private String sslTrustManagerFactoryAlgorithm =
 //            Security.getProperty("ssl.TrustManagerFactory.algorithm") == null
 //                    ? "PKITrustManager"
@@ -96,20 +98,20 @@ public class SSLConfigurator {
 
     private SSLContext loadSSLContext() throws NoSuchAlgorithmException, NoSuchProviderException {
         return provider == null
-            ? SSLContext.getInstance(protocol)
-            : SSLContext.getInstance(protocol, provider);
+                ? SSLContext.getInstance(protocol)
+                : SSLContext.getInstance(protocol, provider);
     }
 
     private SecureRandom loadSecureRandom() throws NoSuchAlgorithmException {
         return secureRandomAlgorithm == null
-            ? null
-            : SecureRandom.getInstance(secureRandomAlgorithm);
+                ? null
+                : SecureRandom.getInstance(secureRandomAlgorithm);
     }
 
     // FIXME: limited proxy policy and configurable policy handlers...
 
     private TrustManager[] loadTrustManagers(KeyStore trustStore, CertStore certStore)
-        throws InvalidAlgorithmParameterException {
+            throws InvalidAlgorithmParameterException {
 //        FileBasedSigningPolicyStore spStore = new FileBasedSigningPolicyStore(signingPolicyStoreParameters);
 //        X509ProxyCertPathValidator validator = new X509ProxyCertPathValidator();
 //        X509ProxyCertPathParameters parameters =
@@ -120,8 +122,8 @@ public class SSLConfigurator {
     }
 
     private KeyManager[] loadKeyManagers()
-        throws IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException,
-        UnrecoverableKeyException {
+            throws IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException,
+            UnrecoverableKeyException {
         InputStream keystoreInputStream = null;
 
         if (keyStore != null) {
@@ -134,14 +136,14 @@ public class SSLConfigurator {
 
         KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(sslKeyManagerFactoryAlgorithm);
         keyManagerFactory.init(keyStoreToLoad,
-            keyStorePassword == null
-                ? null
-                : keyStorePassword.toCharArray());
+                keyStorePassword == null
+                        ? null
+                        : keyStorePassword.toCharArray());
         return keyManagerFactory.getKeyManagers();
     }
 
     private KeyStore loadTrustStore()
-        throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
+            throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
         KeyStore trustStore = KeyStore.getInstance(trustStoreType);
         if (trustStoreParameters == null) {
             if (this.trustStorePath == null || this.trustStorePassword == null) {
@@ -149,10 +151,10 @@ public class SSLConfigurator {
                 this.trustStorePassword = this.keyStorePassword;
             }
             InputStream trustStoreInputStream =
-                getResource(trustStorePath);
+                    getResource(trustStorePath);
             char[] pw = trustStorePassword == null
-                ? null
-                : trustStorePassword.toCharArray();
+                    ? null
+                    : trustStorePassword.toCharArray();
             trustStore.load(trustStoreInputStream, pw);
             return trustStore;
         }

@@ -1,26 +1,25 @@
 /*
- * Copyright 1999-2006 University of Chicago
+ * Copyright 1999-2010 University of Chicago
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License.  You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS,WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied.
+ *
+ * See the License for the specific language governing permissions and limitations under the License.
  */
 package org.globus.security;
+
+import org.globus.security.proxyExtension.ProxyPolicyHandler;
 
 import java.security.KeyStore;
 import java.security.cert.CertPathParameters;
 import java.security.cert.CertStore;
 import java.util.Map;
-
-import org.globus.security.proxyExtension.ProxyPolicyHandler;
 
 /**
  * FILL ME
@@ -35,19 +34,19 @@ import org.globus.security.proxyExtension.ProxyPolicyHandler;
 public class X509ProxyCertPathParameters implements CertPathParameters {
 
     // For trusted CAs
-    KeyStore keyStore;
+    private KeyStore keyStore;
     // For CRLs
-    CertStore certStore;
+    private CertStore certStore;
     // For signing policy
-    SigningPolicyStore policyStore;
-    boolean rejectLimitedProxy;
-    Map<String, ProxyPolicyHandler> handlers;
+    private SigningPolicyStore policyStore;
+    private boolean rejectLimitedProxy;
+    private Map<String, ProxyPolicyHandler> handlers;
 
     public X509ProxyCertPathParameters(
-        KeyStore initKeyStore,
-        CertStore initCertStore,
-        SigningPolicyStore initPolicyStore,
-        boolean initRejectLimitedProxy) {
+            KeyStore initKeyStore,
+            CertStore initCertStore,
+            SigningPolicyStore initPolicyStore,
+            boolean initRejectLimitedProxy) {
         this(initKeyStore, initCertStore, initPolicyStore, initRejectLimitedProxy, null);
     }
 
@@ -95,7 +94,7 @@ public class X509ProxyCertPathParameters implements CertPathParameters {
     public Object clone() {
         try {
             X509ProxyCertPathParameters clone =
-                (X509ProxyCertPathParameters) super.clone();
+                    (X509ProxyCertPathParameters) super.clone();
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new InternalError(e.toString());

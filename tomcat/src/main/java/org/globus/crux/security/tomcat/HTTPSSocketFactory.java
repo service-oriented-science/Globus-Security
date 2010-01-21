@@ -1,18 +1,28 @@
+/*
+ * Copyright 1999-2010 University of Chicago
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS,WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied.
+ *
+ * See the License for the specific language governing permissions and limitations under the License.
+ */
+
 package org.globus.crux.security.tomcat;
 
 import org.apache.tomcat.util.net.ServerSocketFactory;
-import org.apache.tomcat.util.net.jsse.JSSESocketFactory;
-
 import org.globus.security.util.SSLConfigurator;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.SSLException;
-import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocket;
-
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -27,9 +37,9 @@ import java.net.SocketException;
  * To change this template use File | Settings | File Templates.
  */
 public class HTTPSSocketFactory extends ServerSocketFactory {
-    SSLConfigurator config = new SSLConfigurator();
-    SSLServerSocketFactory delegate;
-    Logger logger = LoggerFactory.getLogger(getClass());
+    private SSLConfigurator config = new SSLConfigurator();
+    private SSLServerSocketFactory delegate;
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * Flag to state that we require client authentication.
@@ -57,7 +67,7 @@ public class HTTPSSocketFactory extends ServerSocketFactory {
     }
 
     public Socket acceptSocket(ServerSocket socket)
-        throws IOException {
+            throws IOException {
         SSLSocket asock = null;
         try {
             asock = (SSLSocket) socket.accept();
@@ -80,7 +90,7 @@ public class HTTPSSocketFactory extends ServerSocketFactory {
 
     @Override
     public ServerSocket createSocket(int i, int i1, InetAddress inetAddress)
-        throws IOException, InstantiationException {
+            throws IOException, InstantiationException {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 

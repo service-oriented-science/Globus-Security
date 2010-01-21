@@ -1,56 +1,36 @@
 /*
- * Copyright 1999-2006 University of Chicago
+ * Copyright 1999-2010 University of Chicago
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License.  You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS,WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied.
+ *
+ * See the License for the specific language governing permissions and limitations under the License.
  */
 package org.globus.security.provider;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.security.Key;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.PrivateKey;
-import java.security.Security;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.Certificate;
-import java.security.cert.X509Certificate;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Vector;
 
 import org.globus.security.X509Credential;
 import org.globus.security.filestore.DirSetupUtil;
 import org.globus.security.filestore.FileBasedKeyStoreParameters;
 import org.globus.security.filestore.FileSetupUtil;
 import org.globus.security.util.CertificateLoadUtil;
-
 import org.springframework.core.io.FileSystemResource;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import java.io.*;
+import java.security.*;
+import java.security.cert.Certificate;
+import java.security.cert.X509Certificate;
+import java.util.*;
+
+import static org.testng.Assert.*;
 
 /**
  * FILL ME
@@ -89,7 +69,7 @@ public class TestPEMFileBasedKeyStore {
                     throw new Exception("Unable to load: " + trustedCertFilename);
                 }
                 this.trustedCertificates.put(this.trustedDirectory.getFileSetupUtil(trustedCertFilename),
-                    CertificateLoadUtil.loadCertificate(in));
+                        CertificateLoadUtil.loadCertificate(in));
             } finally {
                 if (in != null) {
                     in.close();
@@ -109,8 +89,8 @@ public class TestPEMFileBasedKeyStore {
                     throw new Exception("Unable to load: " + aDefaultTrustedCert);
                 }
                 this.trustedCertificates.put(
-                    this.defaultTrustedDirectory.getFileSetupUtil(aDefaultTrustedCert),
-                    CertificateLoadUtil.loadCertificate(in));
+                        this.defaultTrustedDirectory.getFileSetupUtil(aDefaultTrustedCert),
+                        CertificateLoadUtil.loadCertificate(in));
             } finally {
                 if (in != null) {
                     in.close();
@@ -124,14 +104,14 @@ public class TestPEMFileBasedKeyStore {
         this.proxyFile1 = new FileSetupUtil(proxyFilename1);
         this.proxyFile1.copyFileToTemp();
         this.proxyCertificates.put(this.proxyFile1,
-            new X509Credential(loader.getResourceAsStream(proxyFilename1), loader.getResourceAsStream(proxyFilename1)));
+                new X509Credential(loader.getResourceAsStream(proxyFilename1), loader.getResourceAsStream(proxyFilename1)));
 
         String proxyFilename2 = "validatorTest/gsi3FromPathOneProxy.pem";
         this.proxyFile2 = new FileSetupUtil(proxyFilename2);
         this.proxyFile2.copyFileToTemp();
         this.proxyCertificates.put(this.proxyFile2,
-            new X509Credential(loader.getResourceAsStream(proxyFilename2),
-                loader.getResourceAsStream(proxyFilename2)));
+                new X509Credential(loader.getResourceAsStream(proxyFilename2),
+                        loader.getResourceAsStream(proxyFilename2)));
 
         String certFilename = "validatorTest/testeec2.pem";
         this.certFile = new FileSetupUtil(certFilename);
@@ -154,9 +134,9 @@ public class TestPEMFileBasedKeyStore {
         // Parameters in properties file
         Properties properties = new Properties();
         properties.setProperty(FileBasedKeyStore.DEFAULT_DIRECTORY_KEY,
-            "file:" + this.defaultTrustedDirectory.getTempDirectoryName() + "/*.0");
+                "file:" + this.defaultTrustedDirectory.getTempDirectoryName() + "/*.0");
         properties.setProperty(FileBasedKeyStore.DIRECTORY_LIST_KEY,
-            "file:" + this.trustedDirectory.getTempDirectoryName() + "/*.0");
+                "file:" + this.trustedDirectory.getTempDirectoryName() + "/*.0");
 
         InputStream ins = null;
         try {
@@ -184,9 +164,9 @@ public class TestPEMFileBasedKeyStore {
         // Parameters in properties file
         Properties properties = new Properties();
         properties.setProperty(FileBasedKeyStore.DEFAULT_DIRECTORY_KEY,
-            "file:" + this.defaultTrustedDirectory.getTempDirectoryName() + "/*.0");
+                "file:" + this.defaultTrustedDirectory.getTempDirectoryName() + "/*.0");
         properties.setProperty(FileBasedKeyStore.DIRECTORY_LIST_KEY,
-            "file:" + this.trustedDirectory.getTempDirectoryName() + "/*.0");
+                "file:" + this.trustedDirectory.getTempDirectoryName() + "/*.0");
 
         InputStream ins = null;
         try {
@@ -211,8 +191,8 @@ public class TestPEMFileBasedKeyStore {
 
     private FileBasedKeyStore loadFromParameters() throws Exception {
         FileBasedKeyStoreParameters params = new FileBasedKeyStoreParameters(
-            "file:" + this.trustedDirectory.getTempDirectoryName() + "/*.0",
-            "file:" + this.defaultTrustedDirectory.getTempDirectoryName() + "/*.0"
+                "file:" + this.trustedDirectory.getTempDirectoryName() + "/*.0",
+                "file:" + this.defaultTrustedDirectory.getTempDirectoryName() + "/*.0"
         );
         FileBasedKeyStore keystore = new FileBasedKeyStore();
         keystore.engineLoad(params);
@@ -225,7 +205,7 @@ public class TestPEMFileBasedKeyStore {
         FileBasedKeyStore existingKeyStore = loadFromParameters();
         //Create new KeyStore to test
         FileBasedKeyStoreParameters params = new FileBasedKeyStoreParameters(
-            "file:" + System.getProperty("java.io.tmpdir") + File.separator + "pemOutputStore");
+                "file:" + System.getProperty("java.io.tmpdir") + File.separator + "pemOutputStore");
         FileBasedKeyStore newKeyStore = new FileBasedKeyStore();
         newKeyStore.engineLoad(params);
         Enumeration<String> enumeration = existingKeyStore.engineAliases();
@@ -234,7 +214,7 @@ public class TestPEMFileBasedKeyStore {
             cert = existingKeyStore.engineGetCertificate(enumeration.nextElement());
         }
         String alias = "file:" + System.getProperty("java.io.tmpdir") + File.separator + "pemOutputStore"
-            + File.separator + "blah.0";
+                + File.separator + "blah.0";
         newKeyStore.engineSetCertificateEntry(alias, cert);
         newKeyStore.engineStore(null, null);
     }
@@ -277,7 +257,7 @@ public class TestPEMFileBasedKeyStore {
         // Parameters in properties file
         Properties properties = new Properties();
         properties.setProperty(FileBasedKeyStore.PROXY_FILENAME,
-            "file:" + this.proxyFile1.getAbsoluteFilename());
+                "file:" + this.proxyFile1.getAbsoluteFilename());
         InputStream ins = null;
         try {
             ins = getProperties(properties);
@@ -305,7 +285,7 @@ public class TestPEMFileBasedKeyStore {
         //     assert (this.proxyCertificates.get(this.proxyFile1.getAbsoluteFilename()).equals(certificates[0]));
 
         properties.setProperty(FileBasedKeyStore.PROXY_FILENAME,
-            "file:" + this.proxyFile2.getAbsoluteFilename());
+                "file:" + this.proxyFile2.getAbsoluteFilename());
         ins = null;
         try {
             ins = getProperties(properties);
@@ -345,9 +325,9 @@ public class TestPEMFileBasedKeyStore {
         // Parameters in properties file
         Properties properties = new Properties();
         properties.setProperty(FileBasedKeyStore.CERTIFICATE_FILENAME, new FileSystemResource(
-            this.certFile.getTempFile()).getURL().toExternalForm());
+                this.certFile.getTempFile()).getURL().toExternalForm());
         properties.setProperty(FileBasedKeyStore.KEY_FILENAME, new FileSystemResource(this.keyFile.getTempFile())
-            .getURL().toExternalForm());
+                .getURL().toExternalForm());
         InputStream ins = null;
         try {
             ins = getProperties(properties);
@@ -371,7 +351,7 @@ public class TestPEMFileBasedKeyStore {
         assertNull(certificate);
 
         X509Credential x509Credential = new X509Credential(new FileInputStream(this.certFile.getAbsoluteFilename()),
-            new FileInputStream(this.keyFile.getAbsoluteFilename()));
+                new FileInputStream(this.keyFile.getAbsoluteFilename()));
 
         assertEquals(key, x509Credential.getPrivateKey());
         Certificate[] x509CredentialChain = x509Credential.getCertificateChain();
@@ -382,9 +362,9 @@ public class TestPEMFileBasedKeyStore {
 
         store = new FileBasedKeyStore();
         properties.setProperty(FileBasedKeyStore.CERTIFICATE_FILENAME,
-            new FileSystemResource(this.certFile.getTempFile()).getURL().toExternalForm());
+                new FileSystemResource(this.certFile.getTempFile()).getURL().toExternalForm());
         properties.setProperty(FileBasedKeyStore.KEY_FILENAME,
-            new FileSystemResource(this.keyEncFile.getTempFile()).getURL().toExternalForm());
+                new FileSystemResource(this.keyEncFile.getTempFile()).getURL().toExternalForm());
         try {
             ins = getProperties(properties);
             store.engineLoad(ins, null);

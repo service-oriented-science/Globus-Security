@@ -1,45 +1,36 @@
 /*
- * Copyright 1999-2006 University of Chicago
+ * Copyright 1999-2010 University of Chicago
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License.  You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS,WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied.
+ *
+ * See the License for the specific language governing permissions and limitations under the License.
  */
 package org.globus.security.filestore;
-
-import java.io.File;
-import java.io.FilenameFilter;
-import java.security.Security;
-import java.security.cert.CRL;
-import java.security.cert.CertStore;
-import java.security.cert.CertStoreParameters;
-import java.security.cert.Certificate;
-import java.security.cert.X509CRL;
-import java.security.cert.X509CertSelector;
-import java.security.cert.X509Certificate;
-import java.util.Collection;
-
-import javax.security.auth.x500.X500Principal;
 
 import org.globus.security.SigningPolicy;
 import org.globus.security.SigningPolicyStore;
 import org.globus.security.SigningPolicyStoreParameters;
 import org.globus.security.provider.GlobusProvider;
-
 import org.globus.security.resources.ResourceCertStoreParameters;
 import org.globus.security.resources.ResourceSigningPolicyStore;
 import org.globus.security.resources.ResourceSigningPolicyStoreParameters;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import javax.security.auth.x500.X500Principal;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.security.Security;
+import java.security.cert.*;
+import java.util.Collection;
 
 import static org.testng.AssertJUnit.assertFalse;
 import static org.testng.AssertJUnit.assertTrue;
@@ -122,7 +113,7 @@ public class TestFileBasedTrustStore {
     }
 
     @Test
-    public void testEngineGetCertificatesDirectory() throws Exception{
+    public void testEngineGetCertificatesDirectory() throws Exception {
         File tempDir = this.dir.getTempDirectory();
         // number of CA files
         String[] caFiles =
