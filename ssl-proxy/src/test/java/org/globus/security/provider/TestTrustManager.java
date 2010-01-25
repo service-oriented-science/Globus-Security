@@ -41,8 +41,7 @@ public class TestTrustManager extends TestProxyPathValidator {
     public void validationTest() throws Exception {
 
         KeyStore keyStore = getKeyStore(new X509Certificate[]{goodCertsArr[0]});
-        TestCertParameters parameters =
-                new TestCertParameters(null, this.crls);
+        TestCertParameters parameters = new TestCertParameters(null, this.crls);
 
         CertStore certStore =
                 CertStore.getInstance("MockCertStore", parameters);

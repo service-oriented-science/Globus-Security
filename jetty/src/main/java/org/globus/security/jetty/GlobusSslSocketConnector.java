@@ -1,36 +1,128 @@
+/*
+ * Copyright 1999-2010 University of Chicago
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS,WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied.
+ *
+ * See the License for the specific language governing permissions and limitations under the License.
+ */
+
 package org.globus.security.jetty;
 
-import java.security.cert.CertStoreParameters;
 
-import javax.net.ssl.SSLServerSocketFactory;
-
-import org.globus.security.SigningPolicyStoreParameters;
 import org.globus.security.util.SSLConfigurator;
+import org.mortbay.io.EndPoint;
+import org.mortbay.io.bio.SocketEndPoint;
+import org.mortbay.jetty.HttpSchemes;
+import org.mortbay.jetty.Request;
+import org.mortbay.jetty.bio.SocketConnector;
+import org.mortbay.jetty.security.ServletSSL;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import org.mortbay.jetty.security.SslSocketConnector;
+import javax.net.ssl.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
- * This is an implementation of the SslSocketConnector from Jetty, which allows
- * a bit more sophisticated configuration, specifically, it allows an
- * SSLConfigurator to be used to configure the SSLServerSocketFactory.
+ * This is an implementation of the SslSocketConnector from Jetty, which allows a bit more sophisticated configuration,
+ * specifically, it allows an SSLConfigurator to be used to configure the SSLServerSocketFactory.
  *
- * @author Tom Howe
+ * @version ${version}
  * @since 1.0
  */
-public class GlobusSslSocketConnector extends SslSocketConnector {
+public class GlobusSslSocketConnector extends SocketConnector {
+    private static final String CACHED_INFO_ATTR = CachedInfo.class.getName();
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
 
-    private SSLConfigurator sslConfigurator = new SSLConfigurator();
+    private SSLConfigurator sslConfigurator;
+
+    private boolean needClientAuth;
+
+    private boolean wantClientAuth;
+
+    private int handshakeTimeout = 0;
+
+    private SSLServerSocketFactory factory;
+    private SSLServerSocket socket;
+    private String[] excludeCipherSuites;
+
+    private boolean allowRenegotiate = false;
+
+    /**
+     * Create a Jetty SSL Socket Connector based on the provided SSLConfigurator.
+     *
+     * @param config The SSLConfiguration for the server.
+     */
+    public GlobusSslSocketConnector(SSLConfigurator config) {
+        this.sslConfigurator = config;
+    }
+
+    /**
+     * Copied from org.mortbay.jetty.security.SslSocketConnector.
+     *
+     * @param acceptorID
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    @Override
+    public void accept(int acceptorID) throws IOException, InterruptedException {
+        Socket socket = _serverSocket.accept();
+        configure(socket);
+        Connection connection = new SslConnection(socket);
+        connection.dispatch();
+    }
 
     @Override
-    protected SSLServerSocketFactory createFactory() throws Exception {
-        return sslConfigurator.createServerFactory();
+    protected ServerSocket newServerSocket(String host, int port, int backlog) throws IOException {
+        try {
+            factory = createFactory();
+            socket = (SSLServerSocket) (host == null ? factory.createServerSocket(port, backlog) :
+                    factory.createServerSocket(port, backlog, InetAddress.getByName(host)));
+            if (wantClientAuth) socket.setWantClientAuth(wantClientAuth);
+            if (needClientAuth) socket.setNeedClientAuth(needClientAuth);
+            if (excludeCipherSuites != null && excludeCipherSuites.length > 0) {
+                List<String> excludedCSList = Arrays.asList(excludeCipherSuites);
+                String[] enabledCipherSuites = socket.getEnabledCipherSuites();
+                List<String> enabledCSList = new ArrayList<String>(Arrays.asList(enabledCipherSuites));
+                for (String cipherName : excludedCSList) {
+                    if (enabledCSList.contains(cipherName)) {
+                        enabledCSList.remove(cipherName);
+                    }
+                }
+                enabledCipherSuites = enabledCSList.toArray(new String[enabledCSList.size()]);
+                socket.setEnabledCipherSuites(enabledCipherSuites);
+            }
+        } catch (IOException e) {
+            throw e;
+        } catch (Exception e) {
+            logger.warn(e.getLocalizedMessage(), e);
+            throw new IOException("Could not create JsseListener: " + e.toString());
+        }
+        return socket;
     }
 
-    public void setCertStoreParameters(CertStoreParameters certStoreParameters) {
-        sslConfigurator.setCertStoreParameters(certStoreParameters);
+    private SSLServerSocketFactory createFactory() throws Exception {
+        if (sslConfigurator != null) {
+            return sslConfigurator.createServerFactory();
+        }
+        return null;
     }
-
 
     public String getProvider() {
         return sslConfigurator.getProvider();
@@ -57,19 +149,6 @@ public class GlobusSslSocketConnector extends SslSocketConnector {
     }
 
 
-    public void setSigningPolicyStoreParameters(SigningPolicyStoreParameters signingPolicyStoreParameters) {
-        sslConfigurator.setSigningPolicyStoreParameters(signingPolicyStoreParameters);
-    }
-
-    public SigningPolicyStoreParameters getSigningPolicyStoreParameters(){
-        return sslConfigurator.getSigningPolicyStoreParameters();
-    }
-
-
-    public void setPassword(String password) {
-        sslConfigurator.setKeyPassword(password);
-    }
-
     public String getSslKeyManagerFactoryAlgorithm() {
         return sslConfigurator.getSslKeyManagerFactoryAlgorithm();
     }
@@ -78,66 +157,237 @@ public class GlobusSslSocketConnector extends SslSocketConnector {
         sslConfigurator.setSslKeyManagerFactoryAlgorithm(sslKeyManagerFactoryAlgorithm);
     }
 
-    public void setKeyPassword(String keyPassword) {
-        sslConfigurator.setKeyPassword(keyPassword);
+    public int getHandshakeTimeout() {
+        return handshakeTimeout;
     }
 
-    public void setTrustStoreType(String trustStoreType) {
-        sslConfigurator.setTrustStoreType(trustStoreType);
+    public void setHandshakeTimeout(int handshakeTimeout) {
+        this.handshakeTimeout = handshakeTimeout;
     }
 
-
-    public void setTrustStore(String trustStorePath) {
-        sslConfigurator.setTrustStorePath(trustStorePath);
+    public boolean isNeedClientAuth() {
+        return needClientAuth;
     }
 
-
-    public void setTrustStorePassword(String trustStorePassword) {
-        sslConfigurator.setTrustStorePassword(trustStorePassword);
+    public void setNeedClientAuth(boolean needClientAuth) {
+        this.needClientAuth = needClientAuth;
     }
 
-    @Override
-    public void setKeystore(String keystore) {
-        sslConfigurator.setKeyStore(keystore);
+    public boolean isWantClientAuth() {
+        return wantClientAuth;
     }
 
-    @Override
-    public void setTrustPassword(String password) {
-        sslConfigurator.setTrustStorePassword(password);
-    }
-
-    @Override
-    public void setKeystoreType(String keystoreType) {
-        sslConfigurator.setKeyStoreType(keystoreType);
-    }
-
-//    @Override
-//    public void setSslTrustManagerFactoryAlgorithm(String algorithm) {
-//        sslConfigurator.setSslTrustManagerFactoryAlgorithm(algorithm);
-//    }
-
-    @Override
-    public void setTruststore(String truststore) {
-        sslConfigurator.setTrustStorePath(truststore);
-    }
-
-    @Override
-    public void setTruststoreType(String truststoreType) {
-        sslConfigurator.setTrustStoreType(truststoreType);
-    }
-
-    @Override
     public void setWantClientAuth(boolean wantClientAuth) {
-        super.setWantClientAuth(
-                wantClientAuth);    //To change body of overridden methods use File | Settings | File Templates.
+        this.wantClientAuth = wantClientAuth;
     }
 
+    public SSLServerSocketFactory getFactory() {
+        return factory;
+    }
+
+    public void setFactory(SSLServerSocketFactory factory) {
+        this.factory = factory;
+    }
+
+    public SSLServerSocket getSocket() {
+        return socket;
+    }
+
+    public void setSocket(SSLServerSocket socket) {
+        this.socket = socket;
+    }
+
+    public String[] getExcludeCipherSuites() {
+        return excludeCipherSuites;
+    }
+
+    public void setExcludeCipherSuites(String[] excludeCipherSuites) {
+        this.excludeCipherSuites = excludeCipherSuites;
+    }
+
+    public boolean isAllowRenegotiate() {
+        return allowRenegotiate;
+    }
+
+    public void setAllowRenegotiate(boolean allowRenegotiate) {
+        this.allowRenegotiate = allowRenegotiate;
+    }
+
+    /**
+     * Copied from org.mortbay.jetty.security.SslSocketConnector.
+     *
+     * @param endpoint
+     * @param request
+     * @throws IOException
+     */
     @Override
-    public void setHandshakeTimeout(int msec) {
-        super.setHandshakeTimeout(msec);    //To change body of overridden methods use File | Settings | File Templates.
+    public void customize(EndPoint endpoint, Request request) throws IOException {
+        super.customize(endpoint, request);
+        request.setScheme(HttpSchemes.HTTPS);
+        SocketEndPoint socket_end_point = (SocketEndPoint) endpoint;
+        SSLSocket sslSocket = (SSLSocket) socket_end_point.getTransport();
+        try {
+            SSLSession sslSession = sslSocket.getSession();
+            String cipherSuite = sslSession.getCipherSuite();
+            Integer keySize;
+            X509Certificate[] certs;
+            CachedInfo cachedInfo = (CachedInfo) sslSession.getValue(CACHED_INFO_ATTR);
+            if (cachedInfo != null) {
+                keySize = cachedInfo.getKeySize();
+                certs = cachedInfo.getCerts();
+            } else {
+                keySize = new Integer(ServletSSL.deduceKeyLength(cipherSuite));
+                certs = getCertChain(sslSession);
+                cachedInfo = new CachedInfo(keySize, certs);
+                sslSession.putValue(CACHED_INFO_ATTR, cachedInfo);
+            }
+            if (certs != null) {
+                request.setAttribute("javax.servlet.request.X509Certificate", certs);
+            } else if (needClientAuth) {
+                // Sanity check                throw new IllegalStateException("no client auth");
+            }
+            request.setAttribute("javax.servlet.request.cipher_suite", cipherSuite);
+            request.setAttribute("javax.servlet.request.key_size", keySize);
+        } catch (Exception e) {
+            logger.warn(e.getLocalizedMessage(), e);
+        }
     }
 
-    public void setSSLConfigurator(SSLConfigurator configurator) {
-        this.sslConfigurator = configurator;
+    /**
+     * Return the chain of X509 certificates used to negotiate the SSL Session.
+     * <p/>
+     * Note: in order to do this we must convert a javax.security.cert.X509Certificate[], as used by
+     * JSSE to a java.security.cert.X509Certificate[],as required by the Servlet specs.
+     *
+     * @param sslSession the javax.net.ssl.SSLSession to use as the source of the cert chain.
+     * @return the chain of java.security.cert.X509Certificates used to negotiate the SSL
+     *         connection. <br>
+     *         Will be null if the chain is missing or empty.
+     */
+    private X509Certificate[] getCertChain(SSLSession sslSession) {
+        try {
+            javax.security.cert.X509Certificate javaxCerts[] = sslSession.getPeerCertificateChain();
+            if (javaxCerts == null || javaxCerts.length == 0) return null;
+            int length = javaxCerts.length;
+            X509Certificate[] javaCerts = new X509Certificate[length];
+            java.security.cert.CertificateFactory cf = java.security.cert.CertificateFactory.getInstance("X.509");
+            for (int i = 0; i < length; i++) {
+                byte bytes[] = javaxCerts[i].getEncoded();
+                ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
+                javaCerts[i] = (X509Certificate) cf.generateCertificate(stream);
+            }
+            return javaCerts;
+        } catch (SSLPeerUnverifiedException pue) {
+            return null;
+        } catch (Exception e) {
+            logger.warn(e.getLocalizedMessage(), e);
+            return null;
+        }
+    }
+
+
+    /**
+     * By default, we're confidential, given we speak SSL. But, if we've been told about an
+     * confidential port, and said port is not our port, then we're not. This allows separation of
+     * listeners providing INTEGRAL versus CONFIDENTIAL constraints, such as one SSL listener
+     * configured to require client certs providing CONFIDENTIAL, whereas another SSL listener not
+     * requiring client certs providing mere INTEGRAL constraints.
+     */
+    @Override
+    public boolean isConfidential(Request request) {
+        final int confidentialPort = getConfidentialPort();
+        return confidentialPort == 0 || confidentialPort == request.getServerPort();
+    }
+    /* ------------------------------------------------------------ */
+
+    /**
+     * By default, we're integral, given we speak SSL. But, if we've been told about an integral
+     * port, and said port is not our port, then we're not. This allows separation of listeners
+     * providing INTEGRAL versus CONFIDENTIAL constraints, such as one SSL listener configured to
+     * require client certs providing CONFIDENTIAL, whereas another SSL listener not requiring
+     * client certs providing mere INTEGRAL constraints.
+     */
+    @Override
+    public boolean isIntegral(Request request) {
+        final int integralPort = getIntegralPort();
+        return integralPort == 0 || integralPort == request.getServerPort();
+    }
+
+    class CachedInfo {
+        private X509Certificate[] certs;
+        private Integer keySize;
+
+        CachedInfo(Integer inputKeySize, X509Certificate[] inputCerts) {
+            this.keySize = inputKeySize;
+            this.certs = inputCerts;
+        }
+
+        X509Certificate[] getCerts() {
+            return certs;
+        }
+
+        Integer getKeySize() {
+            return keySize;
+        }
+    }
+
+
+    class SslConnection extends Connection {
+
+        public SslConnection(Socket socket) throws IOException {
+            super(socket);
+        }
+
+        public void run() {
+            try {
+                int handshakeTimeout = getHandshakeTimeout();
+                int oldTimeout = _socket.getSoTimeout();
+                if (handshakeTimeout > 0)
+                    _socket.setSoTimeout(handshakeTimeout);
+
+                final SSLSocket ssl = (SSLSocket) _socket;
+                ssl.addHandshakeCompletedListener(new HandshakeCompletedListener() {
+                    boolean handshook = false;
+
+                    public void handshakeCompleted(HandshakeCompletedEvent event) {
+                        if (handshook) {
+                            if (!allowRenegotiate) {
+                                logger.warn("SSL renegotiate denied: " + ssl);
+                                try {
+                                    ssl.close();
+                                } catch (IOException e) {
+                                    logger.warn(e.getLocalizedMessage(), e);
+                                }
+                            }
+                        } else
+                            handshook = true;
+                    }
+                });
+                ssl.startHandshake();
+
+                if (handshakeTimeout > 0)
+                    _socket.setSoTimeout(oldTimeout);
+
+                super.run();
+            }
+            catch (SSLException e) {
+                logger.warn(e.getLocalizedMessage(), e);
+                try {
+                    close();
+                }
+                catch (IOException e2) {
+                    logger.trace(e2.getLocalizedMessage(), e2);
+                }
+            }
+            catch (IOException e) {
+                logger.debug(e.getLocalizedMessage(), e);
+                try {
+                    close();
+                }
+                catch (IOException e2) {
+                    logger.trace(e2.getLocalizedMessage(), e2);
+                }
+            }
+        }
     }
 }

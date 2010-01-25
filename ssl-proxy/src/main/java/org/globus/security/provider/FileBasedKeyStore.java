@@ -317,8 +317,8 @@ public class FileBasedKeyStore extends KeyStoreSpi {
             String proxyFilename, String certFilename, String keyFilename)
             throws IOException, CertificateException {
         if (defaultDirectoryString != null) {
-            defaultDirectory = new File(defaultDirectoryString.substring(0,
-                    defaultDirectoryString.lastIndexOf(File.pathSeparator)));
+            defaultDirectory = new File(defaultDirectoryString);//.substring(0,
+            //defaultDirectoryString.lastIndexOf(File.pathSeparator))
             if (!defaultDirectory.exists()) {
                 boolean directoryMade = defaultDirectory.mkdirs();
                 if (!directoryMade) {

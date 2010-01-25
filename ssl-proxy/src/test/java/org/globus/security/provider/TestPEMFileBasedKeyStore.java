@@ -64,7 +64,6 @@ public class TestPEMFileBasedKeyStore {
             InputStream in = null;
             try {
                 in = loader.getResourceAsStream(trustedCertFilename);
-
                 if (in == null) {
                     throw new Exception("Unable to load: " + trustedCertFilename);
                 }

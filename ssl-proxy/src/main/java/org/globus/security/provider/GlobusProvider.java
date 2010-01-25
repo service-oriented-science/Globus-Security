@@ -30,6 +30,10 @@ import java.security.Provider;
 public class GlobusProvider extends Provider {
 
     public static final String PROVIDER_NAME = "Globus";
+    public static final String CERTSTORE_TYPE = "PEMFilebasedCertStore";
+    public static final String CERT_PATH_VALIDATOR_TYPE = "X509ProxyPath";
+    public static final String KEYSTORE_TYPE = "PEMFilebasedKeyStore";
+
     private static final long serialVersionUID = -6275241207604782362L;
 
     /**

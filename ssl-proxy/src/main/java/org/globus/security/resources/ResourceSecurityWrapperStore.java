@@ -96,8 +96,7 @@ public abstract class ResourceSecurityWrapperStore<T extends AbstractResourceSec
                     getLogger().warn("Cannot read: " + uri.toASCIIString());
                     continue;
                 }
-                boolean loaded = load(resource, updatedList, newWrapperMap);
-                changed = loaded;
+                changed = load(resource, updatedList, newWrapperMap);
             }
         } catch (IOException e) {
             throw new ResourceStoreException(e);

@@ -55,8 +55,7 @@ public class X509Credential {
         }
 
         if ((initCertChain == null) || (initCertChain.length < 1)) {
-            throw new IllegalArgumentException(
-                    "Atleast one public certificate required");
+            throw new IllegalArgumentException("Atleast one public certificate required");
         }
 
         this.certChain = new X509Certificate[initCertChain.length];

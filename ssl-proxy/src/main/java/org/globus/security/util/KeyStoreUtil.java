@@ -43,8 +43,7 @@ public final class KeyStoreUtil {
      * @return
      * @throws KeyStoreException
      */
-    public static Collection<? extends Certificate> getTrustedCertificates(
-            KeyStore keyStore, X509CertSelector selector)
+    public static Collection<? extends Certificate> getTrustedCertificates(KeyStore keyStore, X509CertSelector selector)
             throws KeyStoreException {
 
         Vector<X509Certificate> certificates = new Vector<X509Certificate>();
