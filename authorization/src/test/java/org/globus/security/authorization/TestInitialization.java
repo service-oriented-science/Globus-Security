@@ -1,101 +1,95 @@
 /*
- * Copyright 1999-2006 University of Chicago
+ * Copyright 1999-2010 University of Chicago
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License.  You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS,WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied.
+ *
+ * See the License for the specific language governing permissions and limitations under the License.
  */
 package org.globus.security.authorization;
 
 import org.testng.annotations.Test;
 
+import java.util.List;
+
+import static org.testng.Assert.*;
+
 public class TestInitialization {
 
     @Test
     public void test() throws Exception {
+        MockEngine engine = new MockEngine("chain name");
 
         // Bootstrap PIPs
-        InterceptorConfig[] bpips = new InterceptorConfig[4];
-        bpips[0] = new InterceptorConfig("b0",
-                MockBootstrapPIP.class.getName());
-        bpips[1] = new InterceptorConfig("b0",
-                MockBootstrapPIP.class.getName());
-        bpips[2] = new InterceptorConfig("b1",
-                MockBootstrapPIP.class.getName());
-        bpips[3] = new InterceptorConfig("b0",
-                MockBootstrapPIP.class.getName());
+        MockBootstrapPIP b0 = new MockBootstrapPIP();
+        MockBootstrapPIP b1 = new MockBootstrapPIP();
+        engine.addBootstrapPIP(new InterceptorConfig<MockBootstrapPIP>("b0", b0));
+        engine.addBootstrapPIP(new InterceptorConfig<MockBootstrapPIP>("b0", b0));
+        engine.addBootstrapPIP(new InterceptorConfig<MockBootstrapPIP>("b1", b1));
+        engine.addBootstrapPIP(new InterceptorConfig<MockBootstrapPIP>("b0", b0));
+
 
         // PIPs
-        InterceptorConfig[] pips = new InterceptorConfig[5];
-        pips[0] = new InterceptorConfig("p1", MockPIPImpl.class.getName());
-        pips[1] = new InterceptorConfig("p0", MockPIPImpl.class.getName());
-        pips[2] = new InterceptorConfig("p1", MockPIPImpl.class.getName());
-        pips[3] = new InterceptorConfig("p0", MockPIPImpl.class.getName());
-        pips[4] = new InterceptorConfig("p0", MockPIPImpl.class.getName());
+        engine.addPIP(new InterceptorConfig<MockPIPImpl>("p1", new MockPIPImpl()));
+        engine.addPIP(new InterceptorConfig<MockPIPImpl>("p0", new MockPIPImpl()));
+        engine.addPIP(new InterceptorConfig<MockPIPImpl>("p1", new MockPIPImpl()));
+        engine.addPIP(new InterceptorConfig<MockPIPImpl>("p0", new MockPIPImpl()));
+        engine.addPIP(new InterceptorConfig<MockPIPImpl>("p0", new MockPIPImpl()));
 
         // PDPs
-        InterceptorConfig[] pdps = new InterceptorConfig[6];
-        pdps[0] = new InterceptorConfig("d1", MockPDPImpl.class.getName());
-        pdps[1] = new InterceptorConfig("d0", MockPDPImpl.class.getName());
-        pdps[2] = new InterceptorConfig("d1", MockPDPImpl.class.getName());
-        pdps[3] = new InterceptorConfig("d0", MockPDPImpl.class.getName());
-        pdps[4] = new InterceptorConfig("d2", MockPDPImpl.class.getName());
-        pdps[5] = new InterceptorConfig("d0", MockPDPImpl.class.getName());
+        engine.addPDP(new InterceptorConfig<MockPDPImpl>("d1", new MockPDPImpl()));
+        engine.addPDP(new InterceptorConfig<MockPDPImpl>("d0", new MockPDPImpl()));
+        engine.addPDP(new InterceptorConfig<MockPDPImpl>("d1", new MockPDPImpl()));
+        engine.addPDP(new InterceptorConfig<MockPDPImpl>("d0", new MockPDPImpl()));
+        engine.addPDP(new InterceptorConfig<MockPDPImpl>("d2", new MockPDPImpl()));
+        engine.addPDP(new InterceptorConfig<MockPDPImpl>("d0", new MockPDPImpl()));
 
-        AuthorizationConfig authzConfig = new AuthorizationConfig(bpips, pips,
-                pdps);
+        engine.engineInitialize("chain name");
 
-        MockEngine engine = new MockEngine();
-        engine.engineInitialize("chain name", authzConfig, null);
+        List<BootstrapPIP> bootstrapPIP = engine.getBootstrapPIPs();
+        assertNotNull(bootstrapPIP);
+        assertEquals(bootstrapPIP.size(), 4);
+        assertTrue(bootstrapPIP.get(0) instanceof MockBootstrapPIP);
+        assertEquals(bootstrapPIP.get(0), (bootstrapPIP.get(1)));
+        assertEquals(bootstrapPIP.get(1), (bootstrapPIP.get(3)));
+        assertEquals(((MockBootstrapPIP) bootstrapPIP.get(0)).getInitializationCount(), 1);
+        assertFalse(bootstrapPIP.get(1).equals(bootstrapPIP.get(2)));
+        assertEquals(((MockBootstrapPIP) bootstrapPIP.get(2)).getInitializationCount(), 1);
+        assertTrue(bootstrapPIP.get(2) instanceof MockBootstrapPIP);
+        assertFalse(bootstrapPIP.get(2).equals(bootstrapPIP.get(3)));
 
-        BootstrapPIP[] bootstrapPIP = engine.getBootstrapPIPs();
-        assert (bootstrapPIP != null);
-        assert (bootstrapPIP.length == 4);
-        assert (bootstrapPIP[0] instanceof MockBootstrapPIP);
-        assert (bootstrapPIP[0].equals(bootstrapPIP[1]));
-        assert (bootstrapPIP[1].equals(bootstrapPIP[3]));
-        assert (((MockBootstrapPIP) bootstrapPIP[0]).getInitializationCount()
-                == 1);
-        assert (!bootstrapPIP[1].equals(bootstrapPIP[2]));
-        assert (((MockBootstrapPIP) bootstrapPIP[2]).getInitializationCount()
-                == 1);
-        assert (bootstrapPIP[2] instanceof MockBootstrapPIP);
-        assert (!bootstrapPIP[2].equals(bootstrapPIP[3]));
+        List<PIPInterceptor> pipClass = engine.getPIPs();
+        assertNotNull(pipClass);
+        assertEquals(pipClass.size(), 5);
+        assertTrue(pipClass.get(0) instanceof MockPIPImpl);
+        assertEquals(pipClass.get(0), (pipClass.get(2)));
+        assertEquals(((MockPIPImpl) pipClass.get(0)).getInitializationCount(), 1);
+        assertEquals(pipClass.get(1), (pipClass.get(3)));
+        assertEquals(pipClass.get(3), (pipClass.get(4)));
+        assertEquals(((MockPIPImpl) pipClass.get(1)).getInitializationCount(), 1);
+        assertEquals(((MockPIPImpl) pipClass.get(3)).getInitializationCount(), 1);
+        assertEquals(((MockPIPImpl) pipClass.get(4)).getInitializationCount(), 1);
 
-        PIPInterceptor[] pipClass = engine.getPIPs();
-        assert (pipClass != null);
-        assert (pipClass.length == 5);
-        assert (pipClass[0] instanceof MockPIPImpl);
-        assert (pipClass[0].equals(pipClass[2]));
-        assert (((MockPIPImpl) pipClass[0]).getInitializationCount() == 1);
-        assert (pipClass[1].equals(pipClass[3]));
-        assert (pipClass[3].equals(pipClass[4]));
-        assert (((MockPIPImpl) pipClass[1]).getInitializationCount() == 1);
-        assert (((MockPIPImpl) pipClass[3]).getInitializationCount() == 1);
-        assert (((MockPIPImpl) pipClass[4]).getInitializationCount() == 1);
-
-        PDPInterceptor[] pdpClass = engine.getPDPs();
-        assert (pdpClass != null);
-        assert (pdpClass.length == 6);
-        assert (pdpClass[0] instanceof MockPDPImpl);
-        assert (pdpClass[0].equals(pdpClass[2]));
-        assert (((MockPDPImpl) pdpClass[0]).getInitializationCount() == 1);
-        assert (((MockPDPImpl) pdpClass[2]).getInitializationCount() == 1);
-        assert (pdpClass[1] instanceof MockPDPImpl);
-        assert (pdpClass[1].equals(pdpClass[3]));
-        assert (pdpClass[3].equals(pdpClass[5]));
-        assert (((MockPDPImpl) pdpClass[1]).getInitializationCount() == 1);
-        assert (((MockPDPImpl) pdpClass[3]).getInitializationCount() == 1);
-        assert (((MockPDPImpl) pdpClass[5]).getInitializationCount() == 1);
-        assert (pdpClass[4] instanceof MockPDPImpl);
-        assert (((MockPDPImpl) pdpClass[4]).getInitializationCount() == 1);
+        List<PDPInterceptor> pdpClass = engine.getPDPs();
+        assertNotNull(pdpClass);
+        assertEquals(pdpClass.size(), 6);
+        assertTrue(pdpClass.get(0) instanceof MockPDPImpl);
+        assertEquals(pdpClass.get(0), (pdpClass.get(2)));
+        assertEquals(((MockPDPImpl) pdpClass.get(0)).getInitializationCount(), 1);
+        assertEquals(((MockPDPImpl) pdpClass.get(2)).getInitializationCount(), 1);
+        assertTrue(pdpClass.get(1) instanceof MockPDPImpl);
+        assertEquals(pdpClass.get(1), (pdpClass.get(3)));
+        assertEquals(pdpClass.get(3), (pdpClass.get(5)));
+        assertEquals(((MockPDPImpl) pdpClass.get(1)).getInitializationCount(), 1);
+        assertEquals(((MockPDPImpl) pdpClass.get(3)).getInitializationCount(), 1);
+        assertEquals(((MockPDPImpl) pdpClass.get(5)).getInitializationCount(), 1);
+        assertTrue(pdpClass.get(4) instanceof MockPDPImpl);
+        assertEquals(((MockPDPImpl) pdpClass.get(4)).getInitializationCount(), 1);
     }
 }

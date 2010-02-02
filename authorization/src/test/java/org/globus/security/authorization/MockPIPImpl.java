@@ -1,22 +1,22 @@
 /*
- * Copyright 1999-2006 University of Chicago
+ * Copyright 1999-2010 University of Chicago
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License.  You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS,WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied.
+ *
+ * See the License for the specific language governing permissions and limitations under the License.
  */
 package org.globus.security.authorization;
 
 import java.net.URI;
 import java.util.Calendar;
+import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
@@ -24,34 +24,32 @@ public class MockPIPImpl implements PIPInterceptor {
 
     private int initCount = 0;
 
-    ChainConfig chainConfig = null;
-    String prefix = null;
-    String token;
-    String name;
-    String resource;
-    String resGroup;
-    String action;
-    String actionGp;
-    AttributeIdentifier tokenIden;
-    AttributeIdentifier userIden;
-    AttributeIdentifier resourceIden;
-    AttributeIdentifier resGroupIden;
-    AttributeIdentifier actionIden;
-    AttributeIdentifier actionGroupIden;
-    Calendar now;
-    EntityAttributes issuer;
+    private String token;
+    private String name;
+    private String resource;
+    private String resGroup;
+    private String action;
+    private String actionGp;
+    private AttributeIdentifier tokenIden;
+    private AttributeIdentifier userIden;
+    private AttributeIdentifier resourceIden;
+    private AttributeIdentifier resGroupIden;
+    private AttributeIdentifier actionIden;
+    private AttributeIdentifier actionGroupIden;
+    private Calendar now;
+    private EntityAttributes issuer;
 
     // This method sets up URIs to use in attribute identifiers and an issuer
     // entity. For every instance of MockPIPImpl the generated objects will be
     // equal.
     public void setupURI() throws InitializeException {
 
-        URI DUMMY_ATTRIBUTE_URI = null;
-        URI TOKEN_ATTRIBUTE_URI = null;
-        URI RES_ATTRIBUTE_URI = null;
-        URI RES_GP_ATTRIBUTE_URI = null;
-        URI ACTION_ATTRIBUTE_URI = null;
-        URI ACTION_GP_ATTRIBUTE_URI = null;
+        URI DUMMY_ATTRIBUTE_URI;
+        URI TOKEN_ATTRIBUTE_URI;
+        URI RES_ATTRIBUTE_URI;
+        URI RES_GP_ATTRIBUTE_URI;
+        URI ACTION_ATTRIBUTE_URI;
+        URI ACTION_GP_ATTRIBUTE_URI;
 
         try {
             DUMMY_ATTRIBUTE_URI = new URI("urn:globus:4.0:test:user");
@@ -101,51 +99,26 @@ public class MockPIPImpl implements PIPInterceptor {
 
     }
 
-    public void initialize(String chainName, String prefix_,
-                           ChainConfig config) throws InitializeException {
+    public void initialize(String chainName, String prefix_) throws InitializeException {
 
         initCount++;
 
-        if (config == null) {
-            return;
-        }
 
         setupURI();
 
         now = Calendar.getInstance();
 
-        this.prefix = prefix_;
-        this.chainConfig = config;
-
-        this.token = (String) this.chainConfig.getProperty(this.prefix,
-                "token");
-
-        this.name = (String) this.chainConfig.getProperty(this.prefix,
-                "name");
-
-        this.resource = (String) this.chainConfig.getProperty(this.prefix,
-                "resource");
-
-        this.resGroup = (String) this.chainConfig.getProperty(this.prefix,
-                "resGp");
-
-        this.action = (String) this.chainConfig.getProperty(this.prefix,
-                "action");
-
-        this.actionGp = (String) this.chainConfig.getProperty(this.prefix,
-                "actionGp");
+//        String prefix = prefix_;
     }
 
     public NonRequestEntities collectAttributes(RequestEntities requestAttr)
             throws AttributeException {
 
-        IdentityAttributeCollection subCol =
-                new IdentityAttributeCollection();
-        Vector subjectColl = new Vector();
+        IdentityAttributeCollection subCol = new IdentityAttributeCollection();
+        List<EntityAttributes> subjectColl = new Vector<EntityAttributes>();
         // add attribute for token
         if (this.token != null) {
-            Attribute tokenAttr = new Attribute(this.tokenIden, this.issuer,
-                    now, null);
+            Attribute tokenAttr = new Attribute(this.tokenIden, this.issuer, now, null);
             StringTokenizer tok = new StringTokenizer(this.token);
             while (tok.hasMoreTokens()) {
                 tokenAttr.addAttributeValue(tok.nextToken());
@@ -165,12 +138,10 @@ public class MockPIPImpl implements PIPInterceptor {
 
         subjectColl.add(new EntityAttributes(subCol));
 
-        IdentityAttributeCollection resCol =
-                new IdentityAttributeCollection();
-        Vector resCol1 = new Vector();
+        IdentityAttributeCollection resCol = new IdentityAttributeCollection();
+        List<EntityAttributes> resCol1 = new Vector<EntityAttributes>();
         if (this.resource != null) {
-            Attribute attr = new Attribute(this.resourceIden, this.issuer, now,
-                    null);
+            Attribute attr = new Attribute(this.resourceIden, this.issuer, now, null);
             StringTokenizer tok = new StringTokenizer(this.resource);
             while (tok.hasMoreTokens()) {
                 attr.addAttributeValue(tok.nextToken());
@@ -190,13 +161,11 @@ public class MockPIPImpl implements PIPInterceptor {
             resCol1.add(new EntityAttributes(resCol));
         }
 
-        IdentityAttributeCollection actionCol =
-                new IdentityAttributeCollection();
+        IdentityAttributeCollection actionCol = new IdentityAttributeCollection();
 
-        Vector actionCol1 = new Vector();
+        List<EntityAttributes> actionCol1 = new Vector<EntityAttributes>();
         if (this.action != null) {
-            Attribute attr = new Attribute(this.actionIden, this.issuer, now,
-                    null);
+            Attribute attr = new Attribute(this.actionIden, this.issuer, now, null);
             StringTokenizer tok = new StringTokenizer(this.action);
             while (tok.hasMoreTokens()) {
                 attr.addAttributeValue(tok.nextToken());
@@ -204,8 +173,7 @@ public class MockPIPImpl implements PIPInterceptor {
             actionCol.add(attr);
         }
         if (this.actionGp != null) {
-            Attribute attr = new Attribute(this.actionGroupIden, this.issuer,
-                    now, null);
+            Attribute attr = new Attribute(this.actionGroupIden, this.issuer, now, null);
             StringTokenizer tok = new StringTokenizer(this.actionGp);
             while (tok.hasMoreTokens()) {
                 attr.addAttributeValue(tok.nextToken());
@@ -220,6 +188,30 @@ public class MockPIPImpl implements PIPInterceptor {
     }
 
     public void close() {
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setResource(String resource) {
+        this.resource = resource;
+    }
+
+    public void setResGroup(String resGroup) {
+        this.resGroup = resGroup;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    public void setActionGp(String actionGp) {
+        this.actionGp = actionGp;
     }
 
     public AttributeIdentifier getTokenIden() {
@@ -253,4 +245,6 @@ public class MockPIPImpl implements PIPInterceptor {
     public int getInitializationCount() {
         return initCount;
     }
+
+
 }

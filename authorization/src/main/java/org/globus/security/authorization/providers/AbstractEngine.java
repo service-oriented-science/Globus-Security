@@ -1,44 +1,25 @@
 /*
- * Copyright 1999-2006 University of Chicago
+ * Copyright 1999-2010 University of Chicago
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License.  You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS,WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied.
+ *
+ * See the License for the specific language governing permissions and limitations under the License.
  */
 package org.globus.security.authorization.providers;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.globus.security.authorization.AttributeException;
-import org.globus.security.authorization.AuthorizationConfig;
-import org.globus.security.authorization.AuthorizationEngineSpi;
-import org.globus.security.authorization.AuthorizationException;
-import org.globus.security.authorization.BootstrapPIP;
-import org.globus.security.authorization.ChainConfig;
-import org.globus.security.authorization.CloseException;
-import org.globus.security.authorization.Decision;
-import org.globus.security.authorization.EntityAttributes;
-import org.globus.security.authorization.InitializeException;
-import org.globus.security.authorization.Interceptor;
-import org.globus.security.authorization.InterceptorConfig;
-import org.globus.security.authorization.NonRequestEntities;
-import org.globus.security.authorization.PDPInterceptor;
-import org.globus.security.authorization.PIPInterceptor;
-import org.globus.security.authorization.RequestEntities;
-import org.globus.security.authorization.util.I18nUtil;
-
+import org.globus.security.authorization.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * Abstract engine class that can be extended from to implement authorization
@@ -60,22 +41,23 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractEngine implements AuthorizationEngineSpi, Serializable {
 
-    protected static final int BOOTSTRAP_PIP = 0;
-    protected static final int PIP_INTERCEPTOR = 1;
-    protected static final int PDP_INTERCEPTOR = 2;
+    private Map<String, PDPInterceptor> pdpMap = new HashMap<String, PDPInterceptor>();
+    private Map<String, PIPInterceptor> pipMap = new HashMap<String, PIPInterceptor>();
+    private Map<String, BootstrapPIP> bootstrapPipMap = new HashMap<String, BootstrapPIP>();
 
-    private static I18nUtil i18n = I18nUtil.getI18n("org.globus.security.authorization.errors",
-        AbstractEngine.class.getClassLoader());
+    private List<PDPInterceptor> pdps = new ArrayList<PDPInterceptor>();
+    private List<PIPInterceptor> pips = new ArrayList<PIPInterceptor>();
+    private List<BootstrapPIP> bootstrapPips = new ArrayList<BootstrapPIP>();
 
-    protected PDPInterceptor[] pdps;
-    protected PIPInterceptor[] pips;
-    protected BootstrapPIP[] bootstrapPips;
-
-    protected NonRequestEntities nonReqEntities;
-
-    protected ChainConfig chainConfig;
+    private NonRequestEntities nonReqEntities;
+    private String chainName;
 
     private Logger logger = LoggerFactory.getLogger(AbstractEngine.class.getName());
+
+    public AbstractEngine(String chainName) {
+        this.chainName = chainName;
+        this.nonReqEntities = new NonRequestEntities();
+    }
 
     /**
      * Initializes the engine with configured PDPs and PIPs. It creates an
@@ -83,20 +65,11 @@ public abstract class AbstractEngine implements AuthorizationEngineSpi, Serializ
      * them. Interceptors with same scope and FQDN are treated as same
      * and only one instance of such an interceptor is created.
      *
-     * @param chainName       A unique string which the authorization chain name
-     * @param authzConfig     An object of <code>AuthorizationConfig</code> containing the list
-     *                        of Bootstrap PIPs, PIPs and PDPs.
-     * @param initChainConfig Configuration object with all configuration for th
+     * @param chainName A unique string which the authorization chain name
      * @throws InitializeException
      */
-    public void engineInitialize(String chainName, AuthorizationConfig authzConfig, ChainConfig initChainConfig)
-        throws InitializeException {
+    public void engineInitialize(String chainName) throws InitializeException {
 
-        this.chainConfig = initChainConfig;
-
-        this.nonReqEntities = new NonRequestEntities();
-
-        initializeInterceptors(chainName, authzConfig);
     }
 
     /**
@@ -108,7 +81,7 @@ public abstract class AbstractEngine implements AuthorizationEngineSpi, Serializ
      * @throws AuthorizationException
      */
     public abstract Decision engineAuthorize(RequestEntities reqAttribute, EntityAttributes resourceOwner)
-        throws AuthorizationException;
+            throws AuthorizationException;
 
     /**
      * Invokes close on all interceptors.
@@ -116,101 +89,69 @@ public abstract class AbstractEngine implements AuthorizationEngineSpi, Serializ
      * @throws CloseException
      */
     public void engineClose() throws CloseException {
-        for (BootstrapPIP bootstrapPip : bootstrapPips) {
-            bootstrapPip.close();
+        for (String bootstrapPipId : bootstrapPipMap.keySet()) {
+            bootstrapPipMap.get(bootstrapPipId).close();
         }
-        for (PIPInterceptor pip : pips) {
-            pip.close();
+        for (String pipId : pipMap.keySet()) {
+            pipMap.get(pipId).close();
         }
-        for (PDPInterceptor pdp : pdps) {
-            pdp.close();
-        }
-    }
-
-    public ChainConfig getChainConfig() {
-        return this.chainConfig;
-    }
-
-    protected synchronized void initializeInterceptors(String chainName, AuthorizationConfig authzConfig)
-        throws InitializeException {
-
-        if (authzConfig == null) {
-            String err = i18n.getMessage("noInterceptors");
-            logger.error(err);
-            throw new InitializeException(err);
-        }
-
-        // bootstrap
-        InterceptorConfig[] interConfig = authzConfig.getBootstrapPips();
-        if (interConfig != null) {
-
-            this.bootstrapPips = new BootstrapPIP[interConfig.length];
-            initializeInterceptors(interConfig, this.bootstrapPips, chainName,
-                BOOTSTRAP_PIP);
-        }
-
-        // PIPs
-        interConfig = authzConfig.getPips();
-        if (interConfig != null) {
-            this.pips = new PIPInterceptor[interConfig.length];
-            initializeInterceptors(interConfig, this.pips, chainName,
-                PIP_INTERCEPTOR);
-        }
-
-        // PDPs
-        interConfig = authzConfig.getPdps();
-        if (interConfig != null) {
-            this.pdps = new PDPInterceptor[interConfig.length];
-            initializeInterceptors(interConfig, this.pdps, chainName,
-                PDP_INTERCEPTOR);
+        for (String pdpId : pdpMap.keySet()) {
+            pdpMap.get(pdpId).close();
         }
     }
 
-    protected void initializeInterceptors(
-        InterceptorConfig[] config, Interceptor[] interceptors, String chainName,
-        int type)
-        throws InitializeException {
 
-        if ((config == null) || (interceptors == null)) {
-            throw new IllegalArgumentException();
+    public void addPDP(InterceptorConfig<? extends PDPInterceptor> interceptor) throws InitializeException {
+        String key = interceptor.getScope() + interceptor.getInterceptor().getClass().getCanonicalName();
+        if (pdpMap.containsKey(key)) {
+            this.pdps.add(pdpMap.get(key));
+        } else {
+            interceptor.getInterceptor().initialize(this.chainName, interceptor.getScope());
+            this.pdpMap.put(key, interceptor.getInterceptor());
+            this.pdps.add(interceptor.getInterceptor());
         }
+    }
 
-        Map<String, Interceptor> interceptorMap = new HashMap<String, Interceptor>();
-
-        for (int i = 0; i < config.length; i++) {
-            String key = config[i].getScope() + config[i].getInterceptorFQDN();
-            try {
-                if (type == BOOTSTRAP_PIP) {
-                    if (interceptorMap.containsKey(key)) {
-                        interceptors[i] = interceptorMap.get(key);
-                    } else {
-                        interceptors[i] = (BootstrapPIP) loadClass(config[i].getInterceptorFQDN()).newInstance();
-                        interceptors[i].initialize(chainName, config[i].getScope(), this.chainConfig);
-                        interceptorMap.put(key, interceptors[i]);
-                    }
-                } else if (type == PIP_INTERCEPTOR) {
-                    if (interceptorMap.containsKey(key)) {
-                        interceptors[i] = interceptorMap.get(key);
-                    } else {
-                        interceptors[i] = (PIPInterceptor) loadClass(config[i].getInterceptorFQDN()).newInstance();
-                        interceptors[i].initialize(chainName, config[i].getScope(), this.chainConfig);
-                        interceptorMap.put(key, interceptors[i]);
-                    }
-                } else if (type == PDP_INTERCEPTOR) {
-                    if (interceptorMap.containsKey(key)) {
-                        interceptors[i] = interceptorMap.get(key);
-                    } else {
-                        interceptors[i] = (PDPInterceptor) loadClass(config[i].getInterceptorFQDN()).newInstance();
-                        interceptors[i].initialize(chainName, config[i].getScope(), this.chainConfig);
-                        interceptorMap.put(key, interceptors[i]);
-                    }
-                }
-            } catch (Exception e) {
-                String err = i18n.getMessage("loadInterceptors", config[i]);
-                logger.error(err, e);
-                throw new InitializeException(err, e);
-            }
+    public void addPIP(InterceptorConfig<? extends PIPInterceptor> pip) throws InitializeException {
+        String key = pip.getScope() + pip.getInterceptor().getClass().getCanonicalName();
+        if (pipMap.containsKey(key)) {
+            this.pips.add(pipMap.get(key));
+        } else {
+            pip.getInterceptor().initialize(this.chainName, pip.getScope());
+            this.pipMap.put(key, pip.getInterceptor());
+            pips.add(pip.getInterceptor());
         }
+    }
+
+    public void addBootstrapPIP(InterceptorConfig<? extends BootstrapPIP> bootstrapPip) throws InitializeException {
+        String key = bootstrapPip.getScope() + bootstrapPip.getInterceptor().getClass().getCanonicalName();
+        if (bootstrapPipMap.containsKey(key)) {
+            this.bootstrapPips.add(bootstrapPipMap.get(key));
+        } else {
+            bootstrapPip.getInterceptor().initialize(this.chainName, bootstrapPip.getScope());
+            this.bootstrapPipMap.put(key, bootstrapPip.getInterceptor());
+            this.bootstrapPips.add(bootstrapPip.getInterceptor());
+        }
+    }
+
+    public List<PDPInterceptor> getPdps() {
+        return Collections.unmodifiableList(pdps);
+    }
+
+    public List<PIPInterceptor> getPips() {
+        return Collections.unmodifiableList(pips);
+    }
+
+    public List<BootstrapPIP> getBootstrapPips() {
+        return Collections.unmodifiableList(bootstrapPips);
+    }
+
+    public NonRequestEntities getNonReqEntities() {
+        return nonReqEntities;
+    }
+
+    public String getChainName() {
+        return chainName;
     }
 
     /**
@@ -223,14 +164,14 @@ public abstract class AbstractEngine implements AuthorizationEngineSpi, Serializ
      */
     protected void collectAttributes(RequestEntities requestAttr) throws AttributeException {
 
-        if (this.bootstrapPips != null) {
-            for (BootstrapPIP bootstrapPip : this.bootstrapPips) {
-                bootstrapPip.collectRequestAttributes(requestAttr);
+        if (this.bootstrapPipMap != null) {
+            for (String id : this.bootstrapPipMap.keySet()) {
+                this.bootstrapPipMap.get(id).collectRequestAttributes(requestAttr);
             }
         }
 
-        if (this.pips != null) {
-            for (PIPInterceptor pip : pips) {
+        if (this.pipMap != null) {
+            for (PIP pip : pips) {
                 NonRequestEntities response = pip.collectAttributes(requestAttr);
                 if (this.nonReqEntities == null) {
                     this.nonReqEntities = response;
@@ -250,24 +191,5 @@ public abstract class AbstractEngine implements AuthorizationEngineSpi, Serializ
                 }
             }
         }
-    }
-
-    // from CoG
-
-    protected Class loadClass(String fqdn) throws ClassNotFoundException {
-
-        ClassLoader loader = this.getClass().getClassLoader();
-        try {
-            return Class.forName(fqdn, true, loader);
-        } catch (ClassNotFoundException e) {
-            // try with context classloader if set & different
-            ClassLoader contextLoader = Thread.currentThread().getContextClassLoader();
-            if (contextLoader == null || contextLoader == loader) {
-                throw e;
-            } else {
-                return Class.forName(fqdn, true, contextLoader);
-            }
-        }
-
     }
 }

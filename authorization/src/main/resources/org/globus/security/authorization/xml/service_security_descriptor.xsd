@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 1999-2010 University of Chicago
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
+  ~ compliance with the License.  You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the License is
+  ~ distributed on an "AS IS" BASIS,WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+  ~ express or implied.
+  ~
+  ~ See the License for the specific language governing permissions and limitations under the License.
+  -->
+<xs:schema targetNamespace="http://www.globus.org/security/descriptor/service" elementFormDefault="qualified"
+           xmlns:tns="http://www.globus.org/security/descriptor/service" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:complexType name="valStringType">
+        <xs:attribute name="value" type="xs:string" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="valIntType">
+        <xs:attribute name="value" type="xs:int" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="valBooleanType">
+        <xs:attribute name="value" type="xs:boolean" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="anyType">
+        <xs:sequence>
+            <xs:any namespace="##any"/>
+        </xs:sequence>
+    </xs:complexType>
+    <!-- Credential type -->
+    <xs:complexType name="certKeyFileType">
+        <xs:all>
+            <xs:element name="key-file" type="tns:valStringType"/>
+            <xs:element name="cert-file" type="tns:valStringType"/>
+        </xs:all>
+    </xs:complexType>
+    <xs:complexType name="credentialType">
+        <xs:choice>
+            <xs:element name="proxy-file" type="tns:valStringType"/>
+            <xs:element name="cert-key-files" type="tns:certKeyFileType"/>
+        </xs:choice>
+    </xs:complexType>
+    <!-- Message protection stuff -->
+    <xs:element name="integrity">
+        <xs:complexType/>
+    </xs:element>
+    <xs:element name="privacy">
+        <xs:complexType/>
+    </xs:element>
+    <xs:element name="interceptor">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="parameter" type="tns:anyType" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="bootstrapPips">
+        <xs:sequence>
+            <xs:element ref="tns:interceptor" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="overwrite" type="xs:boolean"/>
+    </xs:complexType>
+    <xs:complexType name="pips">
+        <xs:sequence>
+            <xs:element ref="tns:interceptor" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="pdps">
+        <xs:sequence>
+            <xs:element ref="tns:interceptor" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="authzChain">
+        <xs:sequence>
+            <xs:element name="bootstrapPips" type="tns:bootstrapPips" minOccurs="0"/>
+            <xs:element name="pips" type="tns:pips" minOccurs="0"/>
+            <xs:element name="pdps" type="tns:pdps" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="combiningAlg" type="xs:string"/>
+    </xs:complexType>
+    <xs:element name="reject-limited-proxy" type="tns:valBooleanType"/>
+    <xs:element name="context-lifetime" type="tns:valIntType"/>
+    <xs:element name="replay-attack-window" type="tns:valIntType"/>
+    <xs:element name="replay-attack-filter" type="tns:valBooleanType"/>
+    <xs:simpleType name="runAsValueType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="caller"/>
+            <xs:enumeration value="service"/>
+            <xs:enumeration value="resource"/>
+            <xs:enumeration value="system"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="runAsType">
+        <xs:attribute name="value" type="tns:runAsValueType" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="protection-levelType">
+        <xs:all>
+            <xs:element ref="tns:integrity" minOccurs="0"/>
+            <xs:element ref="tns:privacy" minOccurs="0"/>
+        </xs:all>
+    </xs:complexType>
+    <xs:element name="none">
+        <xs:complexType/>
+    </xs:element>
+    <xs:complexType name="gsiSecType">
+        <xs:sequence>
+            <xs:element name="protection-level" type="tns:protection-levelType" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <!-- This imposes an order here, which is needless, but can't quite get xerces to like auth-methodType, minOCuurs 0 in methodType if this is set to all rather than sequence. -->
+    <xs:group name="authMethodGp">
+        <xs:sequence>
+            <xs:element name="GSISecureConversation" type="tns:gsiSecType" minOccurs="1"/>
+            <xs:element name="GSISecureMessage" type="tns:gsiSecType" minOccurs="1"/>
+            <xs:element name="GSISecureTransport" type="tns:gsiSecType" minOccurs="1"/>
+        </xs:sequence>
+    </xs:group>
+    <xs:complexType name="auth-methodType">
+        <xs:choice>
+            <xs:group ref="tns:authMethodGp"/>
+            <xs:element ref="tns:none"/>
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="methodType">
+        <xs:all>
+            <xs:element name="auth-method" type="tns:auth-methodType" minOccurs="0"/>
+            <xs:element name="run-as" type="tns:runAsType" minOccurs="0"/>
+        </xs:all>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:element name="methodAuthentication">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="method" type="tns:methodType" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <!-- Service SecurityDescriptor Config -->
+    <xs:element name="serviceSecurityConfig">
+        <xs:complexType>
+            <xs:all>
+                <xs:element ref="tns:methodAuthentication" minOccurs="0"/>
+                <xs:element name="auth-method" type="tns:auth-methodType" minOccurs="0"/>
+                <xs:element name="run-as" type="tns:runAsType" minOccurs="0"/>
+                <xs:element name="credential" type="tns:credentialType" minOccurs="0"/>
+                <xs:element name="authzChain" type="tns:authzChain" minOccurs="0"/>
+                <xs:element ref="tns:reject-limited-proxy" minOccurs="0"/>
+                <xs:element ref="tns:context-lifetime" minOccurs="0"/>
+                <xs:element ref="tns:replay-attack-window" minOccurs="0"/>
+                <xs:element ref="tns:replay-attack-filter" minOccurs="0"/>
+            </xs:all>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

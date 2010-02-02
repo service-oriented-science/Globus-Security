@@ -1,19 +1,20 @@
 /*
- * Copyright 1999-2006 University of Chicago
+ * Copyright 1999-2010 University of Chicago
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License.  You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS,WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied.
+ *
+ * See the License for the specific language governing permissions and limitations under the License.
  */
 package org.globus.security.authorization;
+
+import org.globus.security.authorization.util.I18nUtil;
 
 import java.io.Serializable;
 import java.util.Calendar;
@@ -21,24 +22,22 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.globus.security.authorization.util.I18nUtil;
-
 /**
  * Data type representing an attribute.
  * Attribute is uniquely identified by AttributeIdentifier. It has an
  * issuer, validity time stamps and set of values of same datatype
  * (not ensured in code), without any duplicates.
  */
-public class Attribute implements Serializable {
+public class Attribute<T> implements Serializable {
 
     private static I18nUtil i18n =
-        I18nUtil.getI18n("org.globus.security.authorization.errors",
-            Attribute.class.getClassLoader());
+            I18nUtil.getI18n("org.globus.security.authorization.errors",
+                    Attribute.class.getClassLoader());
 
     private Calendar validFrom;
     private Calendar validTill;
     private AttributeIdentifier attributeId;
-    private Set<Object> valueSet;
+    private Set<T> valueSet;
     private EntityAttributes issuer;
 
     @SuppressWarnings("unused")
@@ -46,9 +45,8 @@ public class Attribute implements Serializable {
         //Should not use 
     }
 
-    public Attribute(
-        AttributeIdentifier initAttributeId, EntityAttributes initIssuer, Calendar validFrom,
-        Calendar validTill) {
+    public Attribute(AttributeIdentifier initAttributeId, EntityAttributes initIssuer, Calendar validFrom,
+                     Calendar validTill) {
         this(initAttributeId, initIssuer, validFrom, validTill, null);
     }
 
@@ -64,9 +62,8 @@ public class Attribute implements Serializable {
      * @param initValidTo     Time until which attribute is valid. Must beafter initValidFrom
      * @param values          Contents of this set are added as attribute values.
      */
-    public Attribute(
-        AttributeIdentifier initAttributeId, EntityAttributes initIssuer, Calendar initValidFrom,
-        Calendar initValidTo, Set<Object> values) {
+    public Attribute(AttributeIdentifier initAttributeId, EntityAttributes initIssuer, Calendar initValidFrom,
+                     Calendar initValidTo, Set<T> values) {
 
         if (initAttributeId == null) {
             String err = i18n.getMessage("attrIdNotNull");
@@ -89,7 +86,7 @@ public class Attribute implements Serializable {
         this.validTill = initValidTo;
 
         if (values != null) {
-            this.valueSet = Collections.synchronizedSet(new HashSet<Object>(values));
+            this.valueSet = Collections.synchronizedSet(new HashSet<T>(values));
         }
     }
 
@@ -108,8 +105,8 @@ public class Attribute implements Serializable {
      *
      * @param values Fill Me
      */
-    public void setAttributeValueSet(Set<Object> values) {
-        this.valueSet = Collections.synchronizedSet(new HashSet<Object>(values));
+    public void setAttributeValueSet(Set<T> values) {
+        this.valueSet = Collections.synchronizedSet(new HashSet<T>(values));
     }
 
     /**
@@ -117,10 +114,10 @@ public class Attribute implements Serializable {
      *
      * @param object Fill Me
      */
-    public void addAttributeValue(Object object) {
+    public void addAttributeValue(T object) {
         if (object != null) {
             if (this.valueSet == null) {
-                this.valueSet = Collections.synchronizedSet(new HashSet<Object>());
+                this.valueSet = Collections.synchronizedSet(new HashSet<T>());
             }
             this.valueSet.add(object);
         }
@@ -131,7 +128,7 @@ public class Attribute implements Serializable {
      *
      * @return Fill Me
      */
-    public Set<Object> getAttributeValueSet() {
+    public Set<T> getAttributeValueSet() {
         return this.valueSet;
     }
 
@@ -228,7 +225,7 @@ public class Attribute implements Serializable {
             // if the current attributes does not have any values, check if
             // compared one also does not have values.
             if ((this.valueSet.size() == 0)
-                && ((obj.getAttributeValueSet().size()) == 0)) {
+                    && ((obj.getAttributeValueSet().size()) == 0)) {
                 return true;
             }
 
@@ -274,7 +271,7 @@ public class Attribute implements Serializable {
      *
      * @param attribute Fill Me
      */
-    public void merge(Attribute attribute) {
+    public void merge(Attribute<T> attribute) {
 
         if (attribute == null) {
             return;
@@ -282,7 +279,7 @@ public class Attribute implements Serializable {
 
         // if attribute exist in map, but the localValueSet being
         // added is null,no point adding it
-        Set localValueSet = attribute.getAttributeValueSet();
+        Set<T> localValueSet = attribute.getAttributeValueSet();
         if (localValueSet != null) {
             // merge valid to and valid from
             Calendar newValidFrom = attribute.getValidFrom();
@@ -296,7 +293,7 @@ public class Attribute implements Serializable {
             }
 
             //merge values
-            for (Object aLocalValueSet : localValueSet) {
+            for (T aLocalValueSet : localValueSet) {
                 addAttributeValue(aLocalValueSet);
             }
         }

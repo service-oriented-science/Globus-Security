@@ -1,35 +1,26 @@
 /*
- * Copyright 1999-2006 University of Chicago
+ * Copyright 1999-2010 University of Chicago
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License.  You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS,WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied.
+ *
+ * See the License for the specific language governing permissions and limitations under the License.
  */
 package org.globus.security.authorization.providers;
 
-import java.util.Vector;
-
-import org.globus.security.authorization.AuthorizationConfig;
-import org.globus.security.authorization.AuthorizationException;
-import org.globus.security.authorization.ChainConfig;
-import org.globus.security.authorization.Decision;
-import org.globus.security.authorization.EntityAttributes;
-import org.globus.security.authorization.InitializeException;
-import org.globus.security.authorization.PDP;
-import org.globus.security.authorization.RequestEntities;
+import org.globus.security.authorization.*;
 import org.globus.security.authorization.util.AttributeUtil;
 import org.globus.security.authorization.util.I18nUtil;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Vector;
 
 /**
  * This is a combining algorithm that returns a permit if a single permit
@@ -38,23 +29,22 @@ import org.slf4j.LoggerFactory;
 public class PermitOverrideAlg extends AbstractEngine {
 
     private static I18nUtil i18n =
-        I18nUtil.getI18n("org.globus.security.authorization.errors",
-            PermitOverrideAlg.class.getClassLoader());
+            I18nUtil.getI18n("org.globus.security.authorization.errors",
+                    PermitOverrideAlg.class.getClassLoader());
 
     private static Logger logger =
-        LoggerFactory.getLogger(PermitOverrideAlg.class.getName());
+            LoggerFactory.getLogger(PermitOverrideAlg.class.getName());
 
     private boolean checkPDP0 = true;
     private EntityAttributes resourceOwner;
 
-    public void engineInitialize(String chainName, AuthorizationConfig authzConfig, ChainConfig initChainConfig)
-        throws InitializeException {
-        super.engineInitialize(chainName, authzConfig, initChainConfig);
+    public PermitOverrideAlg(String chainName) {
+        super(chainName);
     }
 
     @SuppressWarnings("ThrowableInstanceNeverThrown")
     public Decision engineAuthorize(RequestEntities reqAttr, EntityAttributes resourceOwnerAttributes)
-        throws AuthorizationException {
+            throws AuthorizationException {
 
         // set resource owner
         this.resourceOwner = resourceOwnerAttributes;
@@ -68,14 +58,13 @@ public class PermitOverrideAlg extends AbstractEngine {
             throw new AuthorizationException(err);
         }
 
-        if ((this.pdps == null) || (this.pdps.length < 1)) {
+        if ((this.getPdps() == null) || (this.getPdps().isEmpty())) {
             String err = i18n.getMessage("noPDPs");
             logger.error(err);
             throw new AuthorizationException(err);
         }
 
-        DecisionChainContext dcc =
-            new DecisionChainContext(this.pdps.length);
+        DecisionChainContext dcc = new DecisionChainContext(this.getPdps().size());
         dcc.setAuthorityAt(0, this.resourceOwner);
 
         this.checkPDP0 = true;
@@ -86,12 +75,11 @@ public class PermitOverrideAlg extends AbstractEngine {
             if (logger.isDebugEnabled()) {
                 Decision[] decision = chain.toArray();
                 for (int i = 0; i < decision.length; i++) {
-                    logger.debug("Decision " + i + ": "
-                        + decision[i].toString());
+                    logger.debug("Decision " + i + ": " + decision[i].toString());
                 }
             }
             return new Decision(this.resourceOwner, requestor, Decision.PERMIT,
-                null, null);
+                    null, null);
         } else {
             logger.debug("Deny decision ");
             Vector deniedExceptions = dcc.getDeniedExceptions();
@@ -114,19 +102,19 @@ public class PermitOverrideAlg extends AbstractEngine {
 
     @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
     private DecisionChain findDecisionChain(RequestEntities reqAttr, DecisionChainContext dcc, boolean admin)
-        throws AuthorizationException {
+            throws AuthorizationException {
 
         EntityAttributes subject = reqAttr.getRequestor();
 
         logger.debug("requestor " + subject);
 
         dcc.appendToChain(subject);
-        PDP pdp0 = this.pdps[0];
+        PDP pdp0 = this.getPdps().get(0);
         Decision decision;
         if (admin) {
-            decision = pdp0.canAdminister(reqAttr, this.nonReqEntities);
+            decision = pdp0.canAdminister(reqAttr, this.getNonReqEntities());
         } else {
-            decision = pdp0.canAccess(reqAttr, this.nonReqEntities);
+            decision = pdp0.canAccess(reqAttr, this.getNonReqEntities());
         }
 
         // Whatever be the decision, ascertain that the issuer is the
@@ -154,9 +142,7 @@ public class PermitOverrideAlg extends AbstractEngine {
         } else {
             dcc.addDeniedException(decision.getException());
         }
-
-        for (int i = 1; i < this.pdps.length; i++) {
-
+        for (int i = 1; i < getPdps().size(); i++) {
             EntityAttributes authority = dcc.getAuthorityAt(i);
             if (authority != null) {
                 // if not subject owner, then cannot make decision on oneself
@@ -170,23 +156,23 @@ public class PermitOverrideAlg extends AbstractEngine {
                     continue;
                 }
             }
+            PDP pdp = getPdps().get(i);
 
             // It searches for a delegation path from the resouce owner to the
             // authority.
-            PDP pdpi = this.pdps[i];
             if (admin) {
                 logger.debug("PDP " + i + " admin?");
-                decision = pdpi.canAdminister(reqAttr, this.nonReqEntities);
+                decision = pdp.canAdminister(reqAttr, this.getNonReqEntities());
             } else {
                 logger.debug("PDP " + i + " access?");
-                decision = pdpi.canAccess(reqAttr, this.nonReqEntities);
+                decision = pdp.canAccess(reqAttr, this.getNonReqEntities());
             }
 
             // Check if some attributes have been collected about
             // issuer
             EntityAttributes decisionIssuer = decision.getIssuer();
             EntityAttributes completeAttrIssuer =
-                AttributeUtil.getMatchedEntity(this.nonReqEntities.getSubjectAttrsList(), decisionIssuer);
+                    AttributeUtil.getMatchedEntity(this.getNonReqEntities().getSubjectAttrsList(), decisionIssuer);
             if (completeAttrIssuer != null) {
                 decisionIssuer.mergeEntities(completeAttrIssuer);
             }
@@ -207,7 +193,7 @@ public class PermitOverrideAlg extends AbstractEngine {
                     return chain;
                 } else {
                     RequestEntities newReqAttr = new RequestEntities(dcc.getAuthorityAt(i), reqAttr.getAction(),
-                        reqAttr.getResource(), reqAttr.getEnvironment());
+                            reqAttr.getResource(), reqAttr.getEnvironment());
                     DecisionChain chain = findDecisionChain(newReqAttr, dcc, true);
                     if (chain != null) {
                         // It got a chain.  So return it to the

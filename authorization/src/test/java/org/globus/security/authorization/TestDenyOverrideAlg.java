@@ -1,36 +1,41 @@
 /*
- * Copyright 1999-2006 University of Chicago
+ * Copyright 1999-2010 University of Chicago
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License.  You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS,WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied.
+ *
+ * See the License for the specific language governing permissions and limitations under the License.
  */
 package org.globus.security.authorization;
 
-import java.util.Calendar;
-
 import org.globus.security.authorization.providers.DenyOverrideAlg;
-
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.List;
+
+import static org.testng.Assert.*;
 
 public class TestDenyOverrideAlg {
 
+    AttributeIdentifier attrIden;
     EntityAttributes reqAttrIssuer = null;
     EntityAttributes resourceOwner = null;
+    RequestEntities reqAttr = null;
 
-    @Test
-    public void test() throws Exception {
-
+    @BeforeClass
+    public void setup() throws Exception {
         // resource owner
-        AttributeIdentifier attrIden = MockPDPImpl.getTestUserAttrIdentifier();
+        attrIden = MockPDPImpl.getTestUserAttrIdentifier();
         Attribute resourceOwnerAttr = new Attribute(attrIden, null,
                 Calendar.getInstance(), null);
         IdentityAttributeCollection attrCol = new IdentityAttributeCollection();
@@ -45,87 +50,126 @@ public class TestDenyOverrideAlg {
         attrCol.add(issuerAttr);
         this.reqAttrIssuer = new EntityAttributes(attrCol);
 
-
-        InterceptorConfig[] pdps = new InterceptorConfig[3];
-        pdps[0] = new InterceptorConfig("p1", MockPDPImpl.class.getName());
-        pdps[1] = new InterceptorConfig("p2", MockPDPImpl.class.getName());
-        pdps[2] = new InterceptorConfig("p3", MockPDPImpl.class.getName());
-        AuthorizationConfig authzConfig = new AuthorizationConfig(null, null,
-                pdps);
-
-        // Permit
-        ChainConfig chainConfig = new MockChainConfig();
-        chainConfig.setProperty("p1", "issuer", "Issuer1");
-        chainConfig.setProperty("p1", "access", "UserA");
-        chainConfig.setProperty("p1", "denied", "UserD");
-        chainConfig.setProperty("p1", "reqIssuer", this.reqAttrIssuer);
-        chainConfig.setProperty("p2", "issuer", "Issuer2");
-        chainConfig.setProperty("p2", "access", "UserA");
-        chainConfig.setProperty("p2", "reqIssuer", this.reqAttrIssuer);
-        chainConfig.setProperty("p3", "issuer", "Issuer3");
-        chainConfig.setProperty("p3", "access", "UserA");
-        chainConfig.setProperty("p3", "reqIssuer", this.reqAttrIssuer);
-
-        // Requestor userA
-        Attribute attr = new Attribute(attrIden, this.reqAttrIssuer,
-                Calendar.getInstance(), null);
+// Requestor userA
+        Attribute attr = new Attribute(attrIden, this.reqAttrIssuer, Calendar.getInstance(), null);
         attr.addAttributeValue("UserA");
         IdentityAttributeCollection coll = new IdentityAttributeCollection();
         coll.add(attr);
         EntityAttributes requestor = new EntityAttributes(coll);
-        RequestEntities reqAttr =
-                new RequestEntities(requestor, null, null, null);
+        reqAttr = new RequestEntities(requestor, null, null, null);
 
-        DenyOverrideAlg engine = new DenyOverrideAlg();
-        engine.engineInitialize("chain name", authzConfig, chainConfig);
+    }
+
+    @Test
+    public void test1() throws Exception {
+
+        List<InterceptorConfig<MockPDPImpl>> pdps = new ArrayList<InterceptorConfig<MockPDPImpl>>();
+        MockPDPImpl p1 = new MockPDPImpl();
+        p1.setIssuer("Issuer1");
+        p1.setAccess(Arrays.asList("UserA"));
+        p1.setDenied(Arrays.asList("UserD"));
+        p1.setRequestAttrIssuer(this.reqAttrIssuer);
+        pdps.add(new InterceptorConfig<MockPDPImpl>("p1", p1));
+
+        MockPDPImpl p2 = new MockPDPImpl();
+        p2.setIssuer("Issuer2");
+        p2.setAccess(Arrays.asList("UserA"));
+        p2.setRequestAttrIssuer(this.reqAttrIssuer);
+        pdps.add(new InterceptorConfig<MockPDPImpl>("p2", p2));
+
+        MockPDPImpl p3 = new MockPDPImpl();
+        p3.setIssuer("Issuer3");
+        p3.setAccess(Arrays.asList("UserA"));
+        p3.setRequestAttrIssuer(this.reqAttrIssuer);
+        pdps.add(new InterceptorConfig<MockPDPImpl>("p3", p3));
+
+        // Permit
+        DenyOverrideAlg engine = new DenyOverrideAlg("chain name");
+
+        for (InterceptorConfig<MockPDPImpl> interceptor : pdps) {
+            engine.addPDP(interceptor);
+        }
+
+        engine.engineInitialize("chain name");
 
         // Try to get decision.
         Decision decision = engine.engineAuthorize(reqAttr, this.resourceOwner);
-        assert (decision != null);
-        assert (decision.isPermit());
+        assertNotNull(decision);
+        assertTrue(decision.isPermit());
+    }
 
-        // Deny
-        chainConfig = new MockChainConfig();
-        chainConfig.setProperty("p1", "issuer", "Issuer1");
-        chainConfig.setProperty("p1", "access", "UserA");
-        chainConfig.setProperty("p1", "denied", "UserD");
-        chainConfig.setProperty("p1", "reqIssuer", this.reqAttrIssuer);
-        chainConfig.setProperty("p2", "issuer", "Issuer2");
-        chainConfig.setProperty("p2", "access", "UserA");
-        chainConfig.setProperty("p2", "reqIssuer", this.reqAttrIssuer);
-        chainConfig.setProperty("p3", "issuer", "Issuer3");
-        chainConfig.setProperty("p3", "denied", "UserA");
-        chainConfig.setProperty("p3", "reqIssuer", this.reqAttrIssuer);
+    @Test
+    public void test2() throws Exception {
+        List<InterceptorConfig<MockPDPImpl>> pdps = new ArrayList<InterceptorConfig<MockPDPImpl>>();
 
+
+        MockPDPImpl p1 = new MockPDPImpl();
+        p1.setIssuer("Issuer1");
+        p1.setAccess(Arrays.asList("UserA"));
+        p1.setDenied(Arrays.asList("UserD"));
+        p1.setRequestAttrIssuer(this.reqAttrIssuer);
+        pdps.add(new InterceptorConfig<MockPDPImpl>("p1", p1));
+
+        MockPDPImpl p2 = new MockPDPImpl();
+        p2.setIssuer("Issuer2");
+        p2.setAccess(Arrays.asList("UserA"));
+        p2.setRequestAttrIssuer(this.reqAttrIssuer);
+        pdps.add(new InterceptorConfig<MockPDPImpl>("p2", p2));
+
+        MockPDPImpl p3 = new MockPDPImpl();
+        p3.setIssuer("Issuer3");
+        p3.setDenied(Arrays.asList("UserA"));
+        p3.setRequestAttrIssuer(this.reqAttrIssuer);
+        pdps.add(new InterceptorConfig<MockPDPImpl>("p3", p3));
+
+        DenyOverrideAlg engine1 = new DenyOverrideAlg("chain name");
+
+        for (InterceptorConfig<MockPDPImpl> interceptor : pdps) {
+            engine1.addPDP(interceptor);
+        }
         // Try to get decision
-        DenyOverrideAlg engine1 = new DenyOverrideAlg();
-        engine1.engineInitialize("chain name", authzConfig, chainConfig);
+        engine1.engineInitialize("chain name");
 
-        Decision decision1 = engine1.engineAuthorize(reqAttr,
-                this.resourceOwner);
-        assert (decision1 != null);
-        assert (decision1.isDeny());
+        Decision decision1 = engine1.engineAuthorize(reqAttr, this.resourceOwner);
+        assertNotNull(decision1);
+        assertTrue(decision1.isDeny());
+    }
+
+    @Test
+    public void test3() throws Exception {
+        List<InterceptorConfig<MockPDPImpl>> pdps = new ArrayList<InterceptorConfig<MockPDPImpl>>();
+
+        MockPDPImpl p1 = new MockPDPImpl();
+        p1.setIssuer("Issuer1");
+        p1.setAccess(Arrays.asList("UserC"));
+        p1.setDenied(Arrays.asList("UserD"));
+        p1.setRequestAttrIssuer(this.reqAttrIssuer);
+        pdps.add(new InterceptorConfig<MockPDPImpl>("p1", p1));
+
+        MockPDPImpl p2 = new MockPDPImpl();
+        p2.setIssuer("Issuer2");
+        p2.setAccess(Arrays.asList("UserC"));
+        p2.setRequestAttrIssuer(this.reqAttrIssuer);
+        pdps.add(new InterceptorConfig<MockPDPImpl>("p2", p2));
+
+        MockPDPImpl p3 = new MockPDPImpl();
+        p3.setIssuer("Issuer3");
+        p3.setAdmin(Arrays.asList("UserA"));
+        p3.setRequestAttrIssuer(this.reqAttrIssuer);
+        pdps.add(new InterceptorConfig<MockPDPImpl>("p3", p3));
+
 
         // indeterminate
-        chainConfig = new MockChainConfig();
-        chainConfig.setProperty("p1", "issuer", "Issuer1");
-        chainConfig.setProperty("p1", "access", "UserC");
-        chainConfig.setProperty("p1", "denied", "UserD");
-        chainConfig.setProperty("p1", "reqIssuer", this.reqAttrIssuer);
-        chainConfig.setProperty("p2", "issuer", "Issuer2");
-        chainConfig.setProperty("p2", "access", "UserC");
-        chainConfig.setProperty("p2", "reqIssuer", this.reqAttrIssuer);
-        chainConfig.setProperty("p3", "issuer", "Issuer3");
-        chainConfig.setProperty("p3", "admin", "UserA");
-        chainConfig.setProperty("p3", "reqIssuer", this.reqAttrIssuer);
 
         // Try to get decision
-        DenyOverrideAlg engine2 = new DenyOverrideAlg();
-        engine2.engineInitialize("chain name", authzConfig, chainConfig);
+        DenyOverrideAlg engine2 = new DenyOverrideAlg("chain name");
+        for (InterceptorConfig<MockPDPImpl> interceptor : pdps) {
+            engine2.addPDP(interceptor);
+        }
+        engine2.engineInitialize("chain name");
 
-        Decision decision2 = engine2.engineAuthorize(reqAttr,
-                this.resourceOwner);
-        assert (decision2 != null);
-        assert (decision2.getDecision() == Decision.INDETERMINATE);
+        Decision decision2 = engine2.engineAuthorize(reqAttr, this.resourceOwner);
+        assertNotNull(decision2);
+        assertEquals(decision2.getDecision(), Decision.INDETERMINATE);
     }
 }

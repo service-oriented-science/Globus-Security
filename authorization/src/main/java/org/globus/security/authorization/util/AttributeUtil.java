@@ -1,28 +1,40 @@
 /*
- * Copyright 1999-2006 University of Chicago
+ * Copyright 1999-2010 University of Chicago
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License.  You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS,WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied.
+ *
+ * See the License for the specific language governing permissions and limitations under the License.
  */
 package org.globus.security.authorization.util;
 
-import java.util.List;
-
+import org.globus.security.authorization.AttributeIdentifier;
+import org.globus.security.authorization.Constants;
 import org.globus.security.authorization.EntityAttributes;
+
+import java.util.List;
 
 /**
  * Fill Me
  */
 public final class AttributeUtil {
+
+    public static AttributeIdentifier getPeerSubjectAttrIdentifier() {
+
+        return new AttributeIdentifier(Constants.SUBJECT_ATTRIBUTE_ID, Constants.SUBJECT_DATATYPE_URI, true);
+    }
+
+    public static AttributeIdentifier getPrincipalIdentifier() {
+
+        return new AttributeIdentifier(Constants.PRINCIPAL_ATTRIBUTE_ID, Constants.PRINCIPAL_DATATYPE_URI, true);
+    }
+
 
     private AttributeUtil() {
         //this should not be initialized.
@@ -32,7 +44,7 @@ public final class AttributeUtil {
      * Fill Me
      *
      * @param attributeList Fill Me
-     * @param entityAttr Fill Me
+     * @param entityAttr    Fill Me
      * @return Fill Me
      */
     public static EntityAttributes getMatchedEntity(List attributeList, EntityAttributes entityAttr) {

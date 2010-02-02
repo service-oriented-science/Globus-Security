@@ -137,7 +137,7 @@ public class AttributeCollection implements Serializable {
      * Returns all attributes with the given AttributeIdenitfier. The
      * attributes may not have same issuer.
      */
-    public Collection getAttributes(AttributeIdentifier identifier) {
+    public Collection<Attribute> getAttributes(AttributeIdentifier identifier) {
         Map<EntityAttributes, Attribute> attrMap = getAttributeMap(identifier);
         if (attrMap != null) {
             return attrMap.values();

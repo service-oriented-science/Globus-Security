@@ -1,29 +1,24 @@
 /*
- * Copyright 1999-2006 University of Chicago
+ * Copyright 1999-2010 University of Chicago
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License.  You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS,WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied.
+ *
+ * See the License for the specific language governing permissions and limitations under the License.
  */
 package org.globus.security.authorization.providers;
 
-import org.globus.security.authorization.AuthorizationException;
-import org.globus.security.authorization.Decision;
-import org.globus.security.authorization.EntityAttributes;
-import org.globus.security.authorization.PDPInterceptor;
-import org.globus.security.authorization.RequestEntities;
+import org.globus.security.authorization.*;
 import org.globus.security.authorization.util.I18nUtil;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 /**
  * This combining algorithm returns the first permit or return decision returned
  * by the list of configuired PDPs. Steps:
@@ -45,19 +40,23 @@ public class FirstApplicableAlg extends AbstractEngine {
     private static Logger logger =
             LoggerFactory.getLogger(FirstApplicableAlg.class.getName());
 
+    public FirstApplicableAlg(String chainName) {
+        super(chainName);
+    }
+
     public Decision engineAuthorize(RequestEntities reqAttr, EntityAttributes resourceOwner)
-        throws AuthorizationException {
+            throws AuthorizationException {
 
         collectAttributes(reqAttr);
 
-        if ((this.pdps == null) || (this.pdps.length < 1)) {
+        if ((getPdps() == null) || (this.getPdps().isEmpty())) {
             String err = i18n.getMessage("noPDPs");
             logger.error(err);
             throw new AuthorizationException(err);
         }
 
-        for (PDPInterceptor pdp : this.pdps) {
-            Decision decision = pdp.canAccess(reqAttr, this.nonReqEntities);
+        for (PDPInterceptor pdp : this.getPdps()) {
+            Decision decision = pdp.canAccess(reqAttr, this.getNonReqEntities());
 
             if (decision == null) {
                 continue;
