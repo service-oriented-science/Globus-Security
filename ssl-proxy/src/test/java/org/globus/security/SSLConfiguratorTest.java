@@ -16,6 +16,7 @@
 package org.globus.security;
 
 import org.globus.security.filestore.FileBasedKeyStoreParameters;
+import org.globus.security.provider.FileBasedKeyStore;
 import org.globus.security.provider.GlobusProvider;
 import org.globus.security.resources.ResourceCertStoreParameters;
 import org.globus.security.resources.ResourceSigningPolicyStore;
@@ -45,6 +46,21 @@ import static org.testng.Assert.assertEquals;
 @Test
 public class SSLConfiguratorTest {
 
+    public static final String POLICY_LOCATION = "/Users/ranantha/.globus/certificates";
+    //    public static final String KEY_STORE = "/keystore.jks";
+    public static final String KEY_STORE = "/myKeystore";
+    //    public static final String TRUST_STORE = "/cacerts.jks";
+    public static final String TRUST_STORE = "/myTruststore";
+    public static final String CRL_TRUST_STORE = "/Users/ranantha/.globus/certificates";
+    public static final String KEY_PASSWORD = "password";
+
+    public String policyLocation = POLICY_LOCATION;
+    public String keyStore = KEY_STORE;
+    public String trustStore = TRUST_STORE;
+    public String crlTrustStore = CRL_TRUST_STORE;
+    public String keyPassword = KEY_PASSWORD;
+
+
     private SSLSocket sslsocket;
     private SSLServerSocket serverSocket;
     private CountDownLatch latch = new CountDownLatch(1);
@@ -57,23 +73,27 @@ public class SSLConfiguratorTest {
 
     @Test
     public void testConfig() throws Exception {
-        KeyStore keyStore = KeyStore.getInstance(GlobusProvider.KEYSTORE_TYPE, GlobusProvider.PROVIDER_NAME);
 
-        FileBasedKeyStoreParameters keyParams = new FileBasedKeyStoreParameters(
-                "classpath:/testTrustStore/*.0,classpath:/testTrustStore/*.9", "file:/tmp",
-                "classpath:/testTrustStore/ca.9", "classpath:/testTrustStore/private.pem", null);
-
-        keyStore.load(keyParams);
-
-        ResourceCertStoreParameters certParams = new ResourceCertStoreParameters("classpath:/testTrustStore/*.r*");
-        CertStore certStore = CertStore.getInstance(GlobusProvider.CERTSTORE_TYPE, certParams);
-        ResourceSigningPolicyStoreParameters policyParams = new ResourceSigningPolicyStoreParameters(
-                "classpath:/testTrustStore/*.signing_policy");
-        ResourceSigningPolicyStore policyStore = new ResourceSigningPolicyStore(policyParams);
         SSLConfigurator config = new SSLConfigurator();
-        config.setCertStore(certStore);
-        config.setTrustStore(keyStore);
+
+        ResourceCertStoreParameters params = new ResourceCertStoreParameters();
+        config.setCertStoreParams(params);
+        config.setCertStoreType(GlobusProvider.CERTSTORE_TYPE);
+
+        config.setKeyStoreLocation("classpath:/mykeystore.properties");
+        config.setKeyStorePassword(null);
+        config.setKeyStoreType(GlobusProvider.KEYSTORE_TYPE);
+
+        config.setTrustStoreLocation("classpath:/mytruststore.properties");
+        config.setTrustStorePassword(null);
+        config.setTrustStoreType(GlobusProvider.KEYSTORE_TYPE);
+
+        ResourceSigningPolicyStoreParameters policyParams = new ResourceSigningPolicyStoreParameters(
+                "classpath:/TestCA1.signing_policy");
+        ResourceSigningPolicyStore policyStore = new ResourceSigningPolicyStore(policyParams);
+
         config.setPolicyStore(policyStore);
+
         serverSocket = startServer(config);
         latch.await();
         sslsocket = runClient(config);

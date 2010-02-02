@@ -51,8 +51,7 @@ public class TestFileBasedTrustAnchor {
 
         String tempFileURL = this.testCert1.getURL().toExternalForm();
 
-        ResourceTrustAnchor fileAnchor =
-                new ResourceTrustAnchor("classpath:/certificateUtilTest/1c3f2ca8.0");
+        ResourceTrustAnchor fileAnchor = new ResourceTrustAnchor("classpath:/certificateUtilTest/1c3f2ca8.0");
 
 //        assert (fileAnchor != null);
 

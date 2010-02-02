@@ -197,7 +197,8 @@ public class SSLConfigurator {
                     tmpKeyStore = KeyStore.getInstance(keyStoreType, provider);
                 }
                 InputStream keyStoreInput = resourceResolver.getResource(this.keyStoreLocation).getInputStream();
-                tmpKeyStore.load(keyStoreInput, this.keyStorePassword.toCharArray());
+                tmpKeyStore.load(keyStoreInput, this.keyStorePassword == null ? null :
+                        this.keyStorePassword.toCharArray());
             } catch (KeyStoreException e) {
                 throw new GlobusSSLConfigurationException(e);
             } catch (IOException e) {
