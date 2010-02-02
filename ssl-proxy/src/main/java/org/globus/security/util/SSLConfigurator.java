@@ -45,6 +45,7 @@ public class SSLConfigurator {
     private String protocol = "TLS";
     private String secureRandomAlgorithm;
 
+    private KeyStore keyStore;
     private KeyStore trustStore;
     private CertStore certStore;
     private SigningPolicyStore policyStore;
@@ -119,7 +120,7 @@ public class SSLConfigurator {
 
     private X509ProxyCertPathParameters getCertPathParameters() throws GlobusSSLConfigurationException {
         X509ProxyCertPathParameters parameters;
-        KeyStore inputKeyStore = findKeyStore();
+        KeyStore inputKeyStore = findTrustStore();
         CertStore inputCertStore = findCertStore();
         if (handlers == null) {
             parameters = new X509ProxyCertPathParameters(inputKeyStore, inputCertStore, this.policyStore,
@@ -186,8 +187,36 @@ public class SSLConfigurator {
         return certStoreToReturn;
     }
 
+    private KeyStore findTrustStore() throws GlobusSSLConfigurationException {
+        KeyStore tmpTrustStore = this.trustStore;
+        if(tmpTrustStore == null){
+            try {
+                PathMatchingResourcePatternResolver resourceResolver = new PathMatchingResourcePatternResolver();
+                if (provider == null) {
+                    tmpTrustStore = KeyStore.getInstance(this.trustStoreType);
+                } else {
+                    tmpTrustStore = KeyStore.getInstance(this.trustStoreType, this.provider);
+                }
+                InputStream keyStoreInput = resourceResolver.getResource(this.trustStoreLocation).getInputStream();
+                tmpTrustStore.load(keyStoreInput, this.trustStorePassword == null ? null :
+                        this.trustStorePassword.toCharArray());
+            } catch (KeyStoreException e) {
+                throw new GlobusSSLConfigurationException(e);
+            } catch (IOException e) {
+                throw new GlobusSSLConfigurationException(e);
+            } catch (NoSuchAlgorithmException e) {
+                throw new GlobusSSLConfigurationException(e);
+            } catch (CertificateException e) {
+                throw new GlobusSSLConfigurationException(e);
+            } catch (NoSuchProviderException e) {
+                throw new GlobusSSLConfigurationException(e);
+            }
+        }
+        return tmpTrustStore;
+    }
+
     private KeyStore findKeyStore() throws GlobusSSLConfigurationException {
-        KeyStore tmpKeyStore = this.trustStore;
+        KeyStore tmpKeyStore = this.keyStore;
         if (tmpKeyStore == null) {
             try {
                 PathMatchingResourcePatternResolver resourceResolver = new PathMatchingResourcePatternResolver();

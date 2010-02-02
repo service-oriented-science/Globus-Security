@@ -323,7 +323,7 @@ public class SigningPolicyFileParser {
         if (tokenizer.countTokens() < MIN_TOKENS_PER_LINE) {
             // String err = i18n.getMessage("invalidTokens", line);
             String err = "invalidTokens";
-            throw new SigningPolicyException(err);
+            throw new SigningPolicyException(err + " on line \"" + trimmedLine + "\"");
         }
 
         for (String allowedLineStart : ALLOWED_LINE_START) {

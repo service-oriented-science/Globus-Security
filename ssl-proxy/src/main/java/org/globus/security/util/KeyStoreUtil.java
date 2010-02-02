@@ -53,11 +53,9 @@ public final class KeyStoreUtil {
             if (keyStore.isCertificateEntry(alias)) {
                 // If a specific impl of keystore requires refresh, this would be a
                 // good place to add it.
-                Certificate certificate =
-                        keyStore.getCertificate(alias);
+                Certificate certificate = keyStore.getCertificate(alias);
                 if (certificate instanceof X509Certificate) {
-                    X509Certificate x509Cert =
-                            (X509Certificate) certificate;
+                    X509Certificate x509Cert = (X509Certificate) certificate;
                     if (selector.match(certificate)) {
                         certificates.add(x509Cert);
                     }

@@ -125,8 +125,7 @@ public final class TrustedCertPathFinder {
             throw new CertPathValidatorException(e);
         }
         if (caCerts.size() < 1) {
-            throw new CertPathValidatorException(
-                    "No trusted path can be constructed");
+            throw new CertPathValidatorException("No trusted path can be constructed");
         }
 
         trustedCertPath.add(x509Certificate);

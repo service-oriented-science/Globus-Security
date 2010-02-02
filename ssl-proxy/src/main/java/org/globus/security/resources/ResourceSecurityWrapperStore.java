@@ -63,6 +63,11 @@ public abstract class ResourceSecurityWrapperStore<T extends AbstractResourceSec
         Set<V> updatedList = new HashSet<V>();
         boolean changed = false;
         Map<String, T> newWrapperMap = new HashMap<String, T>();
+        if (locationPattern == null) {
+            this.rootObjects = updatedList;
+            this.wrapperMap = newWrapperMap;
+            return;
+        }
         if (locationPattern.indexOf(",") >= 0) {
             String[] locationPatterns = locationPattern.split(",");
             boolean tmpChanged = false;
