@@ -12,16 +12,20 @@
  *
  * See the License for the specific language governing permissions and limitations under the License.
  */
-package org.globus.security.authorization;
 
-import java.io.Serializable;
+package org.globus.security.authorization.xml;
+
+import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
- * Fill Me
+ * Created by IntelliJ IDEA.
+ * User: turtlebender
+ * Date: Jan 26, 2010
+ * Time: 12:57:55 PM
+ * To change this template use File | Settings | File Templates.
  */
-public interface Interceptor extends Serializable {
-
-    void initialize(String chainName, String prefix) throws InitializeException;
-
-    void close() throws CloseException;
+public class ServiceSecDescHandler extends NamespaceHandlerSupport {
+    public void init() {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
 }

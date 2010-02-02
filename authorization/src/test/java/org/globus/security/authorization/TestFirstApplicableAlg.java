@@ -1,26 +1,25 @@
 /*
- * Copyright 1999-2006 University of Chicago
+ * Copyright 1999-2010 University of Chicago
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License.  You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS,WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied.
+ *
+ * See the License for the specific language governing permissions and limitations under the License.
  */
 package org.globus.security.authorization;
 
+import org.globus.security.authorization.providers.FirstApplicableAlg;
+import org.testng.annotations.Test;
+
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Iterator;
-
-import org.globus.security.authorization.providers.FirstApplicableAlg;
-
-import org.testng.annotations.Test;
 
 public class TestFirstApplicableAlg {
 
@@ -29,11 +28,11 @@ public class TestFirstApplicableAlg {
 
     @Test
     public void testFirstApplicable() throws Exception {
+        FirstApplicableAlg engine = new FirstApplicableAlg("chain name");
 
         // resource owner
         AttributeIdentifier attrIden = MockPDPImpl.getTestUserAttrIdentifier();
-        Attribute resourceOwnerAttr = new Attribute(attrIden, null,
-                Calendar.getInstance(), null);
+        Attribute resourceOwnerAttr = new Attribute(attrIden, null, Calendar.getInstance(), null);
         IdentityAttributeCollection attrCol = new IdentityAttributeCollection();
         attrCol.add(resourceOwnerAttr);
 
@@ -47,25 +46,24 @@ public class TestFirstApplicableAlg {
         this.reqAttrIssuer = new EntityAttributes(attrCol);
 
 
-        InterceptorConfig[] pdps = new InterceptorConfig[3];
-        pdps[0] = new InterceptorConfig("p1", MockPDPImpl.class.getName());
-        pdps[1] = new InterceptorConfig("p2", MockPDPImpl.class.getName());
-        pdps[2] = new InterceptorConfig("p3", MockPDPImpl.class.getName());
-        AuthorizationConfig authzConfig = new AuthorizationConfig(null, null,
-                pdps);
+        MockPDPImpl p1 = new MockPDPImpl();
+        p1.setIssuer("Issuer1");
+        p1.setAccess(Arrays.asList("UserC"));
+        p1.setDenied(Arrays.asList("UserD"));
+        p1.setRequestAttrIssuer(this.reqAttrIssuer);
+        engine.addPDP(new InterceptorConfig<MockPDPImpl>("p1", p1));
 
-        // Permit
-        ChainConfig chainConfig = new MockChainConfig();
-        chainConfig.setProperty("p1", "issuer", "Issuer1");
-        chainConfig.setProperty("p1", "access", "UserC");
-        chainConfig.setProperty("p1", "denied", "UserD");
-        chainConfig.setProperty("p1", "reqIssuer", this.reqAttrIssuer);
-        chainConfig.setProperty("p2", "issuer", "Issuer2");
-        chainConfig.setProperty("p2", "access", "UserA");
-        chainConfig.setProperty("p2", "reqIssuer", this.reqAttrIssuer);
-        chainConfig.setProperty("p3", "issuer", "Issuer3");
-        chainConfig.setProperty("p3", "denied", "UserA");
-        chainConfig.setProperty("p3", "reqIssuer", this.reqAttrIssuer);
+        MockPDPImpl p2 = new MockPDPImpl();
+        p2.setIssuer("Issuer2");
+        p2.setAccess(Arrays.asList("UserA"));
+        p2.setRequestAttrIssuer(this.reqAttrIssuer);
+        engine.addPDP(new InterceptorConfig<MockPDPImpl>("p2", p2));
+
+        MockPDPImpl p3 = new MockPDPImpl();
+        p3.setIssuer("Issuer3");
+        p3.setDenied(Arrays.asList("Issuer3"));
+        p3.setRequestAttrIssuer(this.reqAttrIssuer);
+        engine.addPDP(new InterceptorConfig<MockPDPImpl>("p3", p3));
 
         // Requestor userA
         Attribute attr = new Attribute(attrIden, this.reqAttrIssuer,
@@ -77,8 +75,6 @@ public class TestFirstApplicableAlg {
         RequestEntities reqAttr =
                 new RequestEntities(requestor, null, null, null);
 
-        FirstApplicableAlg engine = new FirstApplicableAlg();
-        engine.engineInitialize("chain name", authzConfig, chainConfig);
 
         // Try to get decision.
         Decision decision = engine.engineAuthorize(reqAttr, this.resourceOwner);
@@ -99,22 +95,30 @@ public class TestFirstApplicableAlg {
                 .iterator().next());
         assert ("Issuer2".equals(retIssuerVal));
 
-        // Deny
-        chainConfig = new MockChainConfig();
-        chainConfig.setProperty("p1", "issuer", "Issuer1");
-        chainConfig.setProperty("p1", "access", "UserC");
-        chainConfig.setProperty("p1", "denied", "UserD");
-        chainConfig.setProperty("p1", "reqIssuer", this.reqAttrIssuer);
-        chainConfig.setProperty("p2", "issuer", "Issuer2");
-        chainConfig.setProperty("p2", "access", "UserC");
-        chainConfig.setProperty("p2", "reqIssuer", this.reqAttrIssuer);
-        chainConfig.setProperty("p3", "issuer", "Issuer3");
-        chainConfig.setProperty("p3", "denied", "UserA");
-        chainConfig.setProperty("p3", "reqIssuer", this.reqAttrIssuer);
+
+        FirstApplicableAlg engine1 = new FirstApplicableAlg("chain name");
+
+        p1 = new MockPDPImpl();
+        p1.setIssuer("Issuer1");
+        p1.setAccess(Arrays.asList("UserC"));
+        p1.setDenied(Arrays.asList("UserD"));
+        p1.setRequestAttrIssuer(this.reqAttrIssuer);
+        engine1.addPDP(new InterceptorConfig<MockPDPImpl>("p1", p1));
+
+        p2 = new MockPDPImpl();
+        p2.setIssuer("Issuer2");
+        p2.setAccess(Arrays.asList("UserC"));
+        p2.setRequestAttrIssuer(this.reqAttrIssuer);
+        engine1.addPDP(new InterceptorConfig<MockPDPImpl>("p2", p2));
+
+        p3 = new MockPDPImpl();
+        p3.setIssuer("Issuer3");
+        p3.setDenied(Arrays.asList("UserA"));
+        p3.setRequestAttrIssuer(this.reqAttrIssuer);
+        engine1.addPDP(new InterceptorConfig<MockPDPImpl>("p3", p3));
 
         // Try to get decision
-        FirstApplicableAlg engine1 = new FirstApplicableAlg();
-        engine1.engineInitialize("chain name", authzConfig, chainConfig);
+        engine1.engineInitialize("chain name");
 
         Decision decision1 = engine1.engineAuthorize(reqAttr,
                 this.resourceOwner);
@@ -135,22 +139,31 @@ public class TestFirstApplicableAlg {
                 .iterator().next());
         assert ("Issuer3".equals(retIssuerVal1));
 
+        FirstApplicableAlg engine2 = new FirstApplicableAlg("chain name");
+
+
         // indeterminate
-        chainConfig = new MockChainConfig();
-        chainConfig.setProperty("p1", "issuer", "Issuer1");
-        chainConfig.setProperty("p1", "access", "UserC");
-        chainConfig.setProperty("p1", "denied", "UserD");
-        chainConfig.setProperty("p1", "reqIssuer", this.reqAttrIssuer);
-        chainConfig.setProperty("p2", "issuer", "Issuer2");
-        chainConfig.setProperty("p2", "access", "UserC");
-        chainConfig.setProperty("p2", "reqIssuer", this.reqAttrIssuer);
-        chainConfig.setProperty("p3", "issuer", "Issuer3");
-        chainConfig.setProperty("p3", "admin", "UserA");
-        chainConfig.setProperty("p3", "reqIssuer", this.reqAttrIssuer);
+        p1 = new MockPDPImpl();
+        p1.setIssuer("Issuer1");
+        p1.setAccess(Arrays.asList("UserC"));
+        p1.setDenied(Arrays.asList("UserD"));
+        p1.setRequestAttrIssuer(this.reqAttrIssuer);
+        engine2.addPDP(new InterceptorConfig<MockPDPImpl>("p1", p1));
+
+        p2 = new MockPDPImpl();
+        p2.setIssuer("Issuer2");
+        p2.setAccess(Arrays.asList("UserC"));
+        p2.setRequestAttrIssuer(this.reqAttrIssuer);
+        engine2.addPDP(new InterceptorConfig<MockPDPImpl>("p2", p2));
+
+        p3 = new MockPDPImpl();
+        p3.setIssuer("Issuer3");
+        p3.setAdmin(Arrays.asList("UserA"));
+        p3.setRequestAttrIssuer(this.reqAttrIssuer);
+        engine2.addPDP(new InterceptorConfig<MockPDPImpl>("p3", p3));
 
         // Try to get decision
-        FirstApplicableAlg engine2 = new FirstApplicableAlg();
-        engine2.engineInitialize("chain name", authzConfig, chainConfig);
+        engine2.engineInitialize("chain name");
 
         Decision decision2 = engine2.engineAuthorize(reqAttr,
                 this.resourceOwner);
