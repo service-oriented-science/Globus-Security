@@ -14,13 +14,14 @@
  */
 package org.globus.security.filestore;
 
+import org.globus.crux.security.util.DirSetupUtil;
 import org.globus.security.SigningPolicy;
 import org.globus.security.SigningPolicyStore;
 import org.globus.security.SigningPolicyStoreParameters;
 import org.globus.security.provider.GlobusProvider;
-import org.globus.security.resources.ResourceCertStoreParameters;
-import org.globus.security.resources.ResourceSigningPolicyStore;
-import org.globus.security.resources.ResourceSigningPolicyStoreParameters;
+import org.globus.security.stores.ResourceCertStoreParameters;
+import org.globus.security.stores.ResourceSigningPolicyStore;
+import org.globus.security.stores.ResourceSigningPolicyStoreParameters;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -66,10 +67,10 @@ public class TestFileBasedTrustStore {
         });
         this.dir.createTempDirectory();
         this.dir.copy();
-        parameters = new ResourceCertStoreParameters("classpath:/testTrustStore/*.0,classpath:/testTrustStore/*.9");
-        crlParameters = new ResourceCertStoreParameters("classpath:/testTrustStore/*.r*");
+        parameters = new ResourceCertStoreParameters("classpath:/testTrustStore/*.0,classpath:/testTrustStore/*.9", null);
+        crlParameters = new ResourceCertStoreParameters(null, "classpath:/testTrustStore/*.r*");
         policyParameters = new ResourceSigningPolicyStoreParameters("classpath:/testTrustStore/*.signing_policy");
-        directoryParameters = new ResourceCertStoreParameters(new String[]{dir.getTempDirectory().getAbsolutePath()});
+        directoryParameters = new ResourceCertStoreParameters("file:" + dir.getTempDirectory().getAbsolutePath() + "/*.0", null);
         Security.addProvider(new GlobusProvider());
     }
 
@@ -79,14 +80,13 @@ public class TestFileBasedTrustStore {
 
 
         File tempDir = this.dir.getTempDirectory();
+
         // number of CA files
-        String[] caFiles =
-                tempDir.list(new TrustAnchorFilter());
+        String[] caFiles = tempDir.list(new TrustAnchorFilter());
 
 
         // Get comparison parameters
-        this.certStore = CertStore.getInstance("PEMFilebasedCertStore",
-                parameters);
+        this.certStore = CertStore.getInstance("PEMFilebasedCertStore", parameters);
 
         assert certStore != null;
 
@@ -123,8 +123,7 @@ public class TestFileBasedTrustStore {
         assert certStore != null;
 
 
-        this.trustAnchors =
-                certStore.getCertificates(new X509CertSelector());
+        this.trustAnchors = certStore.getCertificates(new X509CertSelector());
 
         assert trustAnchors != null;
 
@@ -165,13 +164,11 @@ public class TestFileBasedTrustStore {
 
         File tempDir = this.dir.getTempDirectory();
         // number of CRL files
-        String[] crlFiles =
-                tempDir.list(new CrlFilter());
+        String[] crlFiles = tempDir.list(new CrlFilter());
 
 
         // Get comparison parameters
-        this.certStore = CertStore.getInstance("PEMFilebasedCertStore",
-                crlParameters);
+        this.certStore = CertStore.getInstance("PEMFilebasedCertStore", crlParameters);
 
         assert certStore != null;
 

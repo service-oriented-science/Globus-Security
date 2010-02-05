@@ -16,6 +16,7 @@
 package org.globus.security.jetty;
 
 
+import org.globus.security.provider.GlobusProvider;
 import org.globus.security.util.SSLConfigurator;
 import org.mortbay.io.EndPoint;
 import org.mortbay.io.bio.SocketEndPoint;
@@ -32,6 +33,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.security.Security;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,14 +43,17 @@ import java.util.List;
  * This is an implementation of the SslSocketConnector from Jetty, which allows a bit more sophisticated configuration,
  * specifically, it allows an SSLConfigurator to be used to configure the SSLServerSocketFactory.
  *
- * @version ${version}
+ * @version 1.0
  * @since 1.0
  */
 public class GlobusSslSocketConnector extends SocketConnector {
     private static final String CACHED_INFO_ATTR = CachedInfo.class.getName();
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    static {
+        Security.addProvider(new GlobusProvider());
+    }
 
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     private SSLConfigurator sslConfigurator;
 
@@ -146,15 +151,6 @@ public class GlobusSslSocketConnector extends SocketConnector {
 
     public void setSecureRandomAlgorithm(String secureRandomAlgorithm) {
         sslConfigurator.setSecureRandomAlgorithm(secureRandomAlgorithm);
-    }
-
-
-    public String getSslKeyManagerFactoryAlgorithm() {
-        return sslConfigurator.getSslKeyManagerFactoryAlgorithm();
-    }
-
-    public void setSslKeyManagerFactoryAlgorithm(String sslKeyManagerFactoryAlgorithm) {
-        sslConfigurator.setSslKeyManagerFactoryAlgorithm(sslKeyManagerFactoryAlgorithm);
     }
 
     public int getHandshakeTimeout() {

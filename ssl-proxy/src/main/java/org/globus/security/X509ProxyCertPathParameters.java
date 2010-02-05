@@ -34,43 +34,40 @@ import java.util.Map;
 public class X509ProxyCertPathParameters implements CertPathParameters {
 
     // For trusted CAs
-    private KeyStore keyStore;
+    private KeyStore trustStore;
     // For CRLs
-    private CertStore certStore;
+    private CertStore crlStore;
     // For signing policy
     private SigningPolicyStore policyStore;
     private boolean rejectLimitedProxy;
     private Map<String, ProxyPolicyHandler> handlers;
 
-    public X509ProxyCertPathParameters(
-            KeyStore initKeyStore,
-            CertStore initCertStore,
-            SigningPolicyStore initPolicyStore,
-            boolean initRejectLimitedProxy) {
-        this(initKeyStore, initCertStore, initPolicyStore, initRejectLimitedProxy, null);
+    public X509ProxyCertPathParameters(KeyStore initTrustStore, CertStore initCRLStore,
+                                       SigningPolicyStore initPolicyStore, boolean initRejectLimitedProxy) {
+        this(initTrustStore, initCRLStore, initPolicyStore, initRejectLimitedProxy, null);
     }
 
 
-    public X509ProxyCertPathParameters(KeyStore initKeyStore, CertStore initCertStore,
+    public X509ProxyCertPathParameters(KeyStore initTrustStore, CertStore initCRLStore,
                                        SigningPolicyStore initPolicyStore, boolean initRejectLimitedProxy,
                                        Map<String, ProxyPolicyHandler> initHandlers) {
 
-        if ((initKeyStore == null) || (initCertStore == null) || (initPolicyStore == null)) {
+        if ((initTrustStore == null) || (initCRLStore == null) || (initPolicyStore == null)) {
             throw new IllegalArgumentException();
         }
-        this.keyStore = initKeyStore;
-        this.certStore = initCertStore;
+        this.trustStore = initTrustStore;
+        this.crlStore = initCRLStore;
         this.policyStore = initPolicyStore;
         this.rejectLimitedProxy = initRejectLimitedProxy;
         this.handlers = initHandlers;
     }
 
-    public KeyStore getKeyStore() {
-        return this.keyStore;
+    public KeyStore getTrustStore() {
+        return this.trustStore;
     }
 
-    public CertStore getCertStore() {
-        return this.certStore;
+    public CertStore getCrlStore() {
+        return this.crlStore;
     }
 
     public SigningPolicyStore getSigningPolicyStore() {
@@ -93,12 +90,9 @@ public class X509ProxyCertPathParameters implements CertPathParameters {
      */
     public Object clone() {
         try {
-            X509ProxyCertPathParameters clone =
-                    (X509ProxyCertPathParameters) super.clone();
-            return clone;
+            return super.clone();
         } catch (CloneNotSupportedException e) {
             throw new InternalError(e.toString());
-
         }
     }
 }

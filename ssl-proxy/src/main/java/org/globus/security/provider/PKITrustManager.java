@@ -112,7 +112,7 @@ public class PKITrustManager implements X509TrustManager {
     public X509Certificate[] getAcceptedIssuers() {
         try {
             Collection<X509Certificate> trusted = CertificateLoadUtil.getTrustedCertificates(
-                    this.parameters.getKeyStore(), null);
+                    this.parameters.getTrustStore(), null);
             return trusted.toArray(new X509Certificate[trusted.size()]);
         } catch (KeyStoreException e) {
             logger.warn(
@@ -132,12 +132,10 @@ public class PKITrustManager implements X509TrustManager {
 
     // FIXME: THis is super naive, fix it.
 
-    private CertPath getCertPath(X509Certificate[] certs)
-            throws CertificateException {
+    private CertPath getCertPath(X509Certificate[] certs) throws CertificateException {
 
         CertificateFactory factory = CertificateFactory.getInstance("X.509");
-        List<X509Certificate> certList =
-                new Vector<X509Certificate>(certs.length);
+        List<X509Certificate> certList = new Vector<X509Certificate>(certs.length);
         certList.addAll(Arrays.asList(certs));
         CertPath certPath = factory.generateCertPath(certList);
         logger.debug("CertPath: {}", certPath.toString());

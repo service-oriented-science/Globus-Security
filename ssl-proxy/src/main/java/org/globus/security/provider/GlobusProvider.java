@@ -14,7 +14,7 @@
  */
 package org.globus.security.provider;
 
-import org.globus.security.resources.ResourceCertStore;
+import org.globus.security.stores.ResourceCertStore;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;

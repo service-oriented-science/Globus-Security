@@ -14,7 +14,8 @@
  */
 package org.globus.security.filestore;
 
-import org.globus.security.resources.ResourceTrustAnchor;
+import org.globus.crux.security.util.FileSetupUtil;
+import org.globus.security.stores.ResourceTrustAnchor;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;

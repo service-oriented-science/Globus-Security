@@ -113,8 +113,8 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
                     + " required");
         }
         X509ProxyCertPathParameters parameters = (X509ProxyCertPathParameters) params;
-        this.keyStore = parameters.getKeyStore();
-        this.certStore = parameters.getCertStore();
+        this.keyStore = parameters.getTrustStore();
+        this.certStore = parameters.getCrlStore();
         this.policyStore = parameters.getSigningPolicyStore();
         this.rejectLimitedProxy = parameters.isRejectLimitedProxy();
         this.policyHandlers = parameters.getPolicyHandlers();

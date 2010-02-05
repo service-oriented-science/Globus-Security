@@ -13,15 +13,19 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package org.globus.security.resources;
+package org.globus.security.stores;
 
 /**
- * Created by IntelliJ IDEA.
- * User: turtlebender
- * Date: Jan 6, 2010
- * Time: 1:25:44 PM
- * To change this template use File | Settings | File Templates.
+ * Fill Me
+ *
+ * @param <T> The type of security object to be wrapped
  */
-public interface Storable {
-    void store() throws ResourceStoreException;
+public interface SecurityObjectWrapper<T> {
+    void refresh() throws ResourceStoreException;
+
+    T getSecurityObject() throws ResourceStoreException;
+
+    String getAlias();
+
+    boolean hasChanged();
 }

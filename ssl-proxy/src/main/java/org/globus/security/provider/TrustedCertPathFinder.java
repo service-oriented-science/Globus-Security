@@ -42,8 +42,7 @@ public final class TrustedCertPathFinder {
         certSelector.setCertificate(x509Certificate);
         Collection<? extends Certificate> caCerts;
         try {
-            caCerts = KeyStoreUtil
-                    .getTrustedCertificates(keyStore, certSelector);
+            caCerts = KeyStoreUtil.getTrustedCertificates(keyStore, certSelector);
         } catch (KeyStoreException e) {
             throw new CertPathValidatorException(
                     "Error accessing trusted certificate store", e);
@@ -55,8 +54,7 @@ public final class TrustedCertPathFinder {
             // such that signature is validated.
             // trusted certificate found. return.
             try {
-                CertificateFactory certFac =
-                        CertificateFactory.getInstance("X.509");
+                CertificateFactory certFac = CertificateFactory.getInstance("X.509");
                 return certFac.generateCertPath(trustedCertPath);
             } catch (CertificateException e) {
                 throw new CertPathValidatorException(
@@ -133,16 +131,16 @@ public final class TrustedCertPathFinder {
         trustedCertPath.add((X509Certificate) caCerts.iterator().next());
 
         try {
-            CertificateFactory certFac =
-                    CertificateFactory.getInstance("X.509");
+            CertificateFactory certFac = CertificateFactory.getInstance("X.509");
             return certFac.generateCertPath(trustedCertPath);
         } catch (CertificateException e) {
-            throw new CertPathValidatorException(
-                    "Error generating trusted certificate path", e);
+            throw new CertPathValidatorException("Error generating trusted certificate path", e);
         }
     }
 
-    private static X509Certificate checkCertificate(List<X509Certificate> trustedCertPath, X509Certificate x509Certificate, Certificate issuerCertificate) throws CertPathValidatorException {
+    private static X509Certificate checkCertificate(List<X509Certificate> trustedCertPath,
+                                                    X509Certificate x509Certificate, Certificate issuerCertificate)
+            throws CertPathValidatorException {
         X509Certificate x509IssuerCertificate = (X509Certificate) issuerCertificate;
 
         // check that the next one is indeed issuer

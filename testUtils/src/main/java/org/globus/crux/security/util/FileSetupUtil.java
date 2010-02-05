@@ -12,7 +12,7 @@
  *
  * See the License for the specific language governing permissions and limitations under the License.
  */
-package org.globus.security.filestore;
+package org.globus.crux.security.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

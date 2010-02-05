@@ -20,20 +20,15 @@ import org.globus.security.X509ProxyCertPathParameters;
 import org.globus.security.provider.PKITrustManager;
 import org.globus.security.provider.X509ProxyCertPathValidator;
 import org.globus.security.proxyExtension.ProxyPolicyHandler;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import javax.net.ssl.*;
-import java.io.IOException;
-import java.io.InputStream;
 import java.security.*;
 import java.security.cert.CertStore;
-import java.security.cert.CertStoreParameters;
-import java.security.cert.CertificateException;
 import java.util.Map;
 
 /**
  * This class is used to configure and create SSL socket factories.  The factories can either be built by setting
- * the keyStore, certStore, trustStore and policyStore directly, or it can use the java security SPI mechanism.
+ * the credentialStore, crlStore, trustAnchorStore and policyStore directly, or it can use the java security SPI mechanism.
  * This is the simplest way to configure the globus ssl support.
  *
  * @version ${version}
@@ -45,25 +40,25 @@ public class SSLConfigurator {
     private String protocol = "TLS";
     private String secureRandomAlgorithm;
 
-    private KeyStore keyStore;
-    private KeyStore trustStore;
-    private CertStore certStore;
+    private KeyStore credentialStore;
+    private KeyStore trustAnchorStore;
+    private CertStore crlStore;
+
     private SigningPolicyStore policyStore;
+
     private boolean rejectLimitProxy;
     private Map<String, ProxyPolicyHandler> handlers;
 
-    private String trustStoreType;
-    private String trustStoreLocation;
-    private String trustStorePassword;
+    private String trustAnchorStoreType;
+    private String trustAnchorStoreLocation;
+    private String trustAnchorStorePassword;
 
-    private String keyStoreType;
-    private String keyStoreLocation;
-    private String keyStorePassword;
+    private String credentialStoreType;
+    private String credentialStoreLocation;
+    private String credentialStorePassword;
 
-    private String certStoreType;
-    private CertStoreParameters certStoreParams;
-
-    private String[] enabledCipherSuites;
+    private String crlStoreType;
+    private String crlLocationPattern;
 
 
     private String sslKeyManagerFactoryAlgorithm =
@@ -80,6 +75,17 @@ public class SSLConfigurator {
     public SSLSocketFactory createFactory() throws GlobusSSLConfigurationException {
         SSLContext context = configureContext();
         return context.getSocketFactory();
+    }
+
+    /**
+     * Create an SSLContext based on the configured stores.
+     *
+     * @return A configured SSLContext.
+     * @throws GlobusSSLConfigurationException
+     *          If we fail to create the context.
+     */
+    public SSLContext getSSLContext() throws GlobusSSLConfigurationException {
+        return configureContext();
     }
 
 
@@ -120,13 +126,14 @@ public class SSLConfigurator {
 
     private X509ProxyCertPathParameters getCertPathParameters() throws GlobusSSLConfigurationException {
         X509ProxyCertPathParameters parameters;
-        KeyStore inputKeyStore = findTrustStore();
-        CertStore inputCertStore = findCertStore();
+        KeyStore inputTrustStore = GlobusSSLHelper.buildTrustStore(this.provider, this.trustAnchorStoreType,
+                this.trustAnchorStoreLocation, this.trustAnchorStorePassword);
+        CertStore inputCertStore = GlobusSSLHelper.findCRLStore(this.crlLocationPattern);
         if (handlers == null) {
-            parameters = new X509ProxyCertPathParameters(inputKeyStore, inputCertStore, this.policyStore,
+            parameters = new X509ProxyCertPathParameters(inputTrustStore, inputCertStore, this.policyStore,
                     this.rejectLimitProxy);
         } else {
-            parameters = new X509ProxyCertPathParameters(inputKeyStore, inputCertStore, this.policyStore,
+            parameters = new X509ProxyCertPathParameters(inputTrustStore, inputCertStore, this.policyStore,
                     this.rejectLimitProxy, handlers);
         }
         return parameters;
@@ -152,11 +159,11 @@ public class SSLConfigurator {
     }
 
     private KeyManager[] loadKeyManagers() throws GlobusSSLConfigurationException {
-
         try {
-            KeyStore inputKeyStore = findKeyStore();
+            KeyStore inputKeyStore = GlobusSSLHelper.findCredentialStore(this.provider, this.credentialStoreType,
+                    this.credentialStoreLocation, this.credentialStorePassword);
             KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(sslKeyManagerFactoryAlgorithm);
-            keyManagerFactory.init(inputKeyStore, keyStorePassword == null ? null : keyStorePassword.toCharArray());
+            keyManagerFactory.init(inputKeyStore, credentialStorePassword == null ? null : credentialStorePassword.toCharArray());
             return keyManagerFactory.getKeyManagers();
         } catch (KeyStoreException e) {
             throw new GlobusSSLConfigurationException(e);
@@ -167,81 +174,6 @@ public class SSLConfigurator {
         }
     }
 
-    private CertStore findCertStore() throws GlobusSSLConfigurationException {
-        CertStore certStoreToReturn = this.certStore;
-        if (certStoreToReturn == null) {
-            try {
-                if (provider == null) {
-                    certStoreToReturn = CertStore.getInstance(this.certStoreType, this.certStoreParams);
-                } else {
-                    certStoreToReturn = CertStore.getInstance(this.certStoreType, this.certStoreParams, provider);
-                }
-            } catch (InvalidAlgorithmParameterException e) {
-                throw new GlobusSSLConfigurationException(e);
-            } catch (NoSuchAlgorithmException e) {
-                throw new GlobusSSLConfigurationException(e);
-            } catch (NoSuchProviderException e) {
-                throw new GlobusSSLConfigurationException(e);
-            }
-        }
-        return certStoreToReturn;
-    }
-
-    private KeyStore findTrustStore() throws GlobusSSLConfigurationException {
-        KeyStore tmpTrustStore = this.trustStore;
-        if(tmpTrustStore == null){
-            try {
-                PathMatchingResourcePatternResolver resourceResolver = new PathMatchingResourcePatternResolver();
-                if (provider == null) {
-                    tmpTrustStore = KeyStore.getInstance(this.trustStoreType);
-                } else {
-                    tmpTrustStore = KeyStore.getInstance(this.trustStoreType, this.provider);
-                }
-                InputStream keyStoreInput = resourceResolver.getResource(this.trustStoreLocation).getInputStream();
-                tmpTrustStore.load(keyStoreInput, this.trustStorePassword == null ? null :
-                        this.trustStorePassword.toCharArray());
-            } catch (KeyStoreException e) {
-                throw new GlobusSSLConfigurationException(e);
-            } catch (IOException e) {
-                throw new GlobusSSLConfigurationException(e);
-            } catch (NoSuchAlgorithmException e) {
-                throw new GlobusSSLConfigurationException(e);
-            } catch (CertificateException e) {
-                throw new GlobusSSLConfigurationException(e);
-            } catch (NoSuchProviderException e) {
-                throw new GlobusSSLConfigurationException(e);
-            }
-        }
-        return tmpTrustStore;
-    }
-
-    private KeyStore findKeyStore() throws GlobusSSLConfigurationException {
-        KeyStore tmpKeyStore = this.keyStore;
-        if (tmpKeyStore == null) {
-            try {
-                PathMatchingResourcePatternResolver resourceResolver = new PathMatchingResourcePatternResolver();
-                if (provider == null) {
-                    tmpKeyStore = KeyStore.getInstance(keyStoreType);
-                } else {
-                    tmpKeyStore = KeyStore.getInstance(keyStoreType, provider);
-                }
-                InputStream keyStoreInput = resourceResolver.getResource(this.keyStoreLocation).getInputStream();
-                tmpKeyStore.load(keyStoreInput, this.keyStorePassword == null ? null :
-                        this.keyStorePassword.toCharArray());
-            } catch (KeyStoreException e) {
-                throw new GlobusSSLConfigurationException(e);
-            } catch (IOException e) {
-                throw new GlobusSSLConfigurationException(e);
-            } catch (NoSuchAlgorithmException e) {
-                throw new GlobusSSLConfigurationException(e);
-            } catch (CertificateException e) {
-                throw new GlobusSSLConfigurationException(e);
-            } catch (NoSuchProviderException e) {
-                throw new GlobusSSLConfigurationException(e);
-            }
-        }
-        return tmpKeyStore;
-    }
 
     public String getProvider() {
         return provider;
@@ -267,36 +199,29 @@ public class SSLConfigurator {
         this.secureRandomAlgorithm = secureRandomAlgorithm;
     }
 
-    public String getSslKeyManagerFactoryAlgorithm() {
-        return sslKeyManagerFactoryAlgorithm;
+
+    public String getCredentialStorePassword() {
+        return credentialStorePassword;
     }
 
-    public void setSslKeyManagerFactoryAlgorithm(String sslKeyManagerFactoryAlgorithm) {
-        this.sslKeyManagerFactoryAlgorithm = sslKeyManagerFactoryAlgorithm;
+    public void setCredentialStorePassword(String credentialStorePassword) {
+        this.credentialStorePassword = credentialStorePassword;
     }
 
-    public String getKeyStorePassword() {
-        return keyStorePassword;
+    public KeyStore getTrustAnchorStore() {
+        return trustAnchorStore;
     }
 
-    public void setKeyStorePassword(String keyStorePassword) {
-        this.keyStorePassword = keyStorePassword;
+    public void setTrustAnchorStore(KeyStore trustAnchorStore) {
+        this.trustAnchorStore = trustAnchorStore;
     }
 
-    public KeyStore getTrustStore() {
-        return trustStore;
+    public CertStore getCrlStore() {
+        return crlStore;
     }
 
-    public void setTrustStore(KeyStore trustStore) {
-        this.trustStore = trustStore;
-    }
-
-    public CertStore getCertStore() {
-        return certStore;
-    }
-
-    public void setCertStore(CertStore certStore) {
-        this.certStore = certStore;
+    public void setCrlStore(CertStore crlStore) {
+        this.crlStore = crlStore;
     }
 
     public SigningPolicyStore getPolicyStore() {
@@ -323,67 +248,67 @@ public class SSLConfigurator {
         this.handlers = handlers;
     }
 
-    public String getKeyStoreLocation() {
-        return keyStoreLocation;
+    public String getCredentialStoreLocation() {
+        return credentialStoreLocation;
     }
 
-    public void setKeyStoreLocation(String keyStoreLocation) {
-        this.keyStoreLocation = keyStoreLocation;
+    public void setCredentialStoreLocation(String credentialStoreLocation) {
+        this.credentialStoreLocation = credentialStoreLocation;
     }
 
-    public String getKeyStoreType() {
-        return keyStoreType;
+    public String getCredentialStoreType() {
+        return credentialStoreType;
     }
 
-    public void setKeyStoreType(String keyStoreType) {
-        this.keyStoreType = keyStoreType;
+    public void setCredentialStoreType(String credentialStoreType) {
+        this.credentialStoreType = credentialStoreType;
     }
 
-    public String getTrustStoreType() {
-        return trustStoreType;
+    public String getTrustAnchorStoreType() {
+        return trustAnchorStoreType;
     }
 
-    public void setTrustStoreType(String trustStoreType) {
-        this.trustStoreType = trustStoreType;
+    public void setTrustAnchorStoreType(String trustAnchorStoreType) {
+        this.trustAnchorStoreType = trustAnchorStoreType;
     }
 
-    public String getTrustStoreLocation() {
-        return trustStoreLocation;
+    public String getTrustAnchorStoreLocation() {
+        return trustAnchorStoreLocation;
     }
 
-    public void setTrustStoreLocation(String trustStoreLocation) {
-        this.trustStoreLocation = trustStoreLocation;
+    public void setTrustAnchorStoreLocation(String trustAnchorStoreLocation) {
+        this.trustAnchorStoreLocation = trustAnchorStoreLocation;
     }
 
-    public String getTrustStorePassword() {
-        return trustStorePassword;
+    public String getTrustAnchorStorePassword() {
+        return trustAnchorStorePassword;
     }
 
-    public void setTrustStorePassword(String trustStorePassword) {
-        this.trustStorePassword = trustStorePassword;
+    public void setTrustAnchorStorePassword(String trustAnchorStorePassword) {
+        this.trustAnchorStorePassword = trustAnchorStorePassword;
     }
 
-    public String getCertStoreType() {
-        return certStoreType;
+    public String getCrlStoreType() {
+        return crlStoreType;
     }
 
-    public void setCertStoreType(String certStoreType) {
-        this.certStoreType = certStoreType;
+    public void setCrlStoreType(String crlStoreType) {
+        this.crlStoreType = crlStoreType;
     }
 
-    public CertStoreParameters getCertStoreParams() {
-        return certStoreParams;
+    public String getCrlLocationPattern() {
+        return crlLocationPattern;
     }
 
-    public void setCertStoreParams(CertStoreParameters certStoreParams) {
-        this.certStoreParams = certStoreParams;
+    public void setCrlLocationPattern(String crlLocationPattern) {
+        this.crlLocationPattern = crlLocationPattern;
     }
 
-    public String[] getEnabledCipherSuites() {
-        return enabledCipherSuites;
+    public KeyStore getCredentialStore() {
+        return credentialStore;
     }
 
-    public void setEnabledCipherSuites(String[] enabledCipherSuites) {
-        this.enabledCipherSuites = enabledCipherSuites;
+    public void setCredentialStore(KeyStore credentialStore) {
+        this.credentialStore = credentialStore;
     }
 }

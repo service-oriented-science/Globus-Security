@@ -14,8 +14,9 @@
  */
 package org.globus.security.filestore;
 
+import org.globus.crux.security.util.FileSetupUtil;
 import org.globus.security.SigningPolicy;
-import org.globus.security.resources.ResourceSigningPolicy;
+import org.globus.security.stores.ResourceSigningPolicy;
 import org.springframework.core.io.FileSystemResource;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;

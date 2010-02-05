@@ -14,7 +14,7 @@
  */
 package org.globus.security.util;
 
-import org.globus.security.filestore.FileSetupUtil;
+import org.globus.crux.security.util.FileSetupUtil;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;

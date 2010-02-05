@@ -13,33 +13,27 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package org.globus.security.resources;
+package org.globus.security.stores;
 
-import org.globus.security.X509Credential;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.security.cert.X509CRL;
 
 /**
- * Created by IntelliJ IDEA.
- * User: turtlebender
- * Date: Dec 29, 2009
- * Time: 12:53:02 PM
- * To change this template use File | Settings | File Templates.
+ * Fill Me
  */
-public class ResourceProxyCredentialStore
-        extends ResourceSecurityWrapperStore<ResourceProxyCredential, X509Credential> {
-
-    private static FilenameFilter filter = new ProxyFilenameFilter();
-
+public class ResourceCRLStore extends ResourceSecurityWrapperStore<ResourceCRL, X509CRL> {
+    private static CrlFilter filter = new CrlFilter();
+    private static final int MIN_NAME_LENGTH = 3;
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
-    public ResourceProxyCredential create(Resource resource) throws ResourceStoreException {
-        return new ResourceProxyCredential(resource);
+    public ResourceCRL create(Resource resource) throws ResourceStoreException {
+        return new ResourceCRL(resource);
     }
 
     @Override
@@ -49,15 +43,23 @@ public class ResourceProxyCredentialStore
 
     @Override
     public FilenameFilter getDefaultFilenameFilter() {
-        return ResourceProxyCredentialStore.filter;
+        return filter;
     }
 
     /**
-     * This filename filter returns files whose names are valid for a Proxy Certificate.
+     * This filter identifies file whose names are valid for crl files.
      */
-    public static class ProxyFilenameFilter implements FilenameFilter {
-        public boolean accept(File file, String s) {
-            return true;
+    public static class CrlFilter implements FilenameFilter {
+
+        public boolean accept(File dir, String file) {
+
+            if (file == null) {
+                throw new IllegalArgumentException();
+            }
+
+            int length = file.length();
+
+            return length > MIN_NAME_LENGTH && file.endsWith(".r09");
         }
     }
 }

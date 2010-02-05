@@ -12,29 +12,50 @@
  *
  * See the License for the specific language governing permissions and limitations under the License.
  */
-package org.globus.security.resources;
 
-import org.globus.security.SigningPolicyStoreParameters;
+package org.globus.security.stores;
+
+import java.security.cert.CertStoreParameters;
 
 /**
- * FILL ME
- *
- * @author ranantha@mcs.anl.gov
+ * Created by IntelliJ IDEA.
+ * User: turtlebender
+ * Date: Dec 29, 2009
+ * Time: 1:06:39 PM
+ * To change this template use File | Settings | File Templates.
  */
-public class ResourceSigningPolicyStoreParameters implements SigningPolicyStoreParameters {
+public class ResourceCertStoreParameters implements CertStoreParameters {
 
-    private String locations;
+    private String certLocationPattern;
+    private String crlLocationPattern;
 
-    public ResourceSigningPolicyStoreParameters(String locations) {
-        if (locations == null) {
-            throw new IllegalArgumentException();
-        }
-        this.locations = locations;
+    public ResourceCertStoreParameters(String certLocationPattern, String crlLocationPattern) {
+        this.certLocationPattern = certLocationPattern;
+        this.crlLocationPattern = crlLocationPattern;
     }
 
-    public String getTrustRootLocations() {
-        return this.locations;
+//    public ResourceCertStoreParameters(String... initLocations) {
+//        if (initLocations != null) {
+//            this.certLocations = new String[initLocations.length];
+//            System.arraycopy(initLocations, 0, this.certLocations, 0, initLocations.length);
+//        }
+//    }
+
+//    public String[] getCertLocations() {
+//        String[] returnArray = new String[certLocations.length];
+//        System.arraycopy(certLocations, 0, returnArray, 0, certLocations.length);
+//        return returnArray;
+//    }
+
+    public String getCrlLocationPattern() {
+        return crlLocationPattern;
     }
+
+
+    public String getCertLocationPattern() {
+        return certLocationPattern;
+    }
+
 
     /**
      * Makes a copy of this <code>CertStoreParameters</code>.
@@ -53,7 +74,7 @@ public class ResourceSigningPolicyStoreParameters implements SigningPolicyStoreP
      * However, a shallow copy implementation of <code>clone</code> is more
      * appropriate for applications that need to hold a reference to a parameter
      * contained in the <code>CertStoreParameters</code>. For example, a shallow
-     * copy clone allows an application to release the resources of a particular
+     * copy clone allows an application to release the stores of a particular
      * <code>CertStore</code> initialization parameter immediately, rather than
      * waiting for the garbage collection mechanism. This should be done with
      * the utmost care, since the <code>CertStore</code> may still be in use by
@@ -69,7 +90,8 @@ public class ResourceSigningPolicyStoreParameters implements SigningPolicyStoreP
             return super.clone();
         } catch (CloneNotSupportedException e) {
             /* Cannot happen */
-            throw new RuntimeException(e.getMessage(), e);
+            throw new InternalError(e.toString());
         }
     }
+
 }

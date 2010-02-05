@@ -18,7 +18,7 @@ package org.globus.security.provider;
 import org.globus.security.CredentialException;
 import org.globus.security.X509Credential;
 import org.globus.security.filestore.FileBasedKeyStoreParameters;
-import org.globus.security.resources.*;
+import org.globus.security.stores.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
@@ -59,13 +59,11 @@ public class FileBasedKeyStore extends KeyStoreSpi {
     // X.509 PRoxy Cerificate file name
     public static final String PROXY_FILENAME = "proxyFilename";
 
-    private static Logger logger =
-            LoggerFactory.getLogger(FileBasedKeyStore.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(FileBasedKeyStore.class.getName());
 
 
     // Map from alias to the object (either key or certificate)
-    private Map<String, SecurityObjectWrapper<?>> aliasObjectMap =
-            new Hashtable<String, SecurityObjectWrapper<?>>();
+    private Map<String, SecurityObjectWrapper<?>> aliasObjectMap = new Hashtable<String, SecurityObjectWrapper<?>>();
     // Map from trusted certificate to filename
     private Map<Certificate, String> certFilenameMap =
             new HashMap<Certificate, String>();
@@ -160,9 +158,7 @@ public class FileBasedKeyStore extends KeyStoreSpi {
      * @throws CertificateException
      */
     @Override
-    public void engineStore(OutputStream outputStream, char[] chars) throws
-            IOException,
-            NoSuchAlgorithmException,
+    public void engineStore(OutputStream outputStream, char[] chars) throws IOException, NoSuchAlgorithmException,
             CertificateException {
         for (SecurityObjectWrapper<?> object : this.aliasObjectMap.values()) {
             if (object instanceof Storable) {
@@ -312,18 +308,15 @@ public class FileBasedKeyStore extends KeyStoreSpi {
         }
     }
 
-    private void initialize(
-            String defaultDirectoryString, String directoryListString,
-            String proxyFilename, String certFilename, String keyFilename)
-            throws IOException, CertificateException {
+    private void initialize(String defaultDirectoryString, String directoryListString,
+                            String proxyFilename, String certFilename, String keyFilename) throws IOException, CertificateException {
         if (defaultDirectoryString != null) {
             defaultDirectory = new File(defaultDirectoryString);//.substring(0,
             //defaultDirectoryString.lastIndexOf(File.pathSeparator))
             if (!defaultDirectory.exists()) {
                 boolean directoryMade = defaultDirectory.mkdirs();
                 if (!directoryMade) {
-                    throw new IOException(
-                            "Unable to create default certificate directory");
+                    throw new IOException("Unable to create default certificate directory");
                 }
             }
             loadDirectories(defaultDirectoryString);
@@ -345,6 +338,9 @@ public class FileBasedKeyStore extends KeyStoreSpi {
             e.printStackTrace();
             throw new CertificateException(e);
         }
+//        for(String alias: this.aliasObjectMap.keySet()){
+//            System.out.println("alias = " + alias);
+//        }
     }
 
     private void loadProxyCertificate(String proxyFilename) throws ResourceStoreException {
@@ -385,12 +381,14 @@ public class FileBasedKeyStore extends KeyStoreSpi {
         try {
             caDelegate.loadWrappers(directoryList);
             Map<String, ResourceTrustAnchor> wrapperMap = caDelegate.getWrapperMap();
-            for (ResourceTrustAnchor trustAnchor : wrapperMap
-                    .values()) {
-                String alias = trustAnchor.getFile().getName();
-                certFilenameMap
-                        .put(trustAnchor.getTrustAnchor().getTrustedCert(),
-                                alias);
+            for (ResourceTrustAnchor trustAnchor : wrapperMap.values()) {
+                String alias = trustAnchor.getResourceURL().toExternalForm();
+                TrustAnchor tmpTrustAnchor = trustAnchor.getTrustAnchor();
+                X509Certificate trustCert = tmpTrustAnchor.getTrustedCert();
+                certFilenameMap.put(trustCert, alias);
+                if (this.aliasObjectMap == null) {
+                    System.out.println("Alias Map Null");
+                }
                 this.aliasObjectMap.put(alias, trustAnchor);
             }
         } catch (ResourceStoreException e) {

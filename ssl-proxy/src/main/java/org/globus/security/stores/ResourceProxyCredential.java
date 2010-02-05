@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package org.globus.security.resources;
+package org.globus.security.stores;
 
 import org.globus.security.CredentialException;
 import org.globus.security.X509Credential;

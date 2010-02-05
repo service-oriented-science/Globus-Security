@@ -14,10 +14,10 @@
  */
 package org.globus.security.provider;
 
+import org.globus.crux.security.util.DirSetupUtil;
+import org.globus.crux.security.util.FileSetupUtil;
 import org.globus.security.X509Credential;
-import org.globus.security.filestore.DirSetupUtil;
 import org.globus.security.filestore.FileBasedKeyStoreParameters;
-import org.globus.security.filestore.FileSetupUtil;
 import org.globus.security.util.CertificateLoadUtil;
 import org.springframework.core.io.FileSystemResource;
 import org.testng.annotations.AfterTest;
@@ -228,7 +228,7 @@ public class TestPEMFileBasedKeyStore {
         FileSetupUtil util;
         while (iterator.hasNext()) {
             util = iterator.next();
-            alias = util.getTempFilename();
+            alias = util.getTempFile().toURI().toASCIIString();
             assertTrue(store.engineIsCertificateEntry(alias));
             Certificate certificate = store.engineGetCertificate(alias);
             assertNotNull(certificate);

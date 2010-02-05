@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package org.globus.security.resources;
+package org.globus.security.stores;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,25 +37,26 @@ public class ResourceCertStore extends CertStoreSpi {
 
     private ResourceCACertStore caDelegate = new ResourceCACertStore();
 
-    private ResourceCRLCertStore crlDelegate = new ResourceCRLCertStore();
-
-    private ResourceCertStoreParameters storeParams;
+    private ResourceCRLStore crlDelegate = new ResourceCRLStore();
 
     /**
      * The sole constructor.
      *
      * @param params the initialization parameters (may be <code>null</code>)
      * @throws java.security.InvalidAlgorithmParameterException
-     *          if the initialization parameters are inappropriate for this <code>CertStoreSpi</code>
+     *                                if the initialization parameters are inappropriate for this <code>CertStoreSpi</code>
+     * @throws ResourceStoreException If error loading certs and crls.
      */
-    public ResourceCertStore(CertStoreParameters params) throws InvalidAlgorithmParameterException {
+    public ResourceCertStore(CertStoreParameters params) throws InvalidAlgorithmParameterException, ResourceStoreException {
         super(params);
         if (params == null) {
             throw new InvalidAlgorithmParameterException();
         }
 
         if (params instanceof ResourceCertStoreParameters) {
-            this.storeParams = (ResourceCertStoreParameters) params;
+            ResourceCertStoreParameters storeParams = (ResourceCertStoreParameters) params;
+            crlDelegate.loadWrappers(storeParams.getCrlLocationPattern());
+            caDelegate.loadWrappers(storeParams.getCertLocationPattern());
         } else {
             throw new InvalidAlgorithmParameterException();
         }
@@ -85,17 +86,6 @@ public class ResourceCertStore extends CertStoreSpi {
         logger.debug("selecting Certificates");
         if (selector != null && !(selector instanceof X509CertSelector)) {
             throw new IllegalArgumentException();
-        }
-
-        try {
-            if (this.storeParams.getLocationPattern() != null) {
-                caDelegate.loadWrappers(this.storeParams.getLocationPattern());
-            } else {
-                caDelegate.loadWrappers(this.storeParams.getLocations());
-            }
-
-        } catch (ResourceStoreException e) {
-            throw new CertStoreException(e);
         }
 
         if (caDelegate.getCollection() == null) {
@@ -146,12 +136,6 @@ public class ResourceCertStore extends CertStoreSpi {
 
         if (selector != null && !(selector instanceof X509CRLSelector)) {
             throw new IllegalArgumentException();
-        }
-
-        try {
-            crlDelegate.loadWrappers(this.storeParams.getLocationPattern());
-        } catch (ResourceStoreException e) {
-            throw new CertStoreException(e);
         }
 
         if (crlDelegate.getCollection() == null) {

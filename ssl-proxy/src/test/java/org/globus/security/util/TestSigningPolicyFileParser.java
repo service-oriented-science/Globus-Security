@@ -14,9 +14,9 @@
  */
 package org.globus.security.util;
 
+import org.globus.crux.security.util.FileSetupUtil;
 import org.globus.security.SigningPolicy;
 import org.globus.security.SigningPolicyException;
-import org.globus.security.filestore.FileSetupUtil;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;

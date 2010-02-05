@@ -16,9 +16,8 @@
 package org.globus.security;
 
 import org.globus.security.provider.GlobusProvider;
-import org.globus.security.resources.ResourceCertStoreParameters;
-import org.globus.security.resources.ResourceSigningPolicyStore;
-import org.globus.security.resources.ResourceSigningPolicyStoreParameters;
+import org.globus.security.stores.ResourceSigningPolicyStore;
+import org.globus.security.stores.ResourceSigningPolicyStoreParameters;
 import org.globus.security.util.GlobusSSLConfigurationException;
 import org.globus.security.util.SSLConfigurator;
 import org.slf4j.Logger;
@@ -57,17 +56,16 @@ public class SSLConfiguratorTest {
 
         SSLConfigurator config = new SSLConfigurator();
 
-        ResourceCertStoreParameters params = new ResourceCertStoreParameters();
-        config.setCertStoreParams(params);
-        config.setCertStoreType(GlobusProvider.CERTSTORE_TYPE);
+        config.setCrlLocationPattern(null);
+        config.setCrlStoreType(GlobusProvider.CERTSTORE_TYPE);
 
-        config.setKeyStoreLocation("classpath:/configuratorTest/mykeystore.properties");
-        config.setKeyStorePassword("password");
-        config.setKeyStoreType(GlobusProvider.KEYSTORE_TYPE);
+        config.setCredentialStoreLocation("classpath:/configuratorTest/mykeystore.properties");
+        config.setCredentialStorePassword("password");
+        config.setCredentialStoreType(GlobusProvider.KEYSTORE_TYPE);
 
-        config.setTrustStoreLocation("classpath:/configuratorTest/mytruststore.properties");
-        config.setTrustStorePassword("password");
-        config.setTrustStoreType(GlobusProvider.KEYSTORE_TYPE);
+        config.setTrustAnchorStoreLocation("classpath:/configuratorTest/mytruststore.properties");
+        config.setTrustAnchorStorePassword("password");
+        config.setTrustAnchorStoreType(GlobusProvider.KEYSTORE_TYPE);
 
         ResourceSigningPolicyStoreParameters policyParams = new ResourceSigningPolicyStoreParameters(
                 "classpath:/configuratorTest/TestCA1.signing_policy");
@@ -127,7 +125,7 @@ public class SSLConfiguratorTest {
                     while ((line = bufferedreader.readLine()) != null) {
                         builder.append(line);
                     }
-                    assertEquals(builder.toString().trim(), "hello");                    
+                    assertEquals(builder.toString().trim(), "hello");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

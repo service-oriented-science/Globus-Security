@@ -59,7 +59,6 @@ public final class KeyStoreUtil {
                     if (selector.match(certificate)) {
                         certificates.add(x509Cert);
                     }
-
                 }
             }
         }

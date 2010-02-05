@@ -13,8 +13,15 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
+package org.globus.security.stores;
+
 /**
- * This package provides classes for accessing security material from generic "resources" (which can be defined via a
- * url).  They are formatted in the traditional Globus style.
+ * Created by IntelliJ IDEA.
+ * User: turtlebender
+ * Date: Jan 6, 2010
+ * Time: 1:25:44 PM
+ * To change this template use File | Settings | File Templates.
  */
-package org.globus.security.resources;
+public interface Storable {
+    void store() throws ResourceStoreException;
+}

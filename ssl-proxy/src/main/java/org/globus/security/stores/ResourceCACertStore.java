@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package org.globus.security.resources;
+package org.globus.security.stores;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,19 +21,23 @@ import org.springframework.core.io.Resource;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.security.cert.X509CRL;
+import java.security.cert.TrustAnchor;
 
 /**
- * Fill Me
+ * Created by IntelliJ IDEA.
+ * User: turtlebender
+ * Date: Dec 29, 2009
+ * Time: 11:49:20 AM
+ * To change this template use File | Settings | File Templates.
  */
-public class ResourceCRLCertStore extends ResourceSecurityWrapperStore<ResourceCRL, X509CRL> {
-    private static CrlFilter filter = new CrlFilter();
-    private static final int MIN_NAME_LENGTH = 3;
+public class ResourceCACertStore extends ResourceSecurityWrapperStore<ResourceTrustAnchor, TrustAnchor> {
+    private static FilenameFilter filter = new TrustAnchorFilter();
+
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
-    public ResourceCRL create(Resource resource) throws ResourceStoreException {
-        return new ResourceCRL(resource);
+    public ResourceTrustAnchor create(Resource resource) throws ResourceStoreException {
+        return new ResourceTrustAnchor(resource);
     }
 
     @Override
@@ -47,19 +51,20 @@ public class ResourceCRLCertStore extends ResourceSecurityWrapperStore<ResourceC
     }
 
     /**
-     * This filter identifies file whose names are valid for crl files.
+     * File filter for determining a Trust Anchor
      */
-    public static class CrlFilter implements FilenameFilter {
+    public static class TrustAnchorFilter implements FilenameFilter {
 
         public boolean accept(File dir, String file) {
 
             if (file == null) {
                 throw new IllegalArgumentException();
             }
-
             int length = file.length();
-
-            return length > MIN_NAME_LENGTH && file.endsWith(".r09");
+            return length > 2
+                    && file.charAt(length - 2) == '.'
+                    && file.charAt(length - 1) >= '0'
+                    && file.charAt(length - 1) <= '9';
         }
     }
 }

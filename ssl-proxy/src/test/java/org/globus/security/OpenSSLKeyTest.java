@@ -15,8 +15,8 @@
 
 package org.globus.security;
 
+import org.globus.crux.security.util.FileSetupUtil;
 import org.globus.security.bc.BouncyCastleOpenSSLKey;
-import org.globus.security.filestore.FileSetupUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;

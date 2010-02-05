@@ -13,19 +13,8 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package org.globus.security.resources;
-
 /**
- * Fill Me
- *
- * @param <T> The type of security object to be wrapped
+ * This package provides classes for accessing security material from generic "stores" (which can be defined via a
+ * url).  They are formatted in the traditional Globus style.
  */
-public interface SecurityObjectWrapper<T> {
-    void refresh() throws ResourceStoreException;
-
-    T getSecurityObject() throws ResourceStoreException;
-
-    String getAlias();
-
-    boolean hasChanged();
-}
+package org.globus.security.stores;
