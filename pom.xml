@@ -37,10 +37,6 @@
         <module>wss4j</module>
         <module>testUtils</module>
         <module>containerTestUtils</module>
-        <module>jaas</module>
-        <module>cog</module>
-        <module>gss</module>
-        <module>cog-core</module>
     </modules>
 
     <dependencyManagement>
