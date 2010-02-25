@@ -33,7 +33,12 @@ import org.slf4j.LoggerFactory;
  */
 public class FirstApplicableAlg extends AbstractEngine {
 
-    private static I18nUtil i18n =
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -6958049485606617224L;
+
+	private static I18nUtil i18n =
             I18nUtil.getI18n("org.globus.security.authorization.errors",
                     FirstApplicableAlg.class.getClassLoader());
 
@@ -70,4 +75,10 @@ public class FirstApplicableAlg extends AbstractEngine {
         return new Decision(reqAttr.getRequestor(), resourceOwner,
                 Decision.INDETERMINATE, null, null);
     }
+
+	public String getAlgorithm() {
+		return "FirstApplicable";
+	}
+    
+    
 }

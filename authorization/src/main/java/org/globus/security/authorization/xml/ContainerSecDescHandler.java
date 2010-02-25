@@ -44,7 +44,7 @@ public class ContainerSecDescHandler extends NamespaceHandlerSupport {
 
 
         @Override
-        protected Class getBeanClass(Element element) {
+        protected Class<SecurityDescriptor> getBeanClass(Element element) {
             return SecurityDescriptor.class;
         }
 
@@ -69,7 +69,7 @@ public class ContainerSecDescHandler extends NamespaceHandlerSupport {
                     String name = n.getLocalName();
 
                     if ("bootstrapPips".equals(name) || "pips".equals(name) || "pdps".equals(name)) {
-                        List list = parserContext.getDelegate().parseListElement((Element) n, bean.getBeanDefinition());
+                        List<?> list = parserContext.getDelegate().parseListElement((Element) n, bean.getBeanDefinition());
                         bean.addPropertyValue(name, list);
                     }
                 }

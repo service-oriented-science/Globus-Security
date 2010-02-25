@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: tomcat
+Bundle-SymbolicName: tomcat
+Bundle-Version: 1.0.0.qualifier
+Export-Package: org.globus.crux.security,
+ org.globus.crux.security.tomcat

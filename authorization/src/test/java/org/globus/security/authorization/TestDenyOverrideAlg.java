@@ -63,35 +63,31 @@ public class TestDenyOverrideAlg {
     @Test
     public void test1() throws Exception {
 
-        List<InterceptorConfig<MockPDPImpl>> pdps = new ArrayList<InterceptorConfig<MockPDPImpl>>();
+        List<MockPDPImpl> pdps = new ArrayList<MockPDPImpl>();
         MockPDPImpl p1 = new MockPDPImpl();
         p1.setIssuer("Issuer1");
         p1.setAccess(Arrays.asList("UserA"));
         p1.setDenied(Arrays.asList("UserD"));
         p1.setRequestAttrIssuer(this.reqAttrIssuer);
-        pdps.add(new InterceptorConfig<MockPDPImpl>("p1", p1));
+        pdps.add(p1);
 
         MockPDPImpl p2 = new MockPDPImpl();
         p2.setIssuer("Issuer2");
         p2.setAccess(Arrays.asList("UserA"));
         p2.setRequestAttrIssuer(this.reqAttrIssuer);
-        pdps.add(new InterceptorConfig<MockPDPImpl>("p2", p2));
+        pdps.add(p2);
 
         MockPDPImpl p3 = new MockPDPImpl();
         p3.setIssuer("Issuer3");
         p3.setAccess(Arrays.asList("UserA"));
         p3.setRequestAttrIssuer(this.reqAttrIssuer);
-        pdps.add(new InterceptorConfig<MockPDPImpl>("p3", p3));
+        pdps.add(p3);
 
         // Permit
         DenyOverrideAlg engine = new DenyOverrideAlg("chain name");
 
-        for (InterceptorConfig<MockPDPImpl> interceptor : pdps) {
-            engine.addPDP(interceptor);
-        }
-
-        engine.engineInitialize("chain name");
-
+        engine.setPDPInterceptors(pdps);
+                
         // Try to get decision.
         Decision decision = engine.engineAuthorize(reqAttr, this.resourceOwner);
         assertNotNull(decision);
@@ -100,7 +96,7 @@ public class TestDenyOverrideAlg {
 
     @Test
     public void test2() throws Exception {
-        List<InterceptorConfig<MockPDPImpl>> pdps = new ArrayList<InterceptorConfig<MockPDPImpl>>();
+        List<MockPDPImpl> pdps = new ArrayList<MockPDPImpl>();
 
 
         MockPDPImpl p1 = new MockPDPImpl();
@@ -108,27 +104,24 @@ public class TestDenyOverrideAlg {
         p1.setAccess(Arrays.asList("UserA"));
         p1.setDenied(Arrays.asList("UserD"));
         p1.setRequestAttrIssuer(this.reqAttrIssuer);
-        pdps.add(new InterceptorConfig<MockPDPImpl>("p1", p1));
+        pdps.add(p1);
 
         MockPDPImpl p2 = new MockPDPImpl();
         p2.setIssuer("Issuer2");
         p2.setAccess(Arrays.asList("UserA"));
         p2.setRequestAttrIssuer(this.reqAttrIssuer);
-        pdps.add(new InterceptorConfig<MockPDPImpl>("p2", p2));
+        pdps.add(p2);
 
         MockPDPImpl p3 = new MockPDPImpl();
         p3.setIssuer("Issuer3");
         p3.setDenied(Arrays.asList("UserA"));
         p3.setRequestAttrIssuer(this.reqAttrIssuer);
-        pdps.add(new InterceptorConfig<MockPDPImpl>("p3", p3));
+        pdps.add(p3);
 
         DenyOverrideAlg engine1 = new DenyOverrideAlg("chain name");
 
-        for (InterceptorConfig<MockPDPImpl> interceptor : pdps) {
-            engine1.addPDP(interceptor);
-        }
+        engine1.setPDPInterceptors(pdps);
         // Try to get decision
-        engine1.engineInitialize("chain name");
 
         Decision decision1 = engine1.engineAuthorize(reqAttr, this.resourceOwner);
         assertNotNull(decision1);
@@ -137,36 +130,33 @@ public class TestDenyOverrideAlg {
 
     @Test
     public void test3() throws Exception {
-        List<InterceptorConfig<MockPDPImpl>> pdps = new ArrayList<InterceptorConfig<MockPDPImpl>>();
+        List<MockPDPImpl> pdps = new ArrayList<MockPDPImpl>();
 
         MockPDPImpl p1 = new MockPDPImpl();
         p1.setIssuer("Issuer1");
         p1.setAccess(Arrays.asList("UserC"));
         p1.setDenied(Arrays.asList("UserD"));
         p1.setRequestAttrIssuer(this.reqAttrIssuer);
-        pdps.add(new InterceptorConfig<MockPDPImpl>("p1", p1));
+        pdps.add(p1);
 
         MockPDPImpl p2 = new MockPDPImpl();
         p2.setIssuer("Issuer2");
         p2.setAccess(Arrays.asList("UserC"));
         p2.setRequestAttrIssuer(this.reqAttrIssuer);
-        pdps.add(new InterceptorConfig<MockPDPImpl>("p2", p2));
+        pdps.add(p2);
 
         MockPDPImpl p3 = new MockPDPImpl();
         p3.setIssuer("Issuer3");
         p3.setAdmin(Arrays.asList("UserA"));
         p3.setRequestAttrIssuer(this.reqAttrIssuer);
-        pdps.add(new InterceptorConfig<MockPDPImpl>("p3", p3));
+        pdps.add(p3);
 
 
         // indeterminate
 
         // Try to get decision
         DenyOverrideAlg engine2 = new DenyOverrideAlg("chain name");
-        for (InterceptorConfig<MockPDPImpl> interceptor : pdps) {
-            engine2.addPDP(interceptor);
-        }
-        engine2.engineInitialize("chain name");
+        engine2.setPDPInterceptors(pdps);
 
         Decision decision2 = engine2.engineAuthorize(reqAttr, this.resourceOwner);
         assertNotNull(decision2);

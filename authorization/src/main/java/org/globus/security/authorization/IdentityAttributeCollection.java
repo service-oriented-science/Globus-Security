@@ -20,17 +20,22 @@ import org.globus.security.authorization.util.I18nUtil;
 /**
  * Stores a collection of IdentityAttributes. See AttributeCollection.
  */
+
 public class IdentityAttributeCollection extends AttributeCollection {
 
-    private static I18nUtil i18n =
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 5475213179019500601L;
+	private static I18nUtil i18n =
             I18nUtil.getI18n("org.globus.security.authorization.errors",
                     Attribute.class.getClassLoader());
 
     protected String getDescription() {
-        return "Identity Attribute Collection";
+        return "Identity AttributeBase Collection";
     }
 
-    public void add(Attribute attribute) {
+    public void add(Attribute<?> attribute) {
 
         if (!attribute.isIdentityAttribute()) {
             String err = i18n.getMessage("onlyIdenAttr");

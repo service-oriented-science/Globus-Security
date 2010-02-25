@@ -16,6 +16,7 @@ package org.globus.security.authorization;
 
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class TestAttributeEngine {
         this.pip.setupURI();
         this.issuer = this.pip.getIssuer();
 
-
+        List<PIPInterceptor> pips = new ArrayList<PIPInterceptor>(); 
         /*
         ChainConfig chainConfig = new MockChainConfig();
         chainConfig.setProperty("i0", "token", "T1");
@@ -53,7 +54,8 @@ public class TestAttributeEngine {
         i0.setResGroup("G2");
         i0.setAction("A2");
         i0.setActionGp("G2");
-        engine.addPIP(new InterceptorConfig<MockPIPImpl>("i0", i0));
+        i0.initialize();
+        pips.add(i0);
 
         /*
       chainConfig.setProperty("i1", "name", "UB");
@@ -69,7 +71,8 @@ public class TestAttributeEngine {
         i1.setResGroup("G1");
         i1.setAction("A1");
         i1.setActionGp("G1");
-        engine.addPIP(new InterceptorConfig<MockPIPImpl>("i1", i1));
+        i1.initialize();
+        pips.add(i1);
 
         /*
         chainConfig.setProperty("i2", "token", "T1");
@@ -85,7 +88,8 @@ public class TestAttributeEngine {
         i2.setResource("R3");
         i2.setAction("A4");
         i2.setActionGp("G1");
-        engine.addPIP(new InterceptorConfig<MockPIPImpl>("i2", i2));
+        i2.initialize();
+        pips.add(i2);
 
         /*
        chainConfig.setProperty("i3", "token", "T2");
@@ -101,7 +105,9 @@ public class TestAttributeEngine {
         i3.setResource("R3");
         i3.setResGroup("G2");
         i3.setAction("A3");
-        engine.addPIP(new InterceptorConfig<MockPIPImpl>("i3", i3));
+        i3.initialize();
+        pips.add(i3);
+        
 
         // UA/T1 R2/G2 A2/G2
         // UB    R1/G1 A1/G1
@@ -111,7 +117,7 @@ public class TestAttributeEngine {
         RequestEntities reqAttr = new RequestEntities();
 
 
-        engine.engineInitialize("chain name");
+        engine.setPIPInterceptors(pips);
         // since no PDPS are exercises, an issuer of null is okay here.
         engine.engineAuthorize(reqAttr, null);
 

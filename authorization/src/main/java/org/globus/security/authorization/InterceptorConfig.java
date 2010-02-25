@@ -22,12 +22,13 @@ public class InterceptorConfig<T extends Interceptor> {
 
     private T interceptor;
     private String scope;
+    
 
     public InterceptorConfig(String initScope, T interceptor) {
         this.interceptor = interceptor;
         this.scope = initScope;
     }
-
+    
     public String getScope() {
         return this.scope;
     }

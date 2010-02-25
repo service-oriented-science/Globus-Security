@@ -21,7 +21,12 @@ package org.globus.security.authorization;
  */
 public class CloseException extends InitializeException {
 
-    public CloseException(String message) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 3301346935135589865L;
+
+	public CloseException(String message) {
         super(message);
     }
 

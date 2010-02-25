@@ -23,8 +23,14 @@ public class MockEngine extends AbstractEngine {
     public MockEngine(String chainName) {
         super(chainName);
     }
+       
+    public String getAlgorithm() {
+    	return "Mock";
+    }
 
-    public Decision engineAuthorize(RequestEntities reqAttribute, EntityAttributes resourceOwner)
+
+
+	public Decision engineAuthorize(RequestEntities reqAttribute, EntityAttributes resourceOwner)
             throws AuthorizationException {
 
         collectAttributes(reqAttribute);
@@ -43,15 +49,15 @@ public class MockEngine extends AbstractEngine {
         return this.getNonReqEntities().getResourceAttrsList();
     }
 
-    public List<PDPInterceptor> getPDPs() {
+    public List<? extends PDPInterceptor> getPDPs() {
         return this.getPdps();
     }
 
-    public List<PIPInterceptor> getPIPs() {
+    public List<? extends PIPInterceptor> getPIPs() {
         return this.getPips();
     }
 
-    public List<BootstrapPIP> getBootstrapPIPs() {
+    public List<? extends BootstrapPIP> getBootstrapPIPs() {
         return this.getBootstrapPips();
     }
 }

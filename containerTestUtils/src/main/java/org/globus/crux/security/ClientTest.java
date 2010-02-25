@@ -1,0 +1,118 @@
+/*
+ * Copyright 1999-2010 University of Chicago
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS,WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied.
+ *
+ * See the License for the specific language governing permissions and limitations under the License.
+ */
+
+package org.globus.crux.security;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.globus.security.provider.GlobusProvider;
+import org.globus.security.stores.ResourceSigningPolicyStore;
+import org.globus.security.stores.ResourceSigningPolicyStoreParameters;
+import org.globus.security.util.SSLConfigurator;
+import org.testng.annotations.Test;
+
+import javax.net.ssl.SSLPeerUnverifiedException;
+
+import static org.testng.Assert.fail;
+
+@Test(groups = "init")
+public abstract class ClientTest {
+
+    protected int getPort(){
+        return 5082;
+    }
+    /**
+     * Test client with invalid credentials.
+     *
+     * @throws Exception This should happen.
+     */
+    @Test
+    public void testInvalid() throws Exception {
+        SSLConfigurator config = getConfig("classpath:/invalidkeystore.properties");
+        SSLSocketFactory fac = new SSLSocketFactory(config.getSSLContext());
+        fac.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+        DefaultHttpClient httpclient = new DefaultHttpClient();
+        Scheme scheme = new Scheme("https", fac, getPort());
+        httpclient.getConnectionManager().getSchemeRegistry().register(scheme);
+        HttpGet httpget = new HttpGet("https://localhost/");
+        System.out.println("executing request" + httpget.getRequestLine());
+        try {
+            httpclient.execute(httpget);
+            fail();
+        } catch (SSLPeerUnverifiedException ex) {
+            //this better happen
+        }
+    }
+
+    // This creates the client ssl configuration.  it uses the default trust store, signing policy store
+    // and crl store.  Then it applies the users credentials.
+
+    private SSLConfigurator getConfig(String credStoreLocation) throws Exception {
+        SSLConfigurator config = new SSLConfigurator();
+        config.setCrlLocationPattern(null);
+        config.setCrlStoreType(GlobusProvider.CERTSTORE_TYPE);
+
+        config.setCredentialStoreLocation(credStoreLocation);
+        config.setCredentialStorePassword("password");
+        config.setCredentialStoreType(GlobusProvider.KEYSTORE_TYPE);
+
+        config.setTrustAnchorStoreLocation("classpath:/mytruststore.properties");
+        config.setTrustAnchorStorePassword("password");
+        config.setTrustAnchorStoreType(GlobusProvider.KEYSTORE_TYPE);
+
+        ResourceSigningPolicyStoreParameters policyParams = new ResourceSigningPolicyStoreParameters(
+                "classpath:/globus_crux_ca.signing_policy");
+        ResourceSigningPolicyStore policyStore = new ResourceSigningPolicyStore(policyParams);
+
+        config.setPolicyStore(policyStore);
+        return config;
+    }
+
+    /**
+     * Test a client using valid credentials
+     *
+     * @throws Exception if this happens, the test fails.
+     */
+    public void testValid() throws Exception {
+        SSLConfigurator config = getConfig("classpath:/mykeystore.properties");
+        SSLSocketFactory fac = new SSLSocketFactory(config.getSSLContext());
+        fac.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+        DefaultHttpClient httpclient = new DefaultHttpClient();
+        Scheme scheme = new Scheme("https", fac, getPort());
+        httpclient.getConnectionManager().getSchemeRegistry().register(scheme);
+        HttpGet httpget = new HttpGet("https://localhost/");
+        System.out.println("executing request" + httpget.getRequestLine());
+
+        HttpResponse response = httpclient.execute(httpget);
+        HttpEntity entity = response.getEntity();
+        System.out.println("----------------------------------------");
+        System.out.println(response.getStatusLine());
+        if (entity != null) {
+            System.out.println("Response content length: " + entity.getContentLength());
+        }
+        if (entity != null) {
+            entity.consumeContent();
+        }
+
+        // When HttpClient instance is no longer needed,
+        // shut down the connection manager to ensure
+        // immediate deallocation of all system stores
+        httpclient.getConnectionManager().shutdown();
+    }
+}

@@ -21,7 +21,5 @@ import java.io.Serializable;
  */
 public interface Interceptor extends Serializable {
 
-    void initialize(String chainName, String prefix) throws InitializeException;
-
-    void close() throws CloseException;
+	void close() throws CloseException;
 }

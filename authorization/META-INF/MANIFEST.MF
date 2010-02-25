@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: authorization
+Bundle-SymbolicName: authorization
+Bundle-Version: 1.0.0.qualifier
+Export-Package: org.globus.security.authorization,
+ org.globus.security.authorization.impl,
+ org.globus.security.authorization.providers,
+ org.globus.security.authorization.util,
+ org.globus.security.authorization.xml

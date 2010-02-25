@@ -37,7 +37,12 @@ import org.slf4j.LoggerFactory;
  */
 public class DenyOverrideAlg extends AbstractEngine {
 
-    private static I18nUtil i18n = I18nUtil.getI18n("org.globus.security.authorization.errors",
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1634123231473744560L;
+
+	private static I18nUtil i18n = I18nUtil.getI18n("org.globus.security.authorization.errors",
             DenyOverrideAlg.class.getClassLoader());
 
     private Logger logger = LoggerFactory.getLogger(DenyOverrideAlg.class.getName());
@@ -80,4 +85,8 @@ public class DenyOverrideAlg extends AbstractEngine {
             return new Decision(reqAttr.getRequestor(), resourceOwner, Decision.INDETERMINATE, null, null);
         }
     }
+
+	public String getAlgorithm() {
+		return "DenyOverride";
+	}        
 }

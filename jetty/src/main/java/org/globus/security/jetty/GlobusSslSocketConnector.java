@@ -16,6 +16,28 @@
 package org.globus.security.jetty;
 
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.security.Security;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+import javax.net.ssl.HandshakeCompletedEvent;
+import javax.net.ssl.HandshakeCompletedListener;
+import javax.net.ssl.SSLException;
+import javax.net.ssl.SSLPeerUnverifiedException;
+import javax.net.ssl.SSLServerSocket;
+import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocket;
+
+import org.globus.security.GlobusTLSContext;
 import org.globus.security.provider.GlobusProvider;
 import org.globus.security.util.SSLConfigurator;
 import org.mortbay.io.EndPoint;
@@ -27,18 +49,6 @@ import org.mortbay.jetty.security.ServletSSL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.net.ssl.*;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.security.Security;
-import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * This is an implementation of the SslSocketConnector from Jetty, which allows a bit more sophisticated configuration,
  * specifically, it allows an SSLConfigurator to be used to configure the SSLServerSocketFactory.
@@ -47,11 +57,13 @@ import java.util.List;
  * @since 1.0
  */
 public class GlobusSslSocketConnector extends SocketConnector {
-    private static final String CACHED_INFO_ATTR = CachedInfo.class.getName();
+    private static final String CACHED_INFO_ATTR = CachedInfo.class.getName();    
 
     static {
         Security.addProvider(new GlobusProvider());
     }
+    
+    private static InheritableThreadLocal<Map<String, Object>> session = new InheritableThreadLocal<Map<String, Object>>(); 
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -77,6 +89,10 @@ public class GlobusSslSocketConnector extends SocketConnector {
     public GlobusSslSocketConnector(SSLConfigurator config) {
         this.sslConfigurator = config;
     }
+    
+    public Map<String, Object> getCurrentSession(){
+    	return GlobusSslSocketConnector.session.get();
+    }
 
     /**
      * Copied from org.mortbay.jetty.security.SslSocketConnector.
@@ -89,13 +105,13 @@ public class GlobusSslSocketConnector extends SocketConnector {
     public void accept(int acceptorID) throws IOException, InterruptedException {
         Socket socket = _serverSocket.accept();
         configure(socket);
-        Connection connection = new SslConnection(socket);
+        SslConnection connection = new SslConnection(socket);
         connection.dispatch();
     }
 
     @Override
     protected ServerSocket newServerSocket(String host, int port, int backlog) throws IOException {
-        try {
+        try {        	
             factory = createFactory();
             socket = (SSLServerSocket) (host == null ? factory.createServerSocket(port, backlog) :
                     factory.createServerSocket(port, backlog, InetAddress.getByName(host)));
@@ -233,7 +249,7 @@ public class GlobusSslSocketConnector extends SocketConnector {
                 certs = cachedInfo.getCerts();
             } else {
                 keySize = new Integer(ServletSSL.deduceKeyLength(cipherSuite));
-                certs = getCertChain(sslSession);
+                certs = getPeerCertChain(sslSession);
                 cachedInfo = new CachedInfo(keySize, certs);
                 sslSession.putValue(CACHED_INFO_ATTR, cachedInfo);
             }
@@ -242,8 +258,7 @@ public class GlobusSslSocketConnector extends SocketConnector {
             } else if (needClientAuth) {
                 // Sanity check                throw new IllegalStateException("no client auth");
             }
-            request.setAttribute("javax.servlet.request.cipher_suite", cipherSuite);
-            request.setAttribute("javax.servlet.request.key_size", keySize);
+            request.setAttribute(GlobusTLSContext.class.getCanonicalName(), new GlobusTLSContext(sslSession));
         } catch (Exception e) {
             logger.warn(e.getLocalizedMessage(), e);
         }
@@ -260,7 +275,7 @@ public class GlobusSslSocketConnector extends SocketConnector {
      *         connection. <br>
      *         Will be null if the chain is missing or empty.
      */
-    private X509Certificate[] getCertChain(SSLSession sslSession) {
+    private X509Certificate[] getPeerCertChain(SSLSession sslSession) {
         try {
             javax.security.cert.X509Certificate javaxCerts[] = sslSession.getPeerCertificateChain();
             if (javaxCerts == null || javaxCerts.length == 0) return null;
@@ -280,6 +295,7 @@ public class GlobusSslSocketConnector extends SocketConnector {
             return null;
         }
     }
+
 
 
     /**
@@ -326,7 +342,10 @@ public class GlobusSslSocketConnector extends SocketConnector {
             return keySize;
         }
     }
-
+    
+    public SSLConfigurator getSSLConfigurator(){
+    	return this.sslConfigurator;
+    }
 
     class SslConnection extends Connection {
 

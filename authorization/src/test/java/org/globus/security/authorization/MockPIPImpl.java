@@ -39,6 +39,8 @@ public class MockPIPImpl implements PIPInterceptor {
     private Calendar now;
     private EntityAttributes issuer;
 
+    
+    
     // This method sets up URIs to use in attribute identifiers and an issuer
     // entity. For every instance of MockPIPImpl the generated objects will be
     // equal.
@@ -99,7 +101,7 @@ public class MockPIPImpl implements PIPInterceptor {
 
     }
 
-    public void initialize(String chainName, String prefix_) throws InitializeException {
+    public void initialize() throws InitializeException {
 
         initCount++;
 
@@ -118,7 +120,7 @@ public class MockPIPImpl implements PIPInterceptor {
         List<EntityAttributes> subjectColl = new Vector<EntityAttributes>();
         // add attribute for token
         if (this.token != null) {
-            Attribute tokenAttr = new Attribute(this.tokenIden, this.issuer, now, null);
+			Attribute tokenAttr = new Attribute(this.tokenIden, this.issuer, now, null);
             StringTokenizer tok = new StringTokenizer(this.token);
             while (tok.hasMoreTokens()) {
                 tokenAttr.addAttributeValue(tok.nextToken());

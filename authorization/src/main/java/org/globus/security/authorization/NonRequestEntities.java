@@ -29,15 +29,15 @@ public class NonRequestEntities implements Serializable {
 
     private static final long serialVersionUID = 7191178873283695083L;
 
-    private List subjectAttrCollection;
-    private List actionAttrCollection;
-    private List resourceAttrCollection;
+    private List<EntityAttributes> subjectAttrCollection;
+    private List<EntityAttributes> actionAttrCollection;
+    private List<EntityAttributes> resourceAttrCollection;
 
     public NonRequestEntities() {
 
-        this.subjectAttrCollection = new Vector();
-        this.actionAttrCollection = new Vector();
-        this.resourceAttrCollection = new Vector();
+        this.subjectAttrCollection = new Vector<EntityAttributes>();
+        this.actionAttrCollection = new Vector<EntityAttributes>();
+        this.resourceAttrCollection = new Vector<EntityAttributes>();
     }
 
     /**
@@ -45,23 +45,23 @@ public class NonRequestEntities implements Serializable {
      * @param initActionAttrCollection   Collection of EntityAttributes for action entities
      * @param initResourceAttrCollection Collection of EntityAttributes for resource entities
      */
-    public NonRequestEntities(List initSubjectAttrCollection, List initActionAttrCollection,
-                              List initResourceAttrCollection) {
+    public NonRequestEntities(List<EntityAttributes> initSubjectAttrCollection, List<EntityAttributes> initActionAttrCollection,
+                              List<EntityAttributes> initResourceAttrCollection) {
 
         this.subjectAttrCollection = initSubjectAttrCollection;
         this.actionAttrCollection = initActionAttrCollection;
         this.resourceAttrCollection = initResourceAttrCollection;
     }
 
-    public List getSubjectAttrsList() {
+    public List<EntityAttributes> getSubjectAttrsList() {
         return this.subjectAttrCollection;
     }
 
-    public List getActionAttrsList() {
+    public List<EntityAttributes> getActionAttrsList() {
         return this.actionAttrCollection;
     }
 
-    public List getResourceAttrsList() {
+    public List<EntityAttributes> getResourceAttrsList() {
         return this.resourceAttrCollection;
     }
 
@@ -71,30 +71,30 @@ public class NonRequestEntities implements Serializable {
             return;
         }
 
-        List subjectAttrs = reqAttr.getSubjectAttrsList();
+        List<EntityAttributes> subjectAttrs = reqAttr.getSubjectAttrsList();
         mergeSubjectAttributes(subjectAttrs);
-        List actionAttrs = reqAttr.getActionAttrsList();
+        List<EntityAttributes> actionAttrs = reqAttr.getActionAttrsList();
         mergeActionAttributes(actionAttrs);
-        List resourceAttrs = reqAttr.getResourceAttrsList();
+        List<EntityAttributes> resourceAttrs = reqAttr.getResourceAttrsList();
         mergeResourceAttributes(resourceAttrs);
     }
 
-    public void mergeSubjectAttributes(List subjectAttrs) {
+    public void mergeSubjectAttributes(List<EntityAttributes> subjectAttrs) {
 
         mergeLists(this.subjectAttrCollection, subjectAttrs);
     }
 
-    public void mergeActionAttributes(List actionAttrs) {
+    public void mergeActionAttributes(List<EntityAttributes> actionAttrs) {
 
         mergeLists(this.actionAttrCollection, actionAttrs);
     }
 
-    public void mergeResourceAttributes(List resourceAttrs) {
+    public void mergeResourceAttributes(List<EntityAttributes> resourceAttrs) {
 
         mergeLists(this.resourceAttrCollection, resourceAttrs);
     }
 
-    protected void mergeLists(List storeList, List mergeList) {
+    protected void mergeLists(List<EntityAttributes> storeList, List<EntityAttributes> mergeList) {
 
         if (mergeList == null) {
             return;

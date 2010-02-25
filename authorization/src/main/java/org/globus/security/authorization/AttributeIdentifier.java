@@ -25,7 +25,12 @@ import org.globus.security.authorization.util.I18nUtil;
  */
 public class AttributeIdentifier implements Serializable {
 
-    private static I18nUtil i18n =
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -7963560462839338318L;
+
+	private static I18nUtil i18n =
             I18nUtil.getI18n("org.globus.security.authorization.errors",
                     AttributeIdentifier.class.getClassLoader());
 
@@ -40,16 +45,16 @@ public class AttributeIdentifier implements Serializable {
     /**
      * Constructs a non-identity atttibute
      *
-     * @param id        Attribute ID URI
-     * @param initDataType Datatype of Attribute
+     * @param id        AttributeBase ID URI
+     * @param initDataType Datatype of AttributeBase
      */
     public AttributeIdentifier(URI id, URI initDataType) {
         this(id, initDataType, false);
     }
 
     /**
-     * @param id        Attribute ID URI
-     * @param initDataType Datatype of Attribute
+     * @param id        AttributeBase ID URI
+     * @param initDataType Datatype of AttributeBase
      * @param identity  If set to true, an identity attribute it created. If
      *                  not, a non-identity attribute is created.
      */
@@ -124,7 +129,7 @@ public class AttributeIdentifier implements Serializable {
 
     public String toString() {
 
-        return " Attribute Id: " + this.attributeId + "\n Datatype: "
+        return " AttributeBase Id: " + this.attributeId + "\n Datatype: "
                 + this.dataType + "\n Identity: "
                 + this.identityAttibute;
     }

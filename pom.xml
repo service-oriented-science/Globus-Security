@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -8,12 +9,12 @@
         <artifactId>parent</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    
+
     <groupId>org.globus.crux.security</groupId>
     <artifactId>security</artifactId>
     <packaging>pom</packaging>
 
-    <name>Security (Master Project)</name>    
+    <name>Security (Master Project)</name>
 
     <issueManagement>
         <system>JIRA</system>
@@ -32,7 +33,15 @@
         <!--<module>crux-wss4j</module>-->
         <module>authorization</module>
         <module>tomcat</module>
-    </modules>    
+        <module>cxf</module>
+        <module>wss4j</module>
+        <module>testUtils</module>
+        <module>containerTestUtils</module>
+        <module>jaas</module>
+        <module>cog</module>
+        <module>gss</module>
+        <module>cog-core</module>
+    </modules>
 
     <dependencyManagement>
         <dependencies>
@@ -40,7 +49,18 @@
                 <groupId>${groupId}</groupId>
                 <artifactId>ssl-proxy</artifactId>
                 <version>${version}</version>
-            </dependency>            
+            </dependency>
+            <dependency>
+            	<groupId>org.slf4j</groupId>
+            	<artifactId>slf4j-simple</artifactId>
+            	<version>1.5.10</version>
+            	<scope>test</scope>
+            </dependency>
+            <dependency>
+            	<groupId>org.slf4j</groupId>
+            	<artifactId>slf4j-api</artifactId>
+            	<version>1.5.10</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -57,17 +77,17 @@
     </profiles>
 
     <repositories>
-        <repository>
+        <!--<repository>
             <id>globus-repo</id>
             <url>http://repo.globus.org/content/groups/public/</url>
-        </repository>
+        </repository>-->
         <repository>
             <id>apache.snapshots</id>
             <url>https://repository.apache.org/content/groups/snapshots-group/</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
-        </repository>        
+        </repository>
     </repositories>
 
 </project>

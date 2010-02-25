@@ -24,7 +24,12 @@ import org.globus.security.stores.ResourceSigningPolicyStore;
 import org.globus.security.stores.ResourceSigningPolicyStoreParameters;
 import org.globus.security.util.GlobusSSLHelper;
 
+import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.TrustManager;
+
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.security.KeyStore;
 import java.security.Security;
 import java.security.cert.CertStore;
@@ -41,6 +46,8 @@ public class GlobusSSLSocketFactory extends JSSESocketFactory {
     static {
         Security.addProvider(new GlobusProvider());
     }
+    
+    
 
     /**
      * Create a Globus trust manager which supports proxy certificates.  This requires that the CRL store, and
@@ -76,4 +83,29 @@ public class GlobusSSLSocketFactory extends JSSESocketFactory {
         TrustManager trustManager = new PKITrustManager(new X509ProxyCertPathValidator(), parameters);
         return new TrustManager[]{trustManager};
     }
+
+	
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		// TODO Auto-generated method stub
+		return super.clone();
+	}
+
+
+	@Override
+	public ServerSocket createSocket(int port, int backlog, InetAddress ifAddress) throws IOException {		
+		return new GlobusSSLSocketWrapper((SSLServerSocket) super.createSocket(port, backlog, ifAddress));
+	}
+
+
+	@Override
+	public ServerSocket createSocket(int port, int backlog) throws IOException {
+		return createSocket(port, backlog, null);
+	}
+
+
+	@Override
+	public ServerSocket createSocket(int port) throws IOException {
+		return createSocket(port, 50);
+	}
 }

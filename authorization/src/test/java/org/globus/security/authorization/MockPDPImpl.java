@@ -38,8 +38,14 @@ public class MockPDPImpl implements PDPInterceptor {
     private EntityAttributes decisionIssuer = null;
 
     private AttributeIdentifier attrIden = null;
+    
+    
 
-    public static AttributeIdentifier getTestUserAttrIdentifier()
+    public MockPDPImpl() throws InitializeException {
+		this.initialize();
+	}
+
+	public static AttributeIdentifier getTestUserAttrIdentifier()
             throws InitializeException {
 
         URI uri;
@@ -86,12 +92,9 @@ public class MockPDPImpl implements PDPInterceptor {
                 true);
     }
 
-    public void initialize(String chainName, String prefix_) throws InitializeException {
+    public void initialize() throws InitializeException {
 
         initCount++;
-
-
-        this.prefix = prefix_;
 
         this.attrIden = getTestUserAttrIdentifier();
     }
@@ -130,10 +133,10 @@ public class MockPDPImpl implements PDPInterceptor {
         // get peer
         EntityAttributes entityAttr = requestEntities.getRequestor();
         IdentityAttributeCollection col = entityAttr.getIdentityAttributes();
-        Iterator<Attribute> iterator = col.getAttributes(this.attrIden).iterator();
-        Attribute attr;
+        Iterator<Attribute<?>> iterator = col.getAttributes(this.attrIden).iterator();
+        Attribute<?> attr;
         // Not dealing with multiple issuers of same attribute in this test case
-        Set<Object> peerValues = null;
+        Set<?> peerValues = null;
         if (iterator.hasNext()) {
             attr = iterator.next();
             peerValues = attr.getAttributeValueSet();
@@ -149,10 +152,10 @@ public class MockPDPImpl implements PDPInterceptor {
         // get peer
         EntityAttributes entityAttr = requestEntities.getRequestor();
         IdentityAttributeCollection col = entityAttr.getIdentityAttributes();
-        Iterator<Attribute> iterator = col.getAttributes(this.attrIden).iterator();
-        Attribute attr;
+        Iterator<Attribute<?>> iterator = col.getAttributes(this.attrIden).iterator();
+        Attribute<?> attr;
         // Not dealing with multiple issuers of same attribute in this test case
-        Set<Object> values = null;
+        Set<?> values = null;
         if (iterator.hasNext()) {
             attr = iterator.next();
             values = attr.getAttributeValueSet();
@@ -163,9 +166,9 @@ public class MockPDPImpl implements PDPInterceptor {
     public void close() {
     }
 
-    private Decision isPermitted(Set<Object> peerSet, EntityAttributes peerEntity, boolean access) {
+    private Decision isPermitted(Set<?> peerSet, EntityAttributes peerEntity, boolean access) {
 
-        Iterator<Object> peer = peerSet.iterator();
+        Iterator<?> peer = peerSet.iterator();
         if (this.denied != null) {
             while (peer.hasNext()) {
                 if (this.denied.contains(peer.next().toString())) {

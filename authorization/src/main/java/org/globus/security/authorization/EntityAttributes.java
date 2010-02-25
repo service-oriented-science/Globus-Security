@@ -28,7 +28,12 @@ import java.util.Set;
  */
 public class EntityAttributes implements Serializable {
 
-    private static I18nUtil i18n = I18nUtil.getI18n("org.globus.security.authorization.errors",
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1530483508802067768L;
+
+	private static I18nUtil i18n = I18nUtil.getI18n("org.globus.security.authorization.errors",
             EntityAttributes.class.getClassLoader());
 
     private static Logger logger = LoggerFactory.getLogger(EntityAttributes.class.getName());
@@ -36,16 +41,16 @@ public class EntityAttributes implements Serializable {
     // collection of attributes that are not identity attributes
     private AttributeCollection attrCollection;
     // Attributes in native format
-    private Set nativeAttrCollection;
+    private Set<Object> nativeAttrCollection;
     // collection of attributes that are identity attributes
     private IdentityAttributeCollection identityAttrCollection;
 
     /**
      * @param idenAttr   Identity attribute collection
-     * @param attr       Attribute collection
+     * @param attr       AttributeBase collection
      * @param nativeAttr Set of attribute in native format
      */
-    public EntityAttributes(IdentityAttributeCollection idenAttr, AttributeCollection attr, Set nativeAttr) {
+    public EntityAttributes(IdentityAttributeCollection idenAttr, AttributeCollection attr, Set<Object> nativeAttr) {
 
         if ((idenAttr == null) || (idenAttr.size() <= 0)) {
             String err = i18n.getMessage("idenAttrReq");
@@ -58,7 +63,7 @@ public class EntityAttributes implements Serializable {
         this.attrCollection = attr;
 
         if (nativeAttr != null) {
-            this.nativeAttrCollection = new HashSet(nativeAttr);
+            this.nativeAttrCollection = new HashSet<Object>(nativeAttr);
         }
     }
 
@@ -89,14 +94,14 @@ public class EntityAttributes implements Serializable {
      *
      * @param set
      */
-    public void addNativeAttributes(Set set) {
+    public void addNativeAttributes(Set<Object> set) {
 
         if (set == null) {
             return;
         }
 
         if (this.nativeAttrCollection == null) {
-            this.nativeAttrCollection = new HashSet(set);
+            this.nativeAttrCollection = new HashSet<Object>(set);
         } else {
             this.nativeAttrCollection.addAll(set);
 
@@ -145,7 +150,7 @@ public class EntityAttributes implements Serializable {
      *
      * @return
      */
-    public Set getNativeAttributes() {
+    public Set<Object> getNativeAttributes() {
         return this.nativeAttrCollection;
     }
 
@@ -193,10 +198,10 @@ public class EntityAttributes implements Serializable {
             }
         }
 
-        Set nativeAttrColl = entityAttr.getNativeAttributes();
+        Set<Object> nativeAttrColl = entityAttr.getNativeAttributes();
         if (nativeAttrColl != null) {
             if (this.nativeAttrCollection == null) {
-                this.nativeAttrCollection = new HashSet(nativeAttrColl);
+                this.nativeAttrCollection = new HashSet<Object>(nativeAttrColl);
             } else {
                 this.nativeAttrCollection.addAll(nativeAttrColl);
             }
@@ -214,7 +219,7 @@ public class EntityAttributes implements Serializable {
             str.append("Non-identity Attributes is null");
         }
 
-        str.append("\nNative Attribute is null: ");
+        str.append("\nNative AttributeBase is null: ");
         str.append(this.nativeAttrCollection == null);
         str.append("\n");
         return str.toString();

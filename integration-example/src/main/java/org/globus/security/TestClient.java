@@ -1,22 +1,18 @@
 package org.globus.security;
 
-import java.io.File;
-import java.security.Security;
-
-import javax.net.ssl.SSLSocketFactory;
-
-import org.globus.hello.HelloPortType;
-import org.globus.hello.HelloService;
-import org.globus.security.filestore.FileCertStoreParameters;
-import org.globus.security.filestore.FileSigningPolicyStoreParameters;
-import org.globus.security.provider.GlobusProvider;
-import org.globus.security.util.SSLConfigurator;
-
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.transport.http.HTTPConduit;
+import org.globus.security.filestore.FileCertStoreParameters;
+import org.globus.security.filestore.FileSigningPolicyStoreParameters;
+import org.globus.security.provider.GlobusProvider;
+import org.globus.security.sample.services.HelloWorldImpl;
+import org.globus.security.util.SSLConfigurator;
+
+import javax.net.ssl.SSLSocketFactory;
+import java.io.File;
 
 
 /**
@@ -31,7 +27,7 @@ public class TestClient {
     private String crlTrustStore = TestServer.CRL_TRUST_STORE;
     private String keyPassword = TestServer.KEY_PASSWORD;
 
-    public  TestClient() {
+    public TestClient() {
     }
 
     public void setPolicyLocation(String policyLocation) {
@@ -58,7 +54,7 @@ public class TestClient {
         this.port = port;
     }
 
-    public String echo(String toSay) throws Exception{
+    public String echo(String toSay) throws Exception {
         JaxWsProxyFactoryBean beanFac = new JaxWsProxyFactoryBean();
         beanFac.setServiceClass(HelloPortType.class);
         beanFac.setAddress("https://localhost:" + port + "/counter");
@@ -71,7 +67,7 @@ public class TestClient {
     }
 
 
-    private  TLSClientParameters configureTLS() throws Exception {
+    private TLSClientParameters configureTLS() throws Exception {
         TLSClientParameters tlsParams = new TLSClientParameters();
         SSLConfigurator configurator = configure();
         SSLSocketFactory socketFactory = configurator.createFactory();
