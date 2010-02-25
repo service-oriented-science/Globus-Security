@@ -21,7 +21,12 @@ package org.globus.security.authorization;
  */
 public class AuthorizationDeniedException extends AuthorizationException {
 
-    public AuthorizationDeniedException(String msg) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 63263315162618722L;
+
+	public AuthorizationDeniedException(String msg) {
         super(msg);
     }
 

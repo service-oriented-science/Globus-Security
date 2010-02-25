@@ -17,9 +17,11 @@ package org.globus.security.authorization;
 import org.globus.security.authorization.providers.FirstApplicableAlg;
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Iterator;
+import java.util.List;
 
 public class TestFirstApplicableAlg {
 
@@ -45,28 +47,28 @@ public class TestFirstApplicableAlg {
         attrCol.add(issuerAttr);
         this.reqAttrIssuer = new EntityAttributes(attrCol);
 
-
+        List<PDPInterceptor> pdps = new ArrayList<PDPInterceptor>();
         MockPDPImpl p1 = new MockPDPImpl();
         p1.setIssuer("Issuer1");
         p1.setAccess(Arrays.asList("UserC"));
         p1.setDenied(Arrays.asList("UserD"));
         p1.setRequestAttrIssuer(this.reqAttrIssuer);
-        engine.addPDP(new InterceptorConfig<MockPDPImpl>("p1", p1));
+        pdps.add(p1);
 
         MockPDPImpl p2 = new MockPDPImpl();
         p2.setIssuer("Issuer2");
         p2.setAccess(Arrays.asList("UserA"));
         p2.setRequestAttrIssuer(this.reqAttrIssuer);
-        engine.addPDP(new InterceptorConfig<MockPDPImpl>("p2", p2));
+        pdps.add(p2);
 
         MockPDPImpl p3 = new MockPDPImpl();
         p3.setIssuer("Issuer3");
         p3.setDenied(Arrays.asList("Issuer3"));
         p3.setRequestAttrIssuer(this.reqAttrIssuer);
-        engine.addPDP(new InterceptorConfig<MockPDPImpl>("p3", p3));
+        pdps.add(p3);
 
         // Requestor userA
-        Attribute attr = new Attribute(attrIden, this.reqAttrIssuer,
+        Attribute<String> attr = new Attribute<String>(attrIden, this.reqAttrIssuer,
                 Calendar.getInstance(), null);
         attr.addAttributeValue("UserA");
         IdentityAttributeCollection coll = new IdentityAttributeCollection();
@@ -75,7 +77,7 @@ public class TestFirstApplicableAlg {
         RequestEntities reqAttr =
                 new RequestEntities(requestor, null, null, null);
 
-
+        engine.setPDPInterceptors(pdps);
         // Try to get decision.
         Decision decision = engine.engineAuthorize(reqAttr, this.resourceOwner);
         assert (decision != null);
@@ -97,28 +99,28 @@ public class TestFirstApplicableAlg {
 
 
         FirstApplicableAlg engine1 = new FirstApplicableAlg("chain name");
-
+        pdps = new ArrayList<PDPInterceptor>();
         p1 = new MockPDPImpl();
         p1.setIssuer("Issuer1");
         p1.setAccess(Arrays.asList("UserC"));
         p1.setDenied(Arrays.asList("UserD"));
         p1.setRequestAttrIssuer(this.reqAttrIssuer);
-        engine1.addPDP(new InterceptorConfig<MockPDPImpl>("p1", p1));
+        pdps.add(p1);
 
         p2 = new MockPDPImpl();
         p2.setIssuer("Issuer2");
         p2.setAccess(Arrays.asList("UserC"));
         p2.setRequestAttrIssuer(this.reqAttrIssuer);
-        engine1.addPDP(new InterceptorConfig<MockPDPImpl>("p2", p2));
+        pdps.add(p2);
 
         p3 = new MockPDPImpl();
         p3.setIssuer("Issuer3");
         p3.setDenied(Arrays.asList("UserA"));
         p3.setRequestAttrIssuer(this.reqAttrIssuer);
-        engine1.addPDP(new InterceptorConfig<MockPDPImpl>("p3", p3));
+        pdps.add(p3);
 
         // Try to get decision
-        engine1.engineInitialize("chain name");
+        engine1.setPDPInterceptors(pdps);
 
         Decision decision1 = engine1.engineAuthorize(reqAttr,
                 this.resourceOwner);
@@ -143,27 +145,28 @@ public class TestFirstApplicableAlg {
 
 
         // indeterminate
+        pdps = new ArrayList<PDPInterceptor>();
         p1 = new MockPDPImpl();
         p1.setIssuer("Issuer1");
         p1.setAccess(Arrays.asList("UserC"));
         p1.setDenied(Arrays.asList("UserD"));
         p1.setRequestAttrIssuer(this.reqAttrIssuer);
-        engine2.addPDP(new InterceptorConfig<MockPDPImpl>("p1", p1));
+        pdps.add(p1);
 
         p2 = new MockPDPImpl();
         p2.setIssuer("Issuer2");
         p2.setAccess(Arrays.asList("UserC"));
         p2.setRequestAttrIssuer(this.reqAttrIssuer);
-        engine2.addPDP(new InterceptorConfig<MockPDPImpl>("p2", p2));
+        pdps.add(p2);
 
         p3 = new MockPDPImpl();
         p3.setIssuer("Issuer3");
         p3.setAdmin(Arrays.asList("UserA"));
         p3.setRequestAttrIssuer(this.reqAttrIssuer);
-        engine2.addPDP(new InterceptorConfig<MockPDPImpl>("p3", p3));
+        pdps.add(p3);
 
         // Try to get decision
-        engine2.engineInitialize("chain name");
+        engine2.setPDPInterceptors(pdps);
 
         Decision decision2 = engine2.engineAuthorize(reqAttr,
                 this.resourceOwner);

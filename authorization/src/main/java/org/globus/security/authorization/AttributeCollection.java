@@ -30,22 +30,23 @@ import java.util.*;
  * <code>EntityAttribute#isSameEntity<code> should
  * be used to compare EntityAttributes.
  */
+@SuppressWarnings("unchecked")
 public class AttributeCollection implements Serializable {
 
     private static final long serialVersionUID = -6203348642130350208L;
 
     private transient Logger logger = LoggerFactory.getLogger(AttributeCollection.class.getName());
-    private Map<AttributeIdentifier, Map<EntityAttributes, Attribute>> map;
+    private Map<AttributeIdentifier, Map<EntityAttributes, Attribute<?>>> map;
 
     public AttributeCollection() {
-        this.map = Collections.synchronizedMap(new HashMap<AttributeIdentifier, Map<EntityAttributes, Attribute>>());
+        this.map = Collections.synchronizedMap(new HashMap<AttributeIdentifier, Map<EntityAttributes, Attribute<?>>>());
     }
 
     /**
      * Adds an attribute to the collection. If attribute already
      * exists, the values are merged.
      */
-    public void add(Attribute attribute) {
+    public void add(Attribute<? extends Object> attribute) {
 
         if (attribute == null) {
             return;
@@ -56,14 +57,14 @@ public class AttributeCollection implements Serializable {
         logger.trace("Adding attribute " + iden.toString());
 
         // check if this attribute already exists
-        Map<EntityAttributes, Attribute> storedMap = this.map.get(iden);
+        Map<EntityAttributes, Attribute<?>> storedMap = this.map.get(iden);
 
         // if map is null, no attributes with this identity exists.
         // Alternatively it might be a map value of null, but then overwrite is
         // okay, since merge is meaningless.
         if (storedMap == null) {
             logger.trace("No attribute present " + iden.getAttributeId());
-            Map<EntityAttributes, Attribute> attrMap = new HashMap<EntityAttributes, Attribute>();
+            Map<EntityAttributes, Attribute<?>> attrMap = new HashMap<EntityAttributes, Attribute<?>>();
             attrMap.put(attribute.getIssuer(), attribute);
             this.map.put(iden, attrMap);
         } else {
@@ -109,18 +110,18 @@ public class AttributeCollection implements Serializable {
             return;
         }
 
-        for (Object o : attrCollection.getAttributes()) {
-            add((Attribute) o);
+        for (Attribute o : attrCollection.getAttributes()) {
+            add(o);
         }
     }
 
     /**
      * Returns a collection of all attributes in the collection.
      */
-    public Collection getAttributes() {
-        Collection<Map.Entry<AttributeIdentifier, Map<EntityAttributes, Attribute>>> coll = this.map.entrySet();
+    public Collection<Attribute> getAttributes() {
+        Collection<Map.Entry<AttributeIdentifier, Map<EntityAttributes, Attribute<?>>>> coll = this.map.entrySet();
         List<Attribute> vector = new Vector<Attribute>();
-        for (Map.Entry<AttributeIdentifier, Map<EntityAttributes, Attribute>> attrEntry : coll) {
+        for (Map.Entry<AttributeIdentifier, Map<EntityAttributes, Attribute<?>>> attrEntry : coll) {
             vector.addAll(attrEntry.getValue().values());
         }
         return vector;
@@ -129,7 +130,7 @@ public class AttributeCollection implements Serializable {
     /**
      * Returns all attribute identifiers in the collection
      */
-    public Set getAttributeIdentifiers() {
+    public Set<AttributeIdentifier> getAttributeIdentifiers() {
         return this.map.keySet();
     }
 
@@ -137,8 +138,8 @@ public class AttributeCollection implements Serializable {
      * Returns all attributes with the given AttributeIdenitfier. The
      * attributes may not have same issuer.
      */
-    public Collection<Attribute> getAttributes(AttributeIdentifier identifier) {
-        Map<EntityAttributes, Attribute> attrMap = getAttributeMap(identifier);
+    public Collection<Attribute<?>> getAttributes(AttributeIdentifier identifier) {
+        Map<EntityAttributes, Attribute<?>> attrMap = getAttributeMap(identifier);
         if (attrMap != null) {
             return attrMap.values();
         } else {
@@ -149,9 +150,8 @@ public class AttributeCollection implements Serializable {
     /**
      * Returns the attribute with said AttributeIdentifier and issuer
      */
-    public Attribute getAttribute(AttributeIdentifier identifier,
-                                  EntityAttributes issuer) {
-        Map<EntityAttributes, Attribute> attrMap = getAttributeMap(identifier);
+    public Attribute getAttribute(AttributeIdentifier identifier, EntityAttributes issuer) {
+        Map<EntityAttributes, Attribute<?>> attrMap = getAttributeMap(identifier);
         if (attrMap == null) {
             return null;
         } else {
@@ -163,7 +163,7 @@ public class AttributeCollection implements Serializable {
      * Returns the HashMap keyed on issuer of attribute, with
      * attribute as value, for the given AttributeIdentifier.
      */
-    public Map<EntityAttributes, Attribute> getAttributeMap(AttributeIdentifier identifier) {
+    public Map<EntityAttributes, Attribute<?>> getAttributeMap(AttributeIdentifier identifier) {
         return this.map.get(identifier);
     }
 
@@ -171,11 +171,11 @@ public class AttributeCollection implements Serializable {
      * Returns the number of attributes in the collection.
      */
     public int size() {
-        Collection entries = this.map.values();
-        Iterator iterator = entries.iterator();
+    	Collection<Map<EntityAttributes,Attribute<?>>> entries = this.map.values();
+        Iterator<Map<EntityAttributes,Attribute<?>>> iterator = entries.iterator();
         int size = 0;
         while (iterator.hasNext()) {
-            HashMap hashMap = (HashMap) iterator.next();
+        	Map<EntityAttributes,Attribute<?>> hashMap = iterator.next();
             size = size + hashMap.size();
         }
         return size;
@@ -183,20 +183,20 @@ public class AttributeCollection implements Serializable {
 
     /**
      * Determines if the attribute collection is same entity. This
-     * returns true if atleast one attribute in both collections are equal:
-     * same attribute identifier,  same issuer and atlease one value should
+     * returns true if at least one attribute in both collections are equal:
+     * same attribute identifier,  same issuer and at lease one value should
      * match. Note that all attributes with issuer as null are
      * treated as issued by same entity.
      */
     public boolean isSameEntity(AttributeCollection collection) {
 
         if (collection == null) {
-            logger.trace("Attribute collection is null");
+            logger.trace("AttributeBase collection is null");
             return false;
         }
 
         // if both collections have no attributes, return true
-        Set attrIdenSet = collection.getAttributeIdentifiers();
+        Set<AttributeIdentifier> attrIdenSet = collection.getAttributeIdentifiers();
         if ((attrIdenSet.size() == 0) &&
                 (this.getAttributeIdentifiers().size() == 0)) {
             return true;
@@ -204,21 +204,17 @@ public class AttributeCollection implements Serializable {
 
         // get list of identitfiers
 
-        for (Object anAttrIdenSet : attrIdenSet) {
-
-            // get each idetifier
-            AttributeIdentifier idenToCheck =
-                    (AttributeIdentifier) anAttrIdenSet;
-
+        for (AttributeIdentifier idenToCheck : attrIdenSet) {
+            
             // check if idenifier is in this collection. Since attribute
             // identifier defines equals and hashcode, this can be checked.
             if (!this.map.containsKey(idenToCheck)) {
                 continue;
             }
 
-            Map<EntityAttributes, Attribute> attrMap = collection.getAttributeMap(idenToCheck);
+            Map<EntityAttributes, Attribute<?>> attrMap = collection.getAttributeMap(idenToCheck);
             if (attrMap == null) {
-                Map<EntityAttributes, Attribute> thisAttrMap = this.getAttributeMap(idenToCheck);
+                Map<EntityAttributes, Attribute<?>> thisAttrMap = this.getAttributeMap(idenToCheck);
                 if (thisAttrMap == null) {
                     return true;
                 }
@@ -227,7 +223,7 @@ public class AttributeCollection implements Serializable {
             }
 
 
-            Map<EntityAttributes, Attribute> thisAttrMap = this.getAttributeMap(idenToCheck);
+            Map<EntityAttributes, Attribute<?>> thisAttrMap = this.getAttributeMap(idenToCheck);
 
             // for each isssuer, get attribute and see if it matches
 
@@ -277,13 +273,13 @@ public class AttributeCollection implements Serializable {
     }
 
     protected String getDescription() {
-        return "Non-identity Attribute Collection";
+        return "Non-identity AttributeBase Collection";
     }
 
     public String toString() {
 
         StringBuilder str = new StringBuilder(getDescription() + "\n");
-        Collection attributes = getAttributes();
+        Collection<Attribute> attributes = getAttributes();
         if (attributes != null) {
             for (Object attribute : attributes) {
                 str.append(attribute.toString());

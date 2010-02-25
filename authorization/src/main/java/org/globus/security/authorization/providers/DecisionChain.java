@@ -57,7 +57,7 @@ public class DecisionChain {
      *
      * @return the iterator for the chain.
      */
-    public Iterator iterator() {
+    public Iterator<Decision> iterator() {
         return chain.iterator();
     }
 

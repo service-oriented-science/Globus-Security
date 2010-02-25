@@ -24,7 +24,12 @@ import java.rmi.RemoteException;
  */
 public class AuthorizationException extends RemoteException {
 
-    public AuthorizationException(String msg) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -4545528761577218890L;
+
+	public AuthorizationException(String msg) {
         super(msg);
     }
 

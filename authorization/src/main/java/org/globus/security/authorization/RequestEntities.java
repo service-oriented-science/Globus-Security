@@ -73,16 +73,36 @@ public class RequestEntities implements Serializable {
     public EntityAttributes getRequestor() {
         return this.requestor;
     }
+    
+    @SuppressWarnings("unchecked")
+	public <T extends EntityAttributes> T getRequestor(Class<T> requestorType){
+    	return (T) this.requestor;
+    }
 
     public EntityAttributes getAction() {
         return this.action;
+    }
+    
+    @SuppressWarnings("unchecked")
+	public <T extends EntityAttributes> T getAction(Class<T> actionType){
+    	return (T) this.action;
     }
 
     public EntityAttributes getResource() {
         return this.resource;
     }
+    
+    @SuppressWarnings("unchecked")
+	public <T extends EntityAttributes> T getResource(Class<T> resourceType){
+    	return (T) this.resource;
+    }
 
     public EntityAttributes getEnvironment() {
         return this.environment;
+    }
+    
+    @SuppressWarnings("unchecked")
+	public <T extends EntityAttributes> T getEnvironment(Class<T> environmentType){
+    	return (T) this.environment;
     }
 }

@@ -19,18 +19,7 @@ import java.io.Serializable;
 /**
  * Interface for authorization engines.
  */
-public interface AuthorizationEngineSpi extends Serializable {
-
-    /**
-     * Initializes the engine with interceptor information and
-     * parameters. The engine should initialize all configured
-     * interceptors
-     *
-     * @param chainName Name for authorization chain
-     * @throws InitializeException Fill Me
-     */
-    void engineInitialize(String chainName)
-            throws InitializeException;
+public interface AuthorizationEngineSpi extends Serializable {    
 
     /**
      * Evalauates the authorization chain to determine of the subject
@@ -52,5 +41,12 @@ public interface AuthorizationEngineSpi extends Serializable {
      * @throws CloseException Fill Me
      */
     void engineClose() throws CloseException;
+    
+    /**
+     * Get the algorithm this engine implements
+     * 
+     * @return The algorithm
+     */
+    String getAlgorithm();
 
 }

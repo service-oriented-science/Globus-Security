@@ -22,95 +22,97 @@ import java.util.Vector;
 import org.globus.security.authorization.EntityAttributes;
 
 /**
- * Datatype used to store context information while constructing
- * decision chain. Used by PermitOverideAlg.
+ * Datatype used to store context information while constructing decision chain.
+ * Used by PermitOverideAlg.
  */
 public class DecisionChainContext {
 
-    private Stack<EntityAttributes> chain;
-    private Vector<EntityAttributes> deniedList;
-    private EntityAttributes[] authorities;
-    private Vector<Throwable> deniedExceptions;
+	private Stack<EntityAttributes> chain;
+	private Vector<EntityAttributes> deniedList;
+	private EntityAttributes[] authorities;
+	private Vector<Throwable> deniedExceptions;
 
-    public DecisionChainContext() {
-        this(1);
-    }
+	public DecisionChainContext() {
+		this(1);
+	}
 
-    public DecisionChainContext(int i) {
-        chain = new Stack<EntityAttributes>();
-        deniedList = new Vector<EntityAttributes>();
-        authorities = new EntityAttributes[i];
-    }
+	public DecisionChainContext(int i) {
+		chain = new Stack<EntityAttributes>();
+		deniedList = new Vector<EntityAttributes>();
+		authorities = new EntityAttributes[i];
+	}
 
-    /**
-     * Tests if the specified authority is in the decision chain.
-     *
-     * @param authority Fill Me
-     * @return true if the specified authority is in the decision chain.
-     */
-    public boolean isInChain(EntityAttributes authority) {
-        return chain.contains(authority);
-    }
+	/**
+	 * Tests if the specified authority is in the decision chain.
+	 * 
+	 * @param authority
+	 *            Fill Me
+	 * @return true if the specified authority is in the decision chain.
+	 */
+	public boolean isInChain(EntityAttributes authority) {
+		return chain.contains(authority);
+	}
 
-    /**
-     * Appends the specified authority to the decision chain.
-     *
-     * @param authority Fill Me
-     */
-    public void appendToChain(EntityAttributes authority) {
-        chain.push(authority);
-    }
+	/**
+	 * Appends the specified authority to the decision chain.
+	 * 
+	 * @param authority
+	 *            Fill Me
+	 */
+	public void appendToChain(EntityAttributes authority) {
+		chain.push(authority);
+	}
 
-    /**
-     * Removes the last authority from the decision chain.
-     */
-    public void removeFromChain() {
-        chain.pop();
-    }
+	/**
+	 * Removes the last authority from the decision chain.
+	 */
+	public void removeFromChain() {
+		chain.pop();
+	}
 
-    /**
-     * Returns the iterator for the decision chain.
-     *
-     * @return the iterator for the decision chain.
-     */
-    @SuppressWarnings("unused")
-    public Iterator getChainAsIterator() {
-        return chain.iterator();
-    }
+	/**
+	 * Returns the iterator for the decision chain.
+	 * 
+	 * @return the iterator for the decision chain.
+	 */
+	public Iterator<EntityAttributes> getChainAsIterator() {
+		return chain.iterator();
+	}
 
-    /**
-     * Tests if the specified authority is in the denied list.
-     *
-     * @param authority Fill Me
-     * @return true if the specified authority is in the denied list.
-     */
-    public boolean isDenied(EntityAttributes authority) {
-        return deniedList.contains(authority);
-    }
+	/**
+	 * Tests if the specified authority is in the denied list.
+	 * 
+	 * @param authority
+	 *            Fill Me
+	 * @return true if the specified authority is in the denied list.
+	 */
+	public boolean isDenied(EntityAttributes authority) {
+		return deniedList.contains(authority);
+	}
 
-    public void addToDeniedList(EntityAttributes authority) {
-        deniedList.add(authority);
-    }
+	public void addToDeniedList(EntityAttributes authority) {
+		deniedList.add(authority);
+	}
 
-    public EntityAttributes getAuthorityAt(int i) {
-        return authorities[i];
-    }
+	public EntityAttributes getAuthorityAt(int i) {
+		return authorities[i];
+	}
 
-    public void setAuthorityAt(int i, EntityAttributes authority) {
-        authorities[i] = authority;
-    }
+	public void setAuthorityAt(int i, EntityAttributes authority) {
+		authorities[i] = authority;
+	}
 
-    public void addDeniedException(Throwable exception) {
+	public void addDeniedException(Throwable exception) {
 
-        if (this.deniedExceptions == null) {
-            this.deniedExceptions = new Vector<Throwable>();
-        }
-        if (exception != null) {
-            this.deniedExceptions.add(exception);
-        }
-    }
+		if (this.deniedExceptions == null) {
+			this.deniedExceptions = new Vector<Throwable>();
+		}
+		if (exception != null) {
+			this.deniedExceptions.add(exception);
+		}
+	}
 
-    public Vector<Throwable> getDeniedExceptions() {
-        return this.deniedExceptions;
-    }
+	public Vector<Throwable> getDeniedExceptions() {
+		return this.deniedExceptions;
+	}
 }

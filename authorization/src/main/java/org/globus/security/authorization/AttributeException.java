@@ -16,12 +16,17 @@
 package org.globus.security.authorization;
 
 /**
- * Exception is thrown when an error occurs in in Attribute Collection
+ * Exception is thrown when an error occurs in in AttributeBase Collection
  * Framework.
  */
 public class AttributeException extends AuthorizationException {
 
-    public AttributeException(String message) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -4011960739423391652L;
+
+	public AttributeException(String message) {
         super(message);
     }
 

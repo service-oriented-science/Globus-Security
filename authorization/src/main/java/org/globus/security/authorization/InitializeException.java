@@ -21,7 +21,12 @@ package org.globus.security.authorization;
  */
 public class InitializeException extends InterceptorException {
 
-    public InitializeException(String message) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 3821790150361154860L;
+
+	public InitializeException(String message) {
         super(message);
     }
 

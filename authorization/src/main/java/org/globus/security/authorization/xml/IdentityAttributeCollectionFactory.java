@@ -15,11 +15,11 @@
 
 package org.globus.security.authorization.xml;
 
+import java.util.List;
+
 import org.globus.security.authorization.Attribute;
 import org.globus.security.authorization.IdentityAttributeCollection;
 import org.springframework.beans.factory.FactoryBean;
-
-import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,15 +29,15 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class IdentityAttributeCollectionFactory implements FactoryBean<IdentityAttributeCollection> {
-    private List<Attribute> attributes;
+    private List<Attribute<?>> attributes;
 
     public IdentityAttributeCollection getObject() throws Exception {
         IdentityAttributeCollection collection = new IdentityAttributeCollection();
-        if (attributes != null) {
-            for (Attribute attribute : attributes) {
-                collection.add(attribute);
-            }
-        }
+//        if (IAttributes != null) {
+//            for (Attribute attribute : IAttributes) {
+//                collection.add(attribute);
+//            }
+//        }
         return collection;
     }
 
@@ -49,11 +49,11 @@ public class IdentityAttributeCollectionFactory implements FactoryBean<IdentityA
         return true;
     }
 
-    public List<Attribute> getAttributes() {
+    public List<Attribute<?>> getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(List<Attribute> attributes) {
-        this.attributes = attributes;
+    public void setAttributes(List<Attribute<?>> IAttributes) {
+        this.attributes = IAttributes;
     }
 }
