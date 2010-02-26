@@ -47,13 +47,14 @@ public class X509BootstrapPIP implements BootstrapPIP {
     public void collectRequestAttributes(RequestEntities requestAttrs)
             throws AttributeException {
 
+        EntityAttributes containerEntity = context.getContainerEntity();
+
         Subject peerSubject = context.getPeerSubject();
         if (peerSubject != null) {
             IdentityAttributeCollection idenAttrColl =
                     new IdentityAttributeCollection();
             Attribute subjectAttribute =
-                    new Attribute(AttributeUtil.getPeerSubjectAttrIdentifier(),
-                            requestAttrs.getEnvironment(), Calendar.getInstance(), null);
+                    new Attribute(AttributeUtil.getPeerSubjectAttrIdentifier(), containerEntity, Calendar.getInstance(), null);
             subjectAttribute.addAttributeValue(peerSubject);
             idenAttrColl.add(subjectAttribute);
 
@@ -62,8 +63,7 @@ public class X509BootstrapPIP implements BootstrapPIP {
                 AttributeIdentifier identifier =
                         AttributeUtil.getPrincipalIdentifier();
                 Attribute principalAttribute =
-                        new Attribute(identifier, requestAttrs.getEnvironment(), Calendar.getInstance(), null,
-                                peerPrincipals);
+                        new Attribute(identifier, containerEntity, Calendar.getInstance(), null, peerPrincipals);
                 idenAttrColl.add(principalAttribute);
             }
 

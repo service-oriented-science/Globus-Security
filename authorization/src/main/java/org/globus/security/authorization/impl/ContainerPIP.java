@@ -48,26 +48,7 @@ public class ContainerPIP implements BootstrapPIP {
     public void collectRequestAttributes(RequestEntities requestAttrs)
             throws AttributeException {
 
-        String containerId = context.getContainerId();
-
-        // to get issuer
-        AttributeIdentifier containerIdentifier =
-                new AttributeIdentifier(Constants.CONTAINER_ATTRIBUTE_URI,
-                        Constants.STRING_DATATYPE_URI, true);
-        Attribute containerIdAttr =
-                new Attribute(containerIdentifier, null, Calendar.getInstance(), null);
-        IdentityAttributeCollection containerIdCollection =
-                new IdentityAttributeCollection();
-        containerIdAttr.addAttributeValue(containerId);
-        containerIdCollection.add(containerIdAttr);
-
-        EntityAttributes envEntity = requestAttrs.getEnvironment();
-        if (envEntity == null) {
-            envEntity = new EntityAttributes(containerIdCollection);
-            requestAttrs.setEnvironment(envEntity);
-        } else {
-            envEntity.addIdentityAttributes(containerIdCollection);
-        }
+        EntityAttributes containerEntity = context.getContainerEntity();
 
         /* Need service endpoint here
         // service
@@ -102,7 +83,7 @@ public class ContainerPIP implements BootstrapPIP {
         QName operation = context.getOperation();
         Attribute operationAttribute =
                 new Attribute(AttributeUtil.getOperationAttrIdentifier(),
-                        envEntity, Calendar.getInstance(), null);
+                        containerEntity, Calendar.getInstance(), null);
         operationAttribute.addAttributeValue(operation);
         IdentityAttributeCollection attrCol = new IdentityAttributeCollection();
         attrCol.add(operationAttribute);
