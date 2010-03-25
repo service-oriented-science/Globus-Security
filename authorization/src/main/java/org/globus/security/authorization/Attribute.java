@@ -36,8 +36,9 @@ public class Attribute<T> implements Serializable {
 	 */
 	private static final long serialVersionUID = -4003937239024876946L;
 
-	private static I18n i18n = I18n.getI18n("org.globus.security.authorization.errors", Attribute.class
-			.getClassLoader());
+	private static I18n i18n = I18n.getI18n(
+			"org.globus.security.authorization.errors", Attribute.class
+					.getClassLoader());
 
 	private Calendar validFrom;
 	private Calendar validTill;
@@ -45,7 +46,8 @@ public class Attribute<T> implements Serializable {
 	private Set<T> valueSet = null;
 	private EntityAttributes issuer = null;
 
-	public Attribute(AttributeIdentifier attributeId_, EntityAttributes issuer_, Calendar validFrom, Calendar validTill) {
+	public Attribute(AttributeIdentifier attributeId_,
+			EntityAttributes issuer_, Calendar validFrom, Calendar validTill) {
 		this(attributeId_, issuer_, validFrom, validTill, null);
 	}
 
@@ -66,8 +68,9 @@ public class Attribute<T> implements Serializable {
 	 * @param values
 	 *            Contents of this set are added as attribute values.
 	 */
-	public Attribute(AttributeIdentifier attributeId_, EntityAttributes issuer_, Calendar validFrom_,
-			Calendar validTill_, Set<T> values) {
+	public Attribute(AttributeIdentifier attributeId_,
+			EntityAttributes issuer_, Calendar validFrom_, Calendar validTill_,
+			Set<T> values) {
 
 		if (attributeId_ == null) {
 			String err = i18n.getMessage("attrIdNotNull");
@@ -210,7 +213,8 @@ public class Attribute<T> implements Serializable {
 
 			// if the current attributes does not have any values, check if
 			// compared one also does not have values.
-			if ((this.valueSet.size() == 0) && ((obj.getAttributeValueSet().size()) == 0)) {
+			if ((this.valueSet.size() == 0)
+					&& ((obj.getAttributeValueSet().size()) == 0)) {
 				return true;
 			}
 

@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import org.globus.util.ClassLoaderUtils;
-import org.globus.util.I18nUtil;
+import org.globus.util.I18n;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +21,7 @@ public abstract class AuthorizationBusFactory {
 
 	private static DefaultAuthorizationBus defaultBus;
 
-	private static I18nUtil i18n = I18nUtil.getI18n("errors.properties");
+	private static I18n i18n = I18n.getI18n("errors.properties");
 
 	public abstract DefaultAuthorizationBus createAuthorizationBus();
 
