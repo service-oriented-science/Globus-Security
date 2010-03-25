@@ -1,0 +1,125 @@
+<html>
+<head>
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+<!--                                           -->
+<!-- Any title is fine                         -->
+<!--                                           -->
+<title>CruxAdmin</title>
+
+<link rel="stylesheet" href="/admin/css/blueprint/screen.css" type="text/css"
+	media="screen, projection" />
+<link rel="stylesheet" href="/admin/css/blueprint/print.css" type="text/css"
+	media="print" />
+<!--[if lt IE 8]><link rel="stylesheet" href="/css/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
+
+<script type='text/javascript' src='/admin/js/jquery-1.4.2.min.js'></script>
+<script type="text/javascript" src="/admin/js/crux-admin.js"></script>
+
+<style type="text/css">
+#nav {
+	padding: 0 10px 10px 10px;
+	background: #eee;
+	margin-bottom: 10px;
+}
+</style>
+</head>
+
+
+<body>
+
+<div class="container">
+<hr />
+<div id="header" class="span-24 last">
+<h1 class="loud"><img src="/images/crux_logo.png" />&nbsp;Crux
+Administration</h1>
+</div>
+
+<hr />
+<div id="nav" class="span-4">
+<ul class="panels">
+	<li><a href='#servicesTab' class='selected'>Services</a></li>
+	<li><a href='#securityTab'>Security</a></li>
+	<li><a href='#statusTab'>Status</a></li>
+</ul>
+</div>
+
+
+
+<div class='column span-19 last' id='tab-set'><!--<ul class='tabs'>
+	<li><a href='#text1' class='selected'>Services</a></li>
+	<li><a href='#text2'>Security</a></li>
+	<li><a href='#text3'>Status</a></li>
+</ul>
+-->
+<div id="panelSet">
+<div id='servicesTab'>
+<p>${message}</p>
+</div>
+
+
+<!-- Setup for Security -->
+<div id='securityTab'>
+<form id="dummy" action="" method="post">
+<p id="containerId"></p>
+<p><label for="dummy0">Container Alias</label><br>
+<input type="text" class="title" name="dummy0" id="containerAlias"
+	value="Custom alias for the container"></p>
+
+<p><label for="dummy1">Another field</label><br>
+<input type="text" class="text" id="dummy1" name="dummy1"
+	value="Field with class .text"></p>
+
+<p><label for="rejectLimitedProxy">Reject Limited Proxy</label><br>
+<checkbox name="dummy2" id="dummy2" rows="5" cols="20"></textarea></p>
+
+<p><input type="submit" value="Submit"> <input type="reset"
+	value="Reset"></p>
+
+</form>
+</div>
+
+<div id='statusTab'>
+<p>It is a long established fact that a reader will be distracted by
+the readable content of a page when looking at its layout. The point of
+using Lorem Ipsum is that it has a more-or-less normal distribution of
+letters, as opposed to using 'Content here, content here', making it
+look like readable English. Many desktop publishing packages and web
+page editors now use Lorem Ipsum as their default model text, and a
+search for 'lorem ipsum' will uncover many web sites still in their
+infancy. Various versions have evolved over the years, sometimes by
+accident, sometimes on purpose (injected humour and the like).</p>
+</div>
+</div>
+<script type="text/javascript">
+	$("#panelSet > div").hide();
+	$("#panelSet > div").eq(0).show();
+	$("ul.panels a").click(function() {
+		$("ul.panels a.selected").removeClass('selected');
+		$("#panelSet > div").hide();
+		$("" + $(this).attr("href")).fadeIn('slow');
+		$(this).addClass('selected');
+		return false;
+	});
+</script></div>
+
+
+
+<!-- Footer -->
+<div id="footer" class="span-24">
+<h4><a
+	href="http://www.divitodesign.com/2009/02/blueprint-css-framework-learn-the-basics/">Container
+Home</a></h4>
+</div>
+</div>
+<!-- In the situation with no JavaScript -->
+<noscript>
+<div
+	style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif">
+Your web browser must have JavaScript enabled in order for this
+application to display correctly.</div>
+
+</noscript>
+</body>
+</html>

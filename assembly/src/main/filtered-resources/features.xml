@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<features>
+	<feature name="jaxb" version="${jaxb.version}">
+		<bundle>mvn:javax.activation/com.springsource.javax.activation/${activation.version}
+		</bundle>
+		<bundle>mvn:javax.xml.stream/com.springsource.javax.xml.stream/${stax.api.version}
+		</bundle>
+		<bundle>mvn:org.jvnet.staxex/com.springsource.org.jvnet.staxex/${stax.impl.version}
+		</bundle>
+		<bundle>mvn:com.sun.xml/com.springsource.com.sun.xml.fastinfoset/${fastinfoset.version}
+		</bundle>
+		<bundle>mvn:javax.xml.bind/com.springsource.javax.xml.bind/${jaxb.api.version}
+		</bundle>
+		<bundle>mvn:com.sun.xml/com.springsource.com.sun.xml.bind/${jaxb.impl.version}
+		</bundle>
+	</feature>
+	<feature name='com.springsource.javax.inject' version="${jsr330.version}">
+		<bundle>mvn:javax.inject/com.springsource.javax.inject/${jsr330.version}
+		</bundle>
+	</feature>
+	<feature name='com.springsource.org.apache.velocity' version="${velocity.version}">
+		<bundle>mvn:org.apache.commons/com.springsource.org.apache.commons.collections/${commons.collections.version}
+		</bundle>
+		<bundle>mvn:org.apache.commons/com.springsource.org.apache.commons.lang/${commons.lang.version}
+		</bundle>
+		<bundle>mvn:org.apache.velocity/com.springsource.org.apache.velocity/${velocity.version}
+		</bundle>
+	</feature>
+	<feature name='org.springframework' version="${spring.framework.version}">
+		<bundle>mvn:org.aopalliance/com.springsource.org.aopalliance/${aopalliance.version}
+		</bundle>
+		<bundle>mvn:org.springframework/org.springframework.core/${spring.framework.version}
+		</bundle>
+		<bundle>mvn:org.springframework/org.springframework.asm/${spring.framework.version}
+		</bundle>
+		<bundle>mvn:org.springframework/org.springframework.beans/${spring.framework.version}
+		</bundle>
+		<bundle>mvn:org.springframework/org.springframework.aop/${spring.framework.version}
+		</bundle>
+		<bundle>mvn:org.springframework/org.springframework.asm/${spring.framework.version}
+		</bundle>
+		<bundle>mvn:org.springframework/org.springframework.expression/${spring.framework.version}
+		</bundle>
+		<bundle>mvn:org.springframework/org.springframework.context/${spring.framework.version}
+		</bundle>
+		<bundle>mvn:org.springframework/org.springframework.context.support/${spring.framework.version}
+		</bundle>
+	</feature>
+	<feature name='org.springframework.web' version="${spring.framework.version}">
+		<feature version="${spring.framework.version}">org.springframework</feature>
+		<bundle>mvn:org.codehaus.jackson/jackson-core-asl/${jackson.version}
+		</bundle>
+		<bundle>mvn:org.codehaus.jackson/jackson-mapper-asl/${jackson.version}
+		</bundle>
+		<bundle>mvn:org.springframework/org.springframework.web/${spring.framework.version}
+		</bundle>
+		<bundle>mvn:org.springframework/org.springframework.web.servlet/${spring.framework.version}
+		</bundle>
+
+	</feature>
+	<feature name='authorization' version="${crux.version}">
+		<feature version="${spring.framework.version}">org.springframework.web</feature>
+		<feature version="${spring.osgi.version}">spring-osgi</feature>
+		<feature version="${jaxb.version}">jaxb</feature>
+		<bundle>mvn:org.apache.commons/com.springsource.org.apache.commons.collections/${commons.collections.version}
+		</bundle>
+
+		<bundle>mvn:org.globus.crux/core/${crux.version}</bundle>
+		<bundle>mvn:org.globus.crux.security/authorization/${crux.version}
+		</bundle>
+	</feature>
+	<feature name='spring-osgi' version="${spring.osgi.version}">
+		<feature version="${spring.framework.version}">org.springframework.web</feature>
+		<bundle>mvn:org.springframework.osgi/spring-osgi-extender/${spring.osgi.version}
+		</bundle>
+		<bundle>mvn:org.springframework.osgi/spring-osgi-core/${spring.osgi.version}
+		</bundle>
+		<bundle>mvn:org.springframework.osgi/spring-osgi-io/${spring.osgi.version}
+		</bundle>
+		<bundle>mvn:org.springframework.osgi/spring-osgi-web/${spring.osgi.version}
+		</bundle>
+	</feature>
+</features>

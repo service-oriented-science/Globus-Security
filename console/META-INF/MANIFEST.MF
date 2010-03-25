@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Export-Package: org.apache.felix.karaf.branding;version="0"
+Fragment-Host: org.apache.felix.karaf.shell.console
+Unversioned-Imports: *
+Bundle-Classpath: .
+Built-By: turtlebender
+Bundle-Name: console
+Created-By: Apache Maven
+Build-Jdk: 1.6.0_17
+Spring-DM-Version: 1.0-SNAPSHOT
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: console
+Archiver-Version: Plexus Archiver
+

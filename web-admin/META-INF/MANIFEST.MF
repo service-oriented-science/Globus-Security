@@ -1,0 +1,54 @@
+Manifest-Version: 1.0
+Bundle-Version: 1.0.0.SNAPSHOT
+Unversioned-Imports: *
+Build-Jdk: 1.6.0_17
+Built-By: turtlebender
+Tool: Bundlor 1.0.0.M6
+Spring-DM-Version: 1.0-SNAPSHOT
+Bundle-Name: Crux Web Administration App
+Bundle-ManifestVersion: 2
+Created-By: Apache Maven
+Bundle-SymbolicName: web-admin;singleton:=true
+Archiver-Version: Plexus Archiver
+Webapp-Context: admin
+Import-Package: javax.inject;version="1.0.0",
+ javax.servlet;version="2.5.0",
+ javax.servlet.http;version="2.5.0",
+ javax.servlet.resources;version="2.5.0",
+ org.apache.commons.collections;version="3.2.1",
+ org.apache.velocity;version="1.6.2",
+ org.apache.velocity.exception;version="1.6.2",
+ org.apache.velocity.io;version="1.6.2",
+ org.apache.velocity.runtime.resource;version="1.6.2",
+ org.apache.velocity.runtime.resource.loader;version="1.6.2",
+ org.codehaus.jackson.map;version="[1.0.0,1.1.0)",
+ org.globus.crux.setup,
+ org.globus.crux.xml,
+ org.globus.security.authorization,
+ org.osgi.framework;version="1.5.0",
+ org.osgi.service.http;version="1.2.0",
+ org.slf4j;version="1.5.6",
+ org.springframework.beans;version="3.0.1.RELEASE-A",
+ org.springframework.beans.factory.annotation;version="3.0.1.RELEASE-A",
+ org.springframework.context;version="3.0.1.RELEASE-A",
+ org.springframework.context.support;version="3.0.1.RELEASE-A",
+ org.springframework.core.io;version="3.0.1.RELEASE-A",
+ org.springframework.osgi;version="1.2.1",
+ org.springframework.osgi.context;version="1.2.1",
+ org.springframework.osgi.context.support;version="1.2.1",
+ org.springframework.osgi.web.context.support;version="1.2.1",
+ org.springframework.stereotype;version="3.0.0.RC1",
+ org.springframework.ui.velocity;version="3.0.0.RC1",
+ org.springframework.web;version="3.0.1.RELEASE-A",
+ org.springframework.web.bind;version="3.0.1.RELEASE-A",
+ org.springframework.web.bind.annotation;version="3.0.1.RELEASE-A",
+ org.springframework.web.context;version="3.0.1.RELEASE-A",
+ org.springframework.web.context.support;version="3.0.1.RELEASE-A",
+ org.springframework.web.servlet;version="3.0.1.RELEASE-A",
+ org.springframework.web.servlet.mvc;version="3.0.1.RELEASE-A",
+ org.springframework.web.servlet.mvc.annotation;version="3.0.1.RELEASE-A",
+ org.springframework.web.servlet.mvc.support;version="3.0.1.RELEASE-A",
+ org.springframework.web.servlet.view;version="3.0.1.RELEASE-A",
+ org.springframework.web.servlet.view.json;version="3.0.1.RELEASE-A",
+ org.springframework.web.servlet.view.velocity;version="3.0.1.RELEASE-A"
+Bundle-ClassPath: .

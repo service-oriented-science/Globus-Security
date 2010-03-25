@@ -1,0 +1,5 @@
+#Mon Mar 08 10:35:56 CST 2010
+com.springsource.server.ide.bundlor.core.bundlor.generated.manifest.autoformatting=false
+com.springsource.server.ide.bundlor.core.byte.code.scanning=false
+com.springsource.server.ide.bundlor.core.template.properties.files=template.properties;build.properties
+eclipse.preferences.version=1
