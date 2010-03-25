@@ -14,9 +14,13 @@
  */
 package org.globus.security.authorization.providers;
 
-import org.globus.security.authorization.*;
+import org.globus.security.authorization.AuthorizationException;
+import org.globus.security.authorization.Decision;
+import org.globus.security.authorization.EntityAttributes;
+import org.globus.security.authorization.PDPInterceptor;
+import org.globus.security.authorization.RequestEntities;
 import org.globus.security.authorization.annotations.AuthorizationEngine;
-import org.globus.security.authorization.util.I18nUtil;
+import org.globus.util.I18nUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,8 +43,7 @@ import org.slf4j.LoggerFactory;
  * any PDPs.
  */
 @AuthorizationEngine(name = "Deny Override Algorithm", description = "This combining algorithm returns the first "
-		+ "deny decision returned by the list of configuired PDPs", documentationPath = "/denyOverride.html", 
-		author="Globus Crux Team", pid = "DenyOverride")
+		+ "deny decision returned by the list of configuired PDPs", documentationPath = "/denyOverride.html", author = "Globus Crux Team", pid = "DenyOverride")
 public class DenyOverrideAlg extends AbstractEngine {
 
 	/**

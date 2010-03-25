@@ -10,12 +10,12 @@ import javax.imageio.spi.ServiceRegistry;
 
 import org.globus.security.authorization.AuthorizationEngineSpi;
 import org.globus.security.authorization.InitializeException;
-import org.globus.util.I18n;
+import org.globus.util.I18nUtil;
 
 public class AuthorizationEngineFactory {
 
 	private ServiceRegistry registry;
-	private I18n i18n = I18n.getI18n("errors.properties");
+	private I18nUtil i18n = I18nUtil.getI18n("errors.properties");
 	private static AuthorizationEngineFactory instance;
 	private Map<String, AuthorizationEngine> cachedEngines = new HashMap<String, AuthorizationEngine>();
 

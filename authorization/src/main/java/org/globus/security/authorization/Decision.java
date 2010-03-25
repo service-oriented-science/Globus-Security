@@ -17,7 +17,7 @@ package org.globus.security.authorization;
 
 import java.util.Calendar;
 
-import org.globus.security.authorization.util.I18nUtil;
+import org.globus.util.I18nUtil;
 
 /**
  * Data type returned by a PDP.

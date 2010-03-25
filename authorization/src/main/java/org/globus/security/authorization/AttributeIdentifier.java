@@ -18,7 +18,7 @@ package org.globus.security.authorization;
 import java.io.Serializable;
 import java.net.URI;
 
-import org.globus.security.authorization.util.I18nUtil;
+import org.globus.util.I18nUtil;
 
 /**
  * Data type with members that uniquely identify an attribute
