@@ -18,6 +18,7 @@ import org.globus.crux.security.util.DirSetupUtil;
 import org.globus.crux.security.util.FileSetupUtil;
 import org.globus.security.X509Credential;
 import org.globus.security.filestore.FileBasedKeyStoreParameters;
+import org.globus.security.filestore.KeyStoreParametersFactory;
 import org.globus.security.util.CertificateLoadUtil;
 import org.springframework.core.io.FileSystemResource;
 import org.testng.annotations.AfterTest;
@@ -26,6 +27,7 @@ import org.testng.annotations.Test;
 
 import java.io.*;
 import java.security.*;
+import java.security.KeyStore.LoadStoreParameter;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.*;
@@ -189,7 +191,7 @@ public class TestPEMFileBasedKeyStore {
     }
 
     private FileBasedKeyStore loadFromParameters() throws Exception {
-        FileBasedKeyStoreParameters params = new FileBasedKeyStoreParameters(
+        LoadStoreParameter params = KeyStoreParametersFactory.createTrustStoreParameters(
                 "file:" + this.trustedDirectory.getTempDirectoryName() + "/*.0",
                 "file:" + this.defaultTrustedDirectory.getTempDirectoryName() + "/*.0"
         );

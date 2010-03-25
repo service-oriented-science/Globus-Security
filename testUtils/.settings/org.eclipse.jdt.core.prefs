@@ -1,5 +1,9 @@
-#Thu Feb 11 20:36:41 CST 2010
-eclipse.preferences.version=1
+#Fri Mar 12 08:48:30 CST 2010
+encoding//src/test/java=UTF8
 org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.5
-org.eclipse.jdt.core.compiler.compliance=1.5
+eclipse.preferences.version=1
+encoding//src/test/resources=UTF8
 org.eclipse.jdt.core.compiler.source=1.5
+encoding//src/main/java=UTF8
+encoding//src/main/resources=UTF8
+org.eclipse.jdt.core.compiler.compliance=1.5
