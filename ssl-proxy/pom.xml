@@ -24,19 +24,6 @@
 	<artifactId>ssl-proxy</artifactId>
 	<name>Globus Support for SSL Proxies</name>
 
-	<packaging>jar</packaging>
-	<dependencyManagement>
-		<dependencies>
-		</dependencies>
-	</dependencyManagement>
-
-	<properties>
-		<bundle.symbolicName>org.globus.crux.security</bundle.symbolicName>
-		<bundle.namespace>ssl-proxy</bundle.namespace>
-		<book.directory>src/book</book.directory>
-		<book.descriptor>src/book/book-descriptor.xml</book.descriptor>
-	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>commons-codec</groupId>
@@ -64,13 +51,7 @@
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcprov-jdk15</artifactId>
-			<scope>provided</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>jcl-over-slf4j</artifactId>
-				</exclusion>
-			</exclusions>
+			<scope>provided</scope>			
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -83,7 +64,7 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.globus.crux.security</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>testUtils</artifactId>
 			<scope>test</scope>
 		</dependency>
@@ -102,6 +83,4 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
-
 </project>

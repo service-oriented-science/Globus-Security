@@ -27,7 +27,7 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>${groupId}</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>ssl-proxy</artifactId>
 		</dependency>
 		<dependency>
@@ -69,12 +69,12 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>${groupId}</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>containerTestUtils</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>${groupId}</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>testUtils</artifactId>
 			<scope>test</scope>
 		</dependency>
