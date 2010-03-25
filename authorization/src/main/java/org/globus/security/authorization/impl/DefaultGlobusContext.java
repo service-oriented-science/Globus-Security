@@ -4,6 +4,7 @@ import javax.security.auth.Subject;
 import javax.xml.namespace.QName;
 
 import org.globus.security.authorization.EntityAttributes;
+import org.globus.security.authorization.GlobusContextFactory;
 
 public class DefaultGlobusContext implements GlobusContext {
     private GlobusContext delegate;

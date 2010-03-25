@@ -22,86 +22,69 @@ import javax.xml.namespace.QName;
 
 import org.globus.security.authorization.Attribute;
 import org.globus.security.authorization.AttributeException;
-import org.globus.security.authorization.AttributeIdentifier;
 import org.globus.security.authorization.BootstrapPIP;
 import org.globus.security.authorization.ChainConfig;
 import org.globus.security.authorization.CloseException;
-import org.globus.security.authorization.Constants;
 import org.globus.security.authorization.EntityAttributes;
 import org.globus.security.authorization.IdentityAttributeCollection;
 import org.globus.security.authorization.InitializeException;
 import org.globus.security.authorization.NonRequestEntities;
 import org.globus.security.authorization.RequestEntities;
-import org.globus.security.authorization.impl.GlobusContext;
 import org.globus.security.authorization.util.AttributeUtil;
 
 public class ContainerPIP implements BootstrapPIP {
 
-    @Inject
-    private GlobusContext context;
+	@Inject
+	private GlobusContext context;
 
-    public void initialize(String chainName, String prefix, ChainConfig config)
-            throws InitializeException {
+	public void initialize(String chainName, String prefix, ChainConfig config) throws InitializeException {
 
-    }
+	}
 
-    public void collectRequestAttributes(RequestEntities requestAttrs)
-            throws AttributeException {
+	public void collectRequestAttributes(RequestEntities requestAttrs) throws AttributeException {
 
-        EntityAttributes containerEntity = context.getContainerEntity();
+		EntityAttributes containerEntity = context.getContainerEntity();
 
-        /* Need service endpoint here
-        // service
-        String servicePath = ContextUtils.getTargetServicePath(this.context);
-        // base URL
-        URL baseURL = null;
-        try {
-            baseURL = ServiceHost.getBaseURL(this.context);
-        } catch (IOException ioe) {
-            throw new AttributeException(ioe);
-        }
+		/*
+		 * Need service endpoint here // service String servicePath =
+		 * ContextUtils.getTargetServicePath(this.context); // base URL URL
+		 * baseURL = null; try { baseURL = ServiceHost.getBaseURL(this.context);
+		 * } catch (IOException ioe) { throw new AttributeException(ioe); }
+		 * 
+		 * AttributeIdentifier serviceIden =
+		 * AttributeUtil.getServiceIdentifier(); // since this is done per
+		 * operaiton, the validity can be infinity Attribute serviceAttribute =
+		 * new Attribute(serviceIden, containerIssuer, now, null);
+		 * serviceAttribute.addAttributeValue(baseURL + servicePath);
+		 * IdentityAttributeCollection attrCol = new
+		 * IdentityAttributeCollection(); attrCol.add(serviceAttribute);
+		 * 
+		 * EntityAttributes resourceEntity = requestAttrs.getResource(); if
+		 * (resourceEntity == null) { resourceEntity = new
+		 * EntityAttributes(attrCol); requestAttrs.setResource(resourceEntity);
+		 * } else { resourceEntity.addIdentityAttributes(attrCol); }
+		 */
 
-        AttributeIdentifier serviceIden = AttributeUtil.getServiceIdentifier();
-        // since this is done per operaiton, the validity can be infinity
-        Attribute serviceAttribute =
-                new Attribute(serviceIden, containerIssuer, now, null);
-        serviceAttribute.addAttributeValue(baseURL + servicePath);
-        IdentityAttributeCollection attrCol =
-                new IdentityAttributeCollection();
-        attrCol.add(serviceAttribute);
+		QName operation = context.getOperation();
+		Attribute operationAttribute = new Attribute(AttributeUtil.getOperationAttrIdentifier(), containerEntity,
+				Calendar.getInstance(), null);
+		operationAttribute.addAttributeValue(operation);
+		IdentityAttributeCollection attrCol = new IdentityAttributeCollection();
+		attrCol.add(operationAttribute);
 
-        EntityAttributes resourceEntity = requestAttrs.getResource();
-        if (resourceEntity == null) {
-            resourceEntity = new EntityAttributes(attrCol);
-            requestAttrs.setResource(resourceEntity);
-        } else {
-            resourceEntity.addIdentityAttributes(attrCol);
-        }
+		EntityAttributes actionEntity = requestAttrs.getAction();
+		if (actionEntity == null) {
+			actionEntity = new EntityAttributes(attrCol);
+			requestAttrs.setAction(actionEntity);
+		} else {
+			actionEntity.addIdentityAttributes(attrCol);
+		}
+	}
 
-*/
+	public NonRequestEntities collectAttributes(RequestEntities requestAttr) throws AttributeException {
+		return null;
+	}
 
-        QName operation = context.getOperation();
-        Attribute operationAttribute =
-                new Attribute(AttributeUtil.getOperationAttrIdentifier(),
-                        containerEntity, Calendar.getInstance(), null);
-        operationAttribute.addAttributeValue(operation);
-        IdentityAttributeCollection attrCol = new IdentityAttributeCollection();
-        attrCol.add(operationAttribute);
-
-        EntityAttributes actionEntity = requestAttrs.getAction();
-        if (actionEntity == null) {
-            actionEntity = new EntityAttributes(attrCol);
-            requestAttrs.setAction(actionEntity);
-        } else {
-            actionEntity.addIdentityAttributes(attrCol);
-        }
-    }
-
-    public NonRequestEntities
-    collectAttributes(RequestEntities requestAttr) throws AttributeException {
-        return null;
-    }
-
-    public void close() throws CloseException {
-    }
+	public void close() throws CloseException {
+	}
 }

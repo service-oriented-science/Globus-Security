@@ -15,7 +15,7 @@
  */
 package org.globus.security.authorization;
 
-import org.globus.util.I18nUtil;
+import org.globus.util.I18n;
 
 /**
  * Stores a collection of IdentityAttributes. See AttributeCollection.
@@ -27,7 +27,7 @@ public class IdentityAttributeCollection extends AttributeCollection {
 	 * 
 	 */
 	private static final long serialVersionUID = 5475213179019500601L;
-	private static I18nUtil i18n = I18nUtil.getI18n("org.globus.security.authorization.errors", Attribute.class
+	private static I18n i18n = I18n.getI18n("org.globus.security.authorization.errors", Attribute.class
 			.getClassLoader());
 
 	protected String getDescription() {

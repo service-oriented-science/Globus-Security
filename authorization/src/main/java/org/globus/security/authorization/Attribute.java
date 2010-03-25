@@ -22,7 +22,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.globus.util.I18nUtil;
+import org.globus.util.I18n;
 
 /**
  * Data type representing an attribute. Attribute is uniquely identified by
@@ -36,7 +36,7 @@ public class Attribute<T> implements Serializable {
 	 */
 	private static final long serialVersionUID = -4003937239024876946L;
 
-	private static I18nUtil i18n = I18nUtil.getI18n("org.globus.security.authorization.errors", Attribute.class
+	private static I18n i18n = I18n.getI18n("org.globus.security.authorization.errors", Attribute.class
 			.getClassLoader());
 
 	private Calendar validFrom;
