@@ -7,8 +7,7 @@ Export-Package: org.globus.security.authorization,
  org.globus.security.authorization.providers,
  org.globus.security.authorization.util,
  org.globus.security.authorization.xml
-Import-Package: org.globus.crux.setup,
- org.osgi.framework;version="1.5.0",
+Import-Package: org.osgi.framework;version="1.5.0",
  org.slf4j;version="[1.5.6,1.9.0]",
  org.springframework.beans;version="[3.0.1,4.0.0)",
  org.springframework.beans.factory;version="[3.0.1,4.0.0)",
@@ -23,3 +22,4 @@ Bundle-ClassPath: .,
  jsr250-api-1.0.jar,
  javax.inject-1.jar,
  aspectjrt-1.6.8.jar
+Bundle-RequiredExecutionEnvironment: JavaSE-1.5
