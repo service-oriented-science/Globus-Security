@@ -15,15 +15,15 @@
 
 package org.globus.security.stores;
 
-import org.apache.commons.io.FileUtils;
-import org.globus.security.CredentialException;
-import org.globus.security.X509Credential;
-import org.springframework.core.io.Resource;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.cert.CertificateEncodingException;
+
+import org.apache.commons.io.FileUtils;
+import org.globus.security.CredentialException;
+import org.globus.security.X509Credential;
+import org.springframework.core.io.Resource;
 
 /**
  * Fill Me

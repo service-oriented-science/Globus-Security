@@ -15,16 +15,29 @@
 
 package org.globus.security.util;
 
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.SecureRandom;
+import java.security.Security;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertStore;
+import java.util.Map;
+
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+
 import org.globus.security.SigningPolicyStore;
 import org.globus.security.X509ProxyCertPathParameters;
 import org.globus.security.provider.PKITrustManager;
 import org.globus.security.provider.X509ProxyCertPathValidator;
 import org.globus.security.proxyExtension.ProxyPolicyHandler;
-
-import javax.net.ssl.*;
-import java.security.*;
-import java.security.cert.CertStore;
-import java.util.Map;
 
 /**
  * This class is used to configure and create SSL socket factories. The

@@ -15,10 +15,10 @@
 
 package org.globus.security.provider;
 
-import org.globus.security.Constants;
-
 import java.security.cert.CertPathValidatorException;
 import java.security.cert.X509Certificate;
+
+import org.globus.security.Constants;
 
 /**
  * Implementations of this interface will provide some validation logic of certificates.

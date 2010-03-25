@@ -14,13 +14,13 @@
  */
 package org.globus.security.util;
 
+import java.io.IOException;
+
 import org.bouncycastle.asn1.x509.TBSCertificateStructure;
 import org.bouncycastle.asn1.x509.X509Extension;
 import org.bouncycastle.asn1.x509.X509Extensions;
 import org.globus.security.Constants;
 import org.globus.security.proxyExtension.ProxyCertInfo;
-
-import java.io.IOException;
 
 /**
  * FILL ME

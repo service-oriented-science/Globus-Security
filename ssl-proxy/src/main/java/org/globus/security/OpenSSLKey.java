@@ -14,16 +14,33 @@
  */
 package org.globus.security;
 
-import org.bouncycastle.util.encoders.Base64;
-import org.globus.security.util.FileUtil;
-import org.globus.security.util.PEMUtil;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.io.Writer;
+import java.security.GeneralSecurityException;
+import java.security.InvalidKeyException;
+import java.security.Key;
+import java.security.MessageDigest;
+import java.security.PrivateKey;
+import java.security.SecureRandom;
+import java.util.StringTokenizer;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.*;
-import java.security.*;
-import java.util.StringTokenizer;
+
+import org.bouncycastle.util.encoders.Base64;
+import org.globus.security.util.FileUtil;
+import org.globus.security.util.PEMUtil;
 
 /**
  * Represents a OpenSSL-style PEM-formatted private key. It supports encryption and decryption of the key. Currently,

@@ -14,14 +14,15 @@
  */
 package org.globus.security;
 
-import org.bouncycastle.util.encoders.Base64;
-import org.globus.security.bc.BouncyCastleOpenSSLKey;
-import org.globus.security.util.CertificateIOUtil;
-import org.globus.security.util.CertificateLoadUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.EOFException;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.security.GeneralSecurityException;
 import java.security.Key;
 import java.security.PrivateKey;
@@ -29,6 +30,13 @@ import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 import java.util.Date;
 import java.util.Vector;
+
+import org.bouncycastle.util.encoders.Base64;
+import org.globus.security.bc.BouncyCastleOpenSSLKey;
+import org.globus.security.util.CertificateIOUtil;
+import org.globus.security.util.CertificateLoadUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * FILL ME

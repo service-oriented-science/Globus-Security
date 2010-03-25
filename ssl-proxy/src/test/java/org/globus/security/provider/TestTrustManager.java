@@ -14,13 +14,17 @@
  */
 package org.globus.security.provider;
 
+import java.security.KeyStore;
+import java.security.cert.CertPathValidatorException;
+import java.security.cert.CertPathValidatorResult;
+import java.security.cert.CertStore;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+
 import org.globus.security.X509ProxyCertPathParameters;
 import org.globus.security.X509ProxyCertPathValidatorResult;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import java.security.KeyStore;
-import java.security.cert.*;
 
 /**
  * FILL ME

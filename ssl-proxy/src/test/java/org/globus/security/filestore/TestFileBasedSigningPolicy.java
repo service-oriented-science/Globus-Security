@@ -17,8 +17,6 @@ package org.globus.security.filestore;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
-import java.io.File;
-import java.io.FilenameFilter;
 import java.util.Collection;
 
 import org.globus.crux.security.util.FileSetupUtil;

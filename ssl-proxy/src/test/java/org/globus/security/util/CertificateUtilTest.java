@@ -14,10 +14,7 @@
  */
 package org.globus.security.util;
 
-import org.globus.crux.security.util.FileSetupUtil;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Test;
+import static org.testng.AssertJUnit.assertTrue;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -26,7 +23,10 @@ import java.security.GeneralSecurityException;
 import java.security.cert.X509CRL;
 import java.security.cert.X509Certificate;
 
-import static org.testng.AssertJUnit.assertTrue;
+import org.globus.crux.security.util.FileSetupUtil;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
 
 /**
  * FILL ME

@@ -14,23 +14,44 @@
  */
 package org.globus.security.provider;
 
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.security.Key;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.PrivateKey;
+import java.security.Security;
+import java.security.UnrecoverableKeyException;
+import java.security.KeyStore.LoadStoreParameter;
+import java.security.cert.Certificate;
+import java.security.cert.X509Certificate;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Vector;
+
 import org.globus.crux.security.util.DirSetupUtil;
 import org.globus.crux.security.util.FileSetupUtil;
 import org.globus.security.X509Credential;
 import org.globus.security.filestore.FileBasedKeyStoreParameters;
+import org.globus.security.filestore.KeyStoreParametersFactory;
 import org.globus.security.util.CertificateLoadUtil;
 import org.springframework.core.io.FileSystemResource;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import java.io.*;
-import java.security.*;
-import java.security.cert.Certificate;
-import java.security.cert.X509Certificate;
-import java.util.*;
-
-import static org.testng.Assert.*;
 
 /**
  * FILL ME
@@ -189,7 +210,7 @@ public class TestPEMFileBasedKeyStore {
     }
 
     private FileBasedKeyStore loadFromParameters() throws Exception {
-        FileBasedKeyStoreParameters params = new FileBasedKeyStoreParameters(
+        LoadStoreParameter params = KeyStoreParametersFactory.createTrustStoreParameters(
                 "file:" + this.trustedDirectory.getTempDirectoryName() + "/*.0",
                 "file:" + this.defaultTrustedDirectory.getTempDirectoryName() + "/*.0"
         );

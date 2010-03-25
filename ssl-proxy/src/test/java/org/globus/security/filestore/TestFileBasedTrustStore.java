@@ -14,6 +14,28 @@
  */
 package org.globus.security.filestore;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
+import java.io.File;
+import java.io.FilenameFilter;
+import java.security.Security;
+import java.security.cert.CRL;
+import java.security.cert.CertStore;
+import java.security.cert.CertStoreParameters;
+import java.security.cert.Certificate;
+import java.security.cert.X509CRL;
+import java.security.cert.X509CertSelector;
+import java.security.cert.X509Certificate;
+import java.util.Collection;
+
+import javax.security.auth.x500.X500Principal;
+
 import org.globus.crux.security.util.DirSetupUtil;
 import org.globus.security.SigningPolicy;
 import org.globus.security.SigningPolicyStore;
@@ -25,15 +47,6 @@ import org.globus.security.stores.ResourceSigningPolicyStoreParameters;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import javax.security.auth.x500.X500Principal;
-import java.io.File;
-import java.io.FilenameFilter;
-import java.security.Security;
-import java.security.cert.*;
-import java.util.Collection;
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
 
 /**
  * FILL ME

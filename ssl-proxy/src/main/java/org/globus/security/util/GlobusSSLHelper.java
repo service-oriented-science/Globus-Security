@@ -15,127 +15,161 @@
 
 package org.globus.security.util;
 
-import org.globus.security.provider.GlobusProvider;
-import org.globus.security.stores.ResourceCertStoreParameters;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.*;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.cert.CertStore;
 import java.security.cert.CertificateException;
 
+import org.globus.security.provider.GlobusProvider;
+import org.globus.security.stores.ResourceCertStoreParameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+
 /**
- * This is a utility class designed to simplify common tasks required for configuring the globus ssl support.
- *
+ * This is a utility class designed to simplify common tasks required for
+ * configuring the globus ssl support.
+ * 
  * @version 1.0
  * @since 1.0
  */
-//TODO: support custom classloader
+// TODO: support custom classloader
 public final class GlobusSSLHelper {
 
+	private GlobusSSLHelper() {
+		// Should not be instantiated.
+	}
 
-    private GlobusSSLHelper() {
-        //Should not be instantiated.
-    }
+	/**
+	 * Create a trust store using the supplied details. Java SSL requires the
+	 * trust store to be supplied as a java.security.KeyStore, so this will
+	 * create a KeyStore containing all of the Trust Anchors.
+	 * 
+	 * @param provider
+	 *            The Java security provider to use.
+	 * @param trustAnchorStoreType
+	 *            The type of key store to be constructed.
+	 * @param trustAnchorStoreLocation
+	 *            The location of the trust store file
+	 * @param trustAnchorStorePassword
+	 *            The password for the trust store.
+	 * @return A configured Keystore which holds TrustAnchors. Note that this
+	 *         holds trusted certificates, not keys/credentials
+	 * @throws GlobusSSLConfigurationException
+	 *             If unable to construct the TrustStore.
+	 */
+	public static KeyStore buildTrustStore(String provider,
+			String trustAnchorStoreType, String trustAnchorStoreLocation,
+			String trustAnchorStorePassword)
+			throws GlobusSSLConfigurationException {
+		try {
+			PathMatchingResourcePatternResolver resourceResolver = new PathMatchingResourcePatternResolver();
+			KeyStore trustAnchorStore;
+			if (provider == null) {
+				trustAnchorStore = KeyStore.getInstance(trustAnchorStoreType);
+			} else {
+				trustAnchorStore = KeyStore.getInstance(trustAnchorStoreType,
+						provider);
+			}
+			InputStream keyStoreInput = resourceResolver.getResource(
+					trustAnchorStoreLocation).getInputStream();
+			trustAnchorStore.load(keyStoreInput,
+					trustAnchorStorePassword == null ? null
+							: trustAnchorStorePassword.toCharArray());
+			return trustAnchorStore;
+		} catch (KeyStoreException e) {
+			throw new GlobusSSLConfigurationException(e);
+		} catch (IOException e) {
+			throw new GlobusSSLConfigurationException(e);
+		} catch (NoSuchAlgorithmException e) {
+			throw new GlobusSSLConfigurationException(e);
+		} catch (CertificateException e) {
+			throw new GlobusSSLConfigurationException(e);
+		} catch (NoSuchProviderException e) {
+			throw new GlobusSSLConfigurationException(e);
+		}
+	}
 
-    /**
-     * Create a trust store using the supplied details.  Java SSL requires the trust store to be supplied as a
-     * java.security.KeyStore, so this will create a KeyStore containing all of the Trust Anchors.
-     *
-     * @param provider                 The Java security provider to use.
-     * @param trustAnchorStoreType     The type of key store to be constructed.
-     * @param trustAnchorStoreLocation The location of the trust store file
-     * @param trustAnchorStorePassword The password for the trust store.
-     * @return A configured Keystore which holds TrustAnchors.  Note that this holds trusted certificates,
-     *         not keys/credentials
-     * @throws GlobusSSLConfigurationException If unable to construct the TrustStore.
-     */
-    public static KeyStore buildTrustStore(String provider, String trustAnchorStoreType, String trustAnchorStoreLocation,
-                                           String trustAnchorStorePassword) throws GlobusSSLConfigurationException {
-        try {
-            PathMatchingResourcePatternResolver resourceResolver = new PathMatchingResourcePatternResolver();
-            KeyStore trustAnchorStore;
-            if (provider == null) {
-                trustAnchorStore = KeyStore.getInstance(trustAnchorStoreType);
-            } else {
-                trustAnchorStore = KeyStore.getInstance(trustAnchorStoreType, provider);
-            }
-            InputStream keyStoreInput = resourceResolver.getResource(trustAnchorStoreLocation).getInputStream();
-            trustAnchorStore.load(keyStoreInput, trustAnchorStorePassword == null ? null :
-                    trustAnchorStorePassword.toCharArray());
-            return trustAnchorStore;
-        } catch (KeyStoreException e) {
-            throw new GlobusSSLConfigurationException(e);
-        } catch (IOException e) {
-            throw new GlobusSSLConfigurationException(e);
-        } catch (NoSuchAlgorithmException e) {
-            throw new GlobusSSLConfigurationException(e);
-        } catch (CertificateException e) {
-            throw new GlobusSSLConfigurationException(e);
-        } catch (NoSuchProviderException e) {
-            throw new GlobusSSLConfigurationException(e);
-        }
-    }
+	/**
+	 * Create a configured CredentialStore using the supplied parameters. The
+	 * credential store is a java.security.KeyStore.
+	 * 
+	 * @param provider
+	 *            The Java security provider to use.
+	 * @param credentialStoreType
+	 *            The type of key store to be constructed.
+	 * @param credentialStoreLocation
+	 *            The location of the credential store file
+	 * @param credentialStorePassword
+	 *            The password for the credential store.
+	 * @return A configured Keystore which holds credentials defined by these
+	 *         parameters.
+	 * @throws GlobusSSLConfigurationException
+	 *             If unable to construct the Credential Store.
+	 */
+	public static KeyStore findCredentialStore(String provider,
+			String credentialStoreType, String credentialStoreLocation,
+			String credentialStorePassword)
+			throws GlobusSSLConfigurationException {
+		try {
+			KeyStore credentialStore;
+			PathMatchingResourcePatternResolver resourceResolver = new PathMatchingResourcePatternResolver();
+			if (provider == null) {
+				credentialStore = KeyStore.getInstance(credentialStoreType);
+			} else {
+				credentialStore = KeyStore.getInstance(credentialStoreType,
+						provider);
+			}
+			InputStream keyStoreInput = resourceResolver.getResource(
+					credentialStoreLocation).getInputStream();
+			credentialStore.load(keyStoreInput,
+					credentialStorePassword == null ? null
+							: credentialStorePassword.toCharArray());
+			return credentialStore;
+		} catch (KeyStoreException e) {
+			throw new GlobusSSLConfigurationException(e);
+		} catch (IOException e) {
+			throw new GlobusSSLConfigurationException(e);
+		} catch (NoSuchAlgorithmException e) {
+			throw new GlobusSSLConfigurationException(e);
+		} catch (CertificateException e) {
+			throw new GlobusSSLConfigurationException(e);
+		} catch (NoSuchProviderException e) {
+			throw new GlobusSSLConfigurationException(e);
+		}
+	}
 
-
-    /**
-     * Create a configured CredentialStore using the supplied parameters.  The credential store is a
-     * java.security.KeyStore.
-     *
-     * @param provider                 The Java security provider to use.
-     * @param credentialStoreType     The type of key store to be constructed.
-     * @param credentialStoreLocation The location of the credential store file
-     * @param credentialStorePassword The password for the credential store.
-     * @return A configured Keystore which holds credentials defined by these parameters.
-     * @throws GlobusSSLConfigurationException If unable to construct the Credential Store.
-     */
-	public static KeyStore findCredentialStore(String provider, String credentialStoreType,
-                                               String credentialStoreLocation, String credentialStorePassword)
-            throws GlobusSSLConfigurationException {
-        try {
-            KeyStore credentialStore;
-            PathMatchingResourcePatternResolver resourceResolver = new PathMatchingResourcePatternResolver();
-            if (provider == null) {
-                credentialStore = KeyStore.getInstance(credentialStoreType);
-            } else {
-                credentialStore = KeyStore.getInstance(credentialStoreType, provider);
-            }
-            InputStream keyStoreInput = resourceResolver.getResource(credentialStoreLocation).getInputStream();
-            credentialStore.load(keyStoreInput, credentialStorePassword == null ? null :
-                    credentialStorePassword.toCharArray());
-            return credentialStore;
-        } catch (KeyStoreException e) {
-            throw new GlobusSSLConfigurationException(e);
-        } catch (IOException e) {
-            throw new GlobusSSLConfigurationException(e);
-        } catch (NoSuchAlgorithmException e) {
-            throw new GlobusSSLConfigurationException(e);
-        } catch (CertificateException e) {
-            throw new GlobusSSLConfigurationException(e);
-        } catch (NoSuchProviderException e) {
-            throw new GlobusSSLConfigurationException(e);
-        }
-    }
-
-    /**
-     * Create a store of Certificate Revocation Lists.  Java requires that this be a
-     * java.security.certificates.CertStore.  As such, the store can hold both CRL's and non-trusted certs.  For the
-     * purposes of this method, we assume that only crl's will be loaded.  This can only be used with the Globus
-     * provided Certificate Store.
-     *
-     * @param crlPattern The pattern which defines the locations of the CRL's
-     * @return A configured Java CertStore containing the specified CRL's
-     * @throws GlobusSSLConfigurationException if the store cannot be loaded.                            
-     */
-    public static CertStore findCRLStore(String crlPattern) throws GlobusSSLConfigurationException {
-        ResourceCertStoreParameters crlStoreParams = new ResourceCertStoreParameters(null, crlPattern);
-        try {
-            return CertStore.getInstance(GlobusProvider.CERTSTORE_TYPE, crlStoreParams);
-        } catch (InvalidAlgorithmParameterException e) {
-            throw new GlobusSSLConfigurationException(e);
-        } catch (NoSuchAlgorithmException e) {
-            throw new GlobusSSLConfigurationException(e);
-        }
-    }
+	/**
+	 * Create a store of Certificate Revocation Lists. Java requires that this
+	 * be a java.security.certificates.CertStore. As such, the store can hold
+	 * both CRL's and non-trusted certs. For the purposes of this method, we
+	 * assume that only crl's will be loaded. This can only be used with the
+	 * Globus provided Certificate Store.
+	 * 
+	 * @param crlPattern
+	 *            The pattern which defines the locations of the CRL's
+	 * @return A configured Java CertStore containing the specified CRL's
+	 * @throws GlobusSSLConfigurationException
+	 *             if the store cannot be loaded.
+	 */
+	public static CertStore findCRLStore(String crlPattern)
+			throws GlobusSSLConfigurationException {
+		ResourceCertStoreParameters crlStoreParams = new ResourceCertStoreParameters(
+				null, crlPattern);
+		try {
+			return CertStore.getInstance(GlobusProvider.CERTSTORE_TYPE,
+					crlStoreParams);
+		} catch (InvalidAlgorithmParameterException e) {
+			throw new GlobusSSLConfigurationException(e);
+		} catch (NoSuchAlgorithmException e) {
+			Logger logger = LoggerFactory.getLogger(GlobusSSLHelper.class);
+			logger.warn("Error Loading CRL store", e);
+			throw new GlobusSSLConfigurationException(e);
+		}
+	}
 }

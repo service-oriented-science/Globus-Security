@@ -17,7 +17,7 @@ package org.globus.security.authorization;
 
 import java.util.Calendar;
 
-import org.globus.util.I18nUtil;
+import org.globus.util.I18n;
 
 /**
  * Data type returned by a PDP.
@@ -29,8 +29,8 @@ public class Decision {
     public static final int NOT_APPLICABLE = 0;
     public static final int DENY = -1;
 
-    private static I18nUtil i18n =
-        I18nUtil.getI18n("org.globus.security.authorization.errors",
+    private static I18n i18n =
+        I18n.getI18n("org.globus.security.authorization.errors",
             Decision.class.getClassLoader());
 
     private EntityAttributes issuer;

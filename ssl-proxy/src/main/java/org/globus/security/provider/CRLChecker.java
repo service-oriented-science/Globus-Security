@@ -15,15 +15,29 @@
 
 package org.globus.security.provider;
 
-import org.globus.security.Constants;
-import org.globus.security.util.KeyStoreUtil;
-
-import javax.security.auth.x500.X500Principal;
-import java.security.*;
-import java.security.cert.*;
+import java.security.InvalidKeyException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.SignatureException;
+import java.security.cert.CRL;
+import java.security.cert.CRLException;
+import java.security.cert.CertPathValidatorException;
+import java.security.cert.CertStore;
+import java.security.cert.CertStoreException;
 import java.security.cert.Certificate;
+import java.security.cert.X509CRL;
+import java.security.cert.X509CRLSelector;
+import java.security.cert.X509CertSelector;
+import java.security.cert.X509Certificate;
 import java.util.Collection;
 import java.util.Date;
+
+import javax.security.auth.x500.X500Principal;
+
+import org.globus.security.Constants;
+import org.globus.security.util.KeyStoreUtil;
 
 /**
  * This checks to see if the certificate is in a CRL.

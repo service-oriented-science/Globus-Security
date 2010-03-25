@@ -14,19 +14,17 @@
  */
 package org.globus.security.filestore;
 
+import static org.testng.AssertJUnit.assertFalse;
+import static org.testng.AssertJUnit.assertTrue;
+
+import java.security.cert.TrustAnchor;
+import java.security.cert.X509Certificate;
+
 import org.globus.crux.security.util.FileSetupUtil;
 import org.globus.security.stores.ResourceTrustAnchor;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import java.io.File;
-import java.io.FilenameFilter;
-import java.security.cert.TrustAnchor;
-import java.security.cert.X509Certificate;
-
-import static org.testng.AssertJUnit.assertFalse;
-import static org.testng.AssertJUnit.assertTrue;
 
 /**
  * FILL ME

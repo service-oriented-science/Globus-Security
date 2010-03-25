@@ -18,7 +18,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.globus.util.I18nUtil;
+import org.globus.util.I18n;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +33,7 @@ public class EntityAttributes implements Serializable {
 	 */
 	private static final long serialVersionUID = 1530483508802067768L;
 
-	private static I18nUtil i18n = I18nUtil.getI18n("org.globus.security.authorization.errors",
+	private static I18n i18n = I18n.getI18n("org.globus.security.authorization.errors",
             EntityAttributes.class.getClassLoader());
 
     private static Logger logger = LoggerFactory.getLogger(EntityAttributes.class.getName());

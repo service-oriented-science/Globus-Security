@@ -14,12 +14,12 @@
  */
 package org.globus.security;
 
-import org.globus.security.proxyExtension.ProxyPolicyHandler;
-
 import java.security.KeyStore;
 import java.security.cert.CertPathParameters;
 import java.security.cert.CertStore;
 import java.util.Map;
+
+import org.globus.security.proxyExtension.ProxyPolicyHandler;
 
 /**
  * FILL ME

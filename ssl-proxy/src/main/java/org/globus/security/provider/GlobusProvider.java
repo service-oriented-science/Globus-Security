@@ -14,11 +14,11 @@
  */
 package org.globus.security.provider;
 
-import org.globus.security.stores.ResourceCertStore;
-
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.security.Provider;
+
+import org.globus.security.stores.ResourceCertStore;
 
 /**
  * This is a security provider for the Globus SSL support.  This supplies a CertStore, CertValidator and KeyStore

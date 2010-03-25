@@ -15,14 +15,14 @@
 
 package org.globus.security.stores;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 
 /**
  * // FIXME: add javadoc

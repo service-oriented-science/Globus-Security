@@ -15,11 +15,11 @@
 
 package org.globus.security.provider;
 
-import org.globus.security.Constants;
-import org.globus.security.util.ProxyCertificateUtil;
-
 import java.security.cert.CertPathValidatorException;
 import java.security.cert.X509Certificate;
+
+import org.globus.security.Constants;
+import org.globus.security.util.ProxyCertificateUtil;
 
 /**
  * Checks to see if a limited proxy is acceptable (if the chain has a limited proxy).

@@ -20,7 +20,7 @@ import org.globus.security.authorization.EntityAttributes;
 import org.globus.security.authorization.PDPInterceptor;
 import org.globus.security.authorization.RequestEntities;
 import org.globus.security.authorization.annotations.AuthorizationEngine;
-import org.globus.util.I18nUtil;
+import org.globus.util.I18n;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,7 +51,7 @@ public class DenyOverrideAlg extends AbstractEngine {
 	 */
 	private static final long serialVersionUID = 1634123231473744560L;
 
-	private static I18nUtil i18n = I18nUtil.getI18n("org.globus.security.authorization.errors", DenyOverrideAlg.class
+	private static I18n i18n = I18n.getI18n("org.globus.security.authorization.errors", DenyOverrideAlg.class
 			.getClassLoader());
 
 	private Logger logger = LoggerFactory.getLogger(DenyOverrideAlg.class.getName());

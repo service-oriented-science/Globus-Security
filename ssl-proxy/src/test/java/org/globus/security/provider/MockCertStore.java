@@ -15,7 +15,15 @@
 package org.globus.security.provider;
 
 import java.security.InvalidAlgorithmParameterException;
-import java.security.cert.*;
+import java.security.cert.CRL;
+import java.security.cert.CRLSelector;
+import java.security.cert.CertSelector;
+import java.security.cert.CertStoreException;
+import java.security.cert.CertStoreParameters;
+import java.security.cert.CertStoreSpi;
+import java.security.cert.Certificate;
+import java.security.cert.X509CRL;
+import java.security.cert.X509Certificate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Vector;

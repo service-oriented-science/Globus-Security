@@ -15,15 +15,16 @@
 
 package org.globus.security.provider;
 
+import java.security.cert.CertPathValidatorException;
+import java.security.cert.CertStoreException;
+import java.security.cert.X509Certificate;
+
+import javax.security.auth.x500.X500Principal;
+
 import org.globus.security.Constants;
 import org.globus.security.SigningPolicy;
 import org.globus.security.SigningPolicyStore;
 import org.globus.security.util.ProxyCertificateUtil;
-
-import javax.security.auth.x500.X500Principal;
-import java.security.cert.CertPathValidatorException;
-import java.security.cert.CertStoreException;
-import java.security.cert.X509Certificate;
 
 /**
  * This checks to make sure the Distinguished Name in the certificate is valid according to the signing policy.

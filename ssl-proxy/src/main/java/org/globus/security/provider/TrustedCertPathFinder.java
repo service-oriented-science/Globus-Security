@@ -15,14 +15,26 @@
 
 package org.globus.security.provider;
 
-import org.globus.security.util.KeyStoreUtil;
-
-import java.security.*;
-import java.security.cert.*;
+import java.security.InvalidKeyException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.Principal;
+import java.security.PublicKey;
+import java.security.SignatureException;
+import java.security.cert.CertPath;
+import java.security.cert.CertPathValidatorException;
 import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509CertSelector;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import org.globus.security.util.KeyStoreUtil;
 
 /**
  * Created by IntelliJ IDEA.

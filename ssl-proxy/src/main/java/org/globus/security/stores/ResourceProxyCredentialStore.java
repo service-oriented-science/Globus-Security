@@ -15,13 +15,13 @@
 
 package org.globus.security.stores;
 
+import java.io.File;
+import java.io.FilenameFilter;
+
 import org.globus.security.X509Credential;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
-
-import java.io.File;
-import java.io.FilenameFilter;
 
 /**
  * Created by IntelliJ IDEA.
