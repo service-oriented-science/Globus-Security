@@ -23,6 +23,9 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.ServletHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 import org.globus.crux.security.ClientTest;
 import org.globus.security.provider.GlobusProvider;
 import org.globus.security.stores.ResourceSigningPolicyStore;
@@ -30,9 +33,6 @@ import org.globus.security.stores.ResourceSigningPolicyStoreParameters;
 import org.globus.security.util.SSLConfigurator;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.servlet.ServletHandler;
-import org.mortbay.jetty.servlet.ServletHolder;
 
 /**
  * Created by IntelliJ IDEA. User: turtlebender Date: Feb 4, 2010 Time: 10:58:56
@@ -97,7 +97,7 @@ public class GlobusSslSocketConnectorTest extends ClientTest {
 
 		});
 		handler.addServletWithMapping(holder, "/");
-		server.addHandler(handler);
+		server.addBean(handler);
 		// server.addHandler(new JettySSLHandler());
 		server.start();
 	}
