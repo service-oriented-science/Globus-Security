@@ -84,36 +84,36 @@ public class TestFileBasedTrustAnchor {
     }
 
 
-    @Test
-    public void testGetTrustAnchorFilter() {
-
-        FilenameFilter filter = new TrustAnchorFilter();
-
-        // Null checks
-        boolean worked = false;
-        try {
-            filter.accept(null, null);
-        } catch (IllegalArgumentException e) {
-            worked = true;
-        }
-        assert worked;
-
-        // null dir name
-        assert (filter.accept(null, "foo.1"));
-
-        // dir name ignored
-        assert (filter.accept(new File("bar"), "foo.9"));
-
-        // only single digit at end
-        assertFalse(filter.accept(null, "foo.10"));
-
-        // only single digit at end
-        assertFalse(filter.accept(null, "foo.bar"));
-
-        // the most common usage. *.0
-        assertTrue(filter.accept(null, "foo.0"));
-
-    }
+//    @Test
+//    public void testGetTrustAnchorFilter() {
+//
+//        FilenameFilter filter = new TrustAnchorFilter();
+//
+//        // Null checks
+//        boolean worked = false;
+//        try {
+//            filter.accept(null, null);
+//        } catch (IllegalArgumentException e) {
+//            worked = true;
+//        }
+//        assert worked;
+//
+//        // null dir name
+//        assert (filter.accept(null, "foo.1"));
+//
+//        // dir name ignored
+//        assert (filter.accept(new File("bar"), "foo.9"));
+//
+//        // only single digit at end
+//        assertFalse(filter.accept(null, "foo.10"));
+//
+//        // only single digit at end
+//        assertFalse(filter.accept(null, "foo.bar"));
+//
+//        // the most common usage. *.0
+//        assertTrue(filter.accept(null, "foo.0"));
+//
+//    }
 
     @AfterTest
     public void tearDown() {

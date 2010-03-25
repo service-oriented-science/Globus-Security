@@ -3,13 +3,10 @@ Bundle-ManifestVersion: 2
 Bundle-Name: ssl_proxy
 Bundle-SymbolicName: ssl_proxy
 Bundle-Version: 1.0.0.qualifier
-Export-Package: certificateUtilTest,
+Export-Package: 
  org.globus.security,
  org.globus.security.bc,
  org.globus.security.filestore,
  org.globus.security.provider,
  org.globus.security.proxyExtension,
- org.globus.security.resources,
- org.globus.security.util,
- testTrustStore,
- validatorTest
+ org.globus.security.util

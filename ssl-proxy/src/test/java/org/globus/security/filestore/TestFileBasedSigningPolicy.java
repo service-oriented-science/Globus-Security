@@ -14,6 +14,13 @@
  */
 package org.globus.security.filestore;
 
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
+
+import java.io.File;
+import java.io.FilenameFilter;
+import java.util.Collection;
+
 import org.globus.crux.security.util.FileSetupUtil;
 import org.globus.security.SigningPolicy;
 import org.globus.security.stores.ResourceSigningPolicy;
@@ -21,13 +28,6 @@ import org.springframework.core.io.FileSystemResource;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import java.io.File;
-import java.io.FilenameFilter;
-import java.util.Collection;
-
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
 
 /**
  * FILL ME
@@ -81,33 +81,33 @@ public class TestFileBasedSigningPolicy {
         assertTrue(filePolicy.hasChanged());
     }
 
-    @Test
-    public void testPolicyFilter() {
-
-        FilenameFilter filter = new SigningPolicyFilter();
-
-        // Null checks
-        boolean worked = false;
-        try {
-            filter.accept(null, null);
-        } catch (IllegalArgumentException e) {
-            worked = true;
-        }
-        assert worked;
-
-        // null dir name
-        assert (filter.accept(null, "foo.signing_policy"));
-
-        // dir name ignored
-        assert (filter.accept(new File("bar"), "foo.signing_policy"));
-
-        assertFalse(filter.accept(null, "foo.r"));
-
-        assertFalse(filter.accept(null, "foo.SIGNING_POLICY"));
-
-        assertFalse(filter.accept(null, "foo.signing"));
-
-    }
+	// @Test
+	// public void testPolicyFilter() {
+	//
+	// FilenameFilter filter = new SigningPolicyFilter();
+	//
+	// // Null checks
+	// boolean worked = false;
+	// try {
+	// filter.accept(null, null);
+	// } catch (IllegalArgumentException e) {
+	// worked = true;
+	// }
+	// assert worked;
+	//
+	// // null dir name
+	// assert (filter.accept(null, "foo.signing_policy"));
+	//
+	// // dir name ignored
+	// assert (filter.accept(new File("bar"), "foo.signing_policy"));
+	//
+	// assertFalse(filter.accept(null, "foo.r"));
+	//
+	// assertFalse(filter.accept(null, "foo.SIGNING_POLICY"));
+	//
+	// assertFalse(filter.accept(null, "foo.signing"));
+	//
+	// }
 
     @AfterTest
     public void tearDown() throws Exception {
