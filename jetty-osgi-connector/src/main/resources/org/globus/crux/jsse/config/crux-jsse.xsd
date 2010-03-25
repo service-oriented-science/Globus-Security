@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+
+<xs:schema xmlns="http://www.globus.org/crux/jsse-config"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.globus.org/crux/jsse-config"
+	xmlns:tns="http://www.globus.org/crux/jsse-config" xmlns:bp="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+	elementFormDefault="qualified" attributeFormDefault="unqualified"
+	version="1.0">
+
+	<xs:import namespace="http://www.osgi.org/xmlns/blueprint/v1.0.0" />
+
+
+	<xs:complexType name="jksTrustManagerType">
+		<xs:sequence>
+			<xs:element name="keyStore" type="xs:string" />
+			<xs:element name="keyStorePassword" type="xs:string" />
+			<xs:element name="keyPassword" type="xs:string" minOccurs="0"
+				maxOccurs="1" />
+			<xs:element name="trustStore" type="xs:string" />
+			<xs:element name="trustStorePassword" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="pemKeystoreType">
+		<xs:attribute name="name" use="required" type="xs:string" />
+		<xs:attribute name="description" type="xs:string" />
+		<xs:attribute name="proxyCredentialPath" type="xs:string" />
+		<xs:attribute name="keyLocation" type="xs:string" />
+		<xs:attribute name="certLocation" type="xs:string" />
+	</xs:complexType>
+
+	<xs:element name="pemKeystore" type="tns:pemKeystoreType" />
+
+	<xs:complexType name="pemTruststoreType">
+		<xs:attribute name="name" use="required" type="xs:string" />
+		<xs:attribute name="defaultTrustDirectory" type="xs:string" />
+		<xs:attribute name="trustedCertLocations" type="xs:string" />
+	</xs:complexType>
+
+	<xs:element name="pemTruststore" type="tns:pemTruststoreType" />
+
+	<xs:complexType name="signingPolicyStoreType">
+		<xs:attribute name="name" use="required" type="xs:string" />
+		<xs:attribute name="signingPolicyLocations" type="xs:string"
+			use="required" />
+	</xs:complexType>
+
+	<xs:element name="signingPolicyStore" type="tns:signingPolicyStoreType" />
+
+	<xs:complexType name="pemCRLstoreType">
+		<xs:attribute name="crlLocations" type="xs:string" use="required" />
+	</xs:complexType>
+
+	<xs:element name="pemCRLStore" type="tns:pemCRLstoreType" />
+</xs:schema>

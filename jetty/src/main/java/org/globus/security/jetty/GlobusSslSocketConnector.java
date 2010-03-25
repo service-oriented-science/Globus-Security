@@ -37,15 +37,15 @@ import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
 
+import org.eclipse.jetty.http.HttpSchemes;
+import org.eclipse.jetty.io.EndPoint;
+import org.eclipse.jetty.io.bio.SocketEndPoint;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.bio.SocketConnector;
+import org.eclipse.jetty.server.ssl.ServletSSL;
 import org.globus.security.GlobusTLSContext;
 import org.globus.security.provider.GlobusProvider;
 import org.globus.security.util.SSLConfigurator;
-import org.mortbay.io.EndPoint;
-import org.mortbay.io.bio.SocketEndPoint;
-import org.mortbay.jetty.HttpSchemes;
-import org.mortbay.jetty.Request;
-import org.mortbay.jetty.bio.SocketConnector;
-import org.mortbay.jetty.security.ServletSSL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -232,7 +232,6 @@ public class GlobusSslSocketConnector extends SocketConnector {
      * @param request
      * @throws IOException
      */
-    @Override
     public void customize(EndPoint endpoint, Request request) throws IOException {
         super.customize(endpoint, request);
         request.setScheme(HttpSchemes.HTTPS);
@@ -347,7 +346,7 @@ public class GlobusSslSocketConnector extends SocketConnector {
     	return this.sslConfigurator;
     }
 
-    class SslConnection extends Connection {
+    class SslConnection extends ConnectorEndPoint {
 
         public SslConnection(Socket socket) throws IOException {
             super(socket);

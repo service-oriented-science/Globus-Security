@@ -1,0 +1,26 @@
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
+	<command-bundle xmlns="http://felix.apache.org/karaf/xmlns/shell/v1.0.0">
+		<command name="crux-jsse/listKeystores">
+			<action class="org.globus.crux.jsse.console.KeystoreCommand">
+				<property name="stores" ref="securityStoreManager" />
+			</action>
+		</command>
+		<command name="crux-jsse/editSSLConfig">
+			<action class="org.globus.crux.jsse.console.CreateSSLConfigCommand" >
+				<property name="manager" ref="securityStoreManager" />
+			</action>
+		</command>
+		<command name="crux-jsse/saveSSLConfig">
+			<action class="org.globus.crux.jsse.console.SaveSSLConfigCommand">
+				<property name="manager" ref="securityStoreManager" />
+			</action>
+			<completers>
+				<ref component-id="saveSSLCompleter" />
+			</completers>
+		</command>
+	</command-bundle>
+
+	<bean id="saveSSLCompleter" class="org.globus.crux.jsse.console.SSLConfigurationCompleter">
+		<property name="manager" ref="securityStoreManager" />
+	</bean>
+</blueprint>
