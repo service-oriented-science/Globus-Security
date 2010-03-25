@@ -15,11 +15,11 @@
  */
 package org.globus.security.jaas;
 
-import javax.security.auth.Subject;
 import java.security.PrivilegedAction;
-import java.security.PrivilegedExceptionAction;
 import java.security.PrivilegedActionException;
-import java.util.LinkedList;
+import java.security.PrivilegedExceptionAction;
+
+import javax.security.auth.Subject;
 
 /**
  * An implementation of the <code>JaasSubject</code> API to circumvent

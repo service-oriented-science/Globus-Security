@@ -43,7 +43,6 @@ import java.util.Properties;
 
 import org.globus.security.CredentialException;
 import org.globus.security.X509Credential;
-import org.globus.security.filestore.FileBasedKeyStoreParameters;
 import org.globus.security.filestore.KeyStoreParametersFactory;
 import org.globus.security.stores.AbstractResourceSecurityWrapper;
 import org.globus.security.stores.CertKeyCredential;

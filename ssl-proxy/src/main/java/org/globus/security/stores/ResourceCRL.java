@@ -15,12 +15,12 @@
 
 package org.globus.security.stores;
 
-import org.globus.security.util.CertificateLoadUtil;
-import org.springframework.core.io.Resource;
-
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.cert.X509CRL;
+
+import org.globus.security.util.CertificateLoadUtil;
+import org.springframework.core.io.Resource;
 
 /**
  * Created by IntelliJ IDEA.

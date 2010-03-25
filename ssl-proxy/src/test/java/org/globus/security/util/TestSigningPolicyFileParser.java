@@ -14,22 +14,23 @@
  */
 package org.globus.security.util;
 
-import org.globus.crux.security.util.FileSetupUtil;
-import org.globus.security.SigningPolicy;
-import org.globus.security.SigningPolicyException;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Test;
+import static org.testng.AssertJUnit.assertFalse;
+import static org.testng.AssertJUnit.assertTrue;
 
-import javax.security.auth.x500.X500Principal;
 import java.io.StringReader;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 import java.util.regex.Pattern;
 
-import static org.testng.AssertJUnit.assertFalse;
-import static org.testng.AssertJUnit.assertTrue;
+import javax.security.auth.x500.X500Principal;
+
+import org.globus.crux.security.util.FileSetupUtil;
+import org.globus.security.SigningPolicy;
+import org.globus.security.SigningPolicyException;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
 
 @Test(groups = {"Util"})
 public class TestSigningPolicyFileParser {

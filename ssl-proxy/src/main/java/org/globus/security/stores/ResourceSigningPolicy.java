@@ -15,6 +15,13 @@
 
 package org.globus.security.stores;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Collection;
+import java.util.Map;
+
+import javax.security.auth.x500.X500Principal;
+
 import org.globus.security.SigningPolicy;
 import org.globus.security.SigningPolicyException;
 import org.globus.security.SigningPolicyStoreException;
@@ -22,12 +29,6 @@ import org.globus.security.util.SigningPolicyFileParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
-
-import javax.security.auth.x500.X500Principal;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Collection;
-import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.

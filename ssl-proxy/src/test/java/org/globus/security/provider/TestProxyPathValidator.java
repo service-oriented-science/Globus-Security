@@ -14,16 +14,10 @@
  */
 package org.globus.security.provider;
 
-import org.globus.security.*;
-import org.globus.security.proxyExtension.ProxyCertInfo;
-import org.globus.security.proxyExtension.ProxyPolicy;
-import org.globus.security.proxyExtension.ProxyPolicyHandler;
-import org.globus.security.util.CertificateLoadUtil;
-import org.globus.security.util.SigningPolicyFileParser;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
-import javax.security.auth.x500.X500Principal;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.Reader;
@@ -31,10 +25,35 @@ import java.io.StringReader;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyStore;
 import java.security.Security;
-import java.security.cert.*;
-import java.util.*;
+import java.security.cert.CertPath;
+import java.security.cert.CertPathValidatorException;
+import java.security.cert.CertStore;
+import java.security.cert.CertStoreParameters;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509CRL;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
 
-import static org.testng.Assert.*;
+import javax.security.auth.x500.X500Principal;
+
+import org.globus.security.SigningPolicy;
+import org.globus.security.SigningPolicyStore;
+import org.globus.security.SigningPolicyStoreException;
+import org.globus.security.X509ProxyCertPathParameters;
+import org.globus.security.X509ProxyCertPathValidatorResult;
+import org.globus.security.proxyExtension.ProxyCertInfo;
+import org.globus.security.proxyExtension.ProxyPolicy;
+import org.globus.security.proxyExtension.ProxyPolicyHandler;
+import org.globus.security.util.CertificateLoadUtil;
+import org.globus.security.util.SigningPolicyFileParser;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 public class TestProxyPathValidator {
 

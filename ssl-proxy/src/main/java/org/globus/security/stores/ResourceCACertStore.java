@@ -15,13 +15,13 @@
 
 package org.globus.security.stores;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
-
 import java.io.File;
 import java.io.FilenameFilter;
 import java.security.cert.TrustAnchor;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
 
 /**
  * Created by IntelliJ IDEA.

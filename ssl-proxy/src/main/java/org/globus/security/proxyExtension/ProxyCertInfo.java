@@ -14,10 +14,15 @@
  */
 package org.globus.security.proxyExtension;
 
-import org.bouncycastle.asn1.*;
-import org.globus.security.util.CertificateUtil;
-
 import java.io.IOException;
+
+import org.bouncycastle.asn1.ASN1EncodableVector;
+import org.bouncycastle.asn1.ASN1Sequence;
+import org.bouncycastle.asn1.DEREncodable;
+import org.bouncycastle.asn1.DERInteger;
+import org.bouncycastle.asn1.DERObject;
+import org.bouncycastle.asn1.DERSequence;
+import org.globus.security.util.CertificateUtil;
 
 /**
  * Represents ProxyCertInfo extension. <BR>

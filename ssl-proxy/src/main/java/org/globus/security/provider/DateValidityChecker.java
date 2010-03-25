@@ -15,12 +15,12 @@
 
 package org.globus.security.provider;
 
-import org.globus.security.Constants;
-
 import java.security.cert.CertPathValidatorException;
 import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
+
+import org.globus.security.Constants;
 
 /**
  * Checks if the certificate has expried or is not yet valid.

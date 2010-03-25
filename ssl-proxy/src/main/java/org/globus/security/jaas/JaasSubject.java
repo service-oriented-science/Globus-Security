@@ -15,12 +15,13 @@
  */
 package org.globus.security.jaas;
 
-import org.globus.util.I18n;
+import java.security.PrivilegedAction;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
 
 import javax.security.auth.Subject;
-import java.security.PrivilegedAction;
-import java.security.PrivilegedExceptionAction;
-import java.security.PrivilegedActionException;
+
+import org.globus.util.I18n;
 
 /**
  * Generic JAAS Subject helper API that provides abstraction layer on top of

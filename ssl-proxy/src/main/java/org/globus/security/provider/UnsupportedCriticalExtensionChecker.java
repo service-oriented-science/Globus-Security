@@ -15,12 +15,12 @@
 
 package org.globus.security.provider;
 
-import org.globus.security.Constants;
-import org.globus.security.util.ProxyCertificateUtil;
-
 import java.security.cert.CertPathValidatorException;
 import java.security.cert.X509Certificate;
 import java.util.Set;
+
+import org.globus.security.Constants;
+import org.globus.security.util.ProxyCertificateUtil;
 
 /**
  * Checks if the certificate includes unsupported critical extensions.

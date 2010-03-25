@@ -14,6 +14,23 @@
  */
 package org.globus.security.provider;
 
+import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.KeyStore;
+import java.security.cert.CertPath;
+import java.security.cert.CertPathParameters;
+import java.security.cert.CertPathValidatorException;
+import java.security.cert.CertPathValidatorResult;
+import java.security.cert.CertPathValidatorSpi;
+import java.security.cert.CertStore;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Map;
+
 import org.bouncycastle.asn1.DERObjectIdentifier;
 import org.bouncycastle.asn1.x509.BasicConstraints;
 import org.bouncycastle.asn1.x509.TBSCertificateStructure;
@@ -28,15 +45,6 @@ import org.globus.security.proxyExtension.ProxyPolicy;
 import org.globus.security.proxyExtension.ProxyPolicyHandler;
 import org.globus.security.util.CertificateUtil;
 import org.globus.security.util.ProxyCertificateUtil;
-
-import java.io.IOException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.KeyStore;
-import java.security.cert.*;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Implementation of the CertPathValidatorSpi and the logic for X.509 Proxy Path Validation.

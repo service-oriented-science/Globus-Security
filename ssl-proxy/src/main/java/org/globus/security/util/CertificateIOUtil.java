@@ -15,19 +15,24 @@
 
 package org.globus.security.util;
 
-import org.apache.commons.codec.binary.Base64;
-import org.bouncycastle.asn1.DEROutputStream;
-import org.bouncycastle.asn1.x509.X509Name;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.security.auth.x500.X500Principal;
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
+
+import javax.security.auth.x500.X500Principal;
+
+import org.apache.commons.codec.binary.Base64;
+import org.bouncycastle.asn1.DEROutputStream;
+import org.bouncycastle.asn1.x509.X509Name;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Fill Me

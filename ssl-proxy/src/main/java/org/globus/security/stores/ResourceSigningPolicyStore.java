@@ -14,6 +14,15 @@
  */
 package org.globus.security.stores;
 
+import java.io.IOException;
+import java.net.URI;
+import java.security.InvalidAlgorithmParameterException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.security.auth.x500.X500Principal;
+
 import org.globus.security.SigningPolicy;
 import org.globus.security.SigningPolicyStore;
 import org.globus.security.SigningPolicyStoreException;
@@ -22,14 +31,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-
-import javax.security.auth.x500.X500Principal;
-import java.io.IOException;
-import java.net.URI;
-import java.security.InvalidAlgorithmParameterException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * FILL ME

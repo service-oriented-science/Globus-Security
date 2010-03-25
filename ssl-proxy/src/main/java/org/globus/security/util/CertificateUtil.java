@@ -14,13 +14,6 @@
  */
 package org.globus.security.util;
 
-import org.bouncycastle.asn1.*;
-import org.bouncycastle.asn1.x509.*;
-import org.globus.security.Constants;
-import org.globus.security.proxyExtension.ProxyCertInfo;
-import org.globus.security.proxyExtension.ProxyPolicy;
-
-import javax.security.auth.x500.X500Principal;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -28,6 +21,25 @@ import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.StringTokenizer;
+
+import javax.security.auth.x500.X500Principal;
+
+import org.bouncycastle.asn1.ASN1InputStream;
+import org.bouncycastle.asn1.ASN1Object;
+import org.bouncycastle.asn1.ASN1Sequence;
+import org.bouncycastle.asn1.ASN1Set;
+import org.bouncycastle.asn1.DERBitString;
+import org.bouncycastle.asn1.DERObject;
+import org.bouncycastle.asn1.DERObjectIdentifier;
+import org.bouncycastle.asn1.DERString;
+import org.bouncycastle.asn1.x509.BasicConstraints;
+import org.bouncycastle.asn1.x509.TBSCertificateStructure;
+import org.bouncycastle.asn1.x509.X509Extension;
+import org.bouncycastle.asn1.x509.X509Extensions;
+import org.bouncycastle.asn1.x509.X509Name;
+import org.globus.security.Constants;
+import org.globus.security.proxyExtension.ProxyCertInfo;
+import org.globus.security.proxyExtension.ProxyPolicy;
 
 /**
  * FILL ME

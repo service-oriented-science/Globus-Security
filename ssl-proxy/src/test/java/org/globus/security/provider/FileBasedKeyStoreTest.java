@@ -15,14 +15,14 @@
 
 package org.globus.security.provider;
 
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.testng.annotations.Test;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Properties;
+
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.testng.annotations.Test;
 
 /**
  * Created by IntelliJ IDEA.

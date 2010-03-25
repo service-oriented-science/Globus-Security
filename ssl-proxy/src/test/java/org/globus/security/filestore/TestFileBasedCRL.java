@@ -14,18 +14,18 @@
  */
 package org.globus.security.filestore;
 
+import static org.testng.AssertJUnit.assertFalse;
+import static org.testng.AssertJUnit.assertTrue;
+
+import java.io.File;
+import java.security.cert.X509CRL;
+
 import org.globus.crux.security.util.FileSetupUtil;
 import org.globus.security.stores.ResourceCRL;
 import org.springframework.core.io.FileSystemResource;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import java.io.File;
-import java.security.cert.X509CRL;
-
-import static org.testng.AssertJUnit.assertFalse;
-import static org.testng.AssertJUnit.assertTrue;
 
 /**
  * FILL ME

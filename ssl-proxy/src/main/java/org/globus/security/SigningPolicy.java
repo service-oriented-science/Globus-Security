@@ -15,14 +15,15 @@
 package org.globus.security;
 
 
-import org.globus.security.util.CertificateUtil;
-import org.globus.security.util.SigningPolicyFileParser;
-
-import javax.security.auth.x500.X500Principal;
 import java.util.List;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.security.auth.x500.X500Principal;
+
+import org.globus.security.util.CertificateUtil;
+import org.globus.security.util.SigningPolicyFileParser;
 
 /**
  * Represents a signing policy associated with a particular CA. The signing policy defines a list of distinguished

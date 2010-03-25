@@ -14,18 +14,23 @@
  */
 package org.globus.security.util;
 
-import org.globus.security.SigningPolicy;
-import org.globus.security.SigningPolicyException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.security.auth.x500.X500Principal;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.regex.Pattern;
+
+import javax.security.auth.x500.X500Principal;
+
+import org.globus.security.SigningPolicy;
+import org.globus.security.SigningPolicyException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Signing policy BCNF grammar as implemented here: (based on C implementation)
