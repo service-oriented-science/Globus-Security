@@ -15,29 +15,16 @@
 
 package org.globus.security.util;
 
-import java.security.KeyManagementException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.SecureRandom;
-import java.security.Security;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertStore;
-import java.util.Map;
-
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLServerSocketFactory;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-
 import org.globus.security.SigningPolicyStore;
 import org.globus.security.X509ProxyCertPathParameters;
 import org.globus.security.provider.PKITrustManager;
 import org.globus.security.provider.X509ProxyCertPathValidator;
 import org.globus.security.proxyExtension.ProxyPolicyHandler;
+
+import javax.net.ssl.*;
+import java.security.*;
+import java.security.cert.CertStore;
+import java.util.Map;
 
 /**
  * This class is used to configure and create SSL socket factories. The
@@ -49,9 +36,6 @@ import org.globus.security.proxyExtension.ProxyPolicyHandler;
  * @since 1.0
  */
 public class SSLConfigurator {
-
-	private String name;
-	private int rank;	
 
 	private String provider;
 	private String protocol = "TLS";
@@ -78,18 +62,8 @@ public class SSLConfigurator {
 	private String crlLocationPattern;
 	private SSLContext sslContext;
 
-	private String sslKeyManagerFactoryAlgorithm = Security
-			.getProperty("ssl.KeyManagerFactory.algorithm") == null ? "SunX509"
+	private String sslKeyManagerFactoryAlgorithm = Security.getProperty("ssl.KeyManagerFactory.algorithm") == null ? "SunX509"
 			: Security.getProperty("ssl.KeyManagerFactory.algorithm");
-
-	public SSLConfigurator(String name) {
-		this.name = name;
-	}
-	
-	public SSLConfigurator(String name, int rank) {
-		this.name = name;
-		this.rank = rank;
-	}
 
 	/**
 	 * Create an SSLSocketFactory based on the configured stores.
@@ -98,8 +72,7 @@ public class SSLConfigurator {
 	 * @throws GlobusSSLConfigurationException
 	 *             If we fail to create the socketFactory.
 	 */
-	public SSLSocketFactory createFactory()
-			throws GlobusSSLConfigurationException {
+	public SSLSocketFactory createFactory() throws GlobusSSLConfigurationException {		
 		return getSSLContext().getSocketFactory();
 	}
 
@@ -111,7 +84,7 @@ public class SSLConfigurator {
 	 *             If we fail to create the context.
 	 */
 	public SSLContext getSSLContext() throws GlobusSSLConfigurationException {
-		if (sslContext == null) {
+		if(sslContext == null){
 			configureContext();
 		}
 		return this.sslContext;
@@ -124,8 +97,7 @@ public class SSLConfigurator {
 	 * @throws GlobusSSLConfigurationException
 	 *             If we fail to create the server socket factory.
 	 */
-	public SSLServerSocketFactory createServerFactory()
-			throws GlobusSSLConfigurationException {
+	public SSLServerSocketFactory createServerFactory() throws GlobusSSLConfigurationException {
 		SSLContext context = getSSLContext();
 		return context.getServerSocketFactory();
 	}
@@ -134,8 +106,7 @@ public class SSLConfigurator {
 
 		X509ProxyCertPathParameters parameters = getCertPathParameters();
 
-		TrustManager trustManager = new PKITrustManager(
-				new X509ProxyCertPathValidator(), parameters);
+		TrustManager trustManager = new PKITrustManager(new X509ProxyCertPathValidator(), parameters);
 
 		TrustManager[] trustManagers = new TrustManager[] { trustManager };
 
@@ -153,32 +124,24 @@ public class SSLConfigurator {
 
 	}
 
-	private X509ProxyCertPathParameters getCertPathParameters()
-			throws GlobusSSLConfigurationException {
+	private X509ProxyCertPathParameters getCertPathParameters() throws GlobusSSLConfigurationException {
 		X509ProxyCertPathParameters parameters;
-		KeyStore inputTrustStore = getTrustAnchorStore();
-		if (inputTrustStore == null) {
-			inputTrustStore = GlobusSSLHelper.buildTrustStore(this.provider,
-					this.trustAnchorStoreType, this.trustAnchorStoreLocation,
-					this.trustAnchorStorePassword);
-		}
-		CertStore inputCertStore = GlobusSSLHelper
-				.findCRLStore(this.crlLocationPattern);
+		KeyStore inputTrustStore = GlobusSSLHelper.buildTrustStore(this.provider, this.trustAnchorStoreType,
+				this.trustAnchorStoreLocation, this.trustAnchorStorePassword);
+		CertStore inputCertStore = GlobusSSLHelper.findCRLStore(this.crlLocationPattern);
 		if (handlers == null) {
-			parameters = new X509ProxyCertPathParameters(inputTrustStore,
-					inputCertStore, this.policyStore, this.rejectLimitProxy);
+			parameters = new X509ProxyCertPathParameters(inputTrustStore, inputCertStore, this.policyStore,
+					this.rejectLimitProxy);
 		} else {
-			parameters = new X509ProxyCertPathParameters(inputTrustStore,
-					inputCertStore, this.policyStore, this.rejectLimitProxy,
-					handlers);
+			parameters = new X509ProxyCertPathParameters(inputTrustStore, inputCertStore, this.policyStore,
+					this.rejectLimitProxy, handlers);
 		}
 		return parameters;
 	}
 
 	private SSLContext loadSSLContext() throws GlobusSSLConfigurationException {
 		try {
-			return provider == null ? SSLContext.getInstance(protocol)
-					: SSLContext.getInstance(protocol, provider);
+			return provider == null ? SSLContext.getInstance(protocol) : SSLContext.getInstance(protocol, provider);
 		} catch (NoSuchAlgorithmException e) {
 			throw new GlobusSSLConfigurationException(e);
 		} catch (NoSuchProviderException e) {
@@ -186,32 +149,21 @@ public class SSLConfigurator {
 		}
 	}
 
-	private SecureRandom loadSecureRandom()
-			throws GlobusSSLConfigurationException {
+	private SecureRandom loadSecureRandom() throws GlobusSSLConfigurationException {
 		try {
-			return secureRandomAlgorithm == null ? null : SecureRandom
-					.getInstance(secureRandomAlgorithm);
+			return secureRandomAlgorithm == null ? null : SecureRandom.getInstance(secureRandomAlgorithm);
 		} catch (NoSuchAlgorithmException e) {
 			throw new GlobusSSLConfigurationException(e);
 		}
 	}
 
-	private KeyManager[] loadKeyManagers()
-			throws GlobusSSLConfigurationException {
+	private KeyManager[] loadKeyManagers() throws GlobusSSLConfigurationException {
 		try {
-			KeyStore inputKeyStore = getCredentialStore();
-
-			if (inputKeyStore == null) {
-				inputKeyStore = GlobusSSLHelper.findCredentialStore(
-						this.provider, this.credentialStoreType,
-						this.credentialStoreLocation,
-						this.credentialStorePassword);
-			}
-			KeyManagerFactory keyManagerFactory = KeyManagerFactory
-					.getInstance(sslKeyManagerFactoryAlgorithm);
-			keyManagerFactory.init(inputKeyStore,
-					credentialStorePassword == null ? null
-							: credentialStorePassword.toCharArray());
+			KeyStore inputKeyStore = GlobusSSLHelper.findCredentialStore(this.provider, this.credentialStoreType,
+					this.credentialStoreLocation, this.credentialStorePassword);
+			KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(sslKeyManagerFactoryAlgorithm);
+			keyManagerFactory.init(inputKeyStore, credentialStorePassword == null ? null : credentialStorePassword
+					.toCharArray());
 			return keyManagerFactory.getKeyManagers();
 		} catch (KeyStoreException e) {
 			throw new GlobusSSLConfigurationException(e);
@@ -356,13 +308,5 @@ public class SSLConfigurator {
 
 	public void setCredentialStore(KeyStore credentialStore) {
 		this.credentialStore = credentialStore;
-	}
-
-	public String getName() {
-		return this.name;
-	}
-	
-	public int getRank() {
-		return this.rank;
 	}
 }
