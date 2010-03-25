@@ -23,7 +23,7 @@ import org.globus.security.authorization.PDP;
 import org.globus.security.authorization.RequestEntities;
 import org.globus.security.authorization.annotations.AuthorizationEngine;
 import org.globus.security.authorization.util.AttributeUtil;
-import org.globus.util.I18nUtil;
+import org.globus.util.I18n;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +38,7 @@ public class PermitOverrideAlg extends AbstractEngine {
 
 	private static final long serialVersionUID = 6701009462458338468L;
 
-	private static I18nUtil i18n = I18nUtil.getI18n("org.globus.security.authorization.errors", PermitOverrideAlg.class
+	private static I18n i18n = I18n.getI18n("org.globus.security.authorization.errors", PermitOverrideAlg.class
 			.getClassLoader());
 
 	private static Logger logger = LoggerFactory.getLogger(PermitOverrideAlg.class.getName());

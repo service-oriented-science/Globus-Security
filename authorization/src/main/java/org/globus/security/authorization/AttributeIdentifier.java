@@ -18,7 +18,7 @@ package org.globus.security.authorization;
 import java.io.Serializable;
 import java.net.URI;
 
-import org.globus.util.I18nUtil;
+import org.globus.util.I18n;
 
 /**
  * Data type with members that uniquely identify an attribute
@@ -30,8 +30,8 @@ public class AttributeIdentifier implements Serializable {
 	 */
 	private static final long serialVersionUID = -7963560462839338318L;
 
-	private static I18nUtil i18n =
-            I18nUtil.getI18n("org.globus.security.authorization.errors",
+	private static I18n i18n =
+            I18n.getI18n("org.globus.security.authorization.errors",
                     AttributeIdentifier.class.getClassLoader());
 
     private URI attributeId;
