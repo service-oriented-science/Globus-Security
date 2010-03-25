@@ -15,6 +15,7 @@
 package org.globus.security.authorization.providers;
 
 import org.globus.security.authorization.*;
+import org.globus.security.authorization.annotations.AuthorizationEngine;
 import org.globus.security.authorization.util.AttributeUtil;
 import org.globus.security.authorization.util.I18nUtil;
 import org.slf4j.Logger;
@@ -26,6 +27,9 @@ import java.util.Vector;
  * This is a combining algorithm that returns a permit if a single permit
  * decision chain can be constructed from the resource owner to the requestor.
  */
+@AuthorizationEngine(name = "Permit Override Algorithm", pid = "permitOverride", description = "This is a "
+		+ "combining algorithm that returns a permit if a single permit decision chain can be constructed from "
+		+ "the resource owner to the requestor.", author = "Globus Crux Team")
 public class PermitOverrideAlg extends AbstractEngine {
 
 	private static final long serialVersionUID = 6701009462458338468L;

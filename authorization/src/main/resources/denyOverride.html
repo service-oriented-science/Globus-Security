@@ -1,0 +1,15 @@
+<div class="securityDocs">This combining algorithm returns the
+first deny decision returned by the list of configured PDPs.
+<p />Steps: Invoke all configured PIPs in order.
+
+<ol>
+	<li>Invoke each PDP in order.</li>
+	<li>If a PDP returns a deny, return decision.</li>
+	<li>If all PDPs return a permit, return permit.</li>
+	<li>If no PDPs provide a decision, return indeterminate.</li>
+</ol>
+<p />Note that entity issuing the decision for each PDP is not
+considered, that is the resource owner is not matched with PDP decision
+issuer. Resource owner is used only when an indeterminate decision is
+returned, with no decision from any PDPs.
+</div>

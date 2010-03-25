@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/osgi http://www.springframework.org/schema/osgi/spring-osgi-1.2.xsd
+		http://www.springframework.org/schema/osgi-compendium http://www.springframework.org/schema/osgi-compendium/spring-osgi-compendium-2.0-m1.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd"
+	xmlns:osgi="http://www.springframework.org/schema/osgi"
+	xmlns:osgix="http://www.springframework.org/schema/osgi-compendium"
+	xmlns:util="http://www.springframework.org/schema/util">
+
+	<bean id="denyOverrideAlg"
+		class="org.globus.security.authorization.providers.DenyOverrideAlg"
+		scope="prototype">
+		<constructor-arg value="Deny Override Algorithm" />
+	</bean>
+
+	<bean id="firstApplicableAlg"
+		class="org.globus.security.authorization.providers.FirstApplicableAlg"
+		scope="prototype">
+		<constructor-arg value="First Applicable Algorithm" />
+	</bean>
+
+	<bean id="permitOverrideAlg"
+		class="org.globus.security.authorization.providers.PermitOverrideAlg"
+		scope="prototype">
+		<constructor-arg value="Permit Override Algorithm" />
+	</bean>
+	
+	<bean id="dummyPIPFactory" class="org.globus.security.authorization.PIPInterceptorFactory"/>
+	
+	<osgi:service
+		interface="org.globus.security.authorization.AuthorizationEngineSpi"
+		ref="denyOverrideAlg">
+		<osgi:service-properties>
+			<entry key="authz.engine.provider" value="http://www.globus.org"/>
+			<entry key="authz.engine.name" value="Deny Override Algorithm"/>
+		</osgi:service-properties>
+	</osgi:service>
+
+	<osgi:service
+		interface="org.globus.security.authorization.AuthorizationEngineSpi"
+		ref="firstApplicableAlg">
+		<osgi:service-properties>
+			<entry key="authz.engine.provider" value="http://www.globus.org"/>
+			<entry key="authz.engine.name" value="First Applicable Algorithm"/>
+		</osgi:service-properties>
+	</osgi:service>
+	
+	<osgi:service
+		interface="org.globus.security.authorization.AuthorizationEngineSpi"
+		ref="permitOverrideAlg">
+		<osgi:service-properties>
+			<entry key="authz.engine.provider" value="http://www.globus.org"/>
+			<entry key="authz.engine.name" value="Permit Override Algorithm"/>
+		</osgi:service-properties>
+	</osgi:service>
+</beans>

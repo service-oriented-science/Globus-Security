@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plan name="multi-artifact.plan" version="1.0.0" scoped="true"
+	atomic="true" xmlns="http://www.springsource.org/schema/dm-server/plan"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+            http://www.springsource.org/schema/dm-server/plan 
+            http://www.springsource.org/schema/dm-server/plan/springsource-dm-server-plan.xsd">
+
+	<artifact type="bundle" name="org.springframework.core"
+		version="[3.0.1.RELEASE-A,4.0.0]" />
+	<artifact type="bundle" name="org.springframework.beans"
+		version="[3.0.1.RELEASE-A,4.0.0]" />
+	<artifact type="bundle" name="org.springframework.context"
+		version="[3.0.1.RELEASE-A,4.0.0]" />
+	<artifact type="bundle" name="org.springframework.context.support"
+		version="[3.0.1.RELEASE-A,4.0.0]" />
+	<artifact type="bundle" name="org.springframework.aop"
+		version="[3.0.1.RELEASE-A,4.0.0]" />
+	<artifact type="bundle" name="org.springframework.asm"
+		version="[3.0.1.RELEASE-A,4.0.0]" />
+	<artifact type="bundle" name="org.springframework.web"
+		version="[3.0.1.RELEASE-A,4.0.0]" />
+	<artifact type="bundle" name="org.springframework.web.servlet"
+		version="[3.0.1.RELEASE-A,4.0.0]" />
+	<artifact type="bundle" name="crux_core"
+		version="[1.0.0.qualifier,2.0.0.qualifier]" />
+</plan>

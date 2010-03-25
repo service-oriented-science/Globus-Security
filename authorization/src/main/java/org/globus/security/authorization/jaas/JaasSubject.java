@@ -21,7 +21,7 @@ import java.security.PrivilegedExceptionAction;
 
 import javax.security.auth.Subject;
 
-import org.globus.util.I18n;
+import org.globus.security.authorization.util.I18nUtil;
 
 /**
  * Generic JAAS Subject helper API that provides abstraction layer on top of
@@ -33,7 +33,7 @@ import org.globus.util.I18n;
 public abstract class JaasSubject {
 	public static final String JAAS_SUBJECT_PROVIDER = "org.globus.jaas.provider";
 
-	private static I18n i18n = I18n.getI18n("org.globus.gsi.gssapi.errors", JaasSubject.class.getClassLoader());
+	private static I18nUtil i18n = I18nUtil.getI18n("org.globus.gsi.gssapi.errors", JaasSubject.class.getClassLoader());
 	private static JaasSubject subject;
 
 	/**
