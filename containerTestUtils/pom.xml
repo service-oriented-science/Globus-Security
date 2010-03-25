@@ -25,11 +25,11 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>${groupId}</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>ssl-proxy</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>${groupId}</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>testUtils</artifactId>
 		</dependency>
 		<dependency>
