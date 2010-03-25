@@ -29,161 +29,173 @@ import org.globus.security.authorization.AttributeIdentifier;
 import org.globus.security.authorization.AuthorizationException;
 import org.globus.security.authorization.Decision;
 import org.globus.security.authorization.EntityAttributes;
+import org.globus.security.authorization.IdentityAttributeCollection;
 import org.globus.security.authorization.NonRequestEntities;
 import org.globus.security.authorization.PDP;
 import org.globus.security.authorization.RequestEntities;
 import org.globus.security.authorization.util.AttributeUtil;
 
 /**
- * This PDP takes a list of accepted principals, one for access to the resource and another to the administrative
- * resource. If at-least one of the request entities' Principal is in the provided ACL, a permit decision is returned.
- * The PDP can also be configured to accept anonymous clients, in which case, if a request subject with no Principals is
- * presented, the client is permitted. By default, anonymous clients are denied.
- *
+ * This PDP takes a list of accepted principals, one for access to the resource
+ * and another to the administrative resource. If at-least one of the request
+ * entities' Principal is in the provided ACL, a permit decision is returned.
+ * The PDP can also be configured to accept anonymous clients, in which case, if
+ * a request subject with no Principals is presented, the client is permitted.
+ * By default, anonymous clients are denied.
+ * 
  * @author ranantha@mcs.anl.gov
  */
 public class AccessControlListPDP implements PDP {
 
-    private Collection<Principal> accessAcl;
-    private Collection<Principal> adminAcl;
-    private boolean anonymousAllowed;
+	private Collection<Principal> accessAcl;
+	private Collection<Principal> adminAcl;
+	private boolean anonymousAllowed;
 
-    @Inject
-    private GlobusContext context;
+	@Inject
+	private GlobusContext context;
 
-    /**
-     * Constructor.
-     *
-     * @param aclParameter Collection of Principals that are allowed access and administrative rights.
-     */
-    public AccessControlListPDP(Collection<Principal> aclParameter) {
+	/**
+	 * Constructor.
+	 * 
+	 * @param aclParameter
+	 *            Collection of Principals that are allowed access and
+	 *            administrative rights.
+	 */
+	public AccessControlListPDP(Collection<Principal> aclParameter) {
 
-        this(aclParameter, aclParameter, false);
-    }
+		this(aclParameter, aclParameter, false);
+	}
 
-    /**
-     * Constructor
-     *
-     * @param accessAclParam Collection of Principals that are allowed access rights.
-     * @param adminAclParam Collection of Principals that are allowed administrative rights.
-     */
-    public AccessControlListPDP(Collection<Principal> accessAclParam, Collection<Principal> adminAclParam) {
-        this(accessAclParam, adminAclParam, false);
-    }
+	/**
+	 * Constructor
+	 * 
+	 * @param accessAclParam
+	 *            Collection of Principals that are allowed access rights.
+	 * @param adminAclParam
+	 *            Collection of Principals that are allowed administrative
+	 *            rights.
+	 */
+	public AccessControlListPDP(Collection<Principal> accessAclParam, Collection<Principal> adminAclParam) {
+		this(accessAclParam, adminAclParam, false);
+	}
 
-    /**
-     * Constructor
-     *
-     * @param accessAclParam Collection of Principals that are allowed access rights.
-     * @param adminAclParam Collection of Principals that are allowed administrative rights.
-     * @param anonymousAllowedParam If set to true, anonymous clients are permitted access. If set to false, anonymous
-     *                              clients are denied.
-     */
-    public AccessControlListPDP(Collection<Principal> accessAclParam, Collection<Principal> adminAclParam,
-                                boolean anonymousAllowedParam) {
+	/**
+	 * Constructor
+	 * 
+	 * @param accessAclParam
+	 *            Collection of Principals that are allowed access rights.
+	 * @param adminAclParam
+	 *            Collection of Principals that are allowed administrative
+	 *            rights.
+	 * @param anonymousAllowedParam
+	 *            If set to true, anonymous clients are permitted access. If set
+	 *            to false, anonymous clients are denied.
+	 */
+	public AccessControlListPDP(Collection<Principal> accessAclParam, Collection<Principal> adminAclParam,
+			boolean anonymousAllowedParam) {
 
-        if ((accessAclParam == null) || (adminAclParam == null)) {
-            throw new IllegalArgumentException("Access Control List cannot be null");
-        }
+		if ((accessAclParam == null) || (adminAclParam == null)) {
+			throw new IllegalArgumentException("Access Control List cannot be null");
+		}
 
-        if ((accessAclParam.isEmpty() || adminAclParam.isEmpty())) {
-            throw new IllegalArgumentException("Access Control List cannot be empty");
+		if ((accessAclParam.isEmpty() || adminAclParam.isEmpty())) {
+			throw new IllegalArgumentException("Access Control List cannot be empty");
 
-        }
+		}
 
-        this.accessAcl = accessAclParam;
-        this.adminAcl = adminAclParam;
-        this.anonymousAllowed = anonymousAllowedParam;
-    }
+		this.accessAcl = accessAclParam;
+		this.adminAcl = adminAclParam;
+		this.anonymousAllowed = anonymousAllowedParam;
+	}
 
-    /**
-     * Decision on whether request entity is allowed access to the resource.
-     *
-     * @param requestEntities
-     * @param nonReqEntities
-     * @return
-     * @throws AuthorizationException
-     */
-    public Decision canAccess(RequestEntities requestEntities, NonRequestEntities nonReqEntities)
-            throws AuthorizationException {
+	/**
+	 * Decision on whether request entity is allowed access to the resource.
+	 * 
+	 * @param requestEntities
+	 * @param nonReqEntities
+	 * @return
+	 * @throws AuthorizationException
+	 */
+	public Decision canAccess(RequestEntities requestEntities, NonRequestEntities nonReqEntities)
+			throws AuthorizationException {
 
-        return getDecision(requestEntities, this.accessAcl);
-    }
+		return getDecision(requestEntities, this.accessAcl);
+	}
 
-    /**
-     * Decision on whether request entity is allowed administrative access to the resource.
-     *
-     * @param requestEntities
-     * @param nonReqEntities
-     * @return
-     * @throws AuthorizationException
-     */
-    public Decision canAdminister(RequestEntities requestEntities, NonRequestEntities nonReqEntities)
-            throws AuthorizationException {
+	/**
+	 * Decision on whether request entity is allowed administrative access to
+	 * the resource.
+	 * 
+	 * @param requestEntities
+	 * @param nonReqEntities
+	 * @return
+	 * @throws AuthorizationException
+	 */
+	public Decision canAdminister(RequestEntities requestEntities, NonRequestEntities nonReqEntities)
+			throws AuthorizationException {
 
-        return getDecision(requestEntities, this.adminAcl);
-    }
+		return getDecision(requestEntities, this.adminAcl);
+	}
 
-    private Set<Set> getAttributeValue(Collection<Attribute<?>> attributes) {
+	private Set getAttributeValue(Collection<Attribute<?>> attributes) {
 
-        Set valueSet = new HashSet();
-        Iterator<Attribute<?>> attributesIterator = attributes.iterator();
-        while (attributesIterator.hasNext()) {
-            Attribute attribute = attributesIterator.next();
-            Set<Set> attributeValues = attribute.getAttributeValueSet();
-            valueSet.addAll(attributeValues);
-        }
+		Set valueSet = new HashSet();
+		Iterator<Attribute<?>> attributesIterator = attributes.iterator();
+		while (attributesIterator.hasNext()) {
+			Attribute attribute = attributesIterator.next();
+			Set<Set> attributeValues = attribute.getAttributeValueSet();
+			valueSet.addAll(attributeValues);
+		}
 
-        return valueSet;
-    }
+		return valueSet;
+	}
 
-    private boolean isPermit(Collection<Principal> acl, Set<Principal> requestPrincipal) {
+	private boolean isPermit(Collection<Principal> acl, Set<Principal> requestPrincipal) {
 
-        if (requestPrincipal == null) {
-            return false;
-        }
+		if (requestPrincipal == null) {
+			return false;
+		}
 
-        if (requestPrincipal.size() < 1) {
-            if (this.anonymousAllowed) {
-                return true;
-            } else {
-                return false;
-            }
-        }
+		if (requestPrincipal.size() < 1) {
+			if (this.anonymousAllowed) {
+				return true;
+			} else {
+				return false;
+			}
+		}
 
-        Iterator<Principal> iterator = requestPrincipal.iterator();
-        while (iterator.hasNext()) {
-            Principal principal = iterator.next();
-            if (acl.contains(principal)) {
-                return true;
-            }
-        }
+		Iterator<Principal> iterator = requestPrincipal.iterator();
+		while (iterator.hasNext()) {
+			Principal principal = iterator.next();
+			if (acl.contains(principal)) {
+				return true;
+			}
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    private Decision getDecision(RequestEntities requestEntities, Collection<Principal> acl) {
+	private Decision getDecision(RequestEntities requestEntities, Collection<Principal> acl) {
 
-        EntityAttributes requestor = requestEntities.getRequestor();
+		EntityAttributes requestor = requestEntities.getRequestor();
 
-        if (requestor != null) {
-            AttributeIdentifier identifier =
-                    AttributeUtil.getPrincipalIdentifier();
-            Collection<Attribute<?>> principals = requestor.getIdentityAttributes().getAttributes(identifier);
-            Set<Set> principalValues = getAttributeValue(principals);
-            Iterator<Set> principalValuesIterator = principalValues.iterator();
-            while (principalValuesIterator.hasNext()) {
-                if (isPermit(acl, principalValuesIterator.next())) {
-                    Decision decision = new Decision(context.getContainerEntity(), requestEntities.getRequestor(),
-                            Decision.PERMIT, Calendar.getInstance(), null);
-                    return decision;
-                }
-            }
-        }
+		if (requestor != null) {
+			AttributeIdentifier identifier = AttributeUtil.getPrincipalIdentifier();
+			IdentityAttributeCollection identityAttributes = requestor.getIdentityAttributes();
+			Collection<Attribute<?>> principals = identityAttributes.getAttributes(identifier);
+			Set<Set> principalValues = getAttributeValue(principals);
+			Iterator<Set> principalValuesIterator = principalValues.iterator();
+			while (principalValuesIterator.hasNext()) {
+				if (isPermit(acl, principalValuesIterator.next())) {
+					Decision decision = new Decision(context.getContainerEntity(), requestEntities.getRequestor(),
+							Decision.PERMIT, Calendar.getInstance(), null);
+					return decision;
+				}
+			}
+		}
 
-        Decision decision = new Decision(context.getContainerEntity(), requestEntities.getRequestor(),
-                Decision.DENY, Calendar.getInstance(), null);
-        return decision;
-    }
+		Decision decision = new Decision(context.getContainerEntity(), requestEntities.getRequestor(), Decision.DENY,
+				Calendar.getInstance(), null);
+		return decision;
+	}
 }
-

@@ -191,4 +191,9 @@ public final class AttributeUtil {
 		}
 		return null;
 	}
+
+	public static AttributeIdentifier getOperationAttrIdentifier() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
