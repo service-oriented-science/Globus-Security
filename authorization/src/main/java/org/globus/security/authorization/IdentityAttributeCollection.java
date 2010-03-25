@@ -15,7 +15,7 @@
  */
 package org.globus.security.authorization;
 
-import org.globus.security.authorization.util.I18nUtil;
+import org.globus.util.I18nUtil;
 
 /**
  * Stores a collection of IdentityAttributes. See AttributeCollection.
@@ -23,35 +23,34 @@ import org.globus.security.authorization.util.I18nUtil;
 
 public class IdentityAttributeCollection extends AttributeCollection {
 
-    /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 5475213179019500601L;
-	private static I18nUtil i18n =
-            I18nUtil.getI18n("org.globus.security.authorization.errors",
-                    Attribute.class.getClassLoader());
+	private static I18nUtil i18n = I18nUtil.getI18n("org.globus.security.authorization.errors", Attribute.class
+			.getClassLoader());
 
-    protected String getDescription() {
-        return "Identity AttributeBase Collection";
-    }
+	protected String getDescription() {
+		return "Identity AttributeBase Collection";
+	}
 
-    public void add(Attribute<?> attribute) {
+	public void add(Attribute<?> attribute) {
 
-        if (!attribute.isIdentityAttribute()) {
-            String err = i18n.getMessage("onlyIdenAttr");
-            throw new IllegalArgumentException(err);
-        }
+		if (!attribute.isIdentityAttribute()) {
+			String err = i18n.getMessage("onlyIdenAttr");
+			throw new IllegalArgumentException(err);
+		}
 
-        super.add(attribute);
-    }
+		super.add(attribute);
+	}
 
-    public void addAll(AttributeCollection attrCollection) {
+	public void addAll(AttributeCollection attrCollection) {
 
-        if (!(attrCollection instanceof IdentityAttributeCollection)) {
-            String err = i18n.getMessage("onlyIdenAttr");
-            throw new IllegalArgumentException(err);
-        }
+		if (!(attrCollection instanceof IdentityAttributeCollection)) {
+			String err = i18n.getMessage("onlyIdenAttr");
+			throw new IllegalArgumentException(err);
+		}
 
-        super.addAll(attrCollection);
-    }
+		super.addAll(attrCollection);
+	}
 }

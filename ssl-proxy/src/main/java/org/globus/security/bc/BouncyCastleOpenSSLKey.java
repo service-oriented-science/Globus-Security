@@ -97,6 +97,9 @@ public class BouncyCastleOpenSSLKey extends OpenSSLKey {
     protected PrivateKey getKey(String alg, byte[] data) throws GeneralSecurityException {
         if (alg.equals("RSA")) {
             try {
+            	if(data.length == 0){
+            		throw new GeneralSecurityException("Cannot process empty byte stream.");
+            	}
                 ByteArrayInputStream bis = new ByteArrayInputStream(data);
                 ASN1InputStream derin = new ASN1InputStream(bis);
                 DERObject keyInfo = derin.readObject();

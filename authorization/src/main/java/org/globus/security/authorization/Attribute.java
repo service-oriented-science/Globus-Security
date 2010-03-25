@@ -15,16 +15,14 @@
  */
 package org.globus.security.authorization;
 
-import org.globus.security.authorization.util.I18nUtil;
-
+import java.io.Serializable;
 import java.util.Calendar;
-
-import java.util.Set;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Collections;
+import java.util.Set;
 
-import java.io.Serializable;
+import org.globus.util.I18nUtil;
 
 /**
  * Data type representing an attribute. Attribute is uniquely identified by

@@ -31,7 +31,7 @@ import java.security.PrivilegedActionException;
  */
 public abstract class JaasSubject {
 
-    private static I18n i18n = I18n.getI18n("org.globus.gsi.gssapi.errors", JaasSubject.class.getClassLoader());
+    private static I18n i18n = I18n.getI18n("org.globus.security.jaas.JaasErrors", JaasSubject.class.getClassLoader());
     private static JaasSubject subject;
 
     protected JaasSubject() {
@@ -51,7 +51,7 @@ public abstract class JaasSubject {
                 className = "org.globus.security.jaas.GlobusSubject";
             }
             try {
-                Class clazz = Class.forName(className);
+                Class <?> clazz = Class.forName(className);
                 if (!JaasSubject.class.isAssignableFrom(clazz)) {
                     throw new RuntimeException(i18n.getMessage("invalidJaasSubject",  className));
                 }

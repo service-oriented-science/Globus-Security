@@ -15,154 +15,147 @@
  */
 package org.globus.security.jaas;
 
-import org.globus.security.jaas.JaasSubject;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
-import java.security.PrivilegedAction;
 import java.security.AccessController;
+import java.security.PrivilegedAction;
+
 import javax.security.auth.Subject;
 
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.framework.Test;
+import org.globus.security.JAASTest;
+import org.globus.security.SecurityTest;
+import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
-public class GlobusSubjectTest extends TestCase {
-    
-    private static final String CRED = "testCred1";
-    private static final String CRED2 = "testCred2";
+@Category( { SecurityTest.class, JAASTest.class })
+public class GlobusSubjectTest {
 
-    public GlobusSubjectTest(String name) {
-	super(name);
-    }
-    
-    public static void main (String[] args) {
-	junit.textui.TestRunner.run (suite());
-    }
+	private static final String CRED = "testCred1";
+	private static final String CRED2 = "testCred2";
 
-    public static Test suite() {
-	return new TestSuite(GlobusSubjectTest.class);
-    }
+	@Test
+	public void testSubject() throws Exception {
 
-    public void testSubject() throws Exception {
-	
-	Subject subject = new Subject();
-	subject.getPublicCredentials().add(CRED);
+		Subject subject = new Subject();
+		subject.getPublicCredentials().add(CRED);
 
-	TestAction action = new TestAction();
-	JaasSubject.doAs(subject, action);
-	
-	assertEquals(subject, action.subject1);
-	assertEquals(subject, action.innerSubject);
-	assertEquals(subject, action.subject2);
-    }
-    
-    class TestAction implements PrivilegedAction {
-	
-	Subject subject1, innerSubject, subject2;
+		TestAction action = new TestAction();
+		JaasSubject.doAs(subject, action);
 
-	public Object run() {
-	    this.subject1 = JaasSubject.getCurrentSubject();
-	    this.innerSubject = (Subject)AccessController.doPrivileged(new PrivilegedAction() {
-		    public Object run() {
+		assertThat(subject, is(action.subject1));
+		assertThat(subject, is(action.innerSubject));
+		assertThat(subject, is(action.subject2));
+	}
+
+	class TestAction implements PrivilegedAction<Object> {
+
+		Subject subject1, innerSubject, subject2;
+
+		public Object run() {
+			this.subject1 = JaasSubject.getCurrentSubject();
+			this.innerSubject = (Subject) AccessController.doPrivileged(new PrivilegedAction<Object>() {
+				public Object run() {
+					return JaasSubject.getCurrentSubject();
+				}
+			});
+			this.subject2 = JaasSubject.getCurrentSubject();
+			return null;
+		}
+	}
+
+	public void testNestedSubject() throws Exception {
+
+		Subject subject = new Subject();
+		subject.getPublicCredentials().add(CRED);
+
+		Subject anotherSubject = new Subject();
+		anotherSubject.getPublicCredentials().add(CRED2);
+
+		NestedTestAction action = new NestedTestAction(anotherSubject);
+		JaasSubject.doAs(subject, action);
+
+		assertEquals(subject, action.subject1);
+		assertEquals(subject, action.subject2);
+
+		assertEquals(anotherSubject, action.innerSubject1);
+		assertEquals(anotherSubject, action.innerSubject2);
+		assertEquals(anotherSubject, action.innerInnerSubject);
+	}
+
+	class NestedTestAction implements PrivilegedAction {
+
+		Subject subject1, subject2;
+		Subject innerSubject1, innerSubject2, innerInnerSubject;
+
+		Subject anotherSubject;
+
+		public NestedTestAction(Subject anotherSubject) {
+			this.anotherSubject = anotherSubject;
+		}
+
+		public Object run() {
+			this.subject1 = JaasSubject.getCurrentSubject();
+
+			TestAction action = new TestAction();
+			JaasSubject.doAs(anotherSubject, action);
+
+			this.innerSubject1 = action.subject1;
+			this.innerSubject2 = action.subject2;
+			this.innerInnerSubject = action.innerSubject;
+
+			this.subject2 = JaasSubject.getCurrentSubject();
+			return null;
+		}
+	}
+
+	public void testGetSubjectSameThread() throws Exception {
+
+		Subject subject = new Subject();
+		subject.getPublicCredentials().add(CRED);
+
+		SimpleTestAction action = new SimpleTestAction();
+		Subject returnedSubject = (Subject) JaasSubject.doAs(subject, action);
+
+		assertEquals(subject, returnedSubject);
+	}
+
+	class SimpleTestAction implements PrivilegedAction {
+		public Object run() {
 			return JaasSubject.getCurrentSubject();
-		    }
-		});
-	    this.subject2 = JaasSubject.getCurrentSubject();
-	    return null;
-	}
-    }
-
-    public void testNestedSubject() throws Exception {
-	
-	Subject subject = new Subject();
-	subject.getPublicCredentials().add(CRED);
-
-	Subject anotherSubject = new Subject();
-	anotherSubject.getPublicCredentials().add(CRED2);
-
-	NestedTestAction action = new NestedTestAction(anotherSubject);
-	JaasSubject.doAs(subject, action);
-	
-	assertEquals(subject, action.subject1);
-	assertEquals(subject, action.subject2);
-	
-	assertEquals(anotherSubject, action.innerSubject1);
-	assertEquals(anotherSubject, action.innerSubject2);
-	assertEquals(anotherSubject, action.innerInnerSubject);
-    }
-
-    class NestedTestAction implements PrivilegedAction {
-	
-	Subject subject1, subject2;
-	Subject innerSubject1, innerSubject2, innerInnerSubject;
-
-	Subject anotherSubject;
-
-	public NestedTestAction(Subject anotherSubject) {
-	    this.anotherSubject = anotherSubject;
+		}
 	}
 
-	public Object run() {
-	    this.subject1 = JaasSubject.getCurrentSubject();
+	public void testGetSubjectInheritThread() throws Exception {
 
-	    TestAction action = new TestAction();
-	    JaasSubject.doAs(anotherSubject, action);
+		Subject subject = new Subject();
+		subject.getPublicCredentials().add(CRED);
 
-	    this.innerSubject1 = action.subject1;
-	    this.innerSubject2 = action.subject2;
-	    this.innerInnerSubject = action.innerSubject;
+		ThreadTestAction action = new ThreadTestAction();
+		Subject returnedSubject = (Subject) JaasSubject.doAs(subject, action);
 
-	    this.subject2 = JaasSubject.getCurrentSubject();
-	    return null;
+		assertEquals(subject, returnedSubject);
 	}
-    }
 
-    public void testGetSubjectSameThread() throws Exception {
-	
-	Subject subject = new Subject();
-	subject.getPublicCredentials().add(CRED);
-	
-	SimpleTestAction action = new SimpleTestAction();
-	Subject returnedSubject = 
-	    (Subject)JaasSubject.doAs(subject, action);
-	
-	assertEquals(subject, returnedSubject);
-    }
-
-    class SimpleTestAction implements PrivilegedAction {
-	public Object run() {
-	    return JaasSubject.getCurrentSubject();
+	class ThreadTestAction implements PrivilegedAction {
+		public Object run() {
+			TestThread t = new TestThread();
+			t.start();
+			try {
+				t.join();
+			} catch (Exception e) {
+			}
+			return t.subject;
+		}
 	}
-    }
 
-    public void testGetSubjectInheritThread() throws Exception {
-	
-	Subject subject = new Subject();
-	subject.getPublicCredentials().add(CRED);
+	class TestThread extends Thread {
+		Subject subject;
 
-	ThreadTestAction action = new ThreadTestAction();
-	Subject returnedSubject = 
-	    (Subject)JaasSubject.doAs(subject, action);
-	
-	assertEquals(subject, returnedSubject);
-    }
-
-    class ThreadTestAction implements PrivilegedAction {
-	public Object run() {
-	    TestThread t = new TestThread();
-	    t.start();
-	    try {
-		t.join();
-	    } catch (Exception e) {
-	    }
-	    return t.subject;
+		public void run() {
+			this.subject = JaasSubject.getCurrentSubject();
+		}
 	}
-    }
-
-    class TestThread extends Thread {
-	Subject subject;
-	public void run() {
-	    this.subject = JaasSubject.getCurrentSubject();
-	}
-    }
 
 }

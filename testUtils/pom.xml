@@ -45,6 +45,10 @@
             <artifactId>testng</artifactId>
             <classifier>jdk15</classifier>
             <version>5.8</version>
+        </dependency>
+        <dependency>
+        	<groupId>org.slf4j</groupId>
+        	<artifactId>slf4j-api</artifactId>
         </dependency>        
     </dependencies>
 

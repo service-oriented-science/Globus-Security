@@ -28,56 +28,51 @@ import org.globus.security.provider.GlobusProvider;
 import org.globus.security.stores.ResourceSigningPolicyStore;
 import org.globus.security.stores.ResourceSigningPolicyStoreParameters;
 import org.globus.security.util.SSLConfigurator;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.ServletHandler;
 import org.mortbay.jetty.servlet.ServletHolder;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
 
 /**
- * Created by IntelliJ IDEA.
- * User: turtlebender
- * Date: Feb 4, 2010
- * Time: 10:58:56 AM
- * To change this template use File | Settings | File Templates.
+ * Created by IntelliJ IDEA. User: turtlebender Date: Feb 4, 2010 Time: 10:58:56
+ * AM To change this template use File | Settings | File Templates.
  */
-@Test
 public class GlobusSslSocketConnectorTest extends ClientTest {
 
-    private Server server;
+	private static Server server;
 
-    @BeforeClass
-    public void setup() throws Exception {
-        SSLConfigurator config = new SSLConfigurator();
-        config.setCrlLocationPattern(null);
-        config.setCrlStoreType(GlobusProvider.CERTSTORE_TYPE);
+	@BeforeClass
+	public static void setup() throws Exception {
+		SSLConfigurator config = new SSLConfigurator();
+		config.setCrlLocationPattern(null);
+		config.setCrlStoreType(GlobusProvider.CERTSTORE_TYPE);
 
-        config.setCredentialStoreLocation("classpath:/mykeystore.properties");
-        config.setCredentialStorePassword("password");
-        config.setCredentialStoreType(GlobusProvider.KEYSTORE_TYPE);
+		config.setCredentialStoreLocation("classpath:/mykeystore.properties");
+		config.setCredentialStorePassword("password");
+		config.setCredentialStoreType(GlobusProvider.KEYSTORE_TYPE);
 
-        config.setTrustAnchorStoreLocation("classpath:/mytruststore.properties");
-        config.setTrustAnchorStorePassword("password");
-        config.setTrustAnchorStoreType(GlobusProvider.KEYSTORE_TYPE);
+		config.setTrustAnchorStoreLocation("classpath:/mytruststore.properties");
+		config.setTrustAnchorStorePassword("password");
+		config.setTrustAnchorStoreType(GlobusProvider.KEYSTORE_TYPE);
 
-        ResourceSigningPolicyStoreParameters policyParams = new ResourceSigningPolicyStoreParameters(
-                "classpath:/globus_crux_ca.signing_policy");
-        ResourceSigningPolicyStore policyStore = new ResourceSigningPolicyStore(policyParams);
+		ResourceSigningPolicyStoreParameters policyParams = new ResourceSigningPolicyStoreParameters(
+				"classpath:/globus_crux_ca.signing_policy");
+		ResourceSigningPolicyStore policyStore = new ResourceSigningPolicyStore(policyParams);
 
-        config.setPolicyStore(policyStore);
-        GlobusSslSocketConnector connector = new GlobusSslSocketConnector(config);
-        server = new Server();
-        connector.setPort(getPort());
-        connector.setNeedClientAuth(true);        
+		config.setPolicyStore(policyStore);
+		GlobusSslSocketConnector connector = new GlobusSslSocketConnector(config);
+		server = new Server();
+		connector.setPort(getPort());
+		connector.setNeedClientAuth(true);
 
-        server.addConnector(connector);
-        ServletHandler handler = new ServletHandler();
-        ServletHolder holder = new ServletHolder(new Servlet(){
+		server.addConnector(connector);
+		ServletHandler handler = new ServletHandler();
+		ServletHolder holder = new ServletHolder(new Servlet() {
 
 			public void destroy() {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			public ServletConfig getServletConfig() {
@@ -92,23 +87,23 @@ public class GlobusSslSocketConnectorTest extends ClientTest {
 
 			public void init(ServletConfig arg0) throws ServletException {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			public void service(ServletRequest arg0, ServletResponse arg1) throws ServletException, IOException {
 				System.out.println("ServicingRequest");
-				
-			}
-        	
-        });
-        handler.addServletWithMapping(holder, "/");
-        server.addHandler(handler);
-//        server.addHandler(new JettySSLHandler());
-        server.start();
-    }
 
-    @AfterClass
-    public void shutdown() throws Exception {
-        server.stop();
-    }
+			}
+
+		});
+		handler.addServletWithMapping(holder, "/");
+		server.addHandler(handler);
+		// server.addHandler(new JettySSLHandler());
+		server.start();
+	}
+
+	@AfterClass
+	public static void shutdown() throws Exception {
+		server.stop();
+	}
 }

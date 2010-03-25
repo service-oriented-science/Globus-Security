@@ -14,14 +14,18 @@
  */
 package org.globus.security.authorization.providers;
 
-import org.globus.security.authorization.*;
+import java.util.Vector;
+
+import org.globus.security.authorization.AuthorizationException;
+import org.globus.security.authorization.Decision;
+import org.globus.security.authorization.EntityAttributes;
+import org.globus.security.authorization.PDP;
+import org.globus.security.authorization.RequestEntities;
 import org.globus.security.authorization.annotations.AuthorizationEngine;
 import org.globus.security.authorization.util.AttributeUtil;
-import org.globus.security.authorization.util.I18nUtil;
+import org.globus.util.I18nUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Vector;
 
 /**
  * This is a combining algorithm that returns a permit if a single permit
