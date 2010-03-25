@@ -30,7 +30,6 @@ import org.globus.security.authorization.RequestEntities;
 import org.globus.security.authorization.util.AttributeUtil;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.springframework.web.context.request.RequestAttributes;
 
 /**
  * FILL ME
