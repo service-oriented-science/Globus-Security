@@ -108,6 +108,12 @@
 			<groupId>cglib</groupId>
 			<artifactId>cglib-nodep</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.globus.crux.security</groupId>
+			<artifactId>ssl-proxy</artifactId>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
 	</dependencies>
 
 	<repositories>
