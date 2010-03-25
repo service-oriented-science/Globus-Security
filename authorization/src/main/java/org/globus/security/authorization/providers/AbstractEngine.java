@@ -30,6 +30,7 @@ import org.globus.security.authorization.NonRequestEntities;
 import org.globus.security.authorization.PDPInterceptor;
 import org.globus.security.authorization.PIPInterceptor;
 import org.globus.security.authorization.RequestEntities;
+import org.globus.security.authorization.annotations.AuthorizationEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

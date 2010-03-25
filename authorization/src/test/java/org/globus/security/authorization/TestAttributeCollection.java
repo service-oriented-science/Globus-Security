@@ -15,6 +15,11 @@
  */
 package org.globus.security.authorization;
 
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
+
 import java.net.URI;
 import java.util.Calendar;
 import java.util.Collection;
@@ -24,10 +29,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
-import static junit.framework.Assert.assertTrue;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
 import org.testng.annotations.Test;
 
 public class TestAttributeCollection {

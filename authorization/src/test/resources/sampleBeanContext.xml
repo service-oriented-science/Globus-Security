@@ -15,7 +15,7 @@
 	xmlns:beans="http://www.springframework.org/schema/beans"
 	xsi:schemaLocation="
 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-http://www.globus.org/security/descriptor/container file:////Users/turtlebender/src/Globus-Security/authorization/src/main/resources/org/globus/security/authorization/xml/container_security_descriptor.xsd">
+http://www.globus.org/security/descriptor/container ${user.dir}/src/main/resources/org/globus/security/authorization/xml/container_security_descriptor.xsd">
 
 	<credential>
 		<cert-key-files>

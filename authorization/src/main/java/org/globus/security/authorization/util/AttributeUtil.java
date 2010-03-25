@@ -31,7 +31,6 @@ import org.globus.security.authorization.AttributeIdentifier;
 import org.globus.security.authorization.Constants;
 import org.globus.security.authorization.EntityAttributes;
 import org.globus.security.authorization.IdentityAttributeCollection;
-import org.globus.security.authorization.impl.GlobusContext;
 
 /**
  * Fill Me
@@ -154,14 +153,14 @@ public final class AttributeUtil {
 		return identAttrColl;
 	}
 
-	public static GlobusContext getGlobusContext(AttributeCollection collection) {
-		Collection<GlobusContext> contextCollection = getAttributeValue(collection,
-				getEnvironmentContextAttrIdentifier(), null, GlobusContext.class);
-		if (!contextCollection.isEmpty()) {
-			return contextCollection.iterator().next();
-		}
-		return null;
-	}
+//	public static GlobusContext getGlobusContext(AttributeCollection collection) {
+//		Collection<GlobusContext> contextCollection = getAttributeValue(collection,
+//				getEnvironmentContextAttrIdentifier(), null, GlobusContext.class);
+//		if (!contextCollection.isEmpty()) {
+//			return contextCollection.iterator().next();
+//		}
+//		return null;
+//	}
 
 	// public static AttributeBase
 

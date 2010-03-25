@@ -15,70 +15,71 @@
 package org.globus.security.authorization.providers;
 
 import org.globus.security.authorization.*;
+import org.globus.security.authorization.annotations.AuthorizationEngine;
 import org.globus.security.authorization.util.I18nUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * This combining algorithm returns the first permit or return decision returned
- * by the list of configuired PDPs. Steps:
- * Invoke all configured PIPs in order. Invoke each PDP in order. If a PDP
- * returns a permit or deny, return decision. If no PDPs provide a decision,
- * return indeterminate.
+ * by the list of configured PDPs. Steps: Invoke all configured PIPs in order.
+ * <ol>
+ * <li>Invoke each PDP in order.</li>
+ * <li>If a PDP returns a permit or deny, return decision.</li>
+ * <li>If no PDPs provide a decision, return indeterminate.</li>
+ * </ol>
  * <p/>
  * Note that entity issuing the decision for each PDP is not considered, that is
- * the resource owner is not matched with PDP decision issuer. Resource owner
- * is used only when an indeterminate decision is returned, with no decision
- * from any PDPs.
+ * the resource owner is not matched with PDP decision issuer. Resource owner is
+ * used only when an indeterminate decision is returned, with no decision from
+ * any PDPs.
  */
+@AuthorizationEngine(name = "First Apllicable Algorithm", description = "This combining algorithm returns the first permit or return decision returned "
+		+ "by the list of configured PDPs", documentationPath = "/firstApplicable.html", author = "Globus Crux Team", pid = "FirstApplicable")
 public class FirstApplicableAlg extends AbstractEngine {
 
-    /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -6958049485606617224L;
 
-	private static I18nUtil i18n =
-            I18nUtil.getI18n("org.globus.security.authorization.errors",
-                    FirstApplicableAlg.class.getClassLoader());
+	private static I18nUtil i18n = I18nUtil.getI18n("org.globus.security.authorization.errors",
+			FirstApplicableAlg.class.getClassLoader());
 
-    private static Logger logger =
-            LoggerFactory.getLogger(FirstApplicableAlg.class.getName());
+	private static Logger logger = LoggerFactory.getLogger(FirstApplicableAlg.class.getName());
 
-    public FirstApplicableAlg(String chainName) {
-        super(chainName);
-    }
+	public FirstApplicableAlg(String chainName) {
+		super(chainName);
+	}
 
-    public Decision engineAuthorize(RequestEntities reqAttr, EntityAttributes resourceOwner)
-            throws AuthorizationException {
+	public Decision engineAuthorize(RequestEntities reqAttr, EntityAttributes resourceOwner)
+			throws AuthorizationException {
 
-        collectAttributes(reqAttr);
+		collectAttributes(reqAttr);
 
-        if ((getPdps() == null) || (this.getPdps().isEmpty())) {
-            String err = i18n.getMessage("noPDPs");
-            logger.error(err);
-            throw new AuthorizationException(err);
-        }
+		if ((getPdps() == null) || (this.getPdps().isEmpty())) {
+			String err = i18n.getMessage("noPDPs");
+			logger.error(err);
+			throw new AuthorizationException(err);
+		}
 
-        for (PDPInterceptor pdp : this.getPdps()) {
-            Decision decision = pdp.canAccess(reqAttr, this.getNonReqEntities());
+		for (PDPInterceptor pdp : this.getPdps()) {
+			Decision decision = pdp.canAccess(reqAttr, this.getNonReqEntities());
 
-            if (decision == null) {
-                continue;
-            }
+			if (decision == null) {
+				continue;
+			}
 
-            if (decision.isPermit() || decision.isDeny()) {
-                return decision;
-            }
-        }
+			if (decision.isPermit() || decision.isDeny()) {
+				return decision;
+			}
+		}
 
-        return new Decision(reqAttr.getRequestor(), resourceOwner,
-                Decision.INDETERMINATE, null, null);
-    }
+		return new Decision(reqAttr.getRequestor(), resourceOwner, Decision.INDETERMINATE, null, null);
+	}
 
 	public String getAlgorithm() {
 		return "FirstApplicable";
 	}
-    
-    
+
 }

@@ -6,6 +6,11 @@
 	</projects>
 	<buildSpec>
 		<buildCommand>
+			<name>org.eclipse.wst.common.project.facet.core.builder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
 			<name>org.eclipse.jdt.core.javabuilder</name>
 			<arguments>
 			</arguments>
@@ -25,10 +30,55 @@
 			<arguments>
 			</arguments>
 		</buildCommand>
+		<buildCommand>
+			<name>org.springframework.ide.eclipse.core.springbuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
 	</buildSpec>
 	<natures>
+		<nature>com.springsource.server.ide.facet.core.bundlenature</nature>
+		<nature>org.springframework.ide.eclipse.core.springnature</nature>
 		<nature>org.maven.ide.eclipse.maven2Nature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.pde.PluginNature</nature>
+		<nature>org.eclipse.wst.common.project.facet.core.nature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>aopalliance-1.0.jar</name>
+			<type>1</type>
+			<location>/Users/turtlebender/.m2/repository/aopalliance/aopalliance/1.0/aopalliance-1.0.jar</location>
+		</link>
+		<link>
+			<name>aspectjrt-1.6.8.jar</name>
+			<type>1</type>
+			<location>/Users/turtlebender/.m2/repository/org/aspectj/aspectjrt/1.6.8/aspectjrt-1.6.8.jar</location>
+		</link>
+		<link>
+			<name>cglib-nodep-2.2.jar</name>
+			<type>1</type>
+			<location>/Users/turtlebender/.m2/repository/cglib/cglib-nodep/2.2/cglib-nodep-2.2.jar</location>
+		</link>
+		<link>
+			<name>commons-logging-1.1.1.jar</name>
+			<type>1</type>
+			<location>/Users/turtlebender/.m2/repository/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar</location>
+		</link>
+		<link>
+			<name>javax.inject-1.jar</name>
+			<type>1</type>
+			<location>/Users/turtlebender/.m2/repository/javax/inject/javax.inject/1/javax.inject-1.jar</location>
+		</link>
+		<link>
+			<name>jsr250-api-1.0.jar</name>
+			<type>1</type>
+			<location>/Users/turtlebender/.m2/repository/javax/annotation/jsr250-api/1.0/jsr250-api-1.0.jar</location>
+		</link>
+		<link>
+			<name>ssl-proxy-1.0-SNAPSHOT.jar</name>
+			<type>1</type>
+			<location>/Users/turtlebender/.m2/repository/org/globus/crux/security/ssl-proxy/1.0-SNAPSHOT/ssl-proxy-1.0-SNAPSHOT.jar</location>
+		</link>
+	</linkedResources>
 </projectDescription>
