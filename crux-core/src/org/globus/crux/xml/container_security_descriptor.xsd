@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		~ Copyright 1999-2010 University of Chicago ~ ~ Licensed under the
+		Apache License, Version 2.0 (the "License"); you may not use this file
+		except in ~ compliance with the License. You may obtain a copy of the
+		License at ~ ~ http://www.apache.org/licenses/LICENSE-2.0 ~ ~ Unless
+		required by applicable law or agreed to in writing, software
+		distributed under the License is ~ distributed on an "AS IS"
+		BASIS,WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either ~ express
+		or implied. ~ ~ See the License for the specific language governing
+		permissions and limitations under the License.
+	-->
+<xs:schema targetNamespace="http://www.globus.org/security/descriptor/container"
+	elementFormDefault="qualified"
+	xmlns:tns="http://www.globus.org/security/descriptor/container"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:complexType name="valStringType">
+		<xs:attribute name="value" type="xs:string" use="required" />
+	</xs:complexType>
+	<xs:complexType name="valIntType">
+		<xs:attribute name="value" type="xs:int" use="required" />
+	</xs:complexType>
+	<xs:complexType name="valBooleanType">
+		<xs:attribute name="value" type="xs:boolean" use="required" />
+	</xs:complexType>
+	<xs:complexType name="anyType">
+		<xs:sequence>
+			<xs:any namespace="##any" />
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Credential type -->
+	<xs:complexType name="certKeyFileType">
+		<xs:all>
+			<xs:element name="key-file" type="tns:valStringType" />
+			<xs:element name="cert-file" type="tns:valStringType" />
+		</xs:all>
+	</xs:complexType>
+	<xs:complexType name="keyStoreType">
+		<xs:sequence>
+			<xs:element name="keyStorePath" type="tns:valStringType" />
+			<xs:element name="keyStorePass" type="xs:string" />
+			<xs:element name="keyStoreAlias" type="xs:string" />
+		</xs:sequence>
+		<xs:attribute name="type" type="xs:string" use="optional" />
+	</xs:complexType>
+	<xs:complexType name="credentialType">
+		<xs:choice>
+			<xs:element name="proxy-file" type="tns:valStringType"
+				minOccurs="0" />
+			<xs:element name="cert-key-files" type="tns:certKeyFileType"
+				minOccurs="0" />
+			<xs:element name="keyStore" type="tns:keyStoreType"
+				minOccurs="0" />
+		</xs:choice>
+	</xs:complexType>
+	<xs:element name="interceptor">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="parameter" type="tns:anyType"
+					minOccurs="0" maxOccurs="1" />
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required" />
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="bootstrapPips">
+		<xs:sequence>
+			<xs:element ref="tns:interceptor" minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+		<xs:attribute name="overwrite" type="xs:boolean" />
+	</xs:complexType>
+	<xs:complexType name="pips">
+		<xs:sequence>
+			<xs:element ref="tns:interceptor" minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="pdps">
+		<xs:sequence>
+			<xs:element ref="tns:interceptor" minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="authzChain">
+		<xs:sequence>
+			<xs:element name="bootstrapPips" type="xs:anyType"
+				minOccurs="0" />
+			<xs:element name="pips" type="xs:anyType" minOccurs="0" />
+			<xs:element name="pdps" type="xs:anyType" minOccurs="0" />
+		</xs:sequence>
+		<xs:attribute name="combiningAlg" type="xs:string"
+			default="PermitOverride" />
+	</xs:complexType>
+	<xs:element name="defaultAuthzParam">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="tns:interceptor" minOccurs="0"
+					maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="reject-limited-proxy" type="tns:valBooleanType" />
+	<xs:element name="context-lifetime" type="tns:valIntType" />
+	<xs:element name="replay-attack-window" type="tns:valIntType" />
+	<xs:element name="replay-attack-filter" type="tns:valBooleanType" />
+	<!-- Container SecurityDescriptor Config -->
+	<xs:element name="containerSecurityConfig">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="credential" type="tns:credentialType"
+					minOccurs="0" />
+				<xs:element name="adminAuthzChain" type="tns:authzChain"
+					minOccurs="0" />
+				<xs:element ref="tns:defaultAuthzParam" minOccurs="0" />
+				<xs:element ref="tns:reject-limited-proxy" minOccurs="0" />
+				<xs:element ref="tns:context-lifetime" minOccurs="0" />
+				<xs:element ref="tns:replay-attack-window" minOccurs="0" />
+				<xs:element ref="tns:replay-attack-filter" minOccurs="0" />
+				<xs:element name="context-timer-interval" type="tns:valIntType"
+					minOccurs="0" />
+				<xs:element name="replay-timer-interval" type="tns:valIntType"
+					minOccurs="0" />
+				<xs:element name="trustedCertificates" type="tns:valStringType"
+					minOccurs="0" maxOccurs="1" />
+				<xs:choice minOccurs="0">
+					<xs:any namespace="##other" processContents="strict"
+						minOccurs="0" maxOccurs="unbounded" />
+				</xs:choice>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

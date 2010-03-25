@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Export-Package: org.globus.crux.security;version="1.0.0"
+Unversioned-Imports: *
+Bundle-Vendor: Globus Crux
+Bundle-Version: 1.0.0
+Tool: Bundlor 1.0.0.BUILD-20091207202403
+Bundle-Name: Crux Deployment Bundle
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.globus.crux.deploy
+Import-Package: org.slf4j
+Bundle-RequiredExecutionEnvironment: J2SE-1.5,OSGi/Minimum-1.2
+
