@@ -20,6 +20,7 @@
 		<crux.version>${project.version}</crux.version>
 		<slf4j.version>1.5.10</slf4j.version>
 		<spring.version>3.0.1.RELEASE-A</spring.version>
+		<felix.compendium.version>1.2.0</felix.compendium.version>
 		<jsr250.version>1.0</jsr250.version>
 		<jsr330.version>1</jsr330.version>
 		<testng.version>5.11</testng.version>
@@ -35,6 +36,11 @@
 		<httpclient.version>4.0.1</httpclient.version>
 		<commonslang.version>2.4</commonslang.version>
 		<junit.version>4.8.1</junit.version>
+		<karaf.version>1.5.0-SNAPSHOT</karaf.version>
+		<osgi.compendium.version>4.2.0</osgi.compendium.version>
+		<aries.blueprint.version>1.0.0-incubating-SNAPSHOT</aries.blueprint.version>
+		<aries.jmx.version>1.0.0-incubating-SNAPSHOT</aries.jmx.version>
+		<felix.osgi.version>1.4.0</felix.osgi.version>
 	</properties>
 
 	<scm>
@@ -95,6 +101,18 @@
 
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>org.osgi.core</artifactId>
+				<version>${felix.osgi.version}</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>org.osgi.compendium</artifactId>
+				<version>${felix.compendium.version}</version>
+				<scope>provided</scope>
+			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-simple</artifactId>
@@ -302,6 +320,33 @@
 				<version>${junit.version}</version>
 				<scope>test</scope>
 			</dependency>
+			<dependency>
+				<groupId>org.apache.felix.karaf.shell</groupId>
+				<artifactId>org.apache.felix.karaf.shell.console</artifactId>
+				<version>${karaf.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.aries.blueprint</groupId>
+				<artifactId>org.apache.aries.blueprint</artifactId>
+				<version>${aries.blueprint.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>org.apache.felix</groupId>
+						<artifactId>javax.servlet</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.aries.jmx</groupId>
+				<artifactId>org.apache.aries.jmx</artifactId>
+				<version>${aries.jmx.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.aries.jmx</groupId>
+				<artifactId>org.apache.aries.jmx.blueprint</artifactId>
+				<version>${aries.jmx.version}</version>
+			</dependency>
+
 		</dependencies>
 	</dependencyManagement>
 
@@ -368,31 +413,31 @@
                 https://springframework.svn.sourceforge.net/svnroot/springframework/repos/repo-ext/
             </url>
 		</repository>
-		
+
 		<repository>
-            <id>apache-snapshots</id>
-            <name>Apache Snapshots Repository</name>
-            <url>http://repository.apache.org/content/groups/snapshots-group</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <!-- ServiceMix repo -->
-        <repository>
-            <id>servicemix</id>
-            <name>Apache ServiceMix Repository</name>
-            <url>http://svn.apache.org/repos/asf/servicemix/m2-repo</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-		
+			<id>apache-snapshots</id>
+			<name>Apache Snapshots Repository</name>
+			<url>http://repository.apache.org/content/groups/snapshots-group</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<!-- ServiceMix repo -->
+		<repository>
+			<id>servicemix</id>
+			<name>Apache ServiceMix Repository</name>
+			<url>http://svn.apache.org/repos/asf/servicemix/m2-repo</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+
 
 		<!--
 
