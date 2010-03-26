@@ -53,6 +53,7 @@
 		-->
 		<module>testUtils</module>
 		<module>containerTestUtils</module>
+		<module>branding</module>
 	</modules>
 
 	<build>
@@ -65,6 +66,28 @@
 						<source>1.5</source>
 						<target>1.5</target>
 					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<version>1.2</version>
+					<dependencies>
+						<dependency>
+							<groupId>ant-contrib</groupId>
+							<artifactId>ant-contrib</artifactId>
+							<version>1.0b3</version>
+						</dependency>
+						<dependency>
+							<groupId>ant</groupId>
+							<artifactId>ant-optional</artifactId>
+							<version>1.5.3-1</version>
+						</dependency>
+						<dependency>
+							<groupId>org.ccil.cowan.tagsoup</groupId>
+							<artifactId>tagsoup</artifactId>
+							<version>1.2</version>
+						</dependency>
+					</dependencies>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -127,6 +150,18 @@
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.osgi</groupId>
+				<artifactId>spring-osgi-io</artifactId>
+				<scope>provided</scope>
+				<version>${spring.osgi.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.osgi</groupId>
+				<artifactId>spring-osgi-annotation</artifactId>
+				<scope>provided</scope>
+				<version>${spring.osgi.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.osgi</groupId>
 				<artifactId>spring-osgi-core</artifactId>
 				<scope>provided</scope>
 				<version>${spring.osgi.version}</version>
@@ -171,11 +206,11 @@
 				<artifactId>cglib-nodep</artifactId>
 				<version>${cglib.version}</version>
 			</dependency>
-			<!--<dependency>
-				<groupId>org.globus.crux</groupId>
-				<artifactId>core</artifactId>
-				<version>${crux.version}</version>
-			</dependency>-->
+			<!--
+				<dependency> <groupId>org.globus.crux</groupId>
+				<artifactId>core</artifactId> <version>${crux.version}</version>
+				</dependency>
+			-->
 			<dependency>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>ssl-proxy</artifactId>
@@ -200,6 +235,17 @@
 			<dependency>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>containerTestUtils</artifactId>
+				<version>${crux.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>jetty</artifactId>
+				<version>${crux.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>org.globus.crux.security.authorization</artifactId>
 				<version>${crux.version}</version>
 				<scope>test</scope>
 			</dependency>
@@ -322,6 +368,31 @@
                 https://springframework.svn.sourceforge.net/svnroot/springframework/repos/repo-ext/
             </url>
 		</repository>
+		
+		<repository>
+            <id>apache-snapshots</id>
+            <name>Apache Snapshots Repository</name>
+            <url>http://repository.apache.org/content/groups/snapshots-group</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <!-- ServiceMix repo -->
+        <repository>
+            <id>servicemix</id>
+            <name>Apache ServiceMix Repository</name>
+            <url>http://svn.apache.org/repos/asf/servicemix/m2-repo</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+		
 
 		<!--
 
