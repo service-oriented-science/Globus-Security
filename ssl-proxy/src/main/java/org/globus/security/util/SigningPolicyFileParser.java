@@ -23,14 +23,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import javax.security.auth.x500.X500Principal;
 
 import org.globus.security.SigningPolicy;
 import org.globus.security.SigningPolicyException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Signing policy BCNF grammar as implemented here: (based on C implementation)
@@ -94,7 +94,7 @@ public class SigningPolicyFileParser {
     static final String[] ALLOWED_LINE_START = new String[]{ACCESS_ID_PREFIX, POS_RIGHTS, NEG_RIGHTS, CONDITION_PREFIX};
 
     private Logger logger =
-            LoggerFactory.getLogger(SigningPolicyFileParser.class.getName());
+            Logger.getLogger(SigningPolicyFileParser.class.getName());
 
     /**
      * Parses the file to extract signing policy defined for CA with the
@@ -116,7 +116,7 @@ public class SigningPolicyFileParser {
             throw new IllegalArgumentException();
         }
 
-        logger.debug("Signing policy file name " + fileName);
+        logger.fine("Signing policy file name " + fileName);
 
         FileReader fileReader = null;
 
@@ -130,7 +130,7 @@ public class SigningPolicyFileParser {
                 try {
                     fileReader.close();
                 } catch (Exception exp) {
-                    logger.debug("Error closing file reader", exp);
+                    logger.log(Level.FINE, "Error closing file reader", exp);
                 }
             }
         }
@@ -166,12 +166,12 @@ public class SigningPolicyFileParser {
                     continue;
                 }
 
-                logger.trace("Line to parse: " + line);
+                logger.finest("Line to parse: " + line);
 
                 String caDN = null;
                 if (line.startsWith(ACCESS_ID_PREFIX)) {
 
-                    logger.trace("Check if it is CA and get the DN " + line);
+                    logger.finest("Check if it is CA and get the DN " + line);
 
                     caDN = getCaDN(line, caDN);
 
@@ -209,7 +209,7 @@ public class SigningPolicyFileParser {
 
             line = line.trim();
 
-            logger.trace("Line is " + line);
+            logger.finest("Line is " + line);
 
             if (line.startsWith(POS_RIGHTS)) {
                 validatePositiveRights(tmpPosNegRights);
@@ -242,7 +242,7 @@ public class SigningPolicyFileParser {
         }
 
         if (usefulEntry && line.startsWith(CONDITION_SUBJECT)) {
-            logger.trace("Read in subject condition.");
+            logger.finest("Read in subject condition.");
             int startIndex = CONDITION_SUBJECT.length();
             int endIndex = line.length();
             Vector<Pattern> allowedDNs = getAllowedDNs(line.substring(startIndex, endIndex));
@@ -259,7 +259,7 @@ public class SigningPolicyFileParser {
         if (line.startsWith(ACCESS_ID_CA)) {
             outCaDN = getCA(line.substring(ACCESS_ID_CA.length(),
                     line.length()));
-            logger.trace("CA DN is " + caDN);
+            logger.finest("CA DN is " + caDN);
         }
         return outCaDN;
     }
@@ -274,7 +274,7 @@ public class SigningPolicyFileParser {
 
     private boolean isUsefulEntry(String line) throws SigningPolicyException {
         boolean usefulEntry;
-        logger.trace("Parse pos_rights here");
+        logger.finest("Parse pos_rights here");
         int startIndex = POS_RIGHTS.length();
         int endIndex = line.length();
         // if it is not CASignRight, then
@@ -290,7 +290,7 @@ public class SigningPolicyFileParser {
             //  i18n.getMessage("invalidNegRights", line);
             throw new SigningPolicyException(err);
         }
-        logger.trace("Ignore neg_rights");
+        logger.finest("Ignore neg_rights");
         return Boolean.FALSE;
     }
 
@@ -300,7 +300,7 @@ public class SigningPolicyFileParser {
                 bufferedReader.close();
             } catch (Exception exp) {
                 //Nothing we can do
-                logger.debug("Unable to close bufferedReader", exp);
+                logger.log(Level.FINE, "Unable to close bufferedReader", exp);
             }
         }
         if (reader != null) {
@@ -308,7 +308,7 @@ public class SigningPolicyFileParser {
                 reader.close();
             } catch (Exception e) {
                 //Nothing we can do
-                logger.debug("Unable to close reader", e);
+                logger.log(Level.FINE, "Unable to close reader", e);
             }
         }
     }
@@ -533,7 +533,7 @@ public class SigningPolicyFileParser {
         }
         tmpPatternStr = buffer.toString();
 
-        LoggerFactory.getLogger(SigningPolicyFileParser.class).debug("String with replaced pattern is " + tmpPatternStr);
+        Logger.getLogger(SigningPolicyFileParser.class.getCanonicalName()).fine("String with replaced pattern is " + tmpPatternStr);
 
         return Pattern.compile(tmpPatternStr, Pattern.CASE_INSENSITIVE);
     }

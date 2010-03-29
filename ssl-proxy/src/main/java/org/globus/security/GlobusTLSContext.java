@@ -8,16 +8,15 @@ import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.net.ssl.SSLPeerUnverifiedException;
 import javax.net.ssl.SSLSession;
 import javax.security.auth.Subject;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class GlobusTLSContext {
-	private static ThreadLocal<Subject> containerSubjectHolder = new ThreadLocal<Subject>(); 
+	private static ThreadLocal<Subject> containerSubjectHolder = new ThreadLocal<Subject>();
 	private Subject containerSubject;
 	private Subject peerSubject;
 	private X509Certificate[] localCertChain;
@@ -30,37 +29,41 @@ public class GlobusTLSContext {
 	private String protocol;
 	private String peerHost;
 	private int peerPort;
-	private Logger logger = LoggerFactory.getLogger(getClass());
+	private Logger logger = Logger.getLogger(getClass().getCanonicalName());
 
 	public GlobusTLSContext(SSLSession sslSession) {
 		containerSubject = new Subject();
 		containerSubject.getPrincipals().add(sslSession.getLocalPrincipal());
-		containerSubject.getPublicCredentials().add(getLocalCertChain(sslSession));
+		containerSubject.getPublicCredentials().add(
+				getLocalCertChain(sslSession));
 		GlobusTLSContext.containerSubjectHolder.set(containerSubject);
 		peerSubject = new Subject();
 		try {
 			peerSubject.getPrincipals().add(sslSession.getPeerPrincipal());
 		} catch (SSLPeerUnverifiedException e) {
-			//We should already be verified, but if by some crazy chance we aren't
-			logger.warn(e.getLocalizedMessage(), e);
+			// We should already be verified, but if by some crazy chance we
+			// aren't
+			logger.log(Level.WARNING, e.getLocalizedMessage(), e);
 		}
 		peerSubject.getPublicCredentials().add(getPeerCertChain(sslSession));
-		
+
 		creationTime = new Date(sslSession.getCreationTime());
 		try {
-			sessionId = org.globus.util.StringUtils.getHexString(sslSession.getId());
+			sessionId = org.globus.util.StringUtils.getHexString(sslSession
+					.getId());
 		} catch (UnsupportedEncodingException e) {
-			logger.warn(e.getLocalizedMessage(), e);
+			logger.log(Level.WARNING, e.getLocalizedMessage(), e);
 		}
 		cipherSuite = sslSession.getCipherSuite();
 		protocol = sslSession.getProtocol();
 		peerHost = sslSession.getPeerHost();
-		peerPort = sslSession.getPeerPort();		
+		peerPort = sslSession.getPeerPort();
 	}
 
-	public static Subject getCurrentContainerSubject(){
+	public static Subject getCurrentContainerSubject() {
 		return GlobusTLSContext.containerSubjectHolder.get();
 	}
+
 	public X509Certificate[] getLocalCertChain() {
 		return localCertChain;
 	}
@@ -95,7 +98,7 @@ public class GlobusTLSContext {
 
 	public String getPeerHost() {
 		return peerHost;
-	}	
+	}
 
 	public int getPeerPort() {
 		return peerPort;
@@ -106,7 +109,7 @@ public class GlobusTLSContext {
 			Certificate[] javaxCerts = sslSession.getLocalCertificates();
 			return processCerts(javaxCerts);
 		} catch (Exception e) {
-			logger.warn(e.getLocalizedMessage(), e);
+			logger.log(Level.WARNING, e.getLocalizedMessage(), e);
 			return null;
 		}
 	}
@@ -117,24 +120,26 @@ public class GlobusTLSContext {
 			javaxCerts = sslSession.getPeerCertificates();
 			return processCerts(javaxCerts);
 		} catch (SSLPeerUnverifiedException e) {
-			logger.warn(e.getLocalizedMessage(), e);
+			logger.log(Level.WARNING, e.getLocalizedMessage(), e);
 			return null;
 		} catch (CertificateEncodingException e) {
-			logger.warn(e.getLocalizedMessage(), e);
+			logger.log(Level.WARNING, e.getLocalizedMessage(), e);
 			return null;
 		} catch (CertificateException e) {
-			logger.warn(e.getLocalizedMessage(), e);
+			logger.log(Level.WARNING, e.getLocalizedMessage(), e);
 			return null;
 		}
 	}
 
-	private X509Certificate[] processCerts(java.security.cert.Certificate[] javaxCerts) throws CertificateException,
-			CertificateEncodingException {
+	private X509Certificate[] processCerts(
+			java.security.cert.Certificate[] javaxCerts)
+			throws CertificateException, CertificateEncodingException {
 		if (javaxCerts == null || javaxCerts.length == 0)
 			return null;
 		int length = javaxCerts.length;
 		X509Certificate[] javaCerts = new X509Certificate[length];
-		java.security.cert.CertificateFactory cf = java.security.cert.CertificateFactory.getInstance("X.509");
+		java.security.cert.CertificateFactory cf = java.security.cert.CertificateFactory
+				.getInstance("X.509");
 		for (int i = 0; i < length; i++) {
 			byte bytes[] = javaxCerts[i].getEncoded();
 			ByteArrayInputStream stream = new ByteArrayInputStream(bytes);

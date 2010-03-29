@@ -27,8 +27,6 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactorySpi;
 
 import org.globus.security.X509ProxyCertPathParameters;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This factory creates trust managers which support the Globus SSL library.
@@ -39,8 +37,7 @@ import org.slf4j.LoggerFactory;
 public class PKITrustManagerFactory extends TrustManagerFactorySpi {
 
     private Collection<TrustManager> trustManagers = new ArrayList<TrustManager>();
-    private Logger logger = LoggerFactory.getLogger(getClass());
-
+    
     /**
      * Initializes this factory with a source of certificate authorities and related trust material.
      *
@@ -49,7 +46,6 @@ public class PKITrustManagerFactory extends TrustManagerFactorySpi {
      */
     @Override
     protected void engineInit(KeyStore keyStore) throws KeyStoreException {
-        logger.debug("Initializing engine with KeyStore only");
         try {
             this.engineInit(new CertPathTrustManagerParameters(new X509ProxyCertPathParameters(keyStore, null, null,
                     false)));

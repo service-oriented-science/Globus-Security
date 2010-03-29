@@ -24,11 +24,11 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.cert.CertStore;
 import java.security.cert.CertificateException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.globus.security.provider.GlobusProvider;
 import org.globus.security.stores.ResourceCertStoreParameters;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 /**
@@ -167,8 +167,8 @@ public final class GlobusSSLHelper {
 		} catch (InvalidAlgorithmParameterException e) {
 			throw new GlobusSSLConfigurationException(e);
 		} catch (NoSuchAlgorithmException e) {
-			Logger logger = LoggerFactory.getLogger(GlobusSSLHelper.class);
-			logger.warn("Error Loading CRL store", e);
+			Logger logger = Logger.getLogger(GlobusSSLHelper.class.getCanonicalName());
+			logger.log(Level.WARNING, "Error Loading CRL store", e);
 			throw new GlobusSSLConfigurationException(e);
 		}
 	}

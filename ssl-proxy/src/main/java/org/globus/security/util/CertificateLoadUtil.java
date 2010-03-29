@@ -33,11 +33,11 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Base64;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Contains various security-related utility methods.
@@ -46,7 +46,7 @@ public final class CertificateLoadUtil {
 
     static {
         Security.addProvider(new BouncyCastleProvider());
-        logger = LoggerFactory.getLogger(CertificateLoadUtil.class.getName());
+        logger = Logger.getLogger(CertificateLoadUtil.class.getCanonicalName());
         setProvider("BC");
     }
 
@@ -73,8 +73,8 @@ public final class CertificateLoadUtil {
      */
     public static void setProvider(String providerName) {
         provider = providerName;
-        if (logger.isDebugEnabled()) {
-            logger.debug("Provider set to : " + providerName);
+        if (logger.isLoggable(Level.FINE)) {
+            logger.fine("Provider set to : " + providerName);
         }
     }
 

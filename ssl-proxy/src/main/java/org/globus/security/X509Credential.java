@@ -30,13 +30,13 @@ import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 import java.util.Date;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.bouncycastle.util.encoders.Base64;
 import org.globus.security.bc.BouncyCastleOpenSSLKey;
 import org.globus.security.util.CertificateIOUtil;
 import org.globus.security.util.CertificateLoadUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * FILL ME
@@ -45,13 +45,12 @@ import org.slf4j.LoggerFactory;
  *
  * @author ranantha@mcs.anl.gov
  */
-@SuppressWarnings("unused")
 public class X509Credential {
 
     public static final int BUFFER_SIZE = Integer.MAX_VALUE;
 
     private static Logger logger =
-            LoggerFactory.getLogger(X509Credential.class.getName());
+            Logger.getLogger(X509Credential.class.getCanonicalName());
 
     private OpenSSLKey opensslKey;
     private X509Certificate[] certChain;
@@ -152,7 +151,7 @@ public class X509Credential {
                 try {
                     reader.close();
                 } catch (IOException e) {
-                    logger.debug("error closing reader", e);
+                    logger.log(Level.FINE, "error closing reader", e);
                     //This is ok
                 }
             }
@@ -262,14 +261,14 @@ public class X509Credential {
                     keyOutputStream.close();
                 }
             } catch (IOException e) {
-                logger.warn("Could not close stream on save of key to file. " + keyFile.getPath());
+                logger.warning("Could not close stream on save of key to file. " + keyFile.getPath());
             }
             try {
                 if (certOutputStream != null) {
                     certOutputStream.close();
                 }
             } catch (IOException e) {
-                logger.warn("Could not close stream on save certificate chain to file. " + certFile.getPath());
+                logger.warning("Could not close stream on save certificate chain to file. " + certFile.getPath());
             }
         }
     }

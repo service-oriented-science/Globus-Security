@@ -19,11 +19,10 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.cert.CertificateEncodingException;
+import java.util.logging.Logger;
 
 import org.globus.security.CredentialException;
 import org.globus.security.X509Credential;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 
 /**
@@ -34,7 +33,7 @@ import org.springframework.core.io.Resource;
 public class ResourceProxyCredential extends AbstractResourceSecurityWrapper<X509Credential>
         implements CredentialWrapper {
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private Logger logger = Logger.getLogger(getClass().getCanonicalName());
 
     public ResourceProxyCredential(String locationPattern) throws ResourceStoreException {
         init(locationPattern);
@@ -74,14 +73,14 @@ public class ResourceProxyCredential extends AbstractResourceSecurityWrapper<X50
                 try {
                     keyInputStream.close();
                 } catch (Exception e) {
-                    logger.warn("Unable to close stream.");
+                    logger.warning("Unable to close stream.");
                 }
             }
             if (certInputStream != null) {
                 try {
                     certInputStream.close();
                 } catch (Exception e) {
-                    logger.warn("Unable to close stream.");
+                    logger.warning("Unable to close stream.");
                 }
             }
         }

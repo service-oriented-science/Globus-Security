@@ -27,13 +27,12 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
+import java.util.logging.Logger;
 
 import javax.net.ssl.X509TrustManager;
 
 import org.globus.security.X509ProxyCertPathParameters;
 import org.globus.security.util.CertificateLoadUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This is an implementation of an X509TrustManager which supports the validation of proxy certificates.
@@ -49,7 +48,7 @@ public class PKITrustManager implements X509TrustManager {
     private CertPathValidatorSpi validator;
     private X509ProxyCertPathParameters parameters;
     private CertPathValidatorResult result;
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private Logger logger = Logger.getLogger(getClass().getCanonicalName());
 
 
     /**
@@ -122,7 +121,7 @@ public class PKITrustManager implements X509TrustManager {
                     this.parameters.getTrustStore(), null);
             return trusted.toArray(new X509Certificate[trusted.size()]);
         } catch (KeyStoreException e) {
-            logger.warn(
+            logger.warning(
                     "Unable to load trusted Certificates.  Authentication will fail.");
             return new X509Certificate[]{};
         }
@@ -145,7 +144,7 @@ public class PKITrustManager implements X509TrustManager {
         List<X509Certificate> certList = new Vector<X509Certificate>(certs.length);
         certList.addAll(Arrays.asList(certs));
         CertPath certPath = factory.generateCertPath(certList);
-        logger.debug("CertPath: {}", certPath.toString());
+        logger.finest(String.format("CertPath: %s", certPath.toString()));
         return certPath;
     }
 }

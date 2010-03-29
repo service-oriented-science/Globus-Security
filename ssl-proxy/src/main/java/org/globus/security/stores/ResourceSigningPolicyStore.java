@@ -20,6 +20,7 @@ import java.security.InvalidAlgorithmParameterException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.security.auth.x500.X500Principal;
 
@@ -27,8 +28,6 @@ import org.globus.security.SigningPolicy;
 import org.globus.security.SigningPolicyStore;
 import org.globus.security.SigningPolicyStoreException;
 import org.globus.security.SigningPolicyStoreParameters;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
@@ -46,7 +45,7 @@ public class ResourceSigningPolicyStore implements SigningPolicyStore {
 
     private ResourceSigningPolicyStoreParameters parameters;
 
-    private Logger logger = LoggerFactory.getLogger(ResourceSigningPolicyStore.class.getName());
+    private Logger logger = Logger.getLogger(ResourceSigningPolicyStore.class.getCanonicalName());
 
     public ResourceSigningPolicyStore(SigningPolicyStoreParameters param) throws InvalidAlgorithmParameterException {
         if (param == null) {
@@ -88,7 +87,7 @@ public class ResourceSigningPolicyStore implements SigningPolicyStore {
         for (Resource resource : resources) {
 
             if (!resource.isReadable()) {
-                logger.debug("Cannot read: " + resource.getFilename());
+                logger.fine("Cannot read: " + resource.getFilename());
                 continue;
             }
             loadSigningPolicy(resource, newPolicyMap, newPolicyFileMap);

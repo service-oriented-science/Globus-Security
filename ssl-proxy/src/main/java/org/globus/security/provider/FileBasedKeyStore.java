@@ -40,6 +40,8 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.globus.security.CredentialException;
 import org.globus.security.X509Credential;
@@ -55,8 +57,6 @@ import org.globus.security.stores.ResourceStoreException;
 import org.globus.security.stores.ResourceTrustAnchor;
 import org.globus.security.stores.SecurityObjectWrapper;
 import org.globus.security.stores.Storable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -84,8 +84,8 @@ public class FileBasedKeyStore extends KeyStoreSpi {
 	// X.509 PRoxy Cerificate file name
 	public static final String PROXY_FILENAME = "proxyFilename";
 
-	private static Logger logger = LoggerFactory
-			.getLogger(FileBasedKeyStore.class.getName());
+	private static Logger logger = Logger.getLogger(FileBasedKeyStore.class
+			.getCanonicalName());
 
 	// Map from alias to the object (either key or certificate)
 	private Map<String, SecurityObjectWrapper<?>> aliasObjectMap = new Hashtable<String, SecurityObjectWrapper<?>>();
@@ -255,7 +255,7 @@ public class FileBasedKeyStore extends KeyStoreSpi {
 			try {
 				chain = credential.getCredential().getCertificateChain();
 			} catch (ResourceStoreException e) {
-				logger.warn(e.getMessage());
+				logger.log(Level.WARNING, e.getMessage(), e);
 				chain = null;
 			}
 		}
@@ -350,7 +350,7 @@ public class FileBasedKeyStore extends KeyStoreSpi {
 			try {
 				inputStream.close();
 			} catch (IOException e) {
-				logger.info("Error closing inputStream", e);
+				logger.log(Level.INFO, "Error closing inputStream", e);
 			}
 		}
 	}
@@ -379,7 +379,8 @@ public class FileBasedKeyStore extends KeyStoreSpi {
 			if (proxyFilename != null && !proxyFilename.isEmpty()) {
 				loadProxyCertificate(proxyFilename);
 			}
-			if ((certFilename != null && !certFilename.isEmpty()) && (keyFilename != null && !keyFilename.isEmpty())) {
+			if ((certFilename != null && !certFilename.isEmpty())
+					&& (keyFilename != null && !keyFilename.isEmpty())) {
 				loadCertificateKey(certFilename, keyFilename);
 			}
 		} catch (ResourceStoreException e) {

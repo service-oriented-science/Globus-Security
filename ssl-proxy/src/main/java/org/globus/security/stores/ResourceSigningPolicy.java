@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Collection;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.security.auth.x500.X500Principal;
 
@@ -26,8 +27,6 @@ import org.globus.security.SigningPolicy;
 import org.globus.security.SigningPolicyException;
 import org.globus.security.SigningPolicyStoreException;
 import org.globus.security.util.SigningPolicyFileParser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 
 /**
@@ -40,7 +39,7 @@ import org.springframework.core.io.Resource;
 public class ResourceSigningPolicy {
     protected Resource resource;
 
-    private Logger logger = LoggerFactory.getLogger(ResourceSigningPolicy.class.getName());
+    private Logger logger = Logger.getLogger(ResourceSigningPolicy.class.getCanonicalName());
     private boolean changed;
     private Map<X500Principal, SigningPolicy> signingPolicyMap;
     private long lastModified = -1;
@@ -52,7 +51,7 @@ public class ResourceSigningPolicy {
     protected void init(Resource initResource) throws ResourceStoreException {
         this.resource = initResource;
         this.signingPolicyMap = create(this.resource);
-        logger.debug("Loading initResource: {}", this.resource.toString());
+        logger.fine(String.format("Loading initResource: %s", this.resource.toString()));
         try {
             this.lastModified = this.resource.lastModified();
         } catch (IOException e) {

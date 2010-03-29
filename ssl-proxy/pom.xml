@@ -21,13 +21,108 @@
 		<artifactId>security</artifactId>
 		<version>1.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>ssl-proxy</artifactId>
+	<artifactId>${project.groupId}.sslproxies</artifactId>
 	<name>Globus Support for SSL Proxies</name>
+
+	<packaging>jar</packaging>
+
+	<build>
+		<plugins>
+			<!--
+				<plugin> <groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<version>2.0.1</version> <extensions>true</extensions>
+				<configuration> <instructions>
+				<Export-Package>org.globus.security.provider,org.globus.security,org.globus.security.filestore</Export-Package>
+				<Private-Package>org.globus.security.bc,org.globus.security.proxyExtension,org.globus.security.util,org.globus.util,org.globus.security.stores</Private-Package>
+				<Import-Package>!junit.*,org.springframework.*;resolution:=optional,*</Import-Package>
+				<Embed-Dependency>*;groupId=org.bouncycastle;inline=false</Embed-Dependency>
+				</instructions> </configuration> </plugin>
+			-->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>1.3.2</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<artifactSet>
+								<includes>
+									<include>org.springframework:org.springframework.core</include>
+									<include>commons-lang:commons-lang</include>
+									<include>commons-io:commons-io</include>
+									<include>commons-codec:commons-codec</include>
+									<include>commons-logging:*</include>
+								</includes>
+								<excludes>
+									<exclude>org.bouncycastle:*</exclude>
+									<exclude>org.apache.httpcomponents:*</exclude>
+									<exclude>org.testng:*</exclude>
+									<exclude>${project.groupId}:testUtils</exclude>
+									<exclude>junit:junit</exclude>
+									<exclude>commons-lang:commons-lang</exclude>
+								</excludes>
+							</artifactSet>
+							<relocations>
+								<relocation>
+									<pattern>org.apache.commons.logging</pattern>
+									<shadedPattern>org.globus.crux.org.apache.commons.logging</shadedPattern>
+								</relocation>
+								<relocation>
+									<pattern>org.apache.commons.codec</pattern>
+									<shadedPattern>org.globus.crux.org.apache.commons.codec</shadedPattern>
+								</relocation>
+								<relocation>
+									<pattern>org.apache.commons.io</pattern>
+									<shadedPattern>org.globus.crux.org.apache.commons.io</shadedPattern>
+								</relocation>
+								<relocation>
+									<pattern>org.springframework</pattern>
+									<shadedPattern>org.globus.crux.org.springframework</shadedPattern>
+								</relocation>
+							</relocations>
+							<filters>
+								<filter>
+									<artifact>commons-io:*</artifact>
+									<includes>
+										<include>org/apache/commons/io/*</include>
+									</includes>
+								</filter>
+								<filter>
+									<artifact>commons-codec:*</artifact>
+									<includes>
+										<include>org/apache/commons/codec/binary/*</include>
+									</includes>
+								</filter>
+								<filter>
+									<artifact>org.springframework:*</artifact>
+									<includes>
+										<include>org/springframework/core/io/**</include>
+										<include>org/springframework/core/io/support/**</include>
+										<include>org/springframework/util</include>
+									</includes>
+								</filter>
+							</filters>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 
 	<dependencies>
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.testng</groupId>
@@ -40,23 +135,13 @@
 			<artifactId>commons-io</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcprov-jdk15</artifactId>
-			<scope>provided</scope>			
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>org.springframework.core</artifactId>
-			<scope>provided</scope>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
@@ -75,7 +160,18 @@
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcprov-ext-jdk15</artifactId>
-			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<version>1.5.8</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>1.5.8</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

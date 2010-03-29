@@ -18,9 +18,8 @@ package org.globus.security.stores;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.security.cert.X509CRL;
+import java.util.logging.Logger;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 
 /**
@@ -29,7 +28,7 @@ import org.springframework.core.io.Resource;
 public class ResourceCRLStore extends ResourceSecurityWrapperStore<ResourceCRL, X509CRL> {
     private static CrlFilter filter = new CrlFilter();
     private static final int MIN_NAME_LENGTH = 3;
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private Logger logger = Logger.getLogger(getClass().getCanonicalName());
 
     @Override
     public ResourceCRL create(Resource resource) throws ResourceStoreException {

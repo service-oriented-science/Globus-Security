@@ -25,14 +25,14 @@ import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.security.auth.x500.X500Principal;
 
 import org.apache.commons.codec.binary.Base64;
 import org.bouncycastle.asn1.DEROutputStream;
 import org.bouncycastle.asn1.x509.X509Name;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Fill Me
@@ -47,7 +47,7 @@ public final class CertificateIOUtil {
     public static final String KEY_HEADER = "-----BEGIN RSA PRIVATE KEY-----";
     public static final String KEY_FOOTER = "-----END RSA PRIVATE KEY-----";
 
-    private static Logger logger = LoggerFactory.getLogger(CertificateIOUtil.class.getName());
+    private static Logger logger = Logger.getLogger(CertificateIOUtil.class.getCanonicalName());
     private static Base64 base64 = new Base64();
     private static MessageDigest md5;
 
@@ -60,7 +60,7 @@ public final class CertificateIOUtil {
             try {
                 md5 = MessageDigest.getInstance("MD5");
             } catch (NoSuchAlgorithmException e) {
-                logger.error("", e);
+                logger.log(Level.SEVERE, "", e);
             }
         }
     }
@@ -77,7 +77,7 @@ public final class CertificateIOUtil {
         try {
             return hash(encodePrincipal(subjectDN));
         } catch (Exception e) {
-            logger.error("", e);
+            logger.log(Level.SEVERE, "", e);
             return null;
         }
     }
