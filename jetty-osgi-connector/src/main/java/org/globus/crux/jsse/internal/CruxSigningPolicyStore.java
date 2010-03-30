@@ -4,7 +4,7 @@ import java.security.InvalidAlgorithmParameterException;
 
 import org.globus.crux.jsse.AbstractNamedSecurityObject;
 import org.globus.crux.jsse.SigningPolicyStoreHolder;
-import org.globus.security.SigningPolicyStore;
+import org.globus.security.provider.SigningPolicyStore;
 import org.globus.security.stores.ResourceSigningPolicyStore;
 import org.globus.security.stores.ResourceSigningPolicyStoreParameters;
 
