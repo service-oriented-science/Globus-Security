@@ -103,7 +103,8 @@
 									<includes>
 										<include>org/springframework/core/io/**</include>
 										<include>org/springframework/core/io/support/**</include>
-										<include>org/springframework/util</include>
+										<include>org/springframework/util/**</include>
+										<include>org/springframework/core/**</include>
 									</includes>
 								</filter>
 							</filters>

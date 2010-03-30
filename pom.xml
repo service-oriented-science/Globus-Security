@@ -231,7 +231,7 @@
 			-->
 			<dependency>
 				<groupId>${project.groupId}</groupId>
-				<artifactId>ssl-proxy</artifactId>
+				<artifactId>${project.groupId}.sslproxies</artifactId>
 				<version>${crux.version}</version>
 			</dependency>
 			<dependency>
