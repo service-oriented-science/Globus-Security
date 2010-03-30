@@ -61,7 +61,7 @@ public class FirstApplicableAlg extends AbstractEngine {
 
 		collectAttributes(reqAttr);
 
-		if ((getPdps() == null) || (this.getPdps().isEmpty())) {
+		if ((getPdps() == null) || (this.getPdps().size() == 0)) {
 			String err = i18n.getMessage("noPDPs");
 			logger.error(err);
 			throw new AuthorizationException(err);

@@ -59,7 +59,7 @@ public class X509BootstrapPIP implements BootstrapPIP {
             idenAttrColl.add(subjectAttribute);
 
             Set peerPrincipals = peerSubject.getPrincipals();
-            if (!peerPrincipals.isEmpty()) {
+            if (peerPrincipals.size() > 0) {
                 AttributeIdentifier identifier =
                         AttributeUtil.getPrincipalIdentifier();
                 Attribute principalAttribute =

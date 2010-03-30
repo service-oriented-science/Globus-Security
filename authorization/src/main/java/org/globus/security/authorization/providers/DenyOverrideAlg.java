@@ -65,7 +65,7 @@ public class DenyOverrideAlg extends AbstractEngine {
 
 		collectAttributes(reqAttr);
 
-		if ((this.getPdps() == null) || (this.getPdps().isEmpty())) {
+		if ((this.getPdps() == null) || (this.getPdps().size() == 0)) {
 			String err = i18n.getMessage("noPDPs");
 			logger.error(err);
 			throw new AuthorizationException(err);
