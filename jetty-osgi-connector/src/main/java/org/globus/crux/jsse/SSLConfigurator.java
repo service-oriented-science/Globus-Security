@@ -15,6 +15,7 @@
 
 package org.globus.crux.jsse;
 
+import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -28,16 +29,15 @@ import java.util.Map;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.ManagerFactoryParameters;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 
-import org.globus.security.X509ProxyCertPathParameters;
-import org.globus.security.provider.PKITrustManager;
+import org.globus.security.provider.GlobusTrustManagerFactoryParameters;
 import org.globus.security.provider.SigningPolicyStore;
-import org.globus.security.provider.X509ProxyCertPathValidator;
 import org.globus.security.proxyExtension.ProxyPolicyHandler;
 
 /**
@@ -121,16 +121,18 @@ public class SSLConfigurator {
 
 	private void configureContext() throws GlobusSSLConfigurationException {
 
-		X509ProxyCertPathParameters parameters = getCertPathParameters();
+		ManagerFactoryParameters parameters = getCertPathParameters();
+		TrustManager[] trustManagers;
 		try {
 			TrustManagerFactory.getInstance("GlobusTrustManager");
+			TrustManagerFactory fact = TrustManagerFactory.getInstance("GSI");
+			fact.init(parameters);
+			trustManagers = fact.getTrustManagers();
 		} catch (NoSuchAlgorithmException e1) {
 			throw new GlobusSSLConfigurationException(e1);
+		} catch (InvalidAlgorithmParameterException e) {
+			throw new GlobusSSLConfigurationException(e);
 		}
-		TrustManager trustManager = new PKITrustManager(
-				new X509ProxyCertPathValidator(), parameters);
-
-		TrustManager[] trustManagers = new TrustManager[] { trustManager };
 
 		KeyManager[] keyManagers = loadKeyManagers();
 
@@ -146,21 +148,22 @@ public class SSLConfigurator {
 
 	}
 
-	private X509ProxyCertPathParameters getCertPathParameters()
+	private ManagerFactoryParameters getCertPathParameters()
 			throws GlobusSSLConfigurationException {
-		X509ProxyCertPathParameters parameters;
+		GlobusTrustManagerFactoryParameters parameters;
 		KeyStore inputTrustStore = GlobusSSLHelper.buildTrustStore(
 				this.provider, this.trustAnchorStoreType,
 				this.trustAnchorStoreLocation, this.trustAnchorStorePassword);
 		CertStore inputCertStore = GlobusSSLHelper
 				.findCRLStore(this.crlLocationPattern);
 		if (handlers == null) {
-			parameters = new X509ProxyCertPathParameters(inputTrustStore,
-					inputCertStore, this.policyStore, this.rejectLimitProxy);
+			parameters = new GlobusTrustManagerFactoryParameters(
+					inputTrustStore, inputCertStore, this.policyStore,
+					this.rejectLimitProxy);
 		} else {
-			parameters = new X509ProxyCertPathParameters(inputTrustStore,
-					inputCertStore, this.policyStore, this.rejectLimitProxy,
-					handlers);
+			parameters = new GlobusTrustManagerFactoryParameters(
+					inputTrustStore, inputCertStore, this.policyStore,
+					this.rejectLimitProxy, handlers);
 		}
 		return parameters;
 	}
