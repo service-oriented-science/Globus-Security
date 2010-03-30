@@ -17,7 +17,7 @@ public class SimpleGlobusContext implements GlobusContext {
     private Subject peerSubject;
     private Subject serviceSubject;
     private EntityAttributes containerEntity;
-    
+
     @SuppressWarnings("unchecked")
     public <T> T get(Class<T> type) {
         return (T) propMap.get(type.getCanonicalName());
@@ -57,6 +57,10 @@ public class SimpleGlobusContext implements GlobusContext {
 
     public EntityAttributes getContainerEntity() {
         return this.containerEntity;
+    }
+
+    public void setContainerEntity(EntityAttributes containerEntityParam) {
+        this.containerEntity = containerEntityParam;
     }
 
     public void setContainerId(String containerId) {
