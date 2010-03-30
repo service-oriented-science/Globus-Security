@@ -22,4 +22,5 @@
 //
 ld = { log:display $args } ;
 lde = { log:display-exception $args } ;
+quit = { shutdown $args } ;
 

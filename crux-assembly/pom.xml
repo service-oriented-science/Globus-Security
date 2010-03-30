@@ -51,12 +51,22 @@
 			<artifactId>jetty</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-ext-jdk15</artifactId>
+			<version>1.45</version>
+		</dependency>
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk15</artifactId>
+			<version>1.45</version>
+		</dependency>
+		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>org.globus.crux.security.authorization</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>ssl-proxy</artifactId>
+			<artifactId>${project.groupId}.sslproxies</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
@@ -407,6 +417,24 @@
 									<artifactId>${project.groupId}.branding</artifactId>
 									<outputDirectory>target/dependencies/lib</outputDirectory>
 									<destFileName>crux-version.jar</destFileName>
+								</artifactItem>
+								<artifactItem>
+									<groupId>${project.groupId}</groupId>
+									<artifactId>${project.groupId}.sslproxies</artifactId>
+									<outputDirectory>target/dependencies/lib</outputDirectory>
+									<destFileName>crux-prov-jdk15.jar</destFileName>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.bouncycastle</groupId>
+									<artifactId>bcprov-jdk15</artifactId>
+									<outputDirectory>target/dependencies/lib</outputDirectory>
+									<destFileName>bcprov-jdk15.jar</destFileName>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.bouncycastle</groupId>
+									<artifactId>bcprov-ext-jdk15</artifactId>
+									<outputDirectory>target/dependencies/lib</outputDirectory>
+									<destFileName>bcprov-ext-jdk15.jar</destFileName>
 								</artifactItem>
 							</artifactItems>
 						</configuration>
