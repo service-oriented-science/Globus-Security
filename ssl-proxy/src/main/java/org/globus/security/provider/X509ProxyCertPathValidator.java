@@ -143,7 +143,7 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
     protected CertPathValidatorResult validate(CertPath certPath) throws CertPathValidatorException {
 
         List<? extends Certificate> certificates = certPath.getCertificates();
-        if (certificates.isEmpty()) {
+        if (certificates.size() == 0) {
             return null;
         }
 

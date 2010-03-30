@@ -376,11 +376,11 @@ public class FileBasedKeyStore extends KeyStoreSpi {
 			loadDirectories(directoryListString);
 		}
 		try {
-			if (proxyFilename != null && !proxyFilename.isEmpty()) {
+			if (proxyFilename != null && proxyFilename.length() > 0) {
 				loadProxyCertificate(proxyFilename);
 			}
-			if ((certFilename != null && !certFilename.isEmpty())
-					&& (keyFilename != null && !keyFilename.isEmpty())) {
+			if ((certFilename != null && certFilename.length() > 0)
+					&& (keyFilename != null && keyFilename.length() > 0)) {
 				loadCertificateKey(certFilename, keyFilename);
 			}
 		} catch (ResourceStoreException e) {

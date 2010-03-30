@@ -100,7 +100,7 @@ public class TestFileBasedTrustStore {
 
 		assert trustAnchors != null;
 
-		assertFalse(trustAnchors.isEmpty());
+		assertTrue(trustAnchors.size() > 0);
 
 		// assert caFiles != null;
 
@@ -129,7 +129,7 @@ public class TestFileBasedTrustStore {
 
 		assert trustAnchors != null;
 
-		assertFalse(trustAnchors.isEmpty());
+		assertTrue(trustAnchors.size() > 0);
 
 		// assert caFiles != null;
 
@@ -174,7 +174,7 @@ public class TestFileBasedTrustStore {
 
 		assertThat(crls, not(nullValue()));
 
-		assertFalse(crls.isEmpty());
+		assertTrue(crls.size() > 0);
 
 		assert crlFiles != null;
 

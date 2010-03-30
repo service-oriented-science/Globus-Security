@@ -32,7 +32,7 @@ public class StackableInheritableThreadLocal<T> extends InheritableThreadLocal<S
 
     protected Stack<T> childValue(Stack<T> parentValue) {
         Stack<T> newList = new Stack<T>();
-        if (!parentValue.isEmpty()) {
+        if (parentValue.size() > 0) {
             newList.add(parentValue.peek());
         }
         return newList;
@@ -43,11 +43,11 @@ public class StackableInheritableThreadLocal<T> extends InheritableThreadLocal<S
     }
 
     public T pop() {
-        return (get().isEmpty()) ? null : get().pop();
+        return (get().size() == 0) ? null : get().pop();
     }
 
     public Object peek() {
-        return (get().isEmpty()) ? null : get().peek();
+        return (get().size() == 0) ? null : get().peek();
     }
 
 }

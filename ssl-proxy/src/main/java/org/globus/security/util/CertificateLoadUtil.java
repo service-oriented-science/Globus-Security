@@ -176,7 +176,7 @@ public final class CertificateLoadUtil {
             reader.close();
         }
 
-        if (list.isEmpty()) {
+        if (list.size() == 0) {
             throw new GeneralSecurityException("No certificate data");
             //i18n.getMessage("noCertData"));
         }
