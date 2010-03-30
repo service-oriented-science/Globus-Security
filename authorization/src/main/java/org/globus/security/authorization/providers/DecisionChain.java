@@ -81,7 +81,7 @@ public class DecisionChain {
      * @return true if the decision chain is empty.
      */
     public boolean isEmpty() {
-        return chain.isEmpty();
+        return chain.size() == 0;
     }
 
     /**

@@ -98,7 +98,7 @@ public class AccessControlListPDP implements PDP {
 			throw new IllegalArgumentException("Access Control List cannot be null");
 		}
 
-		if ((accessAclParam.isEmpty() || adminAclParam.isEmpty())) {
+		if ((accessAclParam.size() == 0 || adminAclParam.size() == 0)) {
 			throw new IllegalArgumentException("Access Control List cannot be empty");
 
 		}

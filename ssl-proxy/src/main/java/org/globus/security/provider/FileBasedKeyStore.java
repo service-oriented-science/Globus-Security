@@ -542,6 +542,7 @@ public class FileBasedKeyStore extends KeyStoreSpi {
 		this.aliasObjectMap.put(wrapper.getAlias(), wrapper);
 	}
 
+	@SuppressWarnings("unchecked")
 	private CredentialWrapper createProxyCredential(String s,
 			X509Credential credential) throws KeyStoreException {
 		CredentialWrapper wrapper;
