@@ -101,7 +101,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.globus.crux.security</groupId>
-			<artifactId>ssl-proxy</artifactId>
+			<artifactId>${project.groupId}.sslproxies</artifactId>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
