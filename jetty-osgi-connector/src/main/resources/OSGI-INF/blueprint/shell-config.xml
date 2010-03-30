@@ -6,7 +6,7 @@
 			</action>
 		</command>
 		<command name="crux-jsse/editSSLConfig">
-			<action class="org.globus.crux.jsse.console.CreateSSLConfigCommand" >
+			<action class="org.globus.crux.jsse.console.CreateSSLConfigCommand">
 				<property name="manager" ref="securityStoreManager" />
 			</action>
 		</command>
