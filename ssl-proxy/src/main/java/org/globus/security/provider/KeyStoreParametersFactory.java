@@ -1,10 +1,9 @@
-package org.globus.security.filestore;
+package org.globus.security.provider;
 
 import java.security.KeyStore;
 import java.security.KeyStore.LoadStoreParameter;
 import java.security.KeyStore.ProtectionParameter;
 
-import org.globus.security.provider.FileBasedKeyStore;
 
 public class KeyStoreParametersFactory {
 
@@ -41,9 +40,9 @@ public class KeyStoreParametersFactory {
 		}
 
 		public Object getProperty(String key) {
-			if (key.equals(FileBasedKeyStore.DIRECTORY_LIST_KEY)) {
+			if (key.equals(PEMKeyStore.DIRECTORY_LIST_KEY)) {
 				return trustedCertificateDirectories;
-			} else if (key.equals(FileBasedKeyStore.DEFAULT_DIRECTORY_KEY)) {
+			} else if (key.equals(PEMKeyStore.DEFAULT_DIRECTORY_KEY)) {
 				return defaultCertificateDirectory;
 			}
 			return null;
@@ -66,7 +65,7 @@ public class KeyStoreParametersFactory {
 		}
 
 		public Object getProperty(String key) {
-			if (key.equals(FileBasedKeyStore.PROXY_FILENAME)) {
+			if (key.equals(PEMKeyStore.PROXY_FILENAME)) {
 				return this.proxyLocation;
 			} else {
 				return null;
@@ -96,9 +95,9 @@ public class KeyStoreParametersFactory {
 		}
 
 		public Object getProperty(String key) {
-			if (key.equals(FileBasedKeyStore.KEY_FILENAME)) {
+			if (key.equals(PEMKeyStore.KEY_FILENAME)) {
 				return this.keyLocation;
-			} else if (key.equals(FileBasedKeyStore.CERTIFICATE_FILENAME)) {
+			} else if (key.equals(PEMKeyStore.CERTIFICATE_FILENAME)) {
 				return this.certLocations;
 			} else {
 				return null;

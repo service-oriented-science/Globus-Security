@@ -12,24 +12,23 @@
  *
  * See the License for the specific language governing permissions and limitations under the License.
  */
-package org.globus.security;
+package org.globus.security.provider;
 
-import java.security.cert.CertStoreException;
+import javax.security.auth.x500.X500Principal;
+
+import org.globus.security.SigningPolicy;
 
 /**
- * This exception signifies an error processing a SigningPolicy in a SigningPolicyStore.
+ * // FIXME: Maybe a provider  access to this?
  */
-public class SigningPolicyStoreException extends CertStoreException {
+public interface SigningPolicyStore {
 
-    public SigningPolicyStoreException(String msg) {
-        super(msg);
-    }
-
-    public SigningPolicyStoreException(String msg, Throwable ex) {
-        super(msg, ex);
-    }
-
-    public SigningPolicyStoreException(Throwable ex) {
-        super(ex);
-    }
+    /**
+     * FixMe: Document me
+     *
+     * @param caPrincipal Document Me.
+     * @return Document Me.
+     * @throws SigningPolicyStoreException Document Me.
+     */
+    SigningPolicy getSigningPolicy(X500Principal caPrincipal) throws SigningPolicyStoreException;
 }

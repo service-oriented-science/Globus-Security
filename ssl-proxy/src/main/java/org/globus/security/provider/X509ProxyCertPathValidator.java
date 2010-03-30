@@ -37,12 +37,17 @@ import org.bouncycastle.asn1.x509.TBSCertificateStructure;
 import org.bouncycastle.asn1.x509.X509Extension;
 import org.bouncycastle.asn1.x509.X509Extensions;
 import org.globus.security.Constants;
-import org.globus.security.SigningPolicyStore;
 import org.globus.security.X509ProxyCertPathParameters;
 import org.globus.security.X509ProxyCertPathValidatorResult;
 import org.globus.security.proxyExtension.ProxyCertInfo;
 import org.globus.security.proxyExtension.ProxyPolicy;
 import org.globus.security.proxyExtension.ProxyPolicyHandler;
+import org.globus.security.trustmanager.CRLChecker;
+import org.globus.security.trustmanager.CertificateChecker;
+import org.globus.security.trustmanager.DateValidityChecker;
+import org.globus.security.trustmanager.IdentityChecker;
+import org.globus.security.trustmanager.SigningPolicyChecker;
+import org.globus.security.trustmanager.UnsupportedCriticalExtensionChecker;
 import org.globus.security.util.CertificateUtil;
 import org.globus.security.util.ProxyCertificateUtil;
 
@@ -82,7 +87,8 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
      *          if the specified parameters or the type of the
      *          specified <code>CertPath</code> are inappropriate for this <code>CertPathValidator</code>
      */
-    public CertPathValidatorResult engineValidate(CertPath certPath, CertPathParameters params)
+    @SuppressWarnings("unchecked")
+	public CertPathValidatorResult engineValidate(CertPath certPath, CertPathParameters params)
             throws CertPathValidatorException, InvalidAlgorithmParameterException {
 
         if (certPath == null) {
@@ -90,7 +96,7 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
                     "Certificate path cannot be null");
         }
 
-        List list = certPath.getCertificates();
+		List list = certPath.getCertificates();
         if (list.size() < 1) {
             throw new IllegalArgumentException(
                     "Certificate path cannot be empty");

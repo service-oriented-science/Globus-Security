@@ -25,9 +25,9 @@ import java.util.logging.Logger;
 import javax.security.auth.x500.X500Principal;
 
 import org.globus.security.SigningPolicy;
-import org.globus.security.SigningPolicyStore;
-import org.globus.security.SigningPolicyStoreException;
-import org.globus.security.SigningPolicyStoreParameters;
+import org.globus.security.provider.SigningPolicyStore;
+import org.globus.security.provider.SigningPolicyStoreException;
+import org.globus.security.provider.SigningPolicyStoreParameters;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 

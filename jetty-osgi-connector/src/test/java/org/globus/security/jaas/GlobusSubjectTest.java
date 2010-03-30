@@ -24,8 +24,7 @@ import java.security.PrivilegedAction;
 
 import javax.security.auth.Subject;
 
-import org.globus.security.JAASTest;
-import org.globus.security.SecurityTest;
+import org.globus.crux.SecurityTest;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 

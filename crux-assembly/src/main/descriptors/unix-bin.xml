@@ -112,12 +112,20 @@
 			<lineEnding>unix</lineEnding>
 		</file>
 		<file>
-			<source>${basedir}/target/classes/features.xml</source>
-			<outputDirectory>/system/org/globus/crux/security/org.globus.crux.security.branding/${project.version}</outputDirectory>
-			<destName>org.globus.crux.security.branding-${project.version}-features.xml</destName>
-			<fileMode>0644</fileMode>
-			<lineEnding>unix</lineEnding>
-		</file>
+            <source>${basedir}/target/classes/features.xml</source>
+            <outputDirectory>/system/org/apache/felix/karaf/apache-felix-karaf/${karaf.version}</outputDirectory>
+            <destName>apache-felix-karaf-${version}-features.xml</destName>
+            <fileMode>0644</fileMode>
+            <lineEnding>unix</lineEnding>
+        </file>
+		
+		<file>
+            <source>${basedir}/target/classes/features.xml</source>
+            <outputDirectory>/system/org/globus/crux/security/globus-crux/${version}</outputDirectory>
+            <destName>globus-crux-${version}-features.xml</destName>
+            <fileMode>0644</fileMode>
+            <lineEnding>unix</lineEnding>
+        </file>		
 	</files>
 
 	<dependencySets>
@@ -271,7 +279,7 @@
 				</include>
 			</includes>
 		</dependencySet>
-		
+
 		<dependencySet>
 			<outputDirectory>/system</outputDirectory>
 			<unpack>false</unpack>

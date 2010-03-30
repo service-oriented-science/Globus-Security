@@ -1,4 +1,4 @@
-package org.globus.security;
+package org.globus.crux;
 
 public interface JAASTest {
 

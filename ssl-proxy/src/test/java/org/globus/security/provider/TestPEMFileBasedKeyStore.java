@@ -45,8 +45,6 @@ import java.util.Vector;
 import org.globus.crux.security.util.DirSetupUtil;
 import org.globus.crux.security.util.FileSetupUtil;
 import org.globus.security.X509Credential;
-import org.globus.security.filestore.FileBasedKeyStoreParameters;
-import org.globus.security.filestore.KeyStoreParametersFactory;
 import org.globus.security.util.CertificateLoadUtil;
 import org.springframework.core.io.FileSystemResource;
 import org.testng.annotations.AfterTest;
@@ -153,9 +151,9 @@ public class TestPEMFileBasedKeyStore {
 
         // Parameters in properties file
         Properties properties = new Properties();
-        properties.setProperty(FileBasedKeyStore.DEFAULT_DIRECTORY_KEY,
+        properties.setProperty(PEMKeyStore.DEFAULT_DIRECTORY_KEY,
                 "file:" + this.defaultTrustedDirectory.getTempDirectoryName() + "/*.0");
-        properties.setProperty(FileBasedKeyStore.DIRECTORY_LIST_KEY,
+        properties.setProperty(PEMKeyStore.DIRECTORY_LIST_KEY,
                 "file:" + this.trustedDirectory.getTempDirectoryName() + "/*.0");
 
         InputStream ins = null;
@@ -179,13 +177,13 @@ public class TestPEMFileBasedKeyStore {
     @Test(dependsOnMethods = {"testParameterLoad"})
     public void testTrustedCerts() throws Exception {
 
-        FileBasedKeyStore store = new FileBasedKeyStore();
+        PEMKeyStore store = new PEMKeyStore();
 
         // Parameters in properties file
         Properties properties = new Properties();
-        properties.setProperty(FileBasedKeyStore.DEFAULT_DIRECTORY_KEY,
+        properties.setProperty(PEMKeyStore.DEFAULT_DIRECTORY_KEY,
                 "file:" + this.defaultTrustedDirectory.getTempDirectoryName() + "/*.0");
-        properties.setProperty(FileBasedKeyStore.DIRECTORY_LIST_KEY,
+        properties.setProperty(PEMKeyStore.DIRECTORY_LIST_KEY,
                 "file:" + this.trustedDirectory.getTempDirectoryName() + "/*.0");
 
         InputStream ins = null;
@@ -205,16 +203,16 @@ public class TestPEMFileBasedKeyStore {
 
     @Test
     public void testParameterLoad() throws Exception {
-        FileBasedKeyStore keystore = loadFromParameters();
+        PEMKeyStore keystore = loadFromParameters();
         testLoadedStore(keystore);
     }
 
-    private FileBasedKeyStore loadFromParameters() throws Exception {
+    private PEMKeyStore loadFromParameters() throws Exception {
         LoadStoreParameter params = KeyStoreParametersFactory.createTrustStoreParameters(
                 "file:" + this.trustedDirectory.getTempDirectoryName() + "/*.0",
                 "file:" + this.defaultTrustedDirectory.getTempDirectoryName() + "/*.0"
         );
-        FileBasedKeyStore keystore = new FileBasedKeyStore();
+        PEMKeyStore keystore = new PEMKeyStore();
         keystore.engineLoad(params);
         return keystore;
     }
@@ -222,11 +220,11 @@ public class TestPEMFileBasedKeyStore {
 //    @Test
 
     public void testOutputStore() throws Exception {
-        FileBasedKeyStore existingKeyStore = loadFromParameters();
+        PEMKeyStore existingKeyStore = loadFromParameters();
         //Create new KeyStore to test
-        FileBasedKeyStoreParameters params = new FileBasedKeyStoreParameters(
+        PEMKeyStoreParameters params = new PEMKeyStoreParameters(
                 "file:" + System.getProperty("java.io.tmpdir") + File.separator + "pemOutputStore");
-        FileBasedKeyStore newKeyStore = new FileBasedKeyStore();
+        PEMKeyStore newKeyStore = new PEMKeyStore();
         newKeyStore.engineLoad(params);
         Enumeration<String> enumeration = existingKeyStore.engineAliases();
         Certificate cert = null;
@@ -239,7 +237,7 @@ public class TestPEMFileBasedKeyStore {
         newKeyStore.engineStore(null, null);
     }
 
-    private void testLoadedStore(FileBasedKeyStore store) throws KeyStoreException {
+    private void testLoadedStore(PEMKeyStore store) throws KeyStoreException {
         Enumeration aliases = store.engineAliases();
         assertTrue(aliases.hasMoreElements());
 
@@ -260,7 +258,7 @@ public class TestPEMFileBasedKeyStore {
         assertFalse(store.engineIsCertificateEntry("FakeCert"));
     }
 
-    private void testDelete(FileBasedKeyStore store, String alias, FileSetupUtil util) throws Exception {
+    private void testDelete(PEMKeyStore store, String alias, FileSetupUtil util) throws Exception {
         // test delete
         store.engineDeleteEntry(alias);
 
@@ -273,10 +271,10 @@ public class TestPEMFileBasedKeyStore {
     @Test
     public void testProxyCerts() throws Exception {
 
-        FileBasedKeyStore store = new FileBasedKeyStore();
+        PEMKeyStore store = new PEMKeyStore();
         // Parameters in properties file
         Properties properties = new Properties();
-        properties.setProperty(FileBasedKeyStore.PROXY_FILENAME,
+        properties.setProperty(PEMKeyStore.PROXY_FILENAME,
                 "file:" + this.proxyFile1.getAbsoluteFilename());
         InputStream ins = null;
         try {
@@ -304,7 +302,7 @@ public class TestPEMFileBasedKeyStore {
         key = null;
         //     assert (this.proxyCertificates.get(this.proxyFile1.getAbsoluteFilename()).equals(certificates[0]));
 
-        properties.setProperty(FileBasedKeyStore.PROXY_FILENAME,
+        properties.setProperty(PEMKeyStore.PROXY_FILENAME,
                 "file:" + this.proxyFile2.getAbsoluteFilename());
         ins = null;
         try {
@@ -341,12 +339,12 @@ public class TestPEMFileBasedKeyStore {
 
     @Test
     public void testUserCerts() throws Exception {
-        FileBasedKeyStore store = new FileBasedKeyStore();
+        PEMKeyStore store = new PEMKeyStore();
         // Parameters in properties file
         Properties properties = new Properties();
-        properties.setProperty(FileBasedKeyStore.CERTIFICATE_FILENAME, new FileSystemResource(
+        properties.setProperty(PEMKeyStore.CERTIFICATE_FILENAME, new FileSystemResource(
                 this.certFile.getTempFile()).getURL().toExternalForm());
-        properties.setProperty(FileBasedKeyStore.KEY_FILENAME, new FileSystemResource(this.keyFile.getTempFile())
+        properties.setProperty(PEMKeyStore.KEY_FILENAME, new FileSystemResource(this.keyFile.getTempFile())
                 .getURL().toExternalForm());
         InputStream ins = null;
         try {
@@ -380,10 +378,10 @@ public class TestPEMFileBasedKeyStore {
             assert (chain[i].equals(x509CredentialChain[i]));
         }
 
-        store = new FileBasedKeyStore();
-        properties.setProperty(FileBasedKeyStore.CERTIFICATE_FILENAME,
+        store = new PEMKeyStore();
+        properties.setProperty(PEMKeyStore.CERTIFICATE_FILENAME,
                 new FileSystemResource(this.certFile.getTempFile()).getURL().toExternalForm());
-        properties.setProperty(FileBasedKeyStore.KEY_FILENAME,
+        properties.setProperty(PEMKeyStore.KEY_FILENAME,
                 new FileSystemResource(this.keyEncFile.getTempFile()).getURL().toExternalForm());
         try {
             ins = getProperties(properties);

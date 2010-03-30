@@ -14,7 +14,7 @@
  */
 package org.globus.security.stores;
 
-import org.globus.security.SigningPolicyStoreParameters;
+import org.globus.security.provider.SigningPolicyStoreParameters;
 
 /**
  * FILL ME

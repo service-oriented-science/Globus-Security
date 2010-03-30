@@ -12,21 +12,33 @@
  *
  * See the License for the specific language governing permissions and limitations under the License.
  */
-package org.globus.security;
 
-import javax.security.auth.x500.X500Principal;
+package org.globus.crux.jsse;
 
 /**
- * // FIXME: Maybe a provider  access to this?
+ * Signals an error in configuring the Globus SSL support.
+ * 
+ * @version ${version}
+ * @since 1.0
  */
-public interface SigningPolicyStore {
+public class GlobusSSLConfigurationException extends Exception {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
-    /**
-     * FixMe: Document me
-     *
-     * @param caPrincipal Document Me.
-     * @return Document Me.
-     * @throws SigningPolicyStoreException Document Me.
-     */
-    SigningPolicy getSigningPolicy(X500Principal caPrincipal) throws SigningPolicyStoreException;
+	public GlobusSSLConfigurationException() {
+	}
+
+	public GlobusSSLConfigurationException(String message) {
+		super(message);
+	}
+
+	public GlobusSSLConfigurationException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
+	public GlobusSSLConfigurationException(Throwable cause) {
+		super(cause);
+	}
 }

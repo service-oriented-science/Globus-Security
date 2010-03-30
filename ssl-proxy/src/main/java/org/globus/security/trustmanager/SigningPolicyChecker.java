@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package org.globus.security.provider;
+package org.globus.security.trustmanager;
 
 import java.security.cert.CertPathValidatorException;
 import java.security.cert.CertStoreException;
@@ -23,7 +23,7 @@ import javax.security.auth.x500.X500Principal;
 
 import org.globus.security.Constants;
 import org.globus.security.SigningPolicy;
-import org.globus.security.SigningPolicyStore;
+import org.globus.security.provider.SigningPolicyStore;
 import org.globus.security.util.ProxyCertificateUtil;
 
 /**

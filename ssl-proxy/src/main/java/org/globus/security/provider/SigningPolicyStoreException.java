@@ -12,28 +12,24 @@
  *
  * See the License for the specific language governing permissions and limitations under the License.
  */
+package org.globus.security.provider;
 
-package org.globus.security.util;
+import java.security.cert.CertStoreException;
 
 /**
- * Signals an error in configuring the Globus SSL support.
- *
- * @version ${version}
- * @since 1.0
+ * This exception signifies an error processing a SigningPolicy in a SigningPolicyStore.
  */
-public class GlobusSSLConfigurationException extends Exception {
-    public GlobusSSLConfigurationException() {
+public class SigningPolicyStoreException extends CertStoreException {
+
+    public SigningPolicyStoreException(String msg) {
+        super(msg);
     }
 
-    public GlobusSSLConfigurationException(String message) {
-        super(message);
+    public SigningPolicyStoreException(String msg, Throwable ex) {
+        super(msg, ex);
     }
 
-    public GlobusSSLConfigurationException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public GlobusSSLConfigurationException(Throwable cause) {
-        super(cause);
+    public SigningPolicyStoreException(Throwable ex) {
+        super(ex);
     }
 }

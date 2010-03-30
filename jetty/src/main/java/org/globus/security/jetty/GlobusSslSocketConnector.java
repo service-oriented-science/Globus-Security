@@ -43,9 +43,9 @@ import org.eclipse.jetty.io.bio.SocketEndPoint;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.bio.SocketConnector;
 import org.eclipse.jetty.server.ssl.ServletSSL;
+import org.globus.crux.jsse.SSLConfigurator;
 import org.globus.security.GlobusTLSContext;
 import org.globus.security.provider.GlobusProvider;
-import org.globus.security.util.SSLConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

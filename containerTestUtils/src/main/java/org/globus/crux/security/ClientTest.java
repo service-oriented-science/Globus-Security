@@ -23,10 +23,10 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.globus.crux.jsse.SSLConfigurator;
 import org.globus.security.provider.GlobusProvider;
 import org.globus.security.stores.ResourceSigningPolicyStore;
 import org.globus.security.stores.ResourceSigningPolicyStoreParameters;
-import org.globus.security.util.SSLConfigurator;
 import org.junit.Test;
 import static org.junit.Assert.fail;
 

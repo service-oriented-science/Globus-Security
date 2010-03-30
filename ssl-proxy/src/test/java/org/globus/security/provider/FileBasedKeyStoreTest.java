@@ -32,7 +32,7 @@ import org.testng.annotations.Test;
  * To change this template use File | Settings | File Templates.
  */
 public class FileBasedKeyStoreTest {
-    private FileBasedKeyStore keystore = new FileBasedKeyStore();
+    private PEMKeyStore keystore = new PEMKeyStore();
     private PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
 
     @Test
@@ -40,7 +40,7 @@ public class FileBasedKeyStoreTest {
         InputStream is;
         ByteArrayOutputStream os;
         Properties props = new Properties();
-        props.put(FileBasedKeyStore.KEY_FILENAME, "classpath:/key.pem");
+        props.put(PEMKeyStore.KEY_FILENAME, "classpath:/key.pem");
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         props.store(baos, "sample");
         ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());

@@ -45,7 +45,6 @@ import java.util.logging.Logger;
 
 import org.globus.security.CredentialException;
 import org.globus.security.X509Credential;
-import org.globus.security.filestore.KeyStoreParametersFactory;
 import org.globus.security.stores.AbstractResourceSecurityWrapper;
 import org.globus.security.stores.CertKeyCredential;
 import org.globus.security.stores.CredentialWrapper;
@@ -70,7 +69,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
  * @version ${version}
  * @since 1.0
  */
-public class FileBasedKeyStore extends KeyStoreSpi {
+public class PEMKeyStore extends KeyStoreSpi {
 
 	// Default trusted certificates directory
 	public static final String DEFAULT_DIRECTORY_KEY = "default_directory";
@@ -84,7 +83,7 @@ public class FileBasedKeyStore extends KeyStoreSpi {
 	// X.509 PRoxy Cerificate file name
 	public static final String PROXY_FILENAME = "proxyFilename";
 
-	private static Logger logger = Logger.getLogger(FileBasedKeyStore.class
+	private static Logger logger = Logger.getLogger(PEMKeyStore.class
 			.getCanonicalName());
 
 	// Map from alias to the object (either key or certificate)

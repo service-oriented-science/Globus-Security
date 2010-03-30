@@ -25,7 +25,7 @@ import javax.security.auth.x500.X500Principal;
 
 import org.globus.security.SigningPolicy;
 import org.globus.security.SigningPolicyException;
-import org.globus.security.SigningPolicyStoreException;
+import org.globus.security.provider.SigningPolicyStoreException;
 import org.globus.security.util.SigningPolicyFileParser;
 import org.springframework.core.io.Resource;
 

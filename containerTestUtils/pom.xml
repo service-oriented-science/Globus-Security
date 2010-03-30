@@ -26,7 +26,8 @@
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>${project.groupId}.sslproxies</artifactId>
+			<artifactId>org.globus.crux.jsse</artifactId>
+			<version>1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>

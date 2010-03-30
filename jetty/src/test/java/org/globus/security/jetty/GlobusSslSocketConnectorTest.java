@@ -26,11 +26,11 @@ import javax.servlet.ServletResponse;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.globus.crux.jsse.SSLConfigurator;
 import org.globus.crux.security.ClientTest;
 import org.globus.security.provider.GlobusProvider;
 import org.globus.security.stores.ResourceSigningPolicyStore;
 import org.globus.security.stores.ResourceSigningPolicyStoreParameters;
-import org.globus.security.util.SSLConfigurator;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 

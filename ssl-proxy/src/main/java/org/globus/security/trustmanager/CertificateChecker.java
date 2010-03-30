@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package org.globus.security.provider;
+package org.globus.security.trustmanager;
 
 import java.security.cert.CertPathValidatorException;
 import java.security.cert.X509Certificate;

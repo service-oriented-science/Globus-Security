@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package org.globus.security.provider;
+package org.globus.security.trustmanager;
 
 import java.security.cert.CertPathValidatorException;
 import java.security.cert.X509Certificate;
 
 import org.globus.security.Constants;
+import org.globus.security.provider.X509ProxyCertPathValidator;
 import org.globus.security.util.ProxyCertificateUtil;
 
 /**
