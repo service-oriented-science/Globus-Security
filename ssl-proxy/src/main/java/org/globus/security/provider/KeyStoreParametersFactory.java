@@ -4,6 +4,8 @@ import java.security.KeyStore;
 import java.security.KeyStore.LoadStoreParameter;
 import java.security.KeyStore.ProtectionParameter;
 
+import org.globus.security.stores.PEMKeyStore;
+
 
 public class KeyStoreParametersFactory {
 

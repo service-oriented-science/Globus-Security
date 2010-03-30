@@ -19,7 +19,6 @@ import java.security.cert.CertPathValidatorException;
 import java.security.cert.X509Certificate;
 
 import org.globus.security.Constants;
-import org.globus.security.provider.X509ProxyCertPathValidator;
 import org.globus.security.util.ProxyCertificateUtil;
 
 /**

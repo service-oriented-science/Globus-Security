@@ -18,7 +18,10 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.security.Provider;
 
+import org.globus.security.stores.PEMKeyStore;
 import org.globus.security.stores.ResourceCertStore;
+import org.globus.security.trustmanager.PKITrustManagerFactory;
+import org.globus.security.trustmanager.X509ProxyCertPathValidator;
 
 /**
  * This is a security provider for the Globus SSL support. This supplies a

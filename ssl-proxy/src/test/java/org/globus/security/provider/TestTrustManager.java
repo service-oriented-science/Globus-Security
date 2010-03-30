@@ -23,6 +23,7 @@ import java.security.cert.X509Certificate;
 
 import org.globus.security.X509ProxyCertPathParameters;
 import org.globus.security.X509ProxyCertPathValidatorResult;
+import org.globus.security.trustmanager.PKITrustManager;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 

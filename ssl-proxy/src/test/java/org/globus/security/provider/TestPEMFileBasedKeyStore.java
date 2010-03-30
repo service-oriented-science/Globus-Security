@@ -45,6 +45,8 @@ import java.util.Vector;
 import org.globus.crux.security.util.DirSetupUtil;
 import org.globus.crux.security.util.FileSetupUtil;
 import org.globus.security.X509Credential;
+import org.globus.security.stores.PEMKeyStore;
+import org.globus.security.stores.PEMKeyStoreParameters;
 import org.globus.security.util.CertificateLoadUtil;
 import org.springframework.core.io.FileSystemResource;
 import org.testng.annotations.AfterTest;

@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Properties;
 
+import org.globus.security.stores.PEMKeyStore;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.testng.annotations.Test;
 

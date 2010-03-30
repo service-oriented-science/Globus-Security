@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package org.globus.security.provider;
+package org.globus.security.stores;
 
 import static org.globus.security.util.CertificateIOUtil.writeCertificate;
 
@@ -45,17 +45,8 @@ import java.util.logging.Logger;
 
 import org.globus.security.CredentialException;
 import org.globus.security.X509Credential;
-import org.globus.security.stores.AbstractResourceSecurityWrapper;
-import org.globus.security.stores.CertKeyCredential;
-import org.globus.security.stores.CredentialWrapper;
-import org.globus.security.stores.ResourceCACertStore;
-import org.globus.security.stores.ResourceProxyCredential;
-import org.globus.security.stores.ResourceProxyCredentialStore;
-import org.globus.security.stores.ResourceSecurityWrapperStore;
-import org.globus.security.stores.ResourceStoreException;
-import org.globus.security.stores.ResourceTrustAnchor;
-import org.globus.security.stores.SecurityObjectWrapper;
-import org.globus.security.stores.Storable;
+import org.globus.security.provider.KeyStoreParametersFactory;
+import org.globus.security.provider.KeyStoreParametersFactory.FileStoreParameters;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;

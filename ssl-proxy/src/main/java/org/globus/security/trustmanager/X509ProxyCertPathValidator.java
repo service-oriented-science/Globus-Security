@@ -12,7 +12,7 @@
  *
  * See the License for the specific language governing permissions and limitations under the License.
  */
-package org.globus.security.provider;
+package org.globus.security.trustmanager;
 
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
@@ -39,15 +39,10 @@ import org.bouncycastle.asn1.x509.X509Extensions;
 import org.globus.security.Constants;
 import org.globus.security.X509ProxyCertPathParameters;
 import org.globus.security.X509ProxyCertPathValidatorResult;
+import org.globus.security.provider.SigningPolicyStore;
 import org.globus.security.proxyExtension.ProxyCertInfo;
 import org.globus.security.proxyExtension.ProxyPolicy;
 import org.globus.security.proxyExtension.ProxyPolicyHandler;
-import org.globus.security.trustmanager.CRLChecker;
-import org.globus.security.trustmanager.CertificateChecker;
-import org.globus.security.trustmanager.DateValidityChecker;
-import org.globus.security.trustmanager.IdentityChecker;
-import org.globus.security.trustmanager.SigningPolicyChecker;
-import org.globus.security.trustmanager.UnsupportedCriticalExtensionChecker;
 import org.globus.security.util.CertificateUtil;
 import org.globus.security.util.ProxyCertificateUtil;
 

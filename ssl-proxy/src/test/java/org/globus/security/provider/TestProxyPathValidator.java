@@ -54,6 +54,7 @@ import org.globus.security.trustmanager.DateValidityChecker;
 import org.globus.security.trustmanager.IdentityChecker;
 import org.globus.security.trustmanager.SigningPolicyChecker;
 import org.globus.security.trustmanager.UnsupportedCriticalExtensionChecker;
+import org.globus.security.trustmanager.X509ProxyCertPathValidator;
 import org.globus.security.util.CertificateLoadUtil;
 import org.globus.security.util.SigningPolicyFileParser;
 import org.testng.annotations.BeforeClass;
