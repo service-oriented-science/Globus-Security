@@ -36,49 +36,61 @@
 			<lineEnding>unix</lineEnding>
 		</fileSet>
 
+		<!-- Copy over everything that needs to get unix line endings -->
 		<fileSet>
-			<directory>etc</directory>
+			<directory>src/main/distribution/text</directory>
+			<outputDirectory>/</outputDirectory>
+			<lineEnding>unix</lineEnding>
+		</fileSet>
+		<fileSet>
+			<directory>src/main/distribution/unix-text</directory>
+			<outputDirectory>/</outputDirectory>
+			<lineEnding>unix</lineEnding>
+		</fileSet>
+		<fileSet>
+			<directory>target/classes/bin</directory>
+			<outputDirectory>/bin/</outputDirectory>
+			<lineEnding>unix</lineEnding>
+			<fileMode>0755</fileMode>
+			<includes>
+				<include>admin</include>
+			</includes>
+		</fileSet>
+		<fileSet>
+			<directory>target/classes/etc</directory>
 			<outputDirectory>/etc/</outputDirectory>
 			<lineEnding>unix</lineEnding>
 		</fileSet>
 
+		<!-- Copy over files that should not get the line endings converted -->
 		<fileSet>
-			<directory>bin</directory>
-			<outputDirectory>/bin/</outputDirectory>
-			<lineEnding>unix</lineEnding>
-			<includes>
-				<include>*.sh</include>
-			</includes>
+			<directory>src/main/distribution/binary</directory>
+			<outputDirectory>/</outputDirectory>
+		</fileSet>
+
+		<!--
+			Copy over the files that should not get the line endings converted
+			but need to be chmod to 755
+		-->
+		<fileSet>
+			<directory>src/main/distribution/unix-binary</directory>
+			<outputDirectory>/</outputDirectory>
 			<fileMode>0755</fileMode>
 		</fileSet>
 
+		<!--
+			Copy over the files that need unix line endings and also chmod to 755
+		-->
+		<fileSet>
+			<directory>src/main/distribution/unix-shell</directory>
+			<outputDirectory>/</outputDirectory>
+			<lineEnding>unix</lineEnding>
+			<fileMode>0755</fileMode>
+		</fileSet>
 
 		<!-- Copy over jar files -->
 		<fileSet>
 			<directory>target/dependencies</directory>
-			<outputDirectory>/lib</outputDirectory>
-		</fileSet>
-
-		<fileSet>
-			<directory>lib</directory>
-			<outputDirectory>/lib</outputDirectory>
-		</fileSet>
-
-		<fileSet>
-			<directory>target/webapp</directory>
-			<outputDirectory>/webapp</outputDirectory>
-		</fileSet>
-
-		<fileSet>
-			<directory>conf</directory>
-			<outputDirectory>/conf</outputDirectory>
-		</fileSet>
-
-		<fileSet>
-			<directory>.</directory>
-			<includes>
-				<include>*.jar</include>
-			</includes>
 			<outputDirectory>/</outputDirectory>
 		</fileSet>
 
@@ -99,28 +111,244 @@
 			<fileMode>0644</fileMode>
 			<lineEnding>unix</lineEnding>
 		</file>
+		<file>
+            <source>${basedir}/target/classes/features.xml</source>
+            <outputDirectory>/system/org/apache/felix/karaf/apache-felix-karaf/${karaf.version}</outputDirectory>
+            <destName>apache-felix-karaf-${version}-features.xml</destName>
+            <fileMode>0644</fileMode>
+            <lineEnding>unix</lineEnding>
+        </file>
+		
+		<file>
+            <source>${basedir}/target/classes/features.xml</source>
+            <outputDirectory>/system/org/globus/crux/security/globus-crux/${version}</outputDirectory>
+            <destName>globus-crux-${version}-features.xml</destName>
+            <fileMode>0644</fileMode>
+            <lineEnding>unix</lineEnding>
+        </file>		
 	</files>
 
 	<dependencySets>
 
 		<dependencySet>
-			<outputDirectory>/lib</outputDirectory>
+			<outputDirectory>/system</outputDirectory>
 			<unpack>false</unpack>
 			<useProjectArtifact>false</useProjectArtifact>
-			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}
+			<outputFileNameMapping>org/apache/felix/${artifact.artifactId}/${artifact.baseVersion}/${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}
 			</outputFileNameMapping>
-			<excludes>
-				<exclude>org.globus.crux:main</exclude>
-			</excludes>
-		</dependencySet>
-		<dependencySet>
-			<outputDirectory>/</outputDirectory>
-			<unpack>false</unpack>
-			<outputFileNameMapping>start.jar</outputFileNameMapping>
 			<includes>
-				<include>org.globus.crux:main</include>
+				<include>org.apache.felix:org.apache.felix.configadmin</include>
+				<include>org.apache.felix:org.apache.felix.prefs</include>
+				<include>org.apache.felix:org.apache.felix.framework</include>
+				<include>org.apache.felix:org.apache.felix.fileinstall</include>
 			</includes>
 		</dependencySet>
+		<dependencySet>
+			<outputDirectory>/system</outputDirectory>
+			<unpack>false</unpack>
+			<useProjectArtifact>false</useProjectArtifact>
+			<outputFileNameMapping>org/apache/felix/gogo/${artifact.artifactId}/${artifact.baseVersion}/${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}
+			</outputFileNameMapping>
+			<includes>
+				<include>org.apache.felix.gogo:org.apache.felix.gogo.runtime
+				</include>
+			</includes>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>/system</outputDirectory>
+			<unpack>false</unpack>
+			<useProjectArtifact>false</useProjectArtifact>
+			<outputFileNameMapping>org/ops4j/pax/logging/${artifact.artifactId}/${artifact.baseVersion}/${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}
+			</outputFileNameMapping>
+			<includes>
+				<include>org.ops4j.pax.logging:pax-logging-api</include>
+				<include>org.ops4j.pax.logging:pax-logging-service</include>
+			</includes>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>/system</outputDirectory>
+			<unpack>false</unpack>
+			<useProjectArtifact>false</useProjectArtifact>
+			<outputFileNameMapping>org/ops4j/pax/url/${artifact.artifactId}/${artifact.baseVersion}/${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}
+			</outputFileNameMapping>
+			<includes>
+				<include>org.ops4j.pax.url:pax-url-mvn</include>
+				<include>org.ops4j.pax.url:pax-url-wrap</include>
+			</includes>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>/system</outputDirectory>
+			<unpack>false</unpack>
+			<useProjectArtifact>false</useProjectArtifact>
+			<outputFileNameMapping>org/apache/felix/karaf/${artifact.artifactId}/${artifact.baseVersion}/${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}
+			</outputFileNameMapping>
+			<includes>
+				<include>org.apache.felix.karaf:org.apache.felix.karaf.commons
+				</include>
+			</includes>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>/system</outputDirectory>
+			<unpack>false</unpack>
+			<useProjectArtifact>false</useProjectArtifact>
+			<outputFileNameMapping>org/apache/felix/karaf/${artifact.artifactId}/${artifact.baseVersion}/${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}
+			</outputFileNameMapping>
+			<includes>
+				<include>org.apache.felix.karaf:org.apache.felix.karaf.management
+				</include>
+			</includes>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>/system</outputDirectory>
+			<unpack>false</unpack>
+			<useProjectArtifact>false</useProjectArtifact>
+			<outputFileNameMapping>org/apache/felix/karaf/features/${artifact.artifactId}/${artifact.baseVersion}/${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}
+			</outputFileNameMapping>
+			<includes>
+				<include>org.apache.felix.karaf.features:org.apache.felix.karaf.features.core
+				</include>
+				<include>org.apache.felix.karaf.features:org.apache.felix.karaf.features.command
+				</include>
+				<include>org.apache.felix.karaf.features:org.apache.felix.karaf.features.management
+				</include>
+			</includes>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>/system</outputDirectory>
+			<unpack>false</unpack>
+			<useProjectArtifact>false</useProjectArtifact>
+			<outputFileNameMapping>org/apache/felix/karaf/admin/${artifact.artifactId}/${artifact.baseVersion}/${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}
+			</outputFileNameMapping>
+			<includes>
+				<include>org.apache.felix.karaf.admin:org.apache.felix.karaf.admin.core
+				</include>
+				<include>org.apache.felix.karaf.admin:org.apache.felix.karaf.admin.command
+				</include>
+				<include>org.apache.felix.karaf.admin:org.apache.felix.karaf.admin.management
+				</include>
+			</includes>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>/system</outputDirectory>
+			<unpack>false</unpack>
+			<useProjectArtifact>false</useProjectArtifact>
+			<outputFileNameMapping>org/apache/felix/karaf/deployer/${artifact.artifactId}/${artifact.baseVersion}/${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}
+			</outputFileNameMapping>
+			<includes>
+				<include>org.apache.felix.karaf.deployer:org.apache.felix.karaf.deployer.spring
+				</include>
+				<include>org.apache.felix.karaf.deployer:org.apache.felix.karaf.deployer.blueprint
+				</include>
+				<include>org.apache.felix.karaf.deployer:org.apache.felix.karaf.deployer.features
+				</include>
+			</includes>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>/system</outputDirectory>
+			<unpack>false</unpack>
+			<useProjectArtifact>false</useProjectArtifact>
+			<outputFileNameMapping>org/apache/felix/karaf/shell/${artifact.artifactId}/${artifact.baseVersion}/${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}
+			</outputFileNameMapping>
+			<includes>
+				<include>org.apache.felix.karaf.shell:org.apache.felix.karaf.shell.console
+				</include>
+				<include>org.apache.felix.karaf.shell:org.apache.felix.karaf.shell.dev
+				</include>
+				<include>org.apache.felix.karaf.shell:org.apache.felix.karaf.shell.osgi
+				</include>
+				<include>org.apache.felix.karaf.shell:org.apache.felix.karaf.shell.log
+				</include>
+				<include>org.apache.felix.karaf.shell:org.apache.felix.karaf.shell.config
+				</include>
+				<include>org.apache.felix.karaf.shell:org.apache.felix.karaf.shell.packages
+				</include>
+				<include>org.apache.felix.karaf.shell:org.apache.felix.karaf.shell.ssh
+				</include>
+				<include>org.apache.felix.karaf.shell:org.apache.felix.karaf.shell.commands
+				</include>
+			</includes>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>/system</outputDirectory>
+			<unpack>false</unpack>
+			<useProjectArtifact>false</useProjectArtifact>
+			<outputFileNameMapping>org/globus/crux/security/${artifact.artifactId}/${artifact.baseVersion}/${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}
+			</outputFileNameMapping>
+			<includes>
+				<include>org.globus.crux.security:org.globus.crux.security.branding
+				</include>
+			</includes>
+		</dependencySet>
+
+		<dependencySet>
+			<outputDirectory>/system</outputDirectory>
+			<unpack>false</unpack>
+			<useProjectArtifact>false</useProjectArtifact>
+			<outputFileNameMapping>org/apache/felix/karaf/jaas/${artifact.artifactId}/${artifact.baseVersion}/${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}
+			</outputFileNameMapping>
+			<includes>
+				<include>org.apache.felix.karaf.jaas:org.apache.felix.karaf.jaas.config
+				</include>
+				<include>org.apache.felix.karaf.jaas:org.apache.felix.karaf.jaas.modules
+				</include>
+			</includes>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>/system</outputDirectory>
+			<unpack>false</unpack>
+			<useProjectArtifact>false</useProjectArtifact>
+			<outputFileNameMapping>org/apache/sshd/${artifact.artifactId}/${artifact.baseVersion}/${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}
+			</outputFileNameMapping>
+			<includes>
+				<include>org.apache.sshd:sshd-core</include>
+			</includes>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>/system</outputDirectory>
+			<unpack>false</unpack>
+			<useProjectArtifact>false</useProjectArtifact>
+			<outputFileNameMapping>org/apache/mina/${artifact.artifactId}/${artifact.baseVersion}/${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}
+			</outputFileNameMapping>
+			<includes>
+				<include>org.apache.mina:mina-core</include>
+			</includes>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>/system</outputDirectory>
+			<unpack>false</unpack>
+			<useProjectArtifact>false</useProjectArtifact>
+			<outputFileNameMapping>org/eclipse/${artifact.artifactId}/${artifact.baseVersion}/${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}
+			</outputFileNameMapping>
+			<includes>
+				<include>org.eclipse:osgi</include>
+			</includes>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>/system</outputDirectory>
+			<unpack>false</unpack>
+			<useProjectArtifact>false</useProjectArtifact>
+			<outputFileNameMapping>org/apache/aries/blueprint/${artifact.artifactId}/${artifact.baseVersion}/${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}
+			</outputFileNameMapping>
+			<includes>
+				<include>org.apache.aries.blueprint:org.apache.aries.blueprint
+				</include>
+			</includes>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>/system</outputDirectory>
+			<unpack>false</unpack>
+			<useProjectArtifact>false</useProjectArtifact>
+			<outputFileNameMapping>org/apache/aries/jmx/${artifact.artifactId}/${artifact.baseVersion}/${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}
+			</outputFileNameMapping>
+			<includes>
+				<include>org.apache.aries.jmx:org.apache.aries.jmx</include>
+				<include>org.apache.aries.jmx:org.apache.aries.jmx.blueprint
+				</include>
+			</includes>
+		</dependencySet>
+
+
+
 	</dependencySets>
 
 </assembly>
