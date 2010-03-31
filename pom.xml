@@ -56,8 +56,8 @@
 		<module>testUtils</module>
 		<module>containerTestUtils</module>
 		<module>branding</module>
-		<module>jetty-osgi-connector</module>
-		<module>crux-assembly</module>
+		<module>jsse</module>
+		<module>assembly</module>
 	</modules>
 
 	<build>
