@@ -20,6 +20,7 @@
 // You can define here closures or variables that will be available
 // in each session.
 //
+dev:print-stack-traces
 ld = { log:display $args } ;
 lde = { log:display-exception $args } ;
 quit = { shutdown $args } ;
