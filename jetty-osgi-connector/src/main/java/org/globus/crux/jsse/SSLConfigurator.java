@@ -124,7 +124,6 @@ public class SSLConfigurator {
 		ManagerFactoryParameters parameters = getCertPathParameters();
 		TrustManager[] trustManagers;
 		try {
-			TrustManagerFactory.getInstance("GlobusTrustManager");
 			TrustManagerFactory fact = TrustManagerFactory.getInstance("GSI");
 			fact.init(parameters);
 			trustManagers = fact.getTrustManagers();
@@ -151,6 +150,7 @@ public class SSLConfigurator {
 	private ManagerFactoryParameters getCertPathParameters()
 			throws GlobusSSLConfigurationException {
 		GlobusTrustManagerFactoryParameters parameters;
+		
 		KeyStore inputTrustStore = GlobusSSLHelper.buildTrustStore(
 				this.provider, this.trustAnchorStoreType,
 				this.trustAnchorStoreLocation, this.trustAnchorStorePassword);

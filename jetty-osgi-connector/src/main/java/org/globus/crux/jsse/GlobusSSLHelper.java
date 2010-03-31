@@ -15,8 +15,13 @@
 
 package org.globus.crux.jsse;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -29,7 +34,6 @@ import java.util.logging.Logger;
 
 import org.globus.security.provider.GlobusProvider;
 import org.globus.security.stores.ResourceCertStoreParameters;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 /**
  * This is a utility class designed to simplify common tasks required for
@@ -68,7 +72,6 @@ public final class GlobusSSLHelper {
 			String trustAnchorStorePassword)
 			throws GlobusSSLConfigurationException {
 		try {
-			PathMatchingResourcePatternResolver resourceResolver = new PathMatchingResourcePatternResolver();
 			KeyStore trustAnchorStore;
 			if (provider == null) {
 				trustAnchorStore = KeyStore.getInstance(trustAnchorStoreType);
@@ -76,8 +79,7 @@ public final class GlobusSSLHelper {
 				trustAnchorStore = KeyStore.getInstance(trustAnchorStoreType,
 						provider);
 			}
-			InputStream keyStoreInput = resourceResolver.getResource(
-					trustAnchorStoreLocation).getInputStream();
+			InputStream keyStoreInput = getStream(trustAnchorStoreLocation);
 			trustAnchorStore.load(keyStoreInput,
 					trustAnchorStorePassword == null ? null
 							: trustAnchorStorePassword.toCharArray());
@@ -118,15 +120,13 @@ public final class GlobusSSLHelper {
 			throws GlobusSSLConfigurationException {
 		try {
 			KeyStore credentialStore;
-			PathMatchingResourcePatternResolver resourceResolver = new PathMatchingResourcePatternResolver();
 			if (provider == null) {
 				credentialStore = KeyStore.getInstance(credentialStoreType);
 			} else {
 				credentialStore = KeyStore.getInstance(credentialStoreType,
 						provider);
 			}
-			InputStream keyStoreInput = resourceResolver.getResource(
-					credentialStoreLocation).getInputStream();
+			InputStream keyStoreInput = getStream(credentialStoreLocation);
 			credentialStore.load(keyStoreInput,
 					credentialStorePassword == null ? null
 							: credentialStorePassword.toCharArray());
@@ -142,6 +142,30 @@ public final class GlobusSSLHelper {
 		} catch (NoSuchProviderException e) {
 			throw new GlobusSSLConfigurationException(e);
 		}
+	}
+
+	private static InputStream getStream(String url)
+			throws MalformedURLException, IOException {
+		if (url.startsWith("classpath:")) {
+			String resource = url.substring(10);
+			URL u = ClassLoader.class.getResource(resource);
+			if (u == null) {
+				throw new MalformedURLException();
+			}
+			return u.openStream();
+		} else if (url.startsWith("file:")) {
+			URL u = new URL(url);
+			File f;
+			try {
+				f = new File(u.toURI());
+			} catch (URISyntaxException e) {
+				f = new File(u.getPath());
+			}
+			return new FileInputStream(f);
+		} else {
+			return new URL(url).openStream();
+		}
+
 	}
 
 	/**
@@ -167,7 +191,8 @@ public final class GlobusSSLHelper {
 		} catch (InvalidAlgorithmParameterException e) {
 			throw new GlobusSSLConfigurationException(e);
 		} catch (NoSuchAlgorithmException e) {
-			Logger logger = Logger.getLogger(GlobusSSLHelper.class.getCanonicalName());
+			Logger logger = Logger.getLogger(GlobusSSLHelper.class
+					.getCanonicalName());
 			logger.log(Level.WARNING, "Error Loading CRL store", e);
 			throw new GlobusSSLConfigurationException(e);
 		}
