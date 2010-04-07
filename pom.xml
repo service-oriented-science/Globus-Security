@@ -41,6 +41,7 @@
 		<aries.blueprint.version>1.0.0-incubating-SNAPSHOT</aries.blueprint.version>
 		<aries.jmx.version>1.0.0-incubating-SNAPSHOT</aries.jmx.version>
 		<felix.osgi.version>1.4.0</felix.osgi.version>
+		<cxf.version>2.2.7</cxf.version>
 	</properties>
 
 	<scm>
@@ -58,6 +59,8 @@
 		<module>branding</module>
 		<module>jsse</module>
 		<module>assembly</module>
+		<module>org.globus.crux.gsi.server</module>
+		<module>org.globus.crux.osgi-proxy</module>
 	</modules>
 
 	<build>
@@ -271,6 +274,11 @@
 				<artifactId>testUtils</artifactId>
 				<version>${crux.version}</version>
 				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>org.globus.crux.jsse</artifactId>
+				<version>${crux.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.bouncycastle</groupId>

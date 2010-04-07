@@ -39,6 +39,8 @@ import javax.net.ssl.TrustManagerFactory;
 import org.globus.security.provider.GlobusTrustManagerFactoryParameters;
 import org.globus.security.provider.SigningPolicyStore;
 import org.globus.security.proxyExtension.ProxyPolicyHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class is used to configure and create SSL socket factories. The
@@ -76,6 +78,7 @@ public class SSLConfigurator {
 	private String crlLocationPattern;
 	private SSLContext sslContext;
 
+	private Logger logger = LoggerFactory.getLogger(getClass());
 	private String sslKeyManagerFactoryAlgorithm = Security
 			.getProperty("ssl.KeyManagerFactory.algorithm") == null ? "SunX509"
 			: Security.getProperty("ssl.KeyManagerFactory.algorithm");
@@ -150,10 +153,15 @@ public class SSLConfigurator {
 	private ManagerFactoryParameters getCertPathParameters()
 			throws GlobusSSLConfigurationException {
 		GlobusTrustManagerFactoryParameters parameters;
-		
-		KeyStore inputTrustStore = GlobusSSLHelper.buildTrustStore(
-				this.provider, this.trustAnchorStoreType,
-				this.trustAnchorStoreLocation, this.trustAnchorStorePassword);
+		KeyStore inputTrustStore;
+		if (this.trustAnchorStore == null) {
+			logger.trace("No trustAnchorStore available");
+			inputTrustStore = GlobusSSLHelper.buildTrustStore(this.provider,
+					this.trustAnchorStoreType, this.trustAnchorStoreLocation,
+					this.trustAnchorStorePassword);
+		} else {
+			inputTrustStore = this.trustAnchorStore;
+		}
 		CertStore inputCertStore = GlobusSSLHelper
 				.findCRLStore(this.crlLocationPattern);
 		if (handlers == null) {
@@ -192,9 +200,15 @@ public class SSLConfigurator {
 	private KeyManager[] loadKeyManagers()
 			throws GlobusSSLConfigurationException {
 		try {
-			KeyStore inputKeyStore = GlobusSSLHelper.findCredentialStore(
-					this.provider, this.credentialStoreType,
-					this.credentialStoreLocation, this.credentialStorePassword);
+			KeyStore inputKeyStore;
+			if (this.credentialStore == null) {
+				inputKeyStore = GlobusSSLHelper.findCredentialStore(
+						this.provider, this.credentialStoreType,
+						this.credentialStoreLocation,
+						this.credentialStorePassword);
+			} else {
+				inputKeyStore = this.credentialStore;
+			}
 			KeyManagerFactory keyManagerFactory = KeyManagerFactory
 					.getInstance(sslKeyManagerFactoryAlgorithm);
 			keyManagerFactory.init(inputKeyStore,

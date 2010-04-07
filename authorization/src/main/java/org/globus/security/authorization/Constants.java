@@ -98,6 +98,16 @@ public class Constants {
             "getMultipleResourceProperties";
 
     public static final String SET_RP_METHOD = "setResourceProperties";
+    
+    public static final String AUTHZ_REQUIRED = "authz_required";
+    
+    public static final String AUTHZ_PROXIED = "authz_proxied";
+    
+    public static final String HAS_PROXY = "has_proxy";
+    
+    public static final String SHOULD_PROXY = "should_proxy";
+    
+    public static final String DO_NOT_PROXY = "do_not_proxy";
 
     static {
 
