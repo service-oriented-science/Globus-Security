@@ -32,13 +32,7 @@
 		</plugins>
 	</build>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.osgi</groupId>
-			<artifactId>org.osgi</artifactId>
-			<version>3.0.0</version>
-			<scope>provided</scope>
-		</dependency>
+	<dependencies>		
 		<dependency>
 			<groupId>${groupId}</groupId>
 			<artifactId>org.globus.crux.jsse</artifactId>
