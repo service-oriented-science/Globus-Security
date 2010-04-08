@@ -53,6 +53,7 @@
 	<modules>
 		<module>ssl-proxy</module>
 		<module>jetty</module>
+		<module>tomcat</module>
 		<module>authorization</module>
 		<module>testUtils</module>
 		<module>containerTestUtils</module>
