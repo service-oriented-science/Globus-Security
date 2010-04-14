@@ -20,44 +20,42 @@ import java.util.List;
 
 public class MockEngine extends AbstractEngine {
 
-    public MockEngine(String chainName) {
-        super(chainName);
-    }
-       
-    public String getAlgorithm() {
-    	return "Mock";
-    }
+	public MockEngine(String chainName) {
+		super(chainName);
+	}
 
+	public String getAlgorithm() {
+		return "Mock";
+	}
 
+	public Decision engineAuthorize(RequestEntities reqAttribute, EntityAttributes resourceOwner, GlobusContext context)
+			throws AuthorizationException {
 
-	public Decision engineAuthorize(RequestEntities reqAttribute, EntityAttributes resourceOwner)
-            throws AuthorizationException {
+		collectAttributes(reqAttribute, context);
+		return null;
+	}
 
-        collectAttributes(reqAttribute);
-        return null;
-    }
+	public List engineGetSubjectAttrList() {
+		return this.getNonReqEntities().getSubjectAttrsList();
+	}
 
-    public List engineGetSubjectAttrList() {
-        return this.getNonReqEntities().getSubjectAttrsList();
-    }
+	public List engineGetActionAttrList() {
+		return this.getNonReqEntities().getActionAttrsList();
+	}
 
-    public List engineGetActionAttrList() {
-        return this.getNonReqEntities().getActionAttrsList();
-    }
+	public List engineGetResourceAttrList() {
+		return this.getNonReqEntities().getResourceAttrsList();
+	}
 
-    public List engineGetResourceAttrList() {
-        return this.getNonReqEntities().getResourceAttrsList();
-    }
+	public List<? extends PDPInterceptor> getPDPs() {
+		return this.getPdps();
+	}
 
-    public List<? extends PDPInterceptor> getPDPs() {
-        return this.getPdps();
-    }
+	public List<? extends PIPInterceptor> getPIPs() {
+		return this.getPips();
+	}
 
-    public List<? extends PIPInterceptor> getPIPs() {
-        return this.getPips();
-    }
-
-    public List<? extends BootstrapPIP> getBootstrapPIPs() {
-        return this.getBootstrapPips();
-    }
+	public List<? extends BootstrapPIP> getBootstrapPIPs() {
+		return this.getBootstrapPips();
+	}
 }

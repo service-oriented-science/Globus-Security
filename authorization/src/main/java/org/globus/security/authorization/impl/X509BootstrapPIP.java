@@ -24,12 +24,11 @@ import org.globus.security.authorization.Attribute;
 import org.globus.security.authorization.AttributeException;
 import org.globus.security.authorization.AttributeIdentifier;
 import org.globus.security.authorization.BootstrapPIP;
-import org.globus.security.authorization.ChainConfig;
 import org.globus.security.authorization.CloseException;
+import org.globus.security.authorization.EntitiesContainer;
 import org.globus.security.authorization.EntityAttributes;
+import org.globus.security.authorization.GlobusContext;
 import org.globus.security.authorization.IdentityAttributeCollection;
-import org.globus.security.authorization.InitializeException;
-import org.globus.security.authorization.NonRequestEntities;
 import org.globus.security.authorization.RequestEntities;
 import org.globus.security.authorization.util.AttributeUtil;
 
@@ -37,51 +36,45 @@ public class X509BootstrapPIP implements BootstrapPIP {
 
 	private static final long serialVersionUID = 4102147324580817900L;
 
-	private GlobusContext context;
+	@SuppressWarnings("unchecked")
+	public RequestEntities collectRequestAttributes(RequestEntities requestAttrs, GlobusContext context)
+			throws AttributeException {
 
-    public void initialize(String chainName, String prefix_,
-                           ChainConfig config) throws InitializeException {
+		EntityAttributes containerEntity = context.getContainerEntity();
 
-    }
+		Subject peerSubject = context.getPeerSubject();
+		if (peerSubject != null) {
+			IdentityAttributeCollection idenAttrColl = new IdentityAttributeCollection();
+			Attribute subjectAttribute = new Attribute(AttributeUtil.getPeerSubjectAttrIdentifier(), containerEntity,
+					Calendar.getInstance(), null);
+			subjectAttribute.addAttributeValue(peerSubject);
+			idenAttrColl.add(subjectAttribute);
 
-    @SuppressWarnings("unchecked")
-    public void collectRequestAttributes(RequestEntities requestAttrs)
-            throws AttributeException {
+			Set peerPrincipals = peerSubject.getPrincipals();
+			if (peerPrincipals.size() > 0) {
+				AttributeIdentifier identifier = AttributeUtil.getPrincipalIdentifier();
+				Attribute principalAttribute = new Attribute(identifier, containerEntity, Calendar.getInstance(), null,
+						peerPrincipals);
+				idenAttrColl.add(principalAttribute);
+			}
 
-        EntityAttributes containerEntity = context.getContainerEntity();
+			EntityAttributes coll = requestAttrs.getRequestor();
+			if (coll == null) {
+				coll = new EntityAttributes(idenAttrColl);
+			} else {
+				coll.addIdentityAttributes(idenAttrColl);
+			}
+			return new RequestEntities(coll, requestAttrs.getAction(), requestAttrs.getResource(), requestAttrs
+					.getEnvironment());
+		}
+		return new RequestEntities(requestAttrs.getRequestor(), requestAttrs.getAction(), requestAttrs.getRequestor(),
+				requestAttrs.getEnvironment());
+	}
 
-        Subject peerSubject = context.getPeerSubject();
-        if (peerSubject != null) {
-            IdentityAttributeCollection idenAttrColl =
-                    new IdentityAttributeCollection();
-            Attribute subjectAttribute =
-                    new Attribute(AttributeUtil.getPeerSubjectAttrIdentifier(), containerEntity, Calendar.getInstance(), null);
-            subjectAttribute.addAttributeValue(peerSubject);
-            idenAttrColl.add(subjectAttribute);
+	public EntitiesContainer collectAttributes(RequestEntities requestAttr, GlobusContext context) {
+		return null;
+	}
 
-            Set peerPrincipals = peerSubject.getPrincipals();
-            if (peerPrincipals.size() > 0) {
-                AttributeIdentifier identifier =
-                        AttributeUtil.getPrincipalIdentifier();
-                Attribute principalAttribute =
-                        new Attribute(identifier, containerEntity, Calendar.getInstance(), null, peerPrincipals);
-                idenAttrColl.add(principalAttribute);
-            }
-
-            EntityAttributes coll = requestAttrs.getRequestor();
-            if (coll == null) {
-                coll = new EntityAttributes(idenAttrColl);
-                requestAttrs.setRequestor(coll);
-            } else {
-                coll.addIdentityAttributes(idenAttrColl);
-            }
-        }
-    }
-
-    public NonRequestEntities collectAttributes(RequestEntities requestAttr) {
-        return null;
-    }
-
-    public void close() throws CloseException {
-    }
+	public void close() throws CloseException {
+	}
 }

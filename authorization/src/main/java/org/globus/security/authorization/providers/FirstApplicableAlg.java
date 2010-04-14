@@ -17,6 +17,8 @@ package org.globus.security.authorization.providers;
 import org.globus.security.authorization.AuthorizationException;
 import org.globus.security.authorization.Decision;
 import org.globus.security.authorization.EntityAttributes;
+import org.globus.security.authorization.GlobusContext;
+import org.globus.security.authorization.NonRequestEntities;
 import org.globus.security.authorization.PDPInterceptor;
 import org.globus.security.authorization.RequestEntities;
 import org.globus.security.authorization.annotations.AuthorizationEngine;
@@ -47,8 +49,8 @@ public class FirstApplicableAlg extends AbstractEngine {
 	 */
 	private static final long serialVersionUID = -6958049485606617224L;
 
-	private static I18n i18n = I18n.getI18n("org.globus.security.authorization.errors",
-			FirstApplicableAlg.class.getClassLoader());
+	private static I18n i18n = I18n.getI18n("org.globus.security.authorization.errors", FirstApplicableAlg.class
+			.getClassLoader());
 
 	private static Logger logger = LoggerFactory.getLogger(FirstApplicableAlg.class.getName());
 
@@ -56,10 +58,10 @@ public class FirstApplicableAlg extends AbstractEngine {
 		super(chainName);
 	}
 
-	public Decision engineAuthorize(RequestEntities reqAttr, EntityAttributes resourceOwner)
+	public Decision engineAuthorize(RequestEntities reqAttr, EntityAttributes resourceOwner, GlobusContext context)
 			throws AuthorizationException {
 
-		collectAttributes(reqAttr);
+		NonRequestEntities collectedNonReqEntities = collectAttributes(reqAttr, context).getNonRequestEntities();
 
 		if ((getPdps() == null) || (this.getPdps().size() == 0)) {
 			String err = i18n.getMessage("noPDPs");
@@ -68,7 +70,7 @@ public class FirstApplicableAlg extends AbstractEngine {
 		}
 
 		for (PDPInterceptor pdp : this.getPdps()) {
-			Decision decision = pdp.canAccess(reqAttr, this.getNonReqEntities());
+			Decision decision = pdp.canAccess(reqAttr, collectedNonReqEntities);
 
 			if (decision == null) {
 				continue;

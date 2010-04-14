@@ -35,169 +35,151 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- *
+ * 
  * @author ranantha@mcs.anl.gov
  */
 public class TestAccessControlListPDP {
 
-    // Entity A
-    static Principal entityA1 = new X500Principal("CN=EA1, OU=bar, O=foo");
-    static Principal entityA2 = new X500Principal("CN=EA2, OU=bar, O=foo");
-    // Entity B
-    static Principal entityB1 = new X500Principal("CN=EB1, OU=bar, O=foo");
-    // Entity C
-    static Principal entityC1 = new X500Principal("CN=EC1, OU=bar, O=foo");
-    static Principal entityC2 = new X500Principal("CN=EC2, OU=bar, O=foo");
+	// Entity A
+	static Principal entityA1 = new X500Principal("CN=EA1, OU=bar, O=foo");
+	static Principal entityA2 = new X500Principal("CN=EA2, OU=bar, O=foo");
+	// Entity B
+	static Principal entityB1 = new X500Principal("CN=EB1, OU=bar, O=foo");
+	// Entity C
+	static Principal entityC1 = new X500Principal("CN=EC1, OU=bar, O=foo");
+	static Principal entityC2 = new X500Principal("CN=EC2, OU=bar, O=foo");
 
-    // ACL has entity A for access and admin
-    static Vector<Principal> test1 = new Vector<Principal>(1);
-    // ACL has entity A and entity B for access and entity C for admin
-    static Vector<Principal> test2Access = new Vector<Principal>(2);
-    static Vector<Principal> test2Admin = new Vector<Principal>(1);
+	// ACL has entity A for access and admin
+	static Vector<Principal> test1 = new Vector<Principal>(1);
+	// ACL has entity A and entity B for access and entity C for admin
+	static Vector<Principal> test2Access = new Vector<Principal>(2);
+	static Vector<Principal> test2Admin = new Vector<Principal>(1);
 
-    static Subject entityA;
-    static Subject entityB;
-    static Subject entityC;
-    static Subject entityAnon;
+	static Subject entityA;
+	static Subject entityB;
+	static Subject entityC;
+	static Subject entityAnon;
 
-    static SimpleGlobusContext context;
+	static SimpleGlobusContext context;
 
-    // test 3
-    // ACL has anonymous and entity A allowed for access, anonymous and entity B
-    // for admin
+	// test 3
+	// ACL has anonymous and entity A allowed for access, anonymous and entity B
+	// for admin
 
-    @BeforeClass
-    static public void setup() throws Exception {
+	@BeforeClass
+	static public void setup() throws Exception {
 
-        test1.add(entityA2);
+		test1.add(entityA2);
 
-        test2Access.add(entityA1);
-        test2Access.add(entityB1);
-        test2Admin.add(entityC2);
+		test2Access.add(entityA1);
+		test2Access.add(entityB1);
+		test2Admin.add(entityC2);
 
-        entityA = new Subject();
-        entityA.getPrincipals().add(entityA1);
-        entityA.getPrincipals().add(entityA2);
+		entityA = new Subject();
+		entityA.getPrincipals().add(entityA1);
+		entityA.getPrincipals().add(entityA2);
 
-        entityB = new Subject();
-        entityB.getPrincipals().add(entityB1);
+		entityB = new Subject();
+		entityB.getPrincipals().add(entityB1);
 
-        entityC = new Subject();
-        entityC.getPrincipals().add(entityC1);
-        entityC.getPrincipals().add(entityC2);
+		entityC = new Subject();
+		entityC.getPrincipals().add(entityC1);
+		entityC.getPrincipals().add(entityC2);
 
-        entityAnon = new Subject();
+		entityAnon = new Subject();
 
-        AttributeIdentifier identifier = new AttributeIdentifier(new URI("org.test.contraienrId"),
-                new URI("org.test.contaierIdType"), true);
-        Attribute containerId = new Attribute(identifier, null, Calendar.getInstance(), null);
-        IdentityAttributeCollection collection = new IdentityAttributeCollection();
-        collection.add(containerId);
-        EntityAttributes containerEntityAttributes = new EntityAttributes(collection);
-        context = new SimpleGlobusContext();
-        context.setContainerEntity(containerEntityAttributes);
-    }
+		AttributeIdentifier identifier = new AttributeIdentifier(new URI("org.test.contraienrId"), new URI(
+				"org.test.contaierIdType"), true);
+		Attribute containerId = new Attribute(identifier, null, Calendar.getInstance(), null);
+		IdentityAttributeCollection collection = new IdentityAttributeCollection();
+		collection.add(containerId);
+		EntityAttributes containerEntityAttributes = new EntityAttributes(collection);
+		context = new SimpleGlobusContext();
+		context.setContainerEntity(containerEntityAttributes);
+	}
 
-    @Test
-    public void test1() throws Exception {
+	@Test
+	public void test1() throws Exception {
 
-        // Access and admin rights allowed for permitted.
-        AccessControlListPDP pdp = new AccessControlListPDP(test1);
-        pdp.setContext(context);
-        RequestEntities request = getRequestor(entityA);
-        Decision decision = pdp.canAccess(request, null);
-        assert (decision.isPermit());
+		// Access and admin rights allowed for permitted.
+		AccessControlListPDP pdp = new AccessControlListPDP(test1);
+		RequestEntities request = getRequestor(entityA);
+		Decision decision = pdp.canAccess(request, null);
+		assert (decision.isPermit());
 
-        decision = pdp.canAdminister(getRequestor(entityA), null);
-        pdp.setContext(context);
-        assert (decision.isPermit());
+		decision = pdp.canAdminister(getRequestor(entityA), null);
+		assert (decision.isPermit());
 
-        decision = pdp.canAccess(getRequestor(entityB), null);
-        pdp.setContext(context);
-        assert (decision.isDeny());
+		decision = pdp.canAccess(getRequestor(entityB), null);
+		assert (decision.isDeny());
 
-        decision = pdp.canAdminister(getRequestor(entityB), null);
-        pdp.setContext(context);
-        assert (decision.isDeny());
+		decision = pdp.canAdminister(getRequestor(entityB), null);
+		assert (decision.isDeny());
 
-        decision = pdp.canAccess(getRequestor(entityAnon), null);
-        pdp.setContext(context);
-        assert (decision.isDeny());
+		decision = pdp.canAccess(getRequestor(entityAnon), null);
+		assert (decision.isDeny());
 
-        decision = pdp.canAdminister(getRequestor(entityAnon), null);
-        pdp.setContext(context);
-        assert (decision.isDeny());
+		decision = pdp.canAdminister(getRequestor(entityAnon), null);
+		assert (decision.isDeny());
 
-    }
+	}
 
-    @Test
-    public void test2() throws Exception {
+	@Test
+	public void test2() throws Exception {
 
+		AccessControlListPDP pdp = new AccessControlListPDP(test2Access, test2Admin);
+		RequestEntities request = getRequestor(entityA);
+		Decision decision = pdp.canAccess(request, null);
+		assert (decision.isPermit());
 
-        AccessControlListPDP pdp = new AccessControlListPDP(test2Access, test2Admin);
-        pdp.setContext(context);
-        RequestEntities request = getRequestor(entityA);
-        Decision decision = pdp.canAccess(request, null);
-        assert (decision.isPermit());
+		decision = pdp.canAdminister(getRequestor(entityA), null);
+		assert (decision.isDeny());
 
-        decision = pdp.canAdminister(getRequestor(entityA), null);
-        pdp.setContext(context);
-        assert (decision.isDeny());
+		decision = pdp.canAccess(getRequestor(entityB), null);
+		assert (decision.isPermit());
 
-        decision = pdp.canAccess(getRequestor(entityB), null);
-        pdp.setContext(context);
-        assert (decision.isPermit());
+		decision = pdp.canAdminister(getRequestor(entityB), null);
+		assert (decision.isDeny());
 
-        decision = pdp.canAdminister(getRequestor(entityB), null);
-        pdp.setContext(context);
-        assert (decision.isDeny());
+		decision = pdp.canAccess(getRequestor(entityC), null);
+		assert (decision.isDeny());
 
-        decision = pdp.canAccess(getRequestor(entityC), null);
-        pdp.setContext(context);
-        assert (decision.isDeny());
+		decision = pdp.canAdminister(getRequestor(entityC), null);
+		assert (decision.isPermit());
 
-        decision = pdp.canAdminister(getRequestor(entityC), null);
-        pdp.setContext(context);
-        assert (decision.isPermit());
+		decision = pdp.canAccess(getRequestor(entityAnon), null);
+		assert (decision.isDeny());
 
-        decision = pdp.canAccess(getRequestor(entityAnon), null);
-        pdp.setContext(context);
-        assert (decision.isDeny());
+		decision = pdp.canAdminister(getRequestor(entityAnon), null);
+		assert (decision.isDeny());
+	}
 
-        decision = pdp.canAdminister(getRequestor(entityAnon), null);
-        pdp.setContext(context);
-        assert (decision.isDeny());
+	@Test
+	public void test3() throws Exception {
 
+		AccessControlListPDP pdp = new AccessControlListPDP(test1, test1, true);
+		RequestEntities request = getRequestor(entityA);
+		Decision decision = pdp.canAccess(request, null);
+		assert (decision.isPermit());
 
-    }
+		request = getRequestor(entityAnon);
+		decision = pdp.canAccess(request, null);
+		assert (decision.isPermit());
+	}
 
-    @Test
-    public void test3() throws Exception {
+	@SuppressWarnings("unchecked")
+	private RequestEntities getRequestor(Subject subject) {
 
-        AccessControlListPDP pdp = new AccessControlListPDP(test1, test1, true);
-        pdp.setContext(context);
-        RequestEntities request = getRequestor(entityA);
-        Decision decision = pdp.canAccess(request, null);
-        assert (decision.isPermit());
+		IdentityAttributeCollection idenAttrColl = new IdentityAttributeCollection();
+		Attribute subjectAttribute = new Attribute(AttributeUtil.getPeerSubjectAttrIdentifier(), null, Calendar
+				.getInstance(), null);
+		subjectAttribute.addAttributeValue(subject);
+		idenAttrColl.add(subjectAttribute);
 
-        request = getRequestor(entityAnon);
-        decision = pdp.canAccess(request, null);
-        assert (decision.isPermit());
-    }
+		EntityAttributes attribute = new EntityAttributes(idenAttrColl);
 
-    @SuppressWarnings("unchecked")
-    private RequestEntities getRequestor(Subject subject) {
+		RequestEntities entity = new RequestEntities(attribute, null, null, null);
 
-        IdentityAttributeCollection idenAttrColl = new IdentityAttributeCollection();
-        Attribute subjectAttribute = new Attribute(AttributeUtil.getPeerSubjectAttrIdentifier(), null, Calendar
-                .getInstance(), null);
-        subjectAttribute.addAttributeValue(subject);
-        idenAttrColl.add(subjectAttribute);
-
-        EntityAttributes attribute = new EntityAttributes(idenAttrColl);
-
-        RequestEntities entity = new RequestEntities(attribute, null, null, null);
-
-        return entity;
-    }
+		return entity;
+	}
 }

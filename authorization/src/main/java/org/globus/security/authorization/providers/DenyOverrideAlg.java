@@ -16,7 +16,9 @@ package org.globus.security.authorization.providers;
 
 import org.globus.security.authorization.AuthorizationException;
 import org.globus.security.authorization.Decision;
+import org.globus.security.authorization.EntitiesContainer;
 import org.globus.security.authorization.EntityAttributes;
+import org.globus.security.authorization.GlobusContext;
 import org.globus.security.authorization.PDPInterceptor;
 import org.globus.security.authorization.RequestEntities;
 import org.globus.security.authorization.annotations.AuthorizationEngine;
@@ -60,10 +62,10 @@ public class DenyOverrideAlg extends AbstractEngine {
 		super(chainName);
 	}
 
-	public Decision engineAuthorize(RequestEntities reqAttr, EntityAttributes resourceOwner)
+	public Decision engineAuthorize(RequestEntities reqAttr, EntityAttributes resourceOwner, GlobusContext context)
 			throws AuthorizationException {
 
-		collectAttributes(reqAttr);
+		EntitiesContainer collectedAttributes = collectAttributes(reqAttr, context);
 
 		if ((this.getPdps() == null) || (this.getPdps().size() == 0)) {
 			String err = i18n.getMessage("noPDPs");
@@ -74,7 +76,7 @@ public class DenyOverrideAlg extends AbstractEngine {
 		boolean permit = true;
 		for (PDPInterceptor pdp : this.getPdps()) {
 
-			Decision decision = pdp.canAccess(reqAttr, this.getNonReqEntities());
+			Decision decision = pdp.canAccess(reqAttr, collectedAttributes.getNonRequestEntities());
 
 			if (decision == null) {
 				permit = false;

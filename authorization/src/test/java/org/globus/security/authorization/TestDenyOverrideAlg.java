@@ -27,139 +27,135 @@ import static org.testng.Assert.*;
 
 public class TestDenyOverrideAlg {
 
-    AttributeIdentifier attrIden;
-    EntityAttributes reqAttrIssuer = null;
-    EntityAttributes resourceOwner = null;
-    RequestEntities reqAttr = null;
+	AttributeIdentifier attrIden;
+	EntityAttributes reqAttrIssuer = null;
+	EntityAttributes resourceOwner = null;
+	RequestEntities reqAttr = null;
 
-    @BeforeClass
-    public void setup() throws Exception {
-        // resource owner
-        attrIden = MockPDPImpl.getTestUserAttrIdentifier();
-        Attribute resourceOwnerAttr = new Attribute(attrIden, null,
-                Calendar.getInstance(), null);
-        IdentityAttributeCollection attrCol = new IdentityAttributeCollection();
-        attrCol.add(resourceOwnerAttr);
+	@BeforeClass
+	public void setup() throws Exception {
+		// resource owner
+		attrIden = MockPDPImpl.getTestUserAttrIdentifier();
+		Attribute resourceOwnerAttr = new Attribute(attrIden, null, Calendar.getInstance(), null);
+		IdentityAttributeCollection attrCol = new IdentityAttributeCollection();
+		attrCol.add(resourceOwnerAttr);
 
-        this.resourceOwner = new EntityAttributes(attrCol);
+		this.resourceOwner = new EntityAttributes(attrCol);
 
-        // request attribute issuer.
-        Attribute issuerAttr = new Attribute(attrIden, this.resourceOwner,
-                Calendar.getInstance(), null);
-        attrCol = new IdentityAttributeCollection();
-        attrCol.add(issuerAttr);
-        this.reqAttrIssuer = new EntityAttributes(attrCol);
+		// request attribute issuer.
+		Attribute issuerAttr = new Attribute(attrIden, this.resourceOwner, Calendar.getInstance(), null);
+		attrCol = new IdentityAttributeCollection();
+		attrCol.add(issuerAttr);
+		this.reqAttrIssuer = new EntityAttributes(attrCol);
 
-// Requestor userA
-        Attribute attr = new Attribute(attrIden, this.reqAttrIssuer, Calendar.getInstance(), null);
-        attr.addAttributeValue("UserA");
-        IdentityAttributeCollection coll = new IdentityAttributeCollection();
-        coll.add(attr);
-        EntityAttributes requestor = new EntityAttributes(coll);
-        reqAttr = new RequestEntities(requestor, null, null, null);
+		// Requestor userA
+		Attribute attr = new Attribute(attrIden, this.reqAttrIssuer, Calendar.getInstance(), null);
+		attr.addAttributeValue("UserA");
+		IdentityAttributeCollection coll = new IdentityAttributeCollection();
+		coll.add(attr);
+		EntityAttributes requestor = new EntityAttributes(coll);
+		reqAttr = new RequestEntities(requestor, null, null, null);
 
-    }
+	}
 
-    @Test
-    public void test1() throws Exception {
+	@Test
+	public void test1() throws Exception {
 
-        List<MockPDPImpl> pdps = new ArrayList<MockPDPImpl>();
-        MockPDPImpl p1 = new MockPDPImpl();
-        p1.setIssuer("Issuer1");
-        p1.setAccess(Arrays.asList("UserA"));
-        p1.setDenied(Arrays.asList("UserD"));
-        p1.setRequestAttrIssuer(this.reqAttrIssuer);
-        pdps.add(p1);
+		List<MockPDPImpl> pdps = new ArrayList<MockPDPImpl>();
+		MockPDPImpl p1 = new MockPDPImpl();
+		p1.setIssuer("Issuer1");
+		p1.setAccess(Arrays.asList("UserA"));
+		p1.setDenied(Arrays.asList("UserD"));
+		p1.setRequestAttrIssuer(this.reqAttrIssuer);
+		pdps.add(p1);
 
-        MockPDPImpl p2 = new MockPDPImpl();
-        p2.setIssuer("Issuer2");
-        p2.setAccess(Arrays.asList("UserA"));
-        p2.setRequestAttrIssuer(this.reqAttrIssuer);
-        pdps.add(p2);
+		MockPDPImpl p2 = new MockPDPImpl();
+		p2.setIssuer("Issuer2");
+		p2.setAccess(Arrays.asList("UserA"));
+		p2.setRequestAttrIssuer(this.reqAttrIssuer);
+		pdps.add(p2);
 
-        MockPDPImpl p3 = new MockPDPImpl();
-        p3.setIssuer("Issuer3");
-        p3.setAccess(Arrays.asList("UserA"));
-        p3.setRequestAttrIssuer(this.reqAttrIssuer);
-        pdps.add(p3);
+		MockPDPImpl p3 = new MockPDPImpl();
+		p3.setIssuer("Issuer3");
+		p3.setAccess(Arrays.asList("UserA"));
+		p3.setRequestAttrIssuer(this.reqAttrIssuer);
+		pdps.add(p3);
 
-        // Permit
-        DenyOverrideAlg engine = new DenyOverrideAlg("chain name");
+		// Permit
+		DenyOverrideAlg engine = new DenyOverrideAlg("chain name");
 
-        engine.setPDPInterceptors(pdps);
-                
-        // Try to get decision.
-        Decision decision = engine.engineAuthorize(reqAttr, this.resourceOwner);
-        assertNotNull(decision);
-        assertTrue(decision.isPermit());
-    }
+		engine.setPDPInterceptors(pdps);
 
-    @Test
-    public void test2() throws Exception {
-        List<MockPDPImpl> pdps = new ArrayList<MockPDPImpl>();
+		// Try to get decision.
+		Decision decision = engine.engineAuthorize(reqAttr, this.resourceOwner, null);
+		assertNotNull(decision);
+		assertTrue(decision.isPermit());
+	}
 
+	@Test
+	public void test2() throws Exception {
+		List<MockPDPImpl> pdps = new ArrayList<MockPDPImpl>();
 
-        MockPDPImpl p1 = new MockPDPImpl();
-        p1.setIssuer("Issuer1");
-        p1.setAccess(Arrays.asList("UserA"));
-        p1.setDenied(Arrays.asList("UserD"));
-        p1.setRequestAttrIssuer(this.reqAttrIssuer);
-        pdps.add(p1);
+		MockPDPImpl p1 = new MockPDPImpl();
+		p1.setIssuer("Issuer1");
+		p1.setAccess(Arrays.asList("UserA"));
+		p1.setDenied(Arrays.asList("UserD"));
+		p1.setRequestAttrIssuer(this.reqAttrIssuer);
+		pdps.add(p1);
 
-        MockPDPImpl p2 = new MockPDPImpl();
-        p2.setIssuer("Issuer2");
-        p2.setAccess(Arrays.asList("UserA"));
-        p2.setRequestAttrIssuer(this.reqAttrIssuer);
-        pdps.add(p2);
+		MockPDPImpl p2 = new MockPDPImpl();
+		p2.setIssuer("Issuer2");
+		p2.setAccess(Arrays.asList("UserA"));
+		p2.setRequestAttrIssuer(this.reqAttrIssuer);
+		pdps.add(p2);
 
-        MockPDPImpl p3 = new MockPDPImpl();
-        p3.setIssuer("Issuer3");
-        p3.setDenied(Arrays.asList("UserA"));
-        p3.setRequestAttrIssuer(this.reqAttrIssuer);
-        pdps.add(p3);
+		MockPDPImpl p3 = new MockPDPImpl();
+		p3.setIssuer("Issuer3");
+		p3.setDenied(Arrays.asList("UserA"));
+		p3.setRequestAttrIssuer(this.reqAttrIssuer);
+		pdps.add(p3);
 
-        DenyOverrideAlg engine1 = new DenyOverrideAlg("chain name");
+		DenyOverrideAlg engine1 = new DenyOverrideAlg("chain name");
 
-        engine1.setPDPInterceptors(pdps);
-        // Try to get decision
+		engine1.setPDPInterceptors(pdps);
+		// Try to get decision
 
-        Decision decision1 = engine1.engineAuthorize(reqAttr, this.resourceOwner);
-        assertNotNull(decision1);
-        assertTrue(decision1.isDeny());
-    }
+		Decision decision1 = engine1.engineAuthorize(reqAttr, this.resourceOwner, null);
+		assertNotNull(decision1);
+		assertTrue(decision1.isDeny());
+	}
 
-    @Test
-    public void test3() throws Exception {
-        List<MockPDPImpl> pdps = new ArrayList<MockPDPImpl>();
+	@Test
+	public void test3() throws Exception {
+		List<MockPDPImpl> pdps = new ArrayList<MockPDPImpl>();
 
-        MockPDPImpl p1 = new MockPDPImpl();
-        p1.setIssuer("Issuer1");
-        p1.setAccess(Arrays.asList("UserC"));
-        p1.setDenied(Arrays.asList("UserD"));
-        p1.setRequestAttrIssuer(this.reqAttrIssuer);
-        pdps.add(p1);
+		MockPDPImpl p1 = new MockPDPImpl();
+		p1.setIssuer("Issuer1");
+		p1.setAccess(Arrays.asList("UserC"));
+		p1.setDenied(Arrays.asList("UserD"));
+		p1.setRequestAttrIssuer(this.reqAttrIssuer);
+		pdps.add(p1);
 
-        MockPDPImpl p2 = new MockPDPImpl();
-        p2.setIssuer("Issuer2");
-        p2.setAccess(Arrays.asList("UserC"));
-        p2.setRequestAttrIssuer(this.reqAttrIssuer);
-        pdps.add(p2);
+		MockPDPImpl p2 = new MockPDPImpl();
+		p2.setIssuer("Issuer2");
+		p2.setAccess(Arrays.asList("UserC"));
+		p2.setRequestAttrIssuer(this.reqAttrIssuer);
+		pdps.add(p2);
 
-        MockPDPImpl p3 = new MockPDPImpl();
-        p3.setIssuer("Issuer3");
-        p3.setAdmin(Arrays.asList("UserA"));
-        p3.setRequestAttrIssuer(this.reqAttrIssuer);
-        pdps.add(p3);
+		MockPDPImpl p3 = new MockPDPImpl();
+		p3.setIssuer("Issuer3");
+		p3.setAdmin(Arrays.asList("UserA"));
+		p3.setRequestAttrIssuer(this.reqAttrIssuer);
+		pdps.add(p3);
 
+		// indeterminate
 
-        // indeterminate
+		// Try to get decision
+		DenyOverrideAlg engine2 = new DenyOverrideAlg("chain name");
+		engine2.setPDPInterceptors(pdps);
 
-        // Try to get decision
-        DenyOverrideAlg engine2 = new DenyOverrideAlg("chain name");
-        engine2.setPDPInterceptors(pdps);
-
-        Decision decision2 = engine2.engineAuthorize(reqAttr, this.resourceOwner);
-        assertNotNull(decision2);
-        assertEquals(decision2.getDecision(), Decision.INDETERMINATE);
-    }
+		Decision decision2 = engine2.engineAuthorize(reqAttr, this.resourceOwner, null);
+		assertNotNull(decision2);
+		assertEquals(decision2.getDecision(), Decision.INDETERMINATE);
+	}
 }

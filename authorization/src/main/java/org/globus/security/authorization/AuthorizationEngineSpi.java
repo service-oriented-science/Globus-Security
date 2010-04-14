@@ -19,35 +19,37 @@ import java.io.Serializable;
 /**
  * Interface for authorization engines.
  */
-public interface AuthorizationEngineSpi extends Serializable {    
+public interface AuthorizationEngineSpi extends Serializable {
 
-	
-    /**
-     * Evalauates the authorization chain to determine of the subject
-     * is allowedList to perfrorm the action on the resource. Subject, action
-     * and resource are specified in the RequestEntities object.
-     *
-     * @param reqAttribute  Object initialized with information about the request
-     *                      context.
-     * @param resourceOwner Resource owner entity.
-     * @return Fill Me
-     * @throws AuthorizationException Fill Me
-     */
-    Decision engineAuthorize(RequestEntities reqAttribute, EntityAttributes resourceOwner)
-            throws AuthorizationException;
+	/**
+	 * Evaluates the authorization chain to determine of the subject is
+	 * allowedList to perform the action on the resource. Subject, action and
+	 * resource are specified in the RequestEntities object.
+	 * 
+	 * @param reqAttribute
+	 *            Object initialized with information about the request context.
+	 * @param resourceOwner
+	 *            Resource owner entity.
+	 * @return Fill Me
+	 * @throws AuthorizationException
+	 *             Fill Me
+	 */
+	Decision engineAuthorize(RequestEntities reqAttribute, EntityAttributes resourceOwner, GlobusContext context)
+			throws AuthorizationException;
 
-    /**
-     * The engine should invoke close on all interceptors
-     *
-     * @throws CloseException Fill Me
-     */
-    void engineClose() throws CloseException;
-    
-    /**
-     * Get the algorithm this engine implements
-     * 
-     * @return The algorithm
-     */
-    String getAlgorithm();
+	/**
+	 * The engine should invoke close on all interceptors
+	 * 
+	 * @throws CloseException
+	 *             Fill Me
+	 */
+	void engineClose() throws CloseException;
+
+	/**
+	 * Get the algorithm this engine implements
+	 * 
+	 * @return The algorithm
+	 */
+	String getAlgorithm();
 
 }

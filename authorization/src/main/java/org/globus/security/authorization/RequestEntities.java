@@ -54,21 +54,21 @@ public class RequestEntities implements Serializable {
         this.environment = initEnvironment;
     }
 
-    public void setRequestor(EntityAttributes requestor) {
-        this.requestor = requestor;
-    }
-
-    public void setAction(EntityAttributes action) {
-        this.action = action;
-    }
-
-    public void setResource(EntityAttributes resource) {
-        this.resource = resource;
-    }
-
-    public void setEnvironment(EntityAttributes environment) {
-        this.environment = environment;
-    }
+//    public void setRequestor(EntityAttributes requestor) {
+//        this.requestor = requestor;
+//    }
+//
+//    public void setAction(EntityAttributes action) {
+//        this.action = action;
+//    }
+//
+//    public void setResource(EntityAttributes resource) {
+//        this.resource = resource;
+//    }
+//
+//    public void setEnvironment(EntityAttributes environment) {
+//        this.environment = environment;
+//    }
 
     public EntityAttributes getRequestor() {
         return this.requestor;

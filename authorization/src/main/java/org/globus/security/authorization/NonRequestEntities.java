@@ -22,92 +22,97 @@ import java.util.Vector;
 
 /**
  * Data type returned by collectAttribute method in {@link PIP PIP}
- *
+ * 
  * @see PIP#collectAttributes(RequestEntities)
  */
 public class NonRequestEntities implements Serializable {
 
-    private static final long serialVersionUID = 7191178873283695083L;
+	private static final long serialVersionUID = 7191178873283695083L;
 
-    private List<EntityAttributes> subjectAttrCollection;
-    private List<EntityAttributes> actionAttrCollection;
-    private List<EntityAttributes> resourceAttrCollection;
+	private List<EntityAttributes> subjectAttrCollection;
+	private List<EntityAttributes> actionAttrCollection;
+	private List<EntityAttributes> resourceAttrCollection;
 
-    public NonRequestEntities() {
+	public NonRequestEntities() {
 
-        this.subjectAttrCollection = new Vector<EntityAttributes>();
-        this.actionAttrCollection = new Vector<EntityAttributes>();
-        this.resourceAttrCollection = new Vector<EntityAttributes>();
-    }
+		this.subjectAttrCollection = new Vector<EntityAttributes>();
+		this.actionAttrCollection = new Vector<EntityAttributes>();
+		this.resourceAttrCollection = new Vector<EntityAttributes>();
+	}
 
-    /**
-     * @param initSubjectAttrCollection  Collection of EntityAttributes for subject entities
-     * @param initActionAttrCollection   Collection of EntityAttributes for action entities
-     * @param initResourceAttrCollection Collection of EntityAttributes for resource entities
-     */
-    public NonRequestEntities(List<EntityAttributes> initSubjectAttrCollection, List<EntityAttributes> initActionAttrCollection,
-                              List<EntityAttributes> initResourceAttrCollection) {
+	/**
+	 * @param initSubjectAttrCollection
+	 *            Collection of EntityAttributes for subject entities
+	 * @param initActionAttrCollection
+	 *            Collection of EntityAttributes for action entities
+	 * @param initResourceAttrCollection
+	 *            Collection of EntityAttributes for resource entities
+	 */
+	public NonRequestEntities(List<EntityAttributes> initSubjectAttrCollection,
+			List<EntityAttributes> initActionAttrCollection, List<EntityAttributes> initResourceAttrCollection) {
 
-        this.subjectAttrCollection = initSubjectAttrCollection;
-        this.actionAttrCollection = initActionAttrCollection;
-        this.resourceAttrCollection = initResourceAttrCollection;
-    }
+		this.subjectAttrCollection = initSubjectAttrCollection;
+		this.actionAttrCollection = initActionAttrCollection;
+		this.resourceAttrCollection = initResourceAttrCollection;
+	}
 
-    public List<EntityAttributes> getSubjectAttrsList() {
-        return this.subjectAttrCollection;
-    }
+	public List<EntityAttributes> getSubjectAttrsList() {
+		return this.subjectAttrCollection;
+	}
 
-    public List<EntityAttributes> getActionAttrsList() {
-        return this.actionAttrCollection;
-    }
+	public List<EntityAttributes> getActionAttrsList() {
+		return this.actionAttrCollection;
+	}
 
-    public List<EntityAttributes> getResourceAttrsList() {
-        return this.resourceAttrCollection;
-    }
+	public List<EntityAttributes> getResourceAttrsList() {
+		return this.resourceAttrCollection;
+	}
 
-    public void merge(NonRequestEntities reqAttr) {
+	public NonRequestEntities merge(NonRequestEntities reqAttr) {
+		NonRequestEntities updated = this;
+		if (reqAttr == null) {
+			return updated;
+		}
 
-        if (reqAttr == null) {
-            return;
-        }
+		List<EntityAttributes> subjectAttrs = reqAttr.getSubjectAttrsList();
+		updated = mergeSubjectAttributes(subjectAttrs);
+		List<EntityAttributes> actionAttrs = reqAttr.getActionAttrsList();
+		updated = mergeActionAttributes(actionAttrs);
+		List<EntityAttributes> resourceAttrs = reqAttr.getResourceAttrsList();
+		updated = mergeResourceAttributes(resourceAttrs);
+		return updated;
+	}
 
-        List<EntityAttributes> subjectAttrs = reqAttr.getSubjectAttrsList();
-        mergeSubjectAttributes(subjectAttrs);
-        List<EntityAttributes> actionAttrs = reqAttr.getActionAttrsList();
-        mergeActionAttributes(actionAttrs);
-        List<EntityAttributes> resourceAttrs = reqAttr.getResourceAttrsList();
-        mergeResourceAttributes(resourceAttrs);
-    }
+	public NonRequestEntities mergeSubjectAttributes(List<EntityAttributes> subjectAttrs) {
 
-    public void mergeSubjectAttributes(List<EntityAttributes> subjectAttrs) {
+		return mergeLists(this.subjectAttrCollection, subjectAttrs);
+	}
 
-        mergeLists(this.subjectAttrCollection, subjectAttrs);
-    }
+	public NonRequestEntities mergeActionAttributes(List<EntityAttributes> actionAttrs) {
 
-    public void mergeActionAttributes(List<EntityAttributes> actionAttrs) {
+		return mergeLists(this.actionAttrCollection, actionAttrs);
+	}
 
-        mergeLists(this.actionAttrCollection, actionAttrs);
-    }
+	public NonRequestEntities mergeResourceAttributes(List<EntityAttributes> resourceAttrs) {
 
-    public void mergeResourceAttributes(List<EntityAttributes> resourceAttrs) {
+		return mergeLists(this.resourceAttrCollection, resourceAttrs);
+	}
 
-        mergeLists(this.resourceAttrCollection, resourceAttrs);
-    }
+	protected NonRequestEntities mergeLists(List<EntityAttributes> storeList, List<EntityAttributes> mergeList) {
+		// TODO: create a new Entities object
+		if (mergeList == null) {
+			return this;
+		}
 
-    protected void mergeLists(List<EntityAttributes> storeList, List<EntityAttributes> mergeList) {
-
-        if (mergeList == null) {
-            return;
-        }
-
-        for (Object aMergeList : mergeList) {
-            EntityAttributes attr = (EntityAttributes) aMergeList;
-            EntityAttributes storeAttr = AttributeUtil.getMatchedEntity(storeList, attr);
-            if (storeAttr != null) {
-                storeAttr.mergeEntities(attr);
-            } else {
-                storeList.add(attr);
-            }
-        }
-    }
+		for (Object aMergeList : mergeList) {
+			EntityAttributes attr = (EntityAttributes) aMergeList;
+			EntityAttributes storeAttr = AttributeUtil.getMatchedEntity(storeList, attr);
+			if (storeAttr != null) {
+				storeAttr.mergeEntities(attr);
+			} else {
+				storeList.add(attr);
+			}
+		}
+		return this;
+	}
 }

@@ -15,12 +15,13 @@
 package org.globus.security.authorization;
 
 /**
- * Interface for collecting attributes about requesting subject,
- * action, resource and environment
+ * Interface for collecting attributes about requesting subject, action,
+ * resource and environment
  */
 public interface BootstrapPIP extends PIPInterceptor {
 
-    //TODO:  This really should return a RequestEntities object
+	// TODO: This really should return a RequestEntities object
 
-    void collectRequestAttributes(RequestEntities requestAttr) throws AttributeException;
+	RequestEntities collectRequestAttributes(RequestEntities requestAttr, GlobusContext context)
+			throws AttributeException;
 }

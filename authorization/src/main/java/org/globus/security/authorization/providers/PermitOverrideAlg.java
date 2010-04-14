@@ -19,6 +19,8 @@ import java.util.Vector;
 import org.globus.security.authorization.AuthorizationException;
 import org.globus.security.authorization.Decision;
 import org.globus.security.authorization.EntityAttributes;
+import org.globus.security.authorization.GlobusContext;
+import org.globus.security.authorization.NonRequestEntities;
 import org.globus.security.authorization.PDP;
 import org.globus.security.authorization.RequestEntities;
 import org.globus.security.authorization.annotations.AuthorizationEngine;
@@ -50,13 +52,13 @@ public class PermitOverrideAlg extends AbstractEngine {
 		super(chainName);
 	}
 
-	public Decision engineAuthorize(RequestEntities reqAttr, EntityAttributes resourceOwnerAttributes)
-			throws AuthorizationException {
+	public Decision engineAuthorize(RequestEntities reqAttr, EntityAttributes resourceOwnerAttributes,
+			GlobusContext context) throws AuthorizationException {
 
 		// set resource owner
 		this.resourceOwner = resourceOwnerAttributes;
 
-		collectAttributes(reqAttr);
+		NonRequestEntities collectedNonReqEntities = collectAttributes(reqAttr, context).getNonRequestEntities();
 
 		EntityAttributes requestor = reqAttr.getRequestor();
 		if (requestor == null) {
@@ -75,7 +77,7 @@ public class PermitOverrideAlg extends AbstractEngine {
 		dcc.setAuthorityAt(0, this.resourceOwner);
 
 		this.checkPDP0 = true;
-		DecisionChain chain = findDecisionChain(reqAttr, dcc, false);
+		DecisionChain chain = findDecisionChain(reqAttr, collectedNonReqEntities, dcc, context, false);
 
 		if (chain != null) {
 			logger.debug("Permit decision");
@@ -106,14 +108,8 @@ public class PermitOverrideAlg extends AbstractEngine {
 		}
 	}
 
-	private DecisionChain findDecisionChain(RequestEntities reqAttr, DecisionChainContext dcc, boolean admin)
+	private Decision getDecision(RequestEntities reqAttr, NonRequestEntities nonReqAttr, boolean admin)
 			throws AuthorizationException {
-
-		EntityAttributes subject = reqAttr.getRequestor();
-
-		logger.debug("requestor " + subject);
-
-		dcc.appendToChain(subject);
 		PDP pdp0 = this.getPdps().get(0);
 		Decision decision;
 		if (admin) {
@@ -121,6 +117,19 @@ public class PermitOverrideAlg extends AbstractEngine {
 		} else {
 			decision = pdp0.canAccess(reqAttr, this.getNonReqEntities());
 		}
+		return decision;
+	}
+
+	private DecisionChain findDecisionChain(RequestEntities reqAttr, NonRequestEntities nonReqAttr,
+			DecisionChainContext dcc, GlobusContext context, boolean admin) throws AuthorizationException {
+
+		EntityAttributes subject = reqAttr.getRequestor();
+
+		logger.debug("requestor " + subject);
+
+		dcc.appendToChain(subject);
+		PDP pdp0 = this.getPdps().get(0);
+		Decision decision = getDecision(reqAttr, nonReqAttr, admin);
 
 		// Whatever be the decision, ascertain that the issuer is the
 		// resource owner
@@ -176,8 +185,8 @@ public class PermitOverrideAlg extends AbstractEngine {
 			// Check if some attributes have been collected about
 			// issuer
 			EntityAttributes decisionIssuer = decision.getIssuer();
-			EntityAttributes completeAttrIssuer = AttributeUtil.getMatchedEntity(this.getNonReqEntities()
-					.getSubjectAttrsList(), decisionIssuer);
+			EntityAttributes completeAttrIssuer = AttributeUtil.getMatchedEntity(nonReqAttr.getSubjectAttrsList(),
+					decisionIssuer);
 			if (completeAttrIssuer != null) {
 				decisionIssuer.mergeEntities(completeAttrIssuer);
 			}
@@ -199,7 +208,7 @@ public class PermitOverrideAlg extends AbstractEngine {
 				} else {
 					RequestEntities newReqAttr = new RequestEntities(dcc.getAuthorityAt(i), reqAttr.getAction(),
 							reqAttr.getResource(), reqAttr.getEnvironment());
-					DecisionChain chain = findDecisionChain(newReqAttr, dcc, true);
+					DecisionChain chain = findDecisionChain(newReqAttr, nonReqAttr, dcc, context, true);
 					if (chain != null) {
 						// It got a chain. So return it to the
 						// caller

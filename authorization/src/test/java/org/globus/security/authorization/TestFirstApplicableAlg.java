@@ -79,7 +79,7 @@ public class TestFirstApplicableAlg {
 
         engine.setPDPInterceptors(pdps);
         // Try to get decision.
-        Decision decision = engine.engineAuthorize(reqAttr, this.resourceOwner);
+        Decision decision = engine.engineAuthorize(reqAttr, this.resourceOwner, null);
         assert (decision != null);
         assert (decision.isPermit());
         EntityAttributes retEntity = decision.getIssuer();
@@ -123,7 +123,7 @@ public class TestFirstApplicableAlg {
         engine1.setPDPInterceptors(pdps);
 
         Decision decision1 = engine1.engineAuthorize(reqAttr,
-                this.resourceOwner);
+                this.resourceOwner, null);
         assert (decision1 != null);
         assert (decision1.isDeny());
         EntityAttributes retEntity1 = decision1.getIssuer();
@@ -169,7 +169,7 @@ public class TestFirstApplicableAlg {
         engine2.setPDPInterceptors(pdps);
 
         Decision decision2 = engine2.engineAuthorize(reqAttr,
-                this.resourceOwner);
+                this.resourceOwner, null);
         assert (decision2 != null);
         assert (decision2.getDecision() == Decision.INDETERMINATE);
 

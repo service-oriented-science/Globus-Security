@@ -22,11 +22,11 @@ public interface PIP {
     /**
      * Collect attributes about entities of interest. If the attribute
      * is about the requested subject, resource or action, it should be
-     * added to the RequestEntities obejct. All other attributes should
+     * added to the RequestEntities Object. All other attributes should
      * be returned as NonRequestEntities. Attributes about same entities,
      * should be merged as a single EntityAttribute object.
      */
-    NonRequestEntities collectAttributes(RequestEntities requestAttr) throws AttributeException;
+    EntitiesContainer collectAttributes(RequestEntities requestAttr, GlobusContext context) throws AttributeException;
 
 
 }

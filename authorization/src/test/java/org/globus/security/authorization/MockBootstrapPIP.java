@@ -16,26 +16,27 @@ package org.globus.security.authorization;
 
 public class MockBootstrapPIP implements BootstrapPIP {
 
-    private int initCount = 0;
+	private int initCount = 0;
 
-    public void initialize(String chainName, String prefix_) throws InitializeException {
+	public void initialize(String chainName, String prefix_) throws InitializeException {
 
-        initCount++;
-    }
+		initCount++;
+	}
 
-    public void collectRequestAttributes(RequestEntities requestAttr)
-            throws AttributeException {
-    }
+	public RequestEntities collectRequestAttributes(RequestEntities requestAttr, GlobusContext context)
+			throws AttributeException {
+		return requestAttr;
+	}
 
-    public NonRequestEntities collectAttributes(RequestEntities requestAttr)
-            throws AttributeException {
-        return null;
-    }
+	public EntitiesContainer collectAttributes(RequestEntities requestAttr, GlobusContext context)
+			throws AttributeException {
+		return null;
+	}
 
-    public int getInitializationCount() {
-        return initCount;
-    }
+	public int getInitializationCount() {
+		return initCount;
+	}
 
-    public void close() {
-    }
+	public void close() {
+	}
 }

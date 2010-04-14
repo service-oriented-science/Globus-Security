@@ -10,6 +10,7 @@ import org.globus.security.authorization.AuthorizationException;
 import org.globus.security.authorization.BootstrapPIP;
 import org.globus.security.authorization.Decision;
 import org.globus.security.authorization.EntityAttributes;
+import org.globus.security.authorization.GlobusContext;
 import org.globus.security.authorization.RequestEntities;
 import org.globus.util.I18n;
 import org.slf4j.Logger;
@@ -23,7 +24,7 @@ public class AuthorizationHandler {
 	private AuthorizationEngineSpi adminEngine;
 	private AuthorizationEngineSpi serviceEngine;
 	private EntityAttributes containerEntity;
-	
+
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	public void handle(GlobusContext context) throws AuthorizationException {
@@ -60,22 +61,22 @@ public class AuthorizationHandler {
 
 		RequestEntities entities = new RequestEntities();
 		for (BootstrapPIP pip : bootstrapPIPs) {
-			pip.collectAttributes(entities);
+			pip.collectAttributes(entities, context);
 		}
 
 		if (adminEngine != null) {
-			checkAdminDecision(entities);
+			checkAdminDecision(entities, context);
 		}
 
 		if (serviceEngine != null) {
-			checkServiceDecision(entities);
+			checkServiceDecision(entities, context);
 		}
 	}
 
-	private boolean checkServiceDecision(RequestEntities request) throws AuthorizationException {
+	private boolean checkServiceDecision(RequestEntities request, GlobusContext context) throws AuthorizationException {
 		Decision serviceDecision = null;
 		try {
-			serviceDecision = serviceEngine.engineAuthorize(request, containerEntity);
+			serviceDecision = serviceEngine.engineAuthorize(request, containerEntity, context);
 		} catch (AuthorizationException e) {
 			String error = i18n.getMessage("authzFail");
 			logger.error(error, e);
@@ -88,10 +89,10 @@ public class AuthorizationHandler {
 		}
 	}
 
-	private boolean checkAdminDecision(RequestEntities request) throws AuthorizationException {
+	private boolean checkAdminDecision(RequestEntities request, GlobusContext context) throws AuthorizationException {
 		Decision adminDecision = null;
 		try {
-			adminDecision = adminEngine.engineAuthorize(request, containerEntity);
+			adminDecision = adminEngine.engineAuthorize(request, containerEntity, context);
 		} catch (AuthorizationException e) {
 			String error = i18n.getMessage("authzFail");
 			logger.error(error, e);

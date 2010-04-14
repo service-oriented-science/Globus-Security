@@ -84,7 +84,7 @@ public class TestPermitOverrideAlg {
 		engine.setPDPInterceptors(pdps);
 
 		// Try to get decision
-		Decision decision = engine.engineAuthorize(reqAttr, new EntityAttributes(this.resourceOwnerAttrs));
+		Decision decision = engine.engineAuthorize(reqAttr, new EntityAttributes(this.resourceOwnerAttrs), null);
 		assert (decision != null);
 		assert (decision.isPermit());
 		EntityAttributes retEntity = decision.getIssuer();
@@ -152,7 +152,7 @@ public class TestPermitOverrideAlg {
 		engine.setPDPInterceptors(pdps);
 
 		// Try to get decision
-		Decision decision = engine.engineAuthorize(reqAttr, new EntityAttributes(this.resourceOwnerAttrs));
+		Decision decision = engine.engineAuthorize(reqAttr, new EntityAttributes(this.resourceOwnerAttrs), null);
 		assert (decision != null);
 		assert (decision.isPermit());
 		EntityAttributes retEntity = decision.getIssuer();
@@ -173,7 +173,7 @@ public class TestPermitOverrideAlg {
 		pdps.add(p4);
 		pdps.add(p5);
 		engine.setPDPInterceptors(pdps);
-		decision = engine.engineAuthorize(reqAttr, new EntityAttributes(this.resourceOwnerAttrs));
+		decision = engine.engineAuthorize(reqAttr, new EntityAttributes(this.resourceOwnerAttrs), null);
 		assert (decision != null);
 		assert (decision.isDeny());
 
@@ -236,7 +236,7 @@ public class TestPermitOverrideAlg {
 		engine.setPDPInterceptors(pdps);
 
 		// Try to get decision
-		Decision decision = engine.engineAuthorize(reqAttr, new EntityAttributes(this.resourceOwnerAttrs));
+		Decision decision = engine.engineAuthorize(reqAttr, new EntityAttributes(this.resourceOwnerAttrs), null);
 		assert (decision != null);
 		assert (decision.isPermit());
 		EntityAttributes retEntity = decision.getIssuer();
@@ -315,7 +315,7 @@ public class TestPermitOverrideAlg {
 		engine.setPDPInterceptors(pdps);
 
 		// Try to get decision
-		Decision decision = engine.engineAuthorize(reqAttr, new EntityAttributes(this.resourceOwnerAttrs));
+		Decision decision = engine.engineAuthorize(reqAttr, new EntityAttributes(this.resourceOwnerAttrs), null);
 		assert (decision != null);
 		assert (decision.isPermit());
 
@@ -333,7 +333,7 @@ public class TestPermitOverrideAlg {
 		pdps.add(p6);
 		engine.setPDPInterceptors(pdps);
 		// Try to get decision
-		decision = engine.engineAuthorize(reqAttr, new EntityAttributes(this.resourceOwnerAttrs));
+		decision = engine.engineAuthorize(reqAttr, new EntityAttributes(this.resourceOwnerAttrs), null);
 		assert (decision != null);
 		assert (decision.isDeny());
 
@@ -351,7 +351,7 @@ public class TestPermitOverrideAlg {
 		engine.setPDPInterceptors(pdps);
 
 		// Try to get decision
-		decision = engine.engineAuthorize(reqAttr, new EntityAttributes(this.resourceOwnerAttrs));
+		decision = engine.engineAuthorize(reqAttr, new EntityAttributes(this.resourceOwnerAttrs), null);
 		assertNotNull(decision);
 		assertTrue(decision.isPermit());
 
@@ -374,7 +374,7 @@ public class TestPermitOverrideAlg {
 		engine.setPDPInterceptors(pdps);
 
 		// Try to get decision
-		decision = engine.engineAuthorize(reqAttr, new EntityAttributes(this.resourceOwnerAttrs));
+		decision = engine.engineAuthorize(reqAttr, new EntityAttributes(this.resourceOwnerAttrs),null);
 		assert (decision != null);
 		assert (decision.isPermit());
 	}
@@ -429,7 +429,7 @@ public class TestPermitOverrideAlg {
 		engine.setPDPInterceptors(pdps);
 
 		// Try to get decision
-		Decision decision = engine.engineAuthorize(reqAttr, new EntityAttributes(this.resourceOwnerAttrs));
+		Decision decision = engine.engineAuthorize(reqAttr, new EntityAttributes(this.resourceOwnerAttrs), null);
 		assert (decision != null);
 		assert (decision.isDeny());
 
@@ -440,7 +440,7 @@ public class TestPermitOverrideAlg {
 		engine.setPIPInterceptors(pips);
 		engine.setPDPInterceptors(pdps);
 		// Try to get decision
-		decision = engine.engineAuthorize(reqAttr, new EntityAttributes(this.resourceOwnerAttrs));
+		decision = engine.engineAuthorize(reqAttr, new EntityAttributes(this.resourceOwnerAttrs), null);
 		assert (decision != null);
 		assert (decision.isPermit());
 	}

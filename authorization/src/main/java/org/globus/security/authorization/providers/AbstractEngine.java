@@ -18,6 +18,8 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.globus.security.authorization.AttributeException;
 import org.globus.security.authorization.AuthorizationEngineSpi;
@@ -25,12 +27,13 @@ import org.globus.security.authorization.AuthorizationException;
 import org.globus.security.authorization.BootstrapPIP;
 import org.globus.security.authorization.CloseException;
 import org.globus.security.authorization.Decision;
+import org.globus.security.authorization.EntitiesContainer;
 import org.globus.security.authorization.EntityAttributes;
+import org.globus.security.authorization.GlobusContext;
 import org.globus.security.authorization.NonRequestEntities;
 import org.globus.security.authorization.PDPInterceptor;
 import org.globus.security.authorization.PIPInterceptor;
 import org.globus.security.authorization.RequestEntities;
-import org.globus.security.authorization.annotations.AuthorizationEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,27 +58,45 @@ import org.slf4j.LoggerFactory;
 @SuppressWarnings("serial")
 public abstract class AbstractEngine implements AuthorizationEngineSpi, Serializable {
 
-//	private static I18n i18n = I18n.getI18n("engine_messages");
-	protected List<PDPInterceptor> pdps;
-	protected List<PIPInterceptor> pips;
-	protected List<BootstrapPIP> bootstrapPips;
+	private NonRequestEntities nonReqEntities = new NonRequestEntities();
+	// private static I18n i18n = I18n.getI18n("engine_messages");
+	private List<PDPInterceptor> pdps;
+	private List<PIPInterceptor> pips;
+	private List<BootstrapPIP> bootstrapPips;
+	private ReentrantReadWriteLock nonReqEntitiesLock = new ReentrantReadWriteLock();
 
-	private NonRequestEntities nonReqEntities;
 	private String chainName;
-	
+
 	private Logger logger = LoggerFactory.getLogger(AbstractEngine.class.getName());
 
 	public AbstractEngine(String chainName) {
 		this.chainName = chainName;
-		this.nonReqEntities = new NonRequestEntities();
 	}
-		
+
 	public String getChainName() {
 		return chainName;
 	}
 
 	public void setChainName(String chainName) {
 		this.chainName = chainName;
+	}
+
+	public void setNonReqEntities(NonRequestEntities nonReqEntities) {
+		this.nonReqEntitiesLock.readLock().lock();
+		try {
+			this.nonReqEntities = nonReqEntities;
+		} finally {
+			this.nonReqEntitiesLock.readLock().unlock();
+		}
+	}
+
+	public NonRequestEntities getNonReqEntities() {
+		this.nonReqEntitiesLock.writeLock().lock();
+		try {
+			return this.nonReqEntities;
+		} finally {
+			this.nonReqEntitiesLock.writeLock().unlock();
+		}
 	}
 
 	/**
@@ -88,8 +109,8 @@ public abstract class AbstractEngine implements AuthorizationEngineSpi, Serializ
 	 * @return Decision object
 	 * @throws AuthorizationException
 	 */
-	abstract public Decision engineAuthorize(RequestEntities reqAttribute, EntityAttributes resourceOwner)
-			throws AuthorizationException;
+	abstract public Decision engineAuthorize(RequestEntities reqAttribute, EntityAttributes resourceOwner,
+			GlobusContext context) throws AuthorizationException;
 
 	/**
 	 * Invokes close on all interceptor.
@@ -97,27 +118,21 @@ public abstract class AbstractEngine implements AuthorizationEngineSpi, Serializ
 	 * @throws CloseException
 	 */
 	public void engineClose() throws CloseException {
-		for(BootstrapPIP bp: bootstrapPips){
+		for (BootstrapPIP bp : bootstrapPips) {
 			bp.close();
 		}
-		for(PIPInterceptor pip: pips){
+		for (PIPInterceptor pip : pips) {
 			pip.close();
 		}
-		for(PDPInterceptor pdp: pdps){
+		for (PDPInterceptor pdp : pdps) {
 			pdp.close();
 		}
-	}	
-	
-	
-	
-	protected NonRequestEntities getNonReqEntities() {
-		return nonReqEntities;
 	}
 
-	public void setPDPInterceptors(final List<? extends PDPInterceptor> pdpInterceptors){
+	public void setPDPInterceptors(final List<? extends PDPInterceptor> pdpInterceptors) {
 		pdps = Collections.unmodifiableList(pdpInterceptors);
-	}		
-	
+	}
+
 	protected List<? extends PDPInterceptor> getPdps() {
 		return pdps;
 	}
@@ -130,11 +145,11 @@ public abstract class AbstractEngine implements AuthorizationEngineSpi, Serializ
 		return bootstrapPips;
 	}
 
-	public void setPIPInterceptors(final List<? extends PIPInterceptor> pipInterceptors){
+	public void setPIPInterceptors(final List<? extends PIPInterceptor> pipInterceptors) {
 		pips = Collections.unmodifiableList(pipInterceptors);
 	}
-	
-	public void setBootstrapPIPS(final List<? extends BootstrapPIP> bootstrapPIPs){
+
+	public void setBootstrapPIPS(final List<? extends BootstrapPIP> bootstrapPIPs) {
 		bootstrapPips = Collections.unmodifiableList(bootstrapPIPs);
 	}
 
@@ -146,28 +161,30 @@ public abstract class AbstractEngine implements AuthorizationEngineSpi, Serializ
 	 * @param requestAttr
 	 * @throws AttributeException
 	 */
-	protected void collectAttributes(RequestEntities requestAttr) throws AttributeException {
-
+	protected EntitiesContainer collectAttributes(RequestEntities requestAttr, GlobusContext context)
+			throws AttributeException {
+		RequestEntities updatedRequest = null;
+		NonRequestEntities updateNonRequest = getNonReqEntities();
 		if (this.bootstrapPips != null) {
-			for(BootstrapPIP bp: bootstrapPips){
-				bp.collectRequestAttributes(requestAttr);
+			for (BootstrapPIP bp : bootstrapPips) {
+				updatedRequest = bp.collectRequestAttributes(requestAttr, context);
 			}
 		}
 
 		if (this.pips != null) {
-			for(PIPInterceptor pip: pips){
-				NonRequestEntities response = pip.collectAttributes(requestAttr);
-				if (this.nonReqEntities == null) {
-					this.nonReqEntities = response;
+			for (PIPInterceptor pip : pips) {
+				EntitiesContainer response = pip.collectAttributes(requestAttr, context);
+				if (updateNonRequest == null) {
+					updateNonRequest = response.getNonRequestEntities();
 				} else {
-					this.nonReqEntities.merge(response);
+					updateNonRequest = updateNonRequest.merge(response.getNonRequestEntities());
 				}
 			}
 
 			if (logger.isDebugEnabled()) {
-				if (this.nonReqEntities != null) {
+				if (getNonReqEntities() != null) {
 					logger.debug("Subject attribute list after merge ");
-					Iterator<EntityAttributes> it = this.nonReqEntities.getSubjectAttrsList().iterator();
+					Iterator<EntityAttributes> it = nonReqEntities.getSubjectAttrsList().iterator();
 					while (it.hasNext()) {
 						logger.debug(it.next().toString());
 					}
@@ -176,5 +193,8 @@ public abstract class AbstractEngine implements AuthorizationEngineSpi, Serializ
 				}
 			}
 		}
-	}	
+		//I don't like this because it requires some kinda ugly synchronization, but for the moment it works
+		setNonReqEntities(updateNonRequest);
+		return new EntitiesContainer(updatedRequest, updateNonRequest);
+	}
 }
