@@ -7,45 +7,49 @@ import org.globus.security.authorization.EntityAttributes;
 import org.globus.security.authorization.GlobusContextFactory;
 
 public class DefaultGlobusContext implements GlobusContext {
-    private GlobusContext delegate;
+	private GlobusContext delegate;
 
-    private GlobusContext getDelegate() {
-        if (delegate == null) {
-            delegate = GlobusContextFactory.newInstance().createContext();
-        }
-        return delegate;
-    }
+	private GlobusContext getDelegate() {
+		if (delegate == null) {
+			delegate = GlobusContextFactory.newInstance().createContext();
+		}
+		return delegate;
+	}
 
-    public <T> T get(Class<T> type) {
-        return getDelegate().get(type);
-    }
+	public <T> T get(String key, Class<T> type) {
+		return getDelegate().get(key, type);
+	}
 
-    public Object get(String key) {
-        return getDelegate().get(key);
-    }
+	public <T> T get(Class<T> type) {
+		return getDelegate().get(type);
+	}
 
-    public String getContainerId() {
-        return getDelegate().getContainerId();
-    }
+	public Object get(String key) {
+		return getDelegate().get(key);
+	}
 
-    public Subject getContainerSubject() {
-        return getDelegate().getContainerSubject();
-    }
+	public String getContainerId() {
+		return getDelegate().getContainerId();
+	}
 
-    public QName getOperation() {
-        return getDelegate().getOperation();
-    }
+	public Subject getContainerSubject() {
+		return getDelegate().getContainerSubject();
+	}
 
-    public Subject getPeerSubject() {
-        return getDelegate().getPeerSubject();
-    }
+	public QName getOperation() {
+		return getDelegate().getOperation();
+	}
 
-    public Subject getServiceSubject() {
-        return getDelegate().getServiceSubject();
-    }
+	public Subject getPeerSubject() {
+		return getDelegate().getPeerSubject();
+	}
 
-    public EntityAttributes getContainerEntity() {
-        return getDelegate().getContainerEntity();
-    }
+	public Subject getServiceSubject() {
+		return getDelegate().getServiceSubject();
+	}
+
+	public EntityAttributes getContainerEntity() {
+		return getDelegate().getContainerEntity();
+	}
 
 }

@@ -10,76 +10,85 @@ import org.globus.security.authorization.EntityAttributes;
 
 public class SimpleGlobusContext implements GlobusContext {
 
-    private Map<String, Object> propMap = new HashMap<String, Object>();
-    private String containerId;
-    private Subject containerSubject;
-    private QName operation;
-    private Subject peerSubject;
-    private Subject serviceSubject;
-    private EntityAttributes containerEntity;
+	private Map<String, Object> propMap = new HashMap<String, Object>();
+	private String containerId;
+	private Subject containerSubject;
+	private QName operation;
+	private Subject peerSubject;
+	private Subject serviceSubject;
+	private EntityAttributes containerEntity;
 
-    @SuppressWarnings("unchecked")
-    public <T> T get(Class<T> type) {
-        return (T) propMap.get(type.getCanonicalName());
-    }
+	@SuppressWarnings("unchecked")
+	public <T> T get(String key, Class<T> type) {
+		Object value = propMap.get(type.getCanonicalName());
+		if (type.isAssignableFrom(value.getClass())) {
+			return (T) value;
+		}
+		return null;
+	}
 
-    public void addProperty(String key, Object value) {
-        this.propMap.put(key, value);
-    }
+	@SuppressWarnings("unchecked")
+	public <T> T get(Class<T> type) {
+		return (T) propMap.get(type.getCanonicalName());
+	}
 
-    public <T> void addProperty(Class<T> clazz, T value) {
-        this.propMap.put(clazz.getCanonicalName(), value);
-    }
+	public void addProperty(String key, Object value) {
+		this.propMap.put(key, value);
+	}
 
-    public Object get(String key) {
-        return propMap.get(key);
-    }
+	public <T> void addProperty(Class<T> clazz, T value) {
+		this.propMap.put(clazz.getCanonicalName(), value);
+	}
 
-    public String getContainerId() {
-        return containerId;
-    }
+	public Object get(String key) {
+		return propMap.get(key);
+	}
 
-    public Subject getContainerSubject() {
-        return containerSubject;
-    }
+	public String getContainerId() {
+		return containerId;
+	}
 
-    public QName getOperation() {
-        return operation;
-    }
+	public Subject getContainerSubject() {
+		return containerSubject;
+	}
 
-    public Subject getPeerSubject() {
-        return peerSubject;
-    }
+	public QName getOperation() {
+		return operation;
+	}
 
-    public Subject getServiceSubject() {
-        return serviceSubject;
-    }
+	public Subject getPeerSubject() {
+		return peerSubject;
+	}
 
-    public EntityAttributes getContainerEntity() {
-        return this.containerEntity;
-    }
+	public Subject getServiceSubject() {
+		return serviceSubject;
+	}
 
-    public void setContainerEntity(EntityAttributes containerEntityParam) {
-        this.containerEntity = containerEntityParam;
-    }
+	public EntityAttributes getContainerEntity() {
+		return this.containerEntity;
+	}
 
-    public void setContainerId(String containerId) {
-        this.containerId = containerId;
-    }
+	public void setContainerEntity(EntityAttributes containerEntityParam) {
+		this.containerEntity = containerEntityParam;
+	}
 
-    public void setContainerSubject(Subject containerSubject) {
-        this.containerSubject = containerSubject;
-    }
+	public void setContainerId(String containerId) {
+		this.containerId = containerId;
+	}
 
-    public void setOperation(QName operation) {
-        this.operation = operation;
-    }
+	public void setContainerSubject(Subject containerSubject) {
+		this.containerSubject = containerSubject;
+	}
 
-    public void setPeerSubject(Subject peerSubject) {
-        this.peerSubject = peerSubject;
-    }
+	public void setOperation(QName operation) {
+		this.operation = operation;
+	}
 
-    public void setServiceSubject(Subject serviceSubject) {
-        this.serviceSubject = serviceSubject;
-    }
+	public void setPeerSubject(Subject peerSubject) {
+		this.peerSubject = peerSubject;
+	}
+
+	public void setServiceSubject(Subject serviceSubject) {
+		this.serviceSubject = serviceSubject;
+	}
 }

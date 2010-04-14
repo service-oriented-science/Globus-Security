@@ -9,6 +9,8 @@ public interface GlobusContext {
 
 	<T> T get(Class<T> type);
 
+	<T> T get(String key, Class<T> type);
+
 	Object get(String key);
 
 	String getContainerId();
