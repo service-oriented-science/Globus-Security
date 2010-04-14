@@ -26,7 +26,7 @@ public interface PIP {
      * be returned as NonRequestEntities. Attributes about same entities,
      * should be merged as a single EntityAttribute object.
      */
-    EntitiesContainer collectAttributes(RequestEntities requestAttr, GlobusContext context) throws AttributeException;
+    EntitiesContainer collectAttributes(RequestEntities requestAttr, AuthorizationContext context) throws AttributeException;
 
 
 }

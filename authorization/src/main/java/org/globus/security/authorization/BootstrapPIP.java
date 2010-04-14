@@ -22,6 +22,6 @@ public interface BootstrapPIP extends PIPInterceptor {
 
 	// TODO: This really should return a RequestEntities object
 
-	RequestEntities collectRequestAttributes(RequestEntities requestAttr, GlobusContext context)
+	RequestEntities collectRequestAttributes(RequestEntities requestAttr, AuthorizationContext context)
 			throws AttributeException;
 }

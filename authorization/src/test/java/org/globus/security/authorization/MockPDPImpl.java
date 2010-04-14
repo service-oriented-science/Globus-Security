@@ -118,7 +118,7 @@ public class MockPDPImpl implements PDPInterceptor {
 
 	}
 
-	public Decision canAccess(RequestEntities requestEntities, NonRequestEntities nonReqAttr, GlobusContext context)
+	public Decision canAccess(RequestEntities requestEntities, NonRequestEntities nonReqAttr, AuthorizationContext context)
 			throws AuthorizationException {
 
 		setupIssuer();
@@ -136,7 +136,7 @@ public class MockPDPImpl implements PDPInterceptor {
 		return isPermitted(peerValues, entityAttr, true);
 	}
 
-	public Decision canAdminister(RequestEntities requestEntities, NonRequestEntities nonReqAttr, GlobusContext context)
+	public Decision canAdminister(RequestEntities requestEntities, NonRequestEntities nonReqAttr, AuthorizationContext context)
 			throws AuthorizationException {
 
 		setupIssuer();

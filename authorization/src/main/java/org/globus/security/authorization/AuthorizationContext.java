@@ -4,7 +4,7 @@ import javax.security.auth.Subject;
 import javax.xml.namespace.QName;
 
 
-public interface GlobusContext {
+public interface AuthorizationContext {
 
 	<T> T get(Class<T> type);
 

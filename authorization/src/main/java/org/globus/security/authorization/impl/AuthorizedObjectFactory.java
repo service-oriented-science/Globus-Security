@@ -2,12 +2,12 @@ package org.globus.security.authorization.impl;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
-import org.globus.security.authorization.GlobusContext;
+import org.globus.security.authorization.AuthorizationContext;
 import org.springframework.aop.framework.ProxyFactory;
 
 public class AuthorizedObjectFactory {
 	private AuthorizationHandler handler;
-	private GlobusContext context;
+	private AuthorizationContext context;
 
 	public Object addAuthorization(Object o) {
 		ProxyFactory factory = new ProxyFactory(o);
@@ -21,7 +21,7 @@ public class AuthorizedObjectFactory {
 		return factory.getProxy();
 	}
 
-	public void setGlobusContext(GlobusContext context){
+	public void setGlobusContext(AuthorizationContext context){
 		this.context = context;
 	}
 	

@@ -10,7 +10,7 @@ import org.globus.security.authorization.AuthorizationException;
 import org.globus.security.authorization.BootstrapPIP;
 import org.globus.security.authorization.Decision;
 import org.globus.security.authorization.EntityAttributes;
-import org.globus.security.authorization.GlobusContext;
+import org.globus.security.authorization.AuthorizationContext;
 import org.globus.security.authorization.RequestEntities;
 import org.globus.util.I18n;
 import org.slf4j.Logger;
@@ -27,7 +27,7 @@ public class AuthorizationHandler {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
-	public void handle(GlobusContext context) throws AuthorizationException {
+	public void handle(AuthorizationContext context) throws AuthorizationException {
 
 		Subject subject = context.get("peer_subject", Subject.class);
 		if (subject == null) {
@@ -73,7 +73,7 @@ public class AuthorizationHandler {
 		}
 	}
 
-	private boolean checkServiceDecision(RequestEntities request, GlobusContext context) throws AuthorizationException {
+	private boolean checkServiceDecision(RequestEntities request, AuthorizationContext context) throws AuthorizationException {
 		Decision serviceDecision = null;
 		try {
 			serviceDecision = serviceEngine.engineAuthorize(request, containerEntity, context);
@@ -89,7 +89,7 @@ public class AuthorizationHandler {
 		}
 	}
 
-	private boolean checkAdminDecision(RequestEntities request, GlobusContext context) throws AuthorizationException {
+	private boolean checkAdminDecision(RequestEntities request, AuthorizationContext context) throws AuthorizationException {
 		Decision adminDecision = null;
 		try {
 			adminDecision = adminEngine.engineAuthorize(request, containerEntity, context);

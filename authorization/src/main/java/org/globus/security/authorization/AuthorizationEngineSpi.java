@@ -34,7 +34,7 @@ public interface AuthorizationEngineSpi extends Serializable {
 	 * @throws AuthorizationException
 	 *             Fill Me
 	 */
-	Decision engineAuthorize(RequestEntities reqAttribute, EntityAttributes resourceOwner, GlobusContext context)
+	Decision engineAuthorize(RequestEntities reqAttribute, EntityAttributes resourceOwner, AuthorizationContext context)
 			throws AuthorizationException;
 
 	/**

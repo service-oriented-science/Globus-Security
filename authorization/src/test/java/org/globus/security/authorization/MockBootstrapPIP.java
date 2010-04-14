@@ -23,12 +23,12 @@ public class MockBootstrapPIP implements BootstrapPIP {
 		initCount++;
 	}
 
-	public RequestEntities collectRequestAttributes(RequestEntities requestAttr, GlobusContext context)
+	public RequestEntities collectRequestAttributes(RequestEntities requestAttr, AuthorizationContext context)
 			throws AttributeException {
 		return requestAttr;
 	}
 
-	public EntitiesContainer collectAttributes(RequestEntities requestAttr, GlobusContext context)
+	public EntitiesContainer collectAttributes(RequestEntities requestAttr, AuthorizationContext context)
 			throws AttributeException {
 		return null;
 	}

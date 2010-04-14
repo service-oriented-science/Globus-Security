@@ -27,7 +27,7 @@ import org.globus.security.authorization.BootstrapPIP;
 import org.globus.security.authorization.CloseException;
 import org.globus.security.authorization.EntitiesContainer;
 import org.globus.security.authorization.EntityAttributes;
-import org.globus.security.authorization.GlobusContext;
+import org.globus.security.authorization.AuthorizationContext;
 import org.globus.security.authorization.IdentityAttributeCollection;
 import org.globus.security.authorization.RequestEntities;
 import org.globus.security.authorization.util.AttributeUtil;
@@ -37,7 +37,7 @@ public class X509BootstrapPIP implements BootstrapPIP {
 	private static final long serialVersionUID = 4102147324580817900L;
 
 	@SuppressWarnings("unchecked")
-	public RequestEntities collectRequestAttributes(RequestEntities requestAttrs, GlobusContext context)
+	public RequestEntities collectRequestAttributes(RequestEntities requestAttrs, AuthorizationContext context)
 			throws AttributeException {
 
 		EntityAttributes containerEntity = context.getContainerEntity();
@@ -71,7 +71,7 @@ public class X509BootstrapPIP implements BootstrapPIP {
 				requestAttrs.getEnvironment());
 	}
 
-	public EntitiesContainer collectAttributes(RequestEntities requestAttr, GlobusContext context) {
+	public EntitiesContainer collectAttributes(RequestEntities requestAttr, AuthorizationContext context) {
 		return null;
 	}
 

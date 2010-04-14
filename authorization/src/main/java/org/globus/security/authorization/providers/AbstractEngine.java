@@ -28,7 +28,7 @@ import org.globus.security.authorization.CloseException;
 import org.globus.security.authorization.Decision;
 import org.globus.security.authorization.EntitiesContainer;
 import org.globus.security.authorization.EntityAttributes;
-import org.globus.security.authorization.GlobusContext;
+import org.globus.security.authorization.AuthorizationContext;
 import org.globus.security.authorization.NonRequestEntities;
 import org.globus.security.authorization.PDPInterceptor;
 import org.globus.security.authorization.PIPInterceptor;
@@ -109,7 +109,7 @@ public abstract class AbstractEngine implements AuthorizationEngineSpi, Serializ
 	 * @throws AuthorizationException
 	 */
 	abstract public Decision engineAuthorize(RequestEntities reqAttribute, EntityAttributes resourceOwner,
-			GlobusContext context) throws AuthorizationException;
+			AuthorizationContext context) throws AuthorizationException;
 
 	/**
 	 * Invokes close on all interceptor.
@@ -160,7 +160,7 @@ public abstract class AbstractEngine implements AuthorizationEngineSpi, Serializ
 	 * @param requestAttr
 	 * @throws AttributeException
 	 */
-	protected EntitiesContainer collectAttributes(RequestEntities requestAttr, GlobusContext context)
+	protected EntitiesContainer collectAttributes(RequestEntities requestAttr, AuthorizationContext context)
 			throws AttributeException {
 		RequestEntities updatedRequest = null;
 		NonRequestEntities updateNonRequest = getNonReqEntities();

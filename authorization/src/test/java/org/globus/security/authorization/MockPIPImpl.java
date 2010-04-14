@@ -91,7 +91,7 @@ public class MockPIPImpl implements PIPInterceptor {
 		// String prefix = prefix_;
 	}
 
-	public EntitiesContainer collectAttributes(RequestEntities requestAttr, GlobusContext context)
+	public EntitiesContainer collectAttributes(RequestEntities requestAttr, AuthorizationContext context)
 			throws AttributeException {
 
 		IdentityAttributeCollection subCol = new IdentityAttributeCollection();

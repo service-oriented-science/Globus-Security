@@ -28,7 +28,7 @@ public class MockEngine extends AbstractEngine {
 		return "Mock";
 	}
 
-	public Decision engineAuthorize(RequestEntities reqAttribute, EntityAttributes resourceOwner, GlobusContext context)
+	public Decision engineAuthorize(RequestEntities reqAttribute, EntityAttributes resourceOwner, AuthorizationContext context)
 			throws AuthorizationException {
 
 		collectAttributes(reqAttribute, context);

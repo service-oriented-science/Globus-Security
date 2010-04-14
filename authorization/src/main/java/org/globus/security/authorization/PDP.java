@@ -26,9 +26,9 @@ package org.globus.security.authorization;
  */
 public interface PDP {
 
-    Decision canAccess(RequestEntities requestEntities, NonRequestEntities nonReqEntities, GlobusContext context)
+    Decision canAccess(RequestEntities requestEntities, NonRequestEntities nonReqEntities, AuthorizationContext context)
         throws AuthorizationException;
 
-    Decision canAdminister(RequestEntities requestEntities, NonRequestEntities nonReqEntities, GlobusContext context)
+    Decision canAdminister(RequestEntities requestEntities, NonRequestEntities nonReqEntities, AuthorizationContext context)
         throws AuthorizationException;
 }

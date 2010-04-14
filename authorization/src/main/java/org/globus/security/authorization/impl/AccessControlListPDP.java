@@ -27,7 +27,7 @@ import org.globus.security.authorization.AttributeIdentifier;
 import org.globus.security.authorization.AuthorizationException;
 import org.globus.security.authorization.Decision;
 import org.globus.security.authorization.EntityAttributes;
-import org.globus.security.authorization.GlobusContext;
+import org.globus.security.authorization.AuthorizationContext;
 import org.globus.security.authorization.IdentityAttributeCollection;
 import org.globus.security.authorization.NonRequestEntities;
 import org.globus.security.authorization.PDP;
@@ -112,7 +112,7 @@ public class AccessControlListPDP implements PDP {
 	 * @return
 	 * @throws AuthorizationException
 	 */
-	public Decision canAccess(RequestEntities requestEntities, NonRequestEntities nonReqEntities, GlobusContext context)
+	public Decision canAccess(RequestEntities requestEntities, NonRequestEntities nonReqEntities, AuthorizationContext context)
 			throws AuthorizationException {
 
 		return getDecision(requestEntities, this.accessAcl, context);
@@ -127,7 +127,7 @@ public class AccessControlListPDP implements PDP {
 	 * @return
 	 * @throws AuthorizationException
 	 */
-	public Decision canAdminister(RequestEntities requestEntities, NonRequestEntities nonReqEntities, GlobusContext context)
+	public Decision canAdminister(RequestEntities requestEntities, NonRequestEntities nonReqEntities, AuthorizationContext context)
 			throws AuthorizationException {
 
 		return getDecision(requestEntities, this.adminAcl, context);
@@ -175,7 +175,7 @@ public class AccessControlListPDP implements PDP {
 		return false;
 	}
 
-	private Decision getDecision(RequestEntities requestEntities, Collection<Principal> acl, GlobusContext context) {
+	private Decision getDecision(RequestEntities requestEntities, Collection<Principal> acl, AuthorizationContext context) {
 
 		EntityAttributes requestor = requestEntities.getRequestor();
 

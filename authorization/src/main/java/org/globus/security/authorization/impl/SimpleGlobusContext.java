@@ -7,9 +7,9 @@ import javax.security.auth.Subject;
 import javax.xml.namespace.QName;
 
 import org.globus.security.authorization.EntityAttributes;
-import org.globus.security.authorization.GlobusContext;
+import org.globus.security.authorization.AuthorizationContext;
 
-public class SimpleGlobusContext implements GlobusContext {
+public class SimpleGlobusContext implements AuthorizationContext {
 
 	
 	private Map<String, Object> propMap = new HashMap<String, Object>();

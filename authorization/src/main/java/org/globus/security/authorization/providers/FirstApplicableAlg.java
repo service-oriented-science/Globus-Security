@@ -17,7 +17,7 @@ package org.globus.security.authorization.providers;
 import org.globus.security.authorization.AuthorizationException;
 import org.globus.security.authorization.Decision;
 import org.globus.security.authorization.EntityAttributes;
-import org.globus.security.authorization.GlobusContext;
+import org.globus.security.authorization.AuthorizationContext;
 import org.globus.security.authorization.NonRequestEntities;
 import org.globus.security.authorization.PDPInterceptor;
 import org.globus.security.authorization.RequestEntities;
@@ -58,7 +58,7 @@ public class FirstApplicableAlg extends AbstractEngine {
 		super(chainName);
 	}
 
-	public Decision engineAuthorize(RequestEntities reqAttr, EntityAttributes resourceOwner, GlobusContext context)
+	public Decision engineAuthorize(RequestEntities reqAttr, EntityAttributes resourceOwner, AuthorizationContext context)
 			throws AuthorizationException {
 
 		NonRequestEntities collectedNonReqEntities = collectAttributes(reqAttr, context).getNonRequestEntities();

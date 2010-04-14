@@ -19,7 +19,7 @@ import java.util.Vector;
 import org.globus.security.authorization.AuthorizationException;
 import org.globus.security.authorization.Decision;
 import org.globus.security.authorization.EntityAttributes;
-import org.globus.security.authorization.GlobusContext;
+import org.globus.security.authorization.AuthorizationContext;
 import org.globus.security.authorization.NonRequestEntities;
 import org.globus.security.authorization.PDP;
 import org.globus.security.authorization.RequestEntities;
@@ -50,7 +50,7 @@ public class PermitOverrideAlg extends AbstractEngine {
 	}
 
 	public Decision engineAuthorize(RequestEntities reqAttr, EntityAttributes resourceOwnerAttributes,
-			GlobusContext context) throws AuthorizationException {
+			AuthorizationContext context) throws AuthorizationException {
 
 		// set resource owner
 		// this.resourceOwner = resourceOwnerAttributes;
@@ -106,7 +106,7 @@ public class PermitOverrideAlg extends AbstractEngine {
 		}
 	}
 
-	private Decision getDecision(RequestEntities reqAttr, NonRequestEntities nonReqAttr, GlobusContext context, boolean admin)
+	private Decision getDecision(RequestEntities reqAttr, NonRequestEntities nonReqAttr, AuthorizationContext context, boolean admin)
 			throws AuthorizationException {
 		PDP pdp0 = this.getPdps().get(0);
 		Decision decision;
@@ -119,7 +119,7 @@ public class PermitOverrideAlg extends AbstractEngine {
 	}
 
 	private DecisionChain findDecisionChain(RequestEntities reqAttr, EntityAttributes resourceOwner,
-			NonRequestEntities nonReqAttr, DecisionChainContext dcc, GlobusContext context, boolean checkPDP0,
+			NonRequestEntities nonReqAttr, DecisionChainContext dcc, AuthorizationContext context, boolean checkPDP0,
 			boolean admin) throws AuthorizationException {
 
 		EntityAttributes subject = reqAttr.getRequestor();
