@@ -70,7 +70,7 @@ public class FirstApplicableAlg extends AbstractEngine {
 		}
 
 		for (PDPInterceptor pdp : this.getPdps()) {
-			Decision decision = pdp.canAccess(reqAttr, collectedNonReqEntities);
+			Decision decision = pdp.canAccess(reqAttr, collectedNonReqEntities, context);
 
 			if (decision == null) {
 				continue;

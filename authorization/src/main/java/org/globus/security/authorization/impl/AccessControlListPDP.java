@@ -22,8 +22,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import javax.inject.Inject;
-
 import org.globus.security.authorization.Attribute;
 import org.globus.security.authorization.AttributeIdentifier;
 import org.globus.security.authorization.AuthorizationException;
@@ -51,9 +49,6 @@ public class AccessControlListPDP implements PDP {
 	private Collection<Principal> accessAcl;
 	private Collection<Principal> adminAcl;
 	private boolean anonymousAllowed;
-
-	@Inject
-	private GlobusContext context;
 
 	/**
 	 * Constructor.
@@ -117,10 +112,10 @@ public class AccessControlListPDP implements PDP {
 	 * @return
 	 * @throws AuthorizationException
 	 */
-	public Decision canAccess(RequestEntities requestEntities, NonRequestEntities nonReqEntities)
+	public Decision canAccess(RequestEntities requestEntities, NonRequestEntities nonReqEntities, GlobusContext context)
 			throws AuthorizationException {
 
-		return getDecision(requestEntities, this.accessAcl);
+		return getDecision(requestEntities, this.accessAcl, context);
 	}
 
 	/**
@@ -132,9 +127,10 @@ public class AccessControlListPDP implements PDP {
 	 * @return
 	 * @throws AuthorizationException
 	 */
-	public Decision canAdminister(RequestEntities requestEntities, NonRequestEntities nonReqEntities) throws AuthorizationException {
+	public Decision canAdminister(RequestEntities requestEntities, NonRequestEntities nonReqEntities, GlobusContext context)
+			throws AuthorizationException {
 
-		return getDecision(requestEntities, this.adminAcl);
+		return getDecision(requestEntities, this.adminAcl, context);
 	}
 
 	private Set getAttributeValue(Collection<Attribute<?>> attributes) {
@@ -179,7 +175,7 @@ public class AccessControlListPDP implements PDP {
 		return false;
 	}
 
-	private Decision getDecision(RequestEntities requestEntities, Collection<Principal> acl) {
+	private Decision getDecision(RequestEntities requestEntities, Collection<Principal> acl, GlobusContext context) {
 
 		EntityAttributes requestor = requestEntities.getRequestor();
 

@@ -76,7 +76,7 @@ public class DenyOverrideAlg extends AbstractEngine {
 		boolean permit = true;
 		for (PDPInterceptor pdp : this.getPdps()) {
 
-			Decision decision = pdp.canAccess(reqAttr, collectedAttributes.getNonRequestEntities());
+			Decision decision = pdp.canAccess(reqAttr, collectedAttributes.getNonRequestEntities(), context);
 
 			if (decision == null) {
 				permit = false;

@@ -104,22 +104,22 @@ public class TestAccessControlListPDP {
 		// Access and admin rights allowed for permitted.
 		AccessControlListPDP pdp = new AccessControlListPDP(test1);
 		RequestEntities request = getRequestor(entityA);
-		Decision decision = pdp.canAccess(request, null);
+		Decision decision = pdp.canAccess(request, null, null);
 		assert (decision.isPermit());
 
-		decision = pdp.canAdminister(getRequestor(entityA), null);
+		decision = pdp.canAdminister(getRequestor(entityA), null, null);
 		assert (decision.isPermit());
 
-		decision = pdp.canAccess(getRequestor(entityB), null);
+		decision = pdp.canAccess(getRequestor(entityB), null, null);
 		assert (decision.isDeny());
 
-		decision = pdp.canAdminister(getRequestor(entityB), null);
+		decision = pdp.canAdminister(getRequestor(entityB), null, null);
 		assert (decision.isDeny());
 
-		decision = pdp.canAccess(getRequestor(entityAnon), null);
+		decision = pdp.canAccess(getRequestor(entityAnon), null, null);
 		assert (decision.isDeny());
 
-		decision = pdp.canAdminister(getRequestor(entityAnon), null);
+		decision = pdp.canAdminister(getRequestor(entityAnon), null, null);
 		assert (decision.isDeny());
 
 	}
@@ -129,28 +129,28 @@ public class TestAccessControlListPDP {
 
 		AccessControlListPDP pdp = new AccessControlListPDP(test2Access, test2Admin);
 		RequestEntities request = getRequestor(entityA);
-		Decision decision = pdp.canAccess(request, null);
+		Decision decision = pdp.canAccess(request, null, null);
 		assert (decision.isPermit());
 
-		decision = pdp.canAdminister(getRequestor(entityA), null);
+		decision = pdp.canAdminister(getRequestor(entityA), null, null);
 		assert (decision.isDeny());
 
-		decision = pdp.canAccess(getRequestor(entityB), null);
+		decision = pdp.canAccess(getRequestor(entityB), null, null);
 		assert (decision.isPermit());
 
-		decision = pdp.canAdminister(getRequestor(entityB), null);
+		decision = pdp.canAdminister(getRequestor(entityB), null, null);
 		assert (decision.isDeny());
 
-		decision = pdp.canAccess(getRequestor(entityC), null);
+		decision = pdp.canAccess(getRequestor(entityC), null, null);
 		assert (decision.isDeny());
 
-		decision = pdp.canAdminister(getRequestor(entityC), null);
+		decision = pdp.canAdminister(getRequestor(entityC), null, null);
 		assert (decision.isPermit());
 
-		decision = pdp.canAccess(getRequestor(entityAnon), null);
+		decision = pdp.canAccess(getRequestor(entityAnon), null, null);
 		assert (decision.isDeny());
 
-		decision = pdp.canAdminister(getRequestor(entityAnon), null);
+		decision = pdp.canAdminister(getRequestor(entityAnon), null, null);
 		assert (decision.isDeny());
 	}
 
@@ -159,11 +159,11 @@ public class TestAccessControlListPDP {
 
 		AccessControlListPDP pdp = new AccessControlListPDP(test1, test1, true);
 		RequestEntities request = getRequestor(entityA);
-		Decision decision = pdp.canAccess(request, null);
+		Decision decision = pdp.canAccess(request, null, null);
 		assert (decision.isPermit());
 
 		request = getRequestor(entityAnon);
-		decision = pdp.canAccess(request, null);
+		decision = pdp.canAccess(request, null, null);
 		assert (decision.isPermit());
 	}
 
