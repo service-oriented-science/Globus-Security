@@ -18,7 +18,6 @@ package org.globus.security.authorization.impl;
 import java.util.Calendar;
 import java.util.Set;
 
-import javax.inject.Inject;
 import javax.security.auth.Subject;
 
 import org.globus.security.authorization.Attribute;
@@ -36,14 +35,16 @@ import org.globus.security.authorization.util.AttributeUtil;
 
 public class X509BootstrapPIP implements BootstrapPIP {
 
-    @Inject
-    private GlobusContext context;
+	private static final long serialVersionUID = 4102147324580817900L;
+
+	private GlobusContext context;
 
     public void initialize(String chainName, String prefix_,
                            ChainConfig config) throws InitializeException {
 
     }
 
+    @SuppressWarnings("unchecked")
     public void collectRequestAttributes(RequestEntities requestAttrs)
             throws AttributeException {
 
