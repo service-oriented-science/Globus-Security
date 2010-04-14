@@ -9,7 +9,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>org.globus.crux.gsi.server</artifactId>
 	<packaging>bundle</packaging>
-	<name>${bundle.symbolicName} :: [${bundle.namespace}]</name>
+	<name>GSI Server for OSGi</name>
 	<properties>
 		<bundle.symbolicName>org.globus.crux.gsi.server</bundle.symbolicName>
 		<bundle.namespace>org.globus.crux.gsi.server</bundle.namespace>
@@ -74,6 +74,12 @@
 			<groupId>org.springframework.osgi</groupId>
 			<artifactId>org.springframework.osgi.web</artifactId>
 			<version>1.2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.core</artifactId>
+			<version>4.2.0</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
