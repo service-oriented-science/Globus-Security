@@ -7,9 +7,11 @@ import javax.security.auth.Subject;
 import javax.xml.namespace.QName;
 
 import org.globus.security.authorization.EntityAttributes;
+import org.globus.security.authorization.GlobusContext;
 
 public class SimpleGlobusContext implements GlobusContext {
 
+	
 	private Map<String, Object> propMap = new HashMap<String, Object>();
 	private String containerId;
 	private Subject containerSubject;
@@ -17,6 +19,10 @@ public class SimpleGlobusContext implements GlobusContext {
 	private Subject peerSubject;
 	private Subject serviceSubject;
 	private EntityAttributes containerEntity;
+
+	public SimpleGlobusContext() {
+
+	}
 
 	@SuppressWarnings("unchecked")
 	public <T> T get(String key, Class<T> type) {

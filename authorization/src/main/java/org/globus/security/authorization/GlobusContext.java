@@ -1,9 +1,8 @@
-package org.globus.security.authorization.impl;
+package org.globus.security.authorization;
 
 import javax.security.auth.Subject;
 import javax.xml.namespace.QName;
 
-import org.globus.security.authorization.EntityAttributes;
 
 public interface GlobusContext {
 
