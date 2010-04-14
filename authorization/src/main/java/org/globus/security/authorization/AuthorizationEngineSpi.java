@@ -21,7 +21,6 @@ import java.io.Serializable;
  */
 public interface AuthorizationEngineSpi extends Serializable {    
 
-	
     /**
      * Evalauates the authorization chain to determine of the subject
      * is allowedList to perfrorm the action on the resource. Subject, action

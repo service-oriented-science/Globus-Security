@@ -13,18 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.globus.security.authorization;
-
-import java.io.Serializable;
+package org.globus.security.jaas;
 
 /**
- * Interface for maintaining parameters required by interceptors in an
- * authorization chain. Each property is identified by a scoped name
- * and the value can be any Java object
+ * A Globus DN principal. The Globus DN is in the form: "/CN=foo/O=bar".
  */
-public interface ChainConfig extends Serializable {
-
-    Object getProperty(String prefix, String property);
-
-    void setProperty(String prefix, String property, Object value);
+public class GlobusPrincipal 
+    extends SimplePrincipal {
+    
+    public GlobusPrincipal(String globusDn) {
+	super(globusDn);
+    }
+    
 }

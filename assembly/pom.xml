@@ -7,7 +7,7 @@
 		<version>1.0-SNAPSHOT</version>
 	</parent>
 	<groupId>org.globus.crux.security</groupId>
-	<artifactId>assembly</artifactId>
+	<artifactId>crux-assembly</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Crux Security Assembly</name>
@@ -463,7 +463,7 @@
 								</descriptor>
 							</descriptors>
 							<finalName>
-								globus-crux-${project.version}
+								${project.artifactId}-${project.version}
 							</finalName>
 							<tarLongFileMode>gnu</tarLongFileMode>
 						</configuration>
