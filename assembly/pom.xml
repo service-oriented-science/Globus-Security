@@ -6,44 +6,9 @@
 		<groupId>org.globus.crux.security</groupId>
 		<version>1.0-SNAPSHOT</version>
 	</parent>
-	<groupId>org.globus.crux.security</groupId>
 	<artifactId>crux-assembly</artifactId>
-	<version>1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Crux Security Assembly</name>
-
-	<properties>
-		<karaf.version>1.5.0-SNAPSHOT</karaf.version>
-		<karaf.groupId>org.apache.felix.karaf</karaf.groupId>
-		<equinox.version>3.5.1.v20090827</equinox.version>
-		<felix.bundlerepository.version>1.5.0-SNAPSHOT</felix.bundlerepository.version>
-		<felix.configadmin.version>1.2.4</felix.configadmin.version>
-		<felix.fileinstall.version>2.0.8</felix.fileinstall.version>
-		<felix.framework.version>2.0.4</felix.framework.version>
-		<felix.gogo.version>0.2.2</felix.gogo.version>
-		<felix.plugin.version>2.1.0-SNAPSHOT</felix.plugin.version>
-		<felix.prefs.version>1.0.4</felix.prefs.version>
-		<felix.webconsole.version>2.0.6</felix.webconsole.version>
-		<felix.metatype.version>1.0.2</felix.metatype.version>
-		<aries.blueprint.version>1.0.0-incubating-SNAPSHOT</aries.blueprint.version>
-		<aries.jmx.version>1.0.0-incubating-SNAPSHOT</aries.jmx.version>
-		<geronimo.servlet.version>1.1.2</geronimo.servlet.version>
-		<jansi.version>1.2</jansi.version>
-		<jline.version>0.9.95.20100209</jline.version>
-		<log4j.version>1.2.14</log4j.version>
-		<maven.version>2.0.9</maven.version>
-		<mina.version>2.0.0-RC1</mina.version>
-		<pax.exam.version>1.1.0</pax.exam.version>
-		<pax.logging.version>1.4</pax.logging.version>
-		<pax.runner.version>1.2.1</pax.runner.version>
-		<pax.url.version>1.1.2</pax.url.version>
-		<pax.web.version>0.7.2</pax.web.version>
-		<servlet.api.version>2.5</servlet.api.version>
-		<sshd.version>0.3.0</sshd.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
-
-
 
 	<dependencies>
 		<dependency>
@@ -67,250 +32,6 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>${project.groupId}.sslproxies</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>${project.groupId}.branding</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>${karaf.groupId}</groupId>
-			<artifactId>org.apache.felix.karaf.main</artifactId>
-			<version>${karaf.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${karaf.groupId}.deployer</groupId>
-			<artifactId>org.apache.felix.karaf.deployer.spring</artifactId>
-			<version>${karaf.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${karaf.groupId}.deployer</groupId>
-			<artifactId>org.apache.felix.karaf.deployer.blueprint</artifactId>
-			<version>${karaf.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${karaf.groupId}.deployer</groupId>
-			<artifactId>org.apache.felix.karaf.deployer.features</artifactId>
-			<version>${karaf.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${karaf.groupId}.deployer</groupId>
-			<artifactId>${karaf.groupId}.deployer.war</artifactId>
-			<version>${karaf.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${karaf.groupId}.features</groupId>
-			<artifactId>${karaf.groupId}.features.core</artifactId>
-			<version>${karaf.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${karaf.groupId}.features</groupId>
-			<artifactId>${karaf.groupId}.features.command</artifactId>
-			<version>${karaf.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${karaf.groupId}.features</groupId>
-			<artifactId>${karaf.groupId}.features.management</artifactId>
-			<version>${karaf.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${karaf.groupId}.admin</groupId>
-			<artifactId>${karaf.groupId}.admin.core</artifactId>
-			<version>${karaf.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${karaf.groupId}.admin</groupId>
-			<artifactId>${karaf.groupId}.admin.command</artifactId>
-			<version>${karaf.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${karaf.groupId}</groupId>
-			<artifactId>${karaf.groupId}.commons</artifactId>
-			<version>${karaf.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${karaf.groupId}.admin</groupId>
-			<artifactId>${karaf.groupId}.admin.management</artifactId>
-			<version>${karaf.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${karaf.groupId}.shell</groupId>
-			<artifactId>${karaf.groupId}.shell.console</artifactId>
-			<version>${karaf.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${karaf.groupId}.shell</groupId>
-			<artifactId>${karaf.groupId}.shell.obr</artifactId>
-			<version>${karaf.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${karaf.groupId}.shell</groupId>
-			<artifactId>${karaf.groupId}.shell.osgi</artifactId>
-			<version>${karaf.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${karaf.groupId}.shell</groupId>
-			<artifactId>${karaf.groupId}.shell.log</artifactId>
-			<version>${karaf.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${karaf.groupId}.shell</groupId>
-			<artifactId>${karaf.groupId}.shell.config</artifactId>
-			<version>${karaf.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${karaf.groupId}.shell</groupId>
-			<artifactId>${karaf.groupId}.shell.packages</artifactId>
-			<version>${karaf.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${karaf.groupId}.shell</groupId>
-			<artifactId>${karaf.groupId}.shell.commands</artifactId>
-			<version>${karaf.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${karaf.groupId}.shell</groupId>
-			<artifactId>${karaf.groupId}.shell.ssh</artifactId>
-			<version>${karaf.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${karaf.groupId}.shell</groupId>
-			<artifactId>${karaf.groupId}.shell.dev</artifactId>
-			<version>${karaf.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${karaf.groupId}.jaas</groupId>
-			<artifactId>${karaf.groupId}.jaas.boot</artifactId>
-			<version>${karaf.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${karaf.groupId}.jaas</groupId>
-			<artifactId>${karaf.groupId}.jaas.config</artifactId>
-			<version>${karaf.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${karaf.groupId}.jaas</groupId>
-			<artifactId>${karaf.groupId}.jaas.modules</artifactId>
-			<version>${karaf.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${karaf.groupId}</groupId>
-			<artifactId>${karaf.groupId}.management</artifactId>
-			<version>${karaf.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.osgi</groupId>
-			<artifactId>spring-osgi-extender</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.osgi</groupId>
-			<artifactId>spring-osgi-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.osgi</groupId>
-			<artifactId>spring-osgi-io</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.osgi</groupId>
-			<artifactId>spring-osgi-annotation</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.felix</groupId>
-			<artifactId>org.apache.felix.bundlerepository</artifactId>
-			<version>${felix.bundlerepository.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.felix</groupId>
-			<artifactId>org.apache.felix.fileinstall</artifactId>
-			<version>${felix.fileinstall.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>jline</groupId>
-			<artifactId>jline</artifactId>
-			<version>${jline.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.felix</groupId>
-			<artifactId>org.osgi.compendium</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.felix</groupId>
-			<artifactId>org.apache.felix.configadmin</artifactId>
-			<version>${felix.configadmin.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.felix</groupId>
-			<artifactId>org.apache.felix.metatype</artifactId>
-			<version>${felix.metatype.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.felix</groupId>
-			<artifactId>org.apache.felix.prefs</artifactId>
-			<version>${felix.prefs.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.ops4j.pax.logging</groupId>
-			<artifactId>pax-logging-api</artifactId>
-			<version>${pax.logging.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.ops4j.pax.logging</groupId>
-			<artifactId>pax-logging-service</artifactId>
-			<version>${pax.logging.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.ops4j.pax.url</groupId>
-			<artifactId>pax-url-mvn</artifactId>
-			<version>${pax.url.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.ops4j.pax.url</groupId>
-			<artifactId>pax-url-wrap</artifactId>
-			<version>${pax.url.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.sshd</groupId>
-			<artifactId>sshd-core</artifactId>
-			<version>${sshd.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse</groupId>
-			<artifactId>osgi</artifactId>
-			<version>${equinox.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.felix</groupId>
-			<artifactId>org.apache.felix.framework</artifactId>
-			<version>${felix.framework.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.aries.blueprint</groupId>
-			<artifactId>org.apache.aries.blueprint</artifactId>
-			<version>${aries.blueprint.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.apache.felix</groupId>
-					<artifactId>javax.servlet</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.aries.jmx</groupId>
-			<artifactId>org.apache.aries.jmx</artifactId>
-			<version>${aries.jmx.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.aries.jmx</groupId>
-			<artifactId>org.apache.aries.jmx.blueprint</artifactId>
-			<version>${aries.jmx.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.geronimo.specs</groupId>
-			<artifactId>geronimo-servlet_2.5_spec</artifactId>
-			<version>${geronimo.servlet.version}</version>
-			<optional>true</optional>
 		</dependency>
 	</dependencies>
 
@@ -402,24 +123,6 @@
 						<configuration>
 							<artifactItems>
 								<artifactItem>
-									<groupId>org.apache.felix.karaf</groupId>
-									<artifactId>org.apache.felix.karaf.main</artifactId>
-									<outputDirectory>target/dependencies/lib</outputDirectory>
-									<destFileName>karaf.jar</destFileName>
-								</artifactItem>
-								<artifactItem>
-									<groupId>org.apache.felix.karaf.jaas</groupId>
-									<artifactId>org.apache.felix.karaf.jaas.boot</artifactId>
-									<outputDirectory>target/dependencies/lib</outputDirectory>
-									<destFileName>karaf-jaas-boot.jar</destFileName>
-								</artifactItem>
-								<artifactItem>
-									<groupId>${project.groupId}</groupId>
-									<artifactId>${project.groupId}.branding</artifactId>
-									<outputDirectory>target/dependencies/lib</outputDirectory>
-									<destFileName>crux-version.jar</destFileName>
-								</artifactItem>
-								<artifactItem>
 									<groupId>${project.groupId}</groupId>
 									<artifactId>${project.groupId}.sslproxies</artifactId>
 									<outputDirectory>target/dependencies/lib</outputDirectory>
@@ -442,7 +145,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
+<!--			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<executions>
@@ -469,29 +172,7 @@
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>build-helper-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>attach-artifacts</id>
-						<phase>package</phase>
-						<goals>
-							<goal>attach-artifact</goal>
-						</goals>
-						<configuration>
-							<artifacts>
-								<artifact>
-									<file>target/classes/features.xml</file>
-									<type>xml</type>
-									<classifier>features</classifier>
-								</artifact>
-							</artifacts>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+			</plugin>-->
 		</plugins>
 	</build>
 </project>
