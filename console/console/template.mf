@@ -1,5 +1,0 @@
-Excluded-Exports: 
- *.internal*
-Unversioned-Imports: 
- *
-Provide-Package: org.apache.felix.karaf.branding
